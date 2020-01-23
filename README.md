@@ -40,7 +40,7 @@ It will run the example bot code found in `src/index.ts` that will login to Inst
 
 ## Architecture // Code Scaffolding
 
-In terms of code patterns, it falls into 2 groups.
+In terms of code patterns, it falls into 2 groups:
 
 1) BotNation
 
@@ -49,6 +49,8 @@ Which has to start development. A web app tool for reporting and management of t
 2) MationBot
 
 Which is the heart and soul of this project. It provides a single class that has a Declarative `actions()` method, for chaining `BotAction`'s in an async sequence. These `BotAction`'s are provided by `BotActionFactory` methods. That allows for dev's to customize the `BotAction`, while injecting the active Puppeteer page for interaction (while keeping the door open for other injectables)
+
+Explore directories in the `src/` folder, to read more documentation on each respective part. `README.md` files were added in the base structure, and more will be added, come time. Better documentation in the future.
 
 ### Actions
 

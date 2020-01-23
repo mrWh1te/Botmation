@@ -1,10 +1,8 @@
 # Botmation
 
+Provides a library with the `MationBot` class that provides a Declarative approach to using [Puppeteer](https://github.com/puppeteer/puppeteer).
+
 A take-over project for [Instamation](https://github.com/mrWh1te/Instamation). Please use this, instead of that.
-
-A library with a Declarative approach to using [Puppeteer](https://github.com/puppeteer/puppeteer).
-
-Supports the [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) package to run multiple bots in parallel!
 
 ## Overview
 
@@ -39,6 +37,23 @@ $ npm run botmation
 ```
 
 It will run the example bot code found in `src/index.ts` that will login to Instagram and take a photo. It's recommended to begin there.
+
+## Running a Nation of Bots
+
+The `MationBot` class supports the [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) package to run multiple bots in parallel! An example script will be provided in the future, but the heart of it, looks like:
+
+```
+cluster.queue(data, async(page, ...) => {
+  const bot = new MationBot(page)
+
+  await bot.actions(
+    ...
+  )
+})
+
+```
+
+You can provide "Task" functions to the `cluster.queue()` method, so the Function provided, doesn't run on all workers (bots), so each bot can do its own thing.
 
 ## Architecture // Code Scaffolding
 

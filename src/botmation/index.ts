@@ -18,16 +18,15 @@ export interface MationBotInterface {
   setup(browser: puppeteer.Browser, options: BotOptions): Promise<void>
   destroy(): Promise<void>
 }
-// @future MationBotOptions to replace InstamationOptions for use
 
 /**
- * @description   Instagram bot that uses a Puppeteer browser
+ * @description   Declarative bot for a Puppeteer browser tab (page)
  */
 export class MationBot implements MationBotInterface {
   // Puppeteer
   private activeTab: puppeteer.Page
 
-  // Instamation
+  // MationBot specific
   private options: BotOptions
 
   /**
@@ -91,7 +90,7 @@ export class MationBot implements MationBotInterface {
   }
 
   /**
-   * @description   Run InstamationAction's in sequence - Declaratively
+   * @description   Run BotAction's in sequence - Declaratively
    *                Supports the higher-order functions in the actions/ directory
    *                They return async functions with the active puppeteer.page injected so the function can crawl/interact with the webpage
    * 

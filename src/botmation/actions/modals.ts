@@ -10,7 +10,7 @@ const TURN_OFF_NOTIFICATIONS_MODAL_HEADER_TEXT = 'Turn on Notifications'
 const TURN_OFF_NOTIFICATIONS_BUTTON_LABEL = 'Not Now'
 
 /**
- * @description   Instamation action closes the "Turn on Notifications" modal by clicking a "no" option
+ * @description   Bot action that closes the "Turn on Notifications" modal by clicking a "no" option
  */
 export const closeTurnOnNotificationsModal = (): BotAction => async (tab: puppeteer.Page): Promise<void> => {
   // click button with text "Not Now" inside the dialog

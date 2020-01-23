@@ -21,7 +21,7 @@ import { isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal } from 
  * @param url
  */
 export const login = ({username, password}: BotAuthOptions): BotAction => async(tab: puppeteer.Page) =>
-  // This is how a single InstamationAction can run its own sequence of InstamationAction's prior to the next call of the original bot.actions() sequence
+  // This is how a single BotAction can run its own sequence of BotAction's prior to the next call of the original bot.actions() sequence
   BotActionsChainFactory(tab)(
     goTo(getInstagramLoginUrl()),
     click(FORM_AUTH_USERNAME_INPUT_SELECTOR),

@@ -35,13 +35,31 @@ $ npm run botmation
 
 ## Architecture // Code Scaffolding
 
-Code architecture is currently a WIP. Notes will be updated as work is done, and finalized on complete. This note will be removed on finalization
+In terms of code patterns, it falls into 2 groups.
 
-WIP
+1) BotNation
 
-Main code is stored in the `src/` directory. More notes on scaffolding, once project matures further
+Which has to start development. A web app tool for reporting and management of the bots.
 
-## Manual Scripts
+2) MationBot
+
+Which is the heart and soul of this project. It provides a single class that has a Declarative `actions()` method, for chaining `BotAction`'s in an async sequence. These `BotAction`'s are provided by `BotActionFactory` methods. That allows for dev's to customize the `BotAction`, while injecting the active Puppeteer page for interaction (while keeping the door open for other injectables)
+
+### Actions
+
+Actions are how you use the bot to crawl/interact with the web page (browser tab). They implement the `BotAction` interface and are produced from factory methods implementing `BotActionFactory`. These bots have a Declarative `actions()` method that is produced from the `BotActionsChainFactory` method. It was separated out as a Function, from the Class, to allow us to reuse that functionality in a "pipe-like" syntax in calling `BotAction`s in sequence, asynchronously. However, we are not including the output of the last call as input for the next. There has been no need for it yet, but can be simply added. Hence, the function is considered more of a "chain" then a "pipe". Also, we may look into injecting not just the active tab (Puppeteer.Page), but also some data source and potentially options as optional params for `BotAction`'s to make some things configurable in another manner.
+
+### Selectors
+
+In the `bots/` directory, for each bot, there is a `selectors.ts` file that describe the main elements the bot will be interacting with, ie the auth form's login input (to click and type in).
+
+### Config
+
+The main config file is `src/config.ts`. It's useful when you're using the `asyncConstructor()` of the `MationBot` class. If you're going to be running multiple bots, you can forgo it by providing the values from that file in the `options` param, during construction. Just to be sure to follow the interface, to maintain expected data structure. 
+
+Follow the "Getting Started" section in getting the file ready, since it's ignored by Git (if you clone the project, it will be missing). There is a planned CLI script to automatically build it for you, upon various input.
+
+## Manual Script Running
 
 You can manually run the scripts ran by the main `botmation` script, in "Getting Started".
 
@@ -55,14 +73,8 @@ To run the built code, run this command:
 $ npm run bot
 ```
 
-## Selectors
+This will run the example bot found here: `./src/index.ts`
 
-In the `bots/` directory, for each bot, there is a `selectors.ts` file that describe the main elements the bot will be interacting with, ie the auth form's login input (to click and type in).
+## Help
 
-## Config
-
-The main config file is `src/config.ts`. Follow the "Getting Started" section in getting that file ready. There is a planned CLI script to automatically build it for you, upon various input.
-
-## Actions
-
-Actions are how you use the bot to crawl/interact with the web page (browser tab). They implement `BotAction` and are produced from factory methods implementing `BotActionFactory`. This bot has an `actions()` method that is produced with the `BotActionsChainFactory`. It was separated to allow us to reuse that functionality in a "pipe-like" syntax in calling Actions in sequence, asynchronously. However, we are not including the output of the last call as input for the next. There has been no need for it yet, but can be added. Hence, the function is considered more of a "chain" then a "pipe".
+Feel free to open Issues in Github. Please provide sample code, screenshots, and any other relevant information.

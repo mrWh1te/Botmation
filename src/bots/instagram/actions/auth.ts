@@ -13,7 +13,7 @@ import {
   FORM_AUTH_USERNAME_INPUT_SELECTOR,
   FORM_AUTH_PASSWORD_INPUT_SELECTOR,
   FORM_AUTH_SUBMIT_BUTTON_SELECTOR
-} from '@selectors'
+} from '@bots/instagram/selectors'
 import { isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal } from './modals'
 
 /**

@@ -12,7 +12,6 @@
       "@mationbot": ["mationbot/index"],
       "@mationbot/*": ["mationbot/*"],
       "@helpers/*": ["helpers/*"],
-      "@selectors": ["selectors"],
       "@config": ["config"],
       "@bots/*": ["bots/*"]
     }

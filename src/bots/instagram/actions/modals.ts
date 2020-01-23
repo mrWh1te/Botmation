@@ -3,7 +3,7 @@
  */
 import puppeteer from 'puppeteer'
 
-import { MAIN_MODAL_HEADER_SELECTOR } from '@selectors'
+import { MAIN_MODAL_HEADER_SELECTOR } from '@bots/instagram/selectors'
 import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
 
 const TURN_OFF_NOTIFICATIONS_MODAL_HEADER_TEXT = 'Turn on Notifications'

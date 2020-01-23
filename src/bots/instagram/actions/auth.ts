@@ -17,8 +17,9 @@ import {
 import { isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal } from './modals'
 
 /**
- * @description   Single Higher Order Function for Page Changing
- * @param url
+ * @description  BotAction that attempts the login flow for Instagram
+ *               This BotAction is a great example of how 1 Action can wrap a whole other list of Action's, while using the same actions() code design
+ * @param {username, password} destructured from BotAuthOptions 
  */
 export const login = ({username, password}: BotAuthOptions): BotAction => async(tab: puppeteer.Page) =>
   // This is how a single BotAction can run its own sequence of BotAction's prior to the next call of the original bot.actions() sequence

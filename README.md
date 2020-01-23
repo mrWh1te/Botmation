@@ -1,28 +1,33 @@
 # Botmation
 
-A take-over project for Instamation.
+A take-over project for [Instamation](https://github.com/mrWh1te/Instamation). Please use this, instead of that.
 
-A declarative approach to using puppeteer.
+A library with a Declarative approach to using [Puppeteer](https://github.com/puppeteer/puppeteer).
 
-[puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) package friendly, so you can run these bots in parallel!
+Supports the [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) package to run multiple bots in parallel!
 
-## Features
+## Overview
 
- - Declarative syntax in using tasks, `BotAction`, previously called `InstamationAction`
+Current:
+ - `MationBot` class with Declarative `actions()` in executing async tasks, `BotAction`'s, sequentially
  - Social media site specific action's ie Instagram for automating login
+
+In dev:
+  - General Instagram Crawling/Interacting `BotAction`'s
 
 Future:
  - Management web app tool
+ - Expanding upon injection to include data attached to the bot, and perhaps options
 
 ## Getting Started
 
-You will need NodeJS current version or LTS on your machine to run the bot, as of writing this. After you have that installed, install the npm dependencies with this command:
+You will need NodeJS current version or LTS on your machine to run the bot(s), as of writing this. After you have that installed, install the npm dependencies with this command:
 
 ```
 $ npm i
 ```
 
-Inside the `src/` directory, create a `config.ts` file with the following, but replace the text inside the quotes with your account credentials of who, you want the bot to login as:
+Then, inside the `src/` directory, create a `config.ts` file with the following, but replace the text inside the quotes with your Instagram account credentials of who, you want the bot to login as:
 ```
 export const ACCOUNT_USERNAME = 'put your username here'
 export const ACCOUNT_PASSWORD = 'put your password here'
@@ -32,6 +37,8 @@ Then build and run the example bot with this single command:
 ```
 $ npm run botmation
 ```
+
+It will run the example bot code found in `src/index.ts` that will login to Instagram and take a photo. It's recommended to begin there.
 
 ## Architecture // Code Scaffolding
 

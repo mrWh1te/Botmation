@@ -1,6 +1,6 @@
 # TypeScript Source
 
-Botmation's main source code all in TypeScript. The built JavaScript is transpiled to the `/build` directory from the root project folder.
+Botmation's main source code is all in TypeScript. The built JavaScript is transpiled to the `/build` directory from the root project folder. See `package.json` in the parent directory for more details.
 
 ## Overview
 

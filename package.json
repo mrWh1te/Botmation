@@ -34,6 +34,7 @@
     "@botmation": "./build/botmation",
     "@helpers": "./build/helpers",
     "@selectors": "./build/selectors.js",
-    "@config": "./build/config.js"
+    "@config": "./build/config.js",
+    "@bots": "./build/bots"
   }
 }

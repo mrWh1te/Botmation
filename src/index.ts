@@ -6,10 +6,16 @@ import puppeteer from 'puppeteer'
 
 import { MationBot } from '@botmation'
 
+import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
+
+// General BotAction's
 import { goTo } from '@botmation/actions/navigation'
-import { favoriteAllFrom } from '@botmation/actions/feed'
 import { warning, log } from '@botmation/actions/console'
-import { wait } from '@botmation/actions/utilities'
+import { wait, ifThen } from '@botmation/actions/utilities'
+
+// Instagram specific BotAction's
+import { favoriteAllFrom } from '@bots/instagram/actions/feed'
+import { login, isGuest } from '@bots/instagram/actions/auth'
 
 // Main Script
 (async () => {
@@ -22,11 +28,12 @@ import { wait } from '@botmation/actions/utilities'
 
     // Start up the Instagram bot to run in the Puppeteer Browser
     // Apart from setup, it handles logging in so your bot is ready to go
-    const bot = await MationBot.asyncConstructor(browser)
+    const instagramBot = await MationBot.asyncConstructor(browser)
 
     // Actions run in sequence
-    await bot.actions(
+    await instagramBot.actions(
       log('MationBot running'),
+      ifThen(isGuest, login({username: ACCOUNT_USERNAME, password: ACCOUNT_PASSWORD})),
       warning('There must be a 5sec delay from seeing this warning and the next message'),
       wait(5000),
       // goTo('feed'), // TODO: figure out the url, and request it anyway, to be sure we're on the feed page since it won't navigate if already there
@@ -37,7 +44,7 @@ import { wait } from '@botmation/actions/utilities'
     )
     //   viewAllStoriesFrom('user1', 'user2')
     
-    await bot.destroy() // closes the tab inside the browser that it was crawling/acting on
+    await instagramBot.destroy() // closes the tab inside the browser that it was crawling/acting on
   } catch (error) {
     console.error(error)
     

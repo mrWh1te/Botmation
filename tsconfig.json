@@ -13,7 +13,8 @@
       "@botmation/*": ["botmation/*"],
       "@helpers/*": ["helpers/*"],
       "@selectors": ["selectors"],
-      "@config": ["config"]
+      "@config": ["config"],
+      "@bots/*": ["bots/*"]
     }
   }
 }

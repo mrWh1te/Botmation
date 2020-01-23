@@ -1,13 +1,13 @@
 import puppeteer from 'puppeteer'
 
-import { BotAction } from '../interfaces/bot-action.interfaces'
+import { BotAction } from '@botmation/interfaces/bot-action.interfaces'
 import { BotActionsChainFactory } from '@botmation/factories/bot-actions-chain.factory'
 
-import { goTo, waitForNavigation } from './navigation'
-import { click, type, ifThen } from './utilities'
-import { log } from './console'
+import { goTo, waitForNavigation } from '@botmation/actions/navigation'
+import { click, type, ifThen } from '@botmation/actions/utilities'
+import { log } from '@botmation/actions/console'
 
-import { getInstagramLoginUrl } from '@botmation/helpers/urls'
+import { getInstagramLoginUrl } from '@bots/instagram/helpers/urls'
 import { BotAuthOptions } from '@botmation/interfaces/bot-options.interfaces'
 import { 
   FORM_AUTH_USERNAME_INPUT_SELECTOR,

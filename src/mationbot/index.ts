@@ -10,14 +10,8 @@ import { BotOptions } from './interfaces/bot-options.interfaces'
 import { BotAction } from './interfaces/bot-action.interfaces'
 import { BotActionsChainFactory } from './factories/bot-actions-chain.factory'
 import { ifThen } from './actions/utilities'
-import { login, isGuest } from './actions/auth'
-
-//
-// As the project grows, we'll add different bots that follow the same base interface
-export interface MationBotInterface {
-  setup(browser: puppeteer.Browser, options: BotOptions): Promise<void>
-  destroy(): Promise<void>
-}
+import { login, isGuest } from '../bots/instagram/actions/auth'
+import { MationBotInterface } from './interfaces/mation-bot.interface'
 
 /**
  * @description   Declarative bot for a Puppeteer browser tab (page)
@@ -39,8 +33,8 @@ export class MationBot implements MationBotInterface {
     this.options = {
       // Default Config
       auth: {
-        username: ACCOUNT_USERNAME,
-        password: ACCOUNT_PASSWORD
+        username: ACCOUNT_USERNAME || 'Missing ACCOUNT_USERNAME',
+        password: ACCOUNT_PASSWORD || 'Missing ACCOUNT_PASSWORD'
       },
       // Overload config with provided options (optional)
       ...options
@@ -62,7 +56,7 @@ export class MationBot implements MationBotInterface {
   }
 
   /**
-   * @description    Loads cookies, db and runs basic auth
+   * @description    Loads cookies, data from db
    *                 Sets everything up for actions() to run
    * @param browser 
    */
@@ -70,23 +64,15 @@ export class MationBot implements MationBotInterface {
     
     // TODO: load db
 
-    // Login to Instagram
-    await this.authenticate()
-  }
-
-  /**
-   * @description   Load saved cookies, Check if authenticated, if Guest, then attempt to login with options information
-   */
-  private async authenticate() {
     // TODO: load cookies 1st
 
-    if (this.options.auth) {
-      await this.actions(
-        ifThen(isGuest, login(this.options.auth))
-      )
-    }
+    // Decided to keep auth separate, it's only 1 line of code in the main bot script to handle
 
-    // TODO: save cookies
+    // TODO: save cookies, post login
+
+    // Future: provide data in the chain, it would be options but more -> data: { auth: authData, feed: feedDb, etc}, options/config: {db: dbOptions, etc} (so data and somekind of base options for configuration of various dependencies)
+    // so in the future we can run these actions against db data, not programmed data
+    //   To implement: follow the flow of injecting the "tab" (puppeteer.Page) from scope of the factory call, likewise, we'll inject options, but maybe have renamed to simply data or store
   }
 
   /**

@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer'
 
-import { BotAction } from '../interfaces/bot-action.interfaces'
+import { BotAction } from '@botmation/interfaces/bot-action.interfaces'
 
 /**
  * @description   Pipeable methods for crawling/interacting with the main feed page in Instagram

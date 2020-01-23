@@ -1,0 +1,39 @@
+{
+  "name": "botmation",
+  "version": "0.0.1",
+  "description": "A Puppeteer Library that provides a declarative syntax for web crawler automation",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc",
+    "bot": "node .",
+    "botmation": "npm run build && npm run bot"
+  },
+  "keywords": [
+    "social",
+    "automation",
+    "login",
+    "likes",
+    "story-viewing",
+    "reporting",
+    "tool",
+    "bot"
+  ],
+  "author": "Michael Lage",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "puppeteer": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^13.1.8",
+    "@types/puppeteer": "^2.0.0",
+    "module-alias": "^2.2.2",
+    "typescript": "^3.7.5"
+  },
+  "_moduleAliases": {
+    "@botmation": "./build/botmation",
+    "@helpers": "./build/helpers",
+    "@selectors": "./build/selectors.js",
+    "@config": "./build/config.js"
+  }
+}

@@ -38,23 +38,6 @@ $ npm run botmation
 
 It will run the example bot code found in `src/index.ts` that will login to Instagram and take a photo. It's recommended to begin there.
 
-## Running a Nation of Bots
-
-The `MationBot` class supports the [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) package to run multiple bots in parallel! An example script will be provided in the future, but the heart of it, looks like:
-
-```
-cluster.queue(data, async(page, ...) => {
-  const bot = new MationBot(page)
-
-  await bot.actions(
-    ...
-  )
-})
-
-```
-
-You can provide "Task" functions to the `cluster.queue()` method, so the Function provided, doesn't run on all workers (bots), so each bot can do its own thing.
-
 ## Architecture // Code Scaffolding
 
 In terms of code patterns, it falls into 2 groups.
@@ -80,6 +63,23 @@ In the `bots/` directory, for each bot, there is a `selectors.ts` file that desc
 The main config file is `src/config.ts`. It's useful when you're using the `asyncConstructor()` of the `MationBot` class. If you're going to be running multiple bots, you can forgo it by providing the values from that file in the `options` param, during construction. Just to be sure to follow the interface, to maintain expected data structure. 
 
 Follow the "Getting Started" section in getting the file ready, since it's ignored by Git (if you clone the project, it will be missing). There is a planned CLI script to automatically build it for you, upon various input.
+
+## Running a Nation of Bots
+
+The `MationBot` class supports the [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) package to run multiple bots in parallel! An example script will be provided in the future, but the heart of it, looks like:
+
+```
+cluster.queue(data, async(page, ...) => {
+  const bot = new MationBot(page)
+
+  await bot.actions(
+    ...
+  )
+})
+
+```
+
+You can provide "Task" functions to the `cluster.queue()` method, so the Function provided, doesn't run on all workers (bots), so each bot can do its own thing.
 
 ## Manual Script Running
 

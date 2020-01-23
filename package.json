@@ -13,10 +13,10 @@
     "automation",
     "login",
     "likes",
-    "story-viewing",
     "reporting",
     "tool",
-    "bot"
+    "bot",
+    "crawler"
   ],
   "author": "Michael Lage",
   "license": "MIT",

@@ -4,14 +4,13 @@
 import 'module-alias/register'
 import puppeteer from 'puppeteer'
 
-import { MationBot } from '@botmation'
+import { MationBot } from '@mationbot'
 
 import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
 
 // General BotAction's
-import { goTo } from '@botmation/actions/navigation'
-import { warning, log } from '@botmation/actions/console'
-import { wait, ifThen } from '@botmation/actions/utilities'
+import { warning, log } from '@mationbot/actions/console'
+import { wait, ifThen } from '@mationbot/actions/utilities'
 
 // Instagram specific BotAction's
 import { favoriteAllFrom } from '@bots/instagram/actions/feed'

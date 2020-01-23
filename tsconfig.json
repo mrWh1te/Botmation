@@ -9,8 +9,8 @@
     "baseUrl": "./src",
     "esModuleInterop": true,
     "paths": {
-      "@botmation": ["botmation/index"],
-      "@botmation/*": ["botmation/*"],
+      "@mationbot": ["mationbot/index"],
+      "@mationbot/*": ["mationbot/*"],
       "@helpers/*": ["helpers/*"],
       "@selectors": ["selectors"],
       "@config": ["config"],

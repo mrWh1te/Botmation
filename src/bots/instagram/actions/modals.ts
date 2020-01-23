@@ -4,7 +4,7 @@
 import puppeteer from 'puppeteer'
 
 import { MAIN_MODAL_HEADER_SELECTOR } from '@selectors'
-import { BotAction } from '@botmation/interfaces/bot-action.interfaces'
+import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
 
 const TURN_OFF_NOTIFICATIONS_MODAL_HEADER_TEXT = 'Turn on Notifications'
 const TURN_OFF_NOTIFICATIONS_BUTTON_LABEL = 'Not Now'

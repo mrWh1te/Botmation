@@ -31,7 +31,7 @@
     "typescript": "^3.7.5"
   },
   "_moduleAliases": {
-    "@botmation": "./build/botmation",
+    "@mationbot": "./build/mationbot",
     "@helpers": "./build/helpers",
     "@selectors": "./build/selectors.js",
     "@config": "./build/config.js",

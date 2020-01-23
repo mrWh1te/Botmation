@@ -9,8 +9,6 @@ import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
 import { BotOptions } from './interfaces/bot-options.interfaces'
 import { BotAction } from './interfaces/bot-action.interfaces'
 import { BotActionsChainFactory } from './factories/bot-actions-chain.factory'
-import { ifThen } from './actions/utilities'
-import { login, isGuest } from '../bots/instagram/actions/auth'
 import { MationBotInterface } from './interfaces/mation-bot.interface'
 
 /**

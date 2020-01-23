@@ -1,4 +1,4 @@
-import { createURL } from "@botmation/helpers/urls"
+import { createURL } from "@mationbot/helpers/urls"
 
 /**
  * @description   Provides helpful methods for parsing URL's and getting URL's to crawl (ie Instagram login URL)

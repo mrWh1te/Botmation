@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer'
 
-import { BotAction } from '@botmation/interfaces/bot-action.interfaces'
+import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
 
 /**
  * @description   Actions() method Factory that will inject the active tab for the BotAction's to operate on

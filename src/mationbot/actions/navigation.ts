@@ -1,9 +1,9 @@
 import puppeteer from 'puppeteer'
 
-import { BotAction } from '../interfaces/bot-action.interfaces'
+import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
+import { getDefaultGoToPageOptions } from '@mationbot/helpers/navigation'
 
-import { logWarning, logMessage } from './console'
-import { getDefaultGoToPageOptions } from '@botmation/helpers/navigation'
+import { logWarning, logMessage } from '@mationbot/actions/console'
 
 /**
  * @description   Single Higher Order Function for Page Changing
@@ -13,7 +13,7 @@ export const goTo = (url: string): BotAction => async(tab: puppeteer.Page) => {
   // TODO: check current url, to prevent reloading if we're already there
   if (tab.url() === url) {
     // same url
-    logWarning('[Action:goTo] Same url requested -> not changing page')
+    logWarning('[Action:goTo] url requested is already active')
     return
   }
 
@@ -22,8 +22,8 @@ export const goTo = (url: string): BotAction => async(tab: puppeteer.Page) => {
   //   await openFeedPage(page)
   // }
 
-  logMessage('current url = '+ tab.url())
-  logWarning('url requested: '+ url)
+  logMessage('[Action:goTo] current url = '+ tab.url())
+  logMessage('[Action:goTo] url requested: '+ url)
   await tab.goto(url, getDefaultGoToPageOptions())
 }
 

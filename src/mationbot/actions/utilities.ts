@@ -3,9 +3,9 @@
  */
 import puppeteer from 'puppeteer'
 
-import { sleep } from '@botmation/helpers/utilities'
+import { sleep } from '@mationbot/helpers/utilities'
 
-import { BotAction } from '@botmation/interfaces/bot-action.interfaces'
+import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
 
 /**
  * @description   Pauses the bot for the provided milliseconds before letting it execute the next Action

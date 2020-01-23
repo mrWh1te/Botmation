@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 
-import { BotAction } from '@botmation/interfaces/bot-action.interfaces'
+import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
 
 // Chalk Themes
 const logTheme = chalk.bgGreen;

@@ -1,6 +1,6 @@
 # Botmation
 
-Provides a library with the `MationBot` class to provide a Declarative approach to using [Puppeteer](https://github.com/puppeteer/puppeteer).
+A library with the `MationBot` class to provide a Declarative approach to using [Puppeteer](https://github.com/puppeteer/puppeteer).
 
 A take-over project for [Instamation](https://github.com/mrWh1te/Instamation). Please use this, instead of that.
 

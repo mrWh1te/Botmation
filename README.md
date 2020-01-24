@@ -1,13 +1,13 @@
 # Botmation
 
-A library with the `MationBot` class to provide a Declarative approach to using [Puppeteer](https://github.com/puppeteer/puppeteer).
+A library that provides the `MationBot` class with a Declarative approach to using [Puppeteer](https://github.com/puppeteer/puppeteer).
 
-A take-over project for [Instamation](https://github.com/mrWh1te/Instamation). Please use this, instead of that.
+This is a take-over project for [Instamation](https://github.com/mrWh1te/Instamation). Please use this, instead of that.
 
 ## Overview
 
 Current:
- - `MationBot` class with Declarative `actions()` in executing async tasks, `BotAction`'s, sequentially
+ - `MationBot` class with method `actions()` for declaratively executing async tasks, `BotAction`'s, sequentially
  - Social media site specific action's ie Instagram for automating login
 
 In dev:
@@ -44,7 +44,7 @@ In terms of code patterns, it falls into 2 groups:
 
 1) BotNation
 
-Which has to start development. A web app tool for reporting and management of the bots.
+Which has yet, to start development. A web app tool for reporting and management of the bots.
 
 2) MationBot
 

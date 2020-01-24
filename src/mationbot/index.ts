@@ -4,8 +4,6 @@
 
 import puppeteer from 'puppeteer'
 
-import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
-
 import { BotOptions } from './interfaces/bot-options.interfaces'
 import { BotAction } from './interfaces/bot-action.interfaces'
 import { BotActionsChainFactory } from './factories/bot-actions-chain.factory'
@@ -29,11 +27,8 @@ export class MationBot implements MationBotInterface {
   constructor(tab: puppeteer.Page, options: Partial<BotOptions> = {}) {
     this.activeTab = tab
     this.options = {
-      // Default Config
-      auth: {
-        username: ACCOUNT_USERNAME || 'Missing ACCOUNT_USERNAME',
-        password: ACCOUNT_PASSWORD || 'Missing ACCOUNT_PASSWORD'
-      },
+      // Default Config TBI (db credentials, etc, what have you, not yet at the project when this is needed)
+      // Currently, options are not injecting into `BotAction`s, but can be, come time! Simple tweak to add
       // Overload config with provided options (optional)
       ...options
     }

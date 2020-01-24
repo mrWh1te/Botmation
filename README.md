@@ -38,7 +38,7 @@ Then build and run the example bot with this single command:
 $ npm run botmation
 ```
 
-It will run the example bot code found in `src/index.ts` that will login to Instagram and take a photo. It's recommended to begin there.
+It will run the example bot code found in `src/example_bot.ts` that will login to Instagram and take a photo. It's recommended to begin there.
 
 ## Architecture // Code Scaffolding
 
@@ -101,7 +101,7 @@ To run the built code, run this command:
 $ npm run bot
 ```
 
-This will run the example bot found here: `./src/index.ts`
+This will run the example bot found here: `./src/example_bot.ts`
 
 ## Help
 

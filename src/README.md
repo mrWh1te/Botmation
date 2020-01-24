@@ -9,7 +9,7 @@ There's 4 distinguishable things here:
 1) `botnation/` for future "BotNation" web app
 2) `mationbot/` for the bot class, `MationBot`
 3) `bots/` for service/site specific code
-4) `./index.ts`, an Example script using the `MationBot` class in crawling/interacting with Instagram (including login)
+4) `./example_bot.ts`, an example script using the `MationBot` class in crawling/interacting with Instagram (including login)
 
 ### BotNation
 
@@ -37,4 +37,4 @@ So inside the `/bots` directory is a folder for each website this project suppor
 
 ### Example Script
 
-Found in this directory, it's the main file `index.ts`. It shows a strong pattern in using the `MationBot` class. If you're just starting out, I recommend following the "Getting Started" guide from the root project's README, then playing around with this file. See what you can get the bot to do :) Once you've written a `BotAction`, they're super easy to get lost in, so have fun!
+Found in this directory, it's the main file `example_bot.ts`. It shows a strong pattern in using the `MationBot` class. If you're just starting out, I recommend following the "Getting Started" guide from the root project's README, then playing around with this file. It's the shortest path into, seeing what you, can get the bot to do :) Once you've written a `BotAction`, they're super easy to get lost in, so have fun! The main script is programmed to run the example bot (just read the "Getting Started" section in the root README)

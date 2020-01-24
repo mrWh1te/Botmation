@@ -34,17 +34,17 @@ import { isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal } from 
     // Actions run in sequence
     await instagramBot.actions(
       log('MationBot running'),
-      loadCookies('./cookies.json'),
+      loadCookies('cookies'),
       ifThen(isGuest, login({username: ACCOUNT_USERNAME, password: ACCOUNT_PASSWORD})),
       // After initial load, Instagram sometimes prompts the User with a modal...
       // Deal with the "Turn On Notifications" Modal, if it shows up
       ifThen(isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal()),
-      wait(5000),
+      // wait(5000),
       // goTo('feed'), // TODO: figure out the url, and request it anyway, to be sure we're on the feed page since it won't navigate if already there
       favoriteAllFrom('user1', 'user2'),
       log('Done interacting with feed, now going to view stories'),
-      warning('3 sec delay'),
-      wait(3000)
+      // warning('3 sec delay'),
+      // wait(3000)
     )
     //   viewAllStoriesFrom('user1', 'user2')
     

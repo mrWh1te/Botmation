@@ -1,5 +1,6 @@
 /**
- * @description    Main source code wrapper to encapsulate main methods with Puppeteer.Page
+ * @description    Main source code wrapper to encapsulate main methods for configuring the bot (cookies, page, etc)
+ *                 This bot uses a Puppeteer.Page, `activeTab`, to inject into factory produced `BotAction` methods
  */
 
 import puppeteer from 'puppeteer'
@@ -10,7 +11,8 @@ import { BotActionsChainFactory } from './factories/bot-actions-chain.factory'
 import { MationBotInterface } from './interfaces/mation-bot.interface'
 
 /**
- * @description   Declarative bot for a Puppeteer browser tab (page)
+ * @name          MationBot
+ * @description   Declarative bot for operating a Puppeteer browser tab (page)
  */
 export class MationBot implements MationBotInterface {
   // Puppeteer
@@ -20,21 +22,20 @@ export class MationBot implements MationBotInterface {
   private options: BotOptions
 
   /**
-   * @note   Please don't call this constructor directly, instead use the async one below
-   *         If you do call the constructor directly, please call "await bot.setup()" on the bot before running any actions
-   * @param options optional partial
+   * @param options optional partial to overload default option values (parsed from the config.ts file)
    */
   constructor(tab: puppeteer.Page, options: Partial<BotOptions> = {}) {
     this.activeTab = tab
     this.options = {
       // Default Config TBI (db credentials, etc, what have you, not yet at the project when this is needed)
-      // Currently, options are not injecting into `BotAction`s, but can be, come time! Simple tweak to add
+
+      // Currently, options are not injected into `BotAction`s, but can be, come time! Simple tweak to add
       // Overload config with provided options (optional)
       ...options
     }
   }
   /**
-   * @description    Runs the constructor then runs async setup code before returning instance
+   * @description    Runs the actual constructor then runs async setup code before returning the `MationBot` instance
    * @param  options   optional to override default options
    */
   public static async asyncConstructor(browser: puppeteer.Browser, options?: Partial<BotOptions>) {
@@ -57,9 +58,7 @@ export class MationBot implements MationBotInterface {
     
     // TODO: load db
 
-    // TODO: load cookies 1st
-
-    // Decided to keep auth separate, it's only 1 line of code in the main bot script to handle
+    // TODO: load cookies
 
     // TODO: save cookies, post login
 

@@ -5,7 +5,7 @@ import { BotActionsChainFactory } from '@mationbot/factories/bot-actions-chain.f
 
 import { goTo, waitForNavigation } from '@mationbot/actions/navigation'
 import { click, type, ifThen } from '@mationbot/actions/utilities'
-import { log } from '@mationbot/actions/console'
+import { log, logMessage } from '@mationbot/actions/console'
 
 import { getInstagramLoginUrl } from '@bots/instagram/helpers/urls'
 import { BotAuthOptions } from '@mationbot/interfaces/bot-options.interfaces'
@@ -14,7 +14,7 @@ import {
   FORM_AUTH_PASSWORD_INPUT_SELECTOR,
   FORM_AUTH_SUBMIT_BUTTON_SELECTOR
 } from '@bots/instagram/selectors'
-import { isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal } from './modals'
+import { saveCookies } from '@mationbot/actions/cookies'
 
 /**
  * @description  BotAction that attempts the login flow for Instagram
@@ -32,10 +32,7 @@ export const login = ({username, password}: BotAuthOptions): BotAction => async(
     click(FORM_AUTH_SUBMIT_BUTTON_SELECTOR),
     waitForNavigation(),
     log('Login Complete'),
-    // After initial login, Instagram usually prompts the User with a modal...
-    // Deal with the "Turn On Notifications" Modal, if it shows up
-    ifThen(isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal()),
-    log('If that modal was open, its closed now')
+    saveCookies('./cookies.json')
   )
 
 //
@@ -57,5 +54,7 @@ export const isGuest = async(tab: puppeteer.Page): Promise<boolean> => {
   
   // if you're logged in, Instagram would have redirected you to the feed
   // if you were a guest, logged out, you would be on the Instagram Login URL
-  return tab.url() === getInstagramLoginUrl()
+  const isGuest: boolean = tab.url() === getInstagramLoginUrl()
+  logMessage('isGuest = ' + isGuest)
+  return isGuest
 }

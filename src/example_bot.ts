@@ -9,12 +9,14 @@ import { MationBot } from '@mationbot'
 import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
 
 // General BotAction's
-import { warning, log } from '@mationbot/actions/console'
+import { warning, log, logError } from '@mationbot/actions/console'
 import { wait, ifThen } from '@mationbot/actions/utilities'
 
 // Instagram specific BotAction's
 import { favoriteAllFrom } from '@bots/instagram/actions/feed'
 import { login, isGuest } from '@bots/instagram/actions/auth'
+import { loadCookies } from '@mationbot/actions/cookies'
+import { isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal } from '@bots/instagram/actions/modals'
 
 // Main Script
 (async () => {
@@ -32,8 +34,11 @@ import { login, isGuest } from '@bots/instagram/actions/auth'
     // Actions run in sequence
     await instagramBot.actions(
       log('MationBot running'),
+      loadCookies('./cookies.json'),
       ifThen(isGuest, login({username: ACCOUNT_USERNAME, password: ACCOUNT_PASSWORD})),
-      warning('There must be a 5sec delay from seeing this warning and the next message'),
+      // After initial load, Instagram sometimes prompts the User with a modal...
+      // Deal with the "Turn On Notifications" Modal, if it shows up
+      ifThen(isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal()),
       wait(5000),
       // goTo('feed'), // TODO: figure out the url, and request it anyway, to be sure we're on the feed page since it won't navigate if already there
       favoriteAllFrom('user1', 'user2'),
@@ -45,7 +50,7 @@ import { login, isGuest } from '@bots/instagram/actions/auth'
     
     await instagramBot.destroy() // closes the tab inside the browser that it was crawling/acting on
   } catch (error) {
-    console.error(error)
+    logError(error)
     
     setTimeout(async() => {
       if (browser) await browser.close()

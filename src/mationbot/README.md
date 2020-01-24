@@ -6,4 +6,4 @@ It provides a most useful declarative method called `actions()` which runs a com
 
 More docs coming in the future
 
-I suggest looking at the example, currently implemented in `src/index.ts` that logs into Instagram, with nested lists of actions, which this system currently supports.
+I suggest looking at the example, currently implemented in `src/example_bot.ts` that logs into Instagram, with nested lists of actions, which this system currently supports.

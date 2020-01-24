@@ -1,6 +1,8 @@
 # Botmation
 
-A library that provides the `MationBot` class with a Declarative approach to using [Puppeteer](https://github.com/puppeteer/puppeteer).
+A NodeJS bot, called `MationBot`, for Declaratively using [Puppeteer](https://github.com/puppeteer/puppeteer) in crawling & interacting with the web.
+
+Bot / Auto + mation => Bot + mation
 
 This is a take-over project for [Instamation](https://github.com/mrWh1te/Instamation). Please use this, instead of that.
 
@@ -52,17 +54,19 @@ Which is the heart and soul of this project. It provides a single class that has
 
 Explore directories in the `src/` folder, to read more documentation on each respective part. `README.md` files were added in the base structure, and more will be added, come time. Better documentation in the future.
 
-### Actions
+### BotAction
 
-Actions are how you use the bot to crawl/interact with the web page (browser tab). They implement the `BotAction` interface and are produced from factory methods implementing `BotActionFactory`. These bots have a Declarative `actions()` method that is produced from the `BotActionsChainFactory` method. It was separated out as a Function, from the Class, to allow us to reuse that functionality in a "pipe-like" syntax in calling `BotAction`s in sequence, asynchronously. However, we are not including the output of the last call as input for the next. There has been no need for it yet, but can be simply added. Hence, the function is considered more of a "chain" then a "pipe". Also, we may look into injecting not just the active tab (Puppeteer.Page), but also some data source and potentially options as optional params for `BotAction`'s to make some things configurable in another manner.
+A `BotAction` is an async function (returns a promise) that uses a Puppeteer `Page` instance to crawl & interact with the web page (browser tab). They are de-coupled from the `MationBot` class and implement the `BotAction` interface. They are produced from factory methods following the `BotActionFactory` interface. That makes them customizable. These bots have a Declarative `actions()` method that is produced from the `BotActionsChainFactory` method. It's similar to the "pipe" syntax in RxJS, but we are not passing the result/output of one `BotAction` to the next. Hence, it's a chain of resolving promises.
+
+However, it's flexible, given the linear nature of chains. It's possible for a `BotAction` to represent another chain of `BotAction`'s, by re-using the `BotActionsChainFactory`! In theory, you can do this over and over, infinitely, chains of chains of chains ..., but run the risk of using more memory, at large scale. The deeper nesting of the technique (not using the technique itself), the higher the memory use will be when the root action is ran. Basically, feel free to use it horizontally, a lot, every `BotAction` could be a chain of `BotAction`'s, maybe most yours will be, but avoid doing deeply vertical chaining. When that chains resolves... It's like a recursive function, but I didn't program an exit. If I find a limit while playing, perhaps I'll add some safe gaurds, to prevent it, like stop excuting X vertical length then omit a console Warning.
 
 ### Selectors
 
-In the `bots/` directory, for each bot, there is a `selectors.ts` file that describe the main elements the bot will be interacting with, ie the auth form's login input (to click and type in).
+In the `bots/` directory, for each website, there is a `selectors.ts` file that describe the main DOM elements, a bot will interact with, ie the auth form's login input (to click for focus, so the bot can type the username).
 
 ### Config
 
-The main config file is `src/config.ts`. It's useful when you're using the `asyncConstructor()` of the `MationBot` class. If you're going to be running multiple bots, you can forgo it by providing the values from that file in the `options` param, during construction. Just to be sure to follow the interface, to maintain expected data structure. 
+The main config file is `src/config.ts`. It's used by the example bot script for saving Instagram auth credentials. 
 
 Follow the "Getting Started" section in getting the file ready, since it's ignored by Git (if you clone the project, it will be missing). There is a planned CLI script to automatically build it for you, upon various input.
 

@@ -36,7 +36,7 @@ Let's see an example:
     import { loadCookies } from '@mationbot/actions/cookies'
     import { goTo } from '@mationbot/actions/navigation'
 
-    // Instagram specific BotAction's
+    // Instagram specific
     import { login, isGuest } from '@bots/instagram/actions/auth'
     import { getInstagramBaseUrl } from '@bots/instagram/helpers/urls'
 

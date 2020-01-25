@@ -26,19 +26,16 @@ You will need NodeJS current version or LTS on your machine to run the bot(s), a
 ```
 $ npm i
 ```
+Once it's done installing npm dependencies, it will run the Botmation CLI script to create the `./src/config.ts` file. Hit "y" when it prompts you if you want to create it now, then follow the questionnaire to completion, then it will automatically generate the file for you. This is a necessary step to get the example Instagram bot running. 
 
-Then, inside the `src/` directory, create a `config.ts` file with the following, but replace the text inside the quotes with your Instagram account credentials of who, you want the bot to login as:
-```
-export const ACCOUNT_USERNAME = 'put your username here'
-export const ACCOUNT_PASSWORD = 'put your password here'
-```
+Note, if before a question-mark, there are parenthesis with some text inside, that text represents the default value accepted, if you simply hit enter, with no typing. When it comes to setting the cookies directory, we recommend going with the default value.
 
 Then build and run the example bot with this single command:
 ```
 $ npm run botmation
 ```
 
-It will run the example bot code found in `src/example_bot.ts` that will login to Instagram and take a photo. It's recommended to begin there.
+It will run the example bot code found in `src/example_bot.ts` that will login to Instagram. It's recommended to begin there.
 
 ## Architecture // Code Scaffolding
 

@@ -4,10 +4,7 @@ var fs = require('fs')
 const configFilePath = './src/config.ts'
 
 // Header Print
-console.log('#######################################')
-console.log('## Botmation: CLI Create "config.ts" ##')
-console.log('#######################################')
-emptyLine()
+printHeader()
 
 // 1. Detect if the config file has already been created
 try {
@@ -24,7 +21,7 @@ try {
 }
 
 function createConfigFileCLIWalkthrough() {
-  // 2. If it hasn't then run this script, else end
+  // 2. Check with the dev, if they want to use this script, since the config file is not a hard requirement
   if (readlineSync.keyInYN('Do you want to create it now?')) {
     // 'Y' key was pressed.
     okay()
@@ -42,6 +39,7 @@ function createConfigFileCLIWalkthrough() {
     
     //
     // Cookies Directory Path
+    // if the dev hits enter without entering any text, we provide the default value
     var cookiesDirectory = readlineSync.question('Directory for cookies (./assets/cookies/) ? ') || '/assets/cookies/'
     okay()
 
@@ -63,12 +61,16 @@ function okay() {
   console.log('Okay.\n')
 }
 function completeSuccess() {
-  console.log('All set, good bye!\n')
+  console.log('You\'re all set, good bye!\n')
+}
+function printHeader() {
+  console.log(' #######################################')
+  console.log(' ##          Botmation: CLI           ##')
+  console.log(' #######################################')
+  emptyLine()
 }
 
 function saveConfigFile(fileText) {
-  console.log('fileText = '+fileText)
-
   fs.writeFile(configFilePath, fileText, 'utf8', function (err) {
     if (err) {
       console.log('[ERROR] unable to create "./src/config.ts"\n')

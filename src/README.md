@@ -35,6 +35,6 @@ This project, originally, started out as a single bot, for Instagram. But, given
 
 So inside the `/bots` directory is a folder for each website this project supports. You're welcome to add your own, please do! Mostly, it's helper methods and actions, tailored for each website. There's a `selectors.ts` file in each folder, for the commonly used DOM selectors in interacting with the web page. 
 
-### Example Script
+### Example Instagram Bot
 
 Found in this directory, it's the main file `example_bot.ts`. It shows a strong pattern in using the `MationBot` class. If you're just starting out, I recommend following the "Getting Started" guide from the root project's README, then playing around with this file. It's the shortest path into, seeing what you, can get the bot to do :) Once you've written a `BotAction`, they're super easy to get lost in, so have fun! The main script is programmed to run the example bot (just read the "Getting Started" section in the root README)

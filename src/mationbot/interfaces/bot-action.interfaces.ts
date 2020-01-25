@@ -1,8 +1,5 @@
 import puppeteer from 'puppeteer'
 
-// Future: Have these extend NationBotActionFactory & NationBotAction, with the abilty to add on
-//         like for other injectables
-
 /**
  * @description   Base Interface for the Higher-Order Action implementations to enable IDE assistance, strong type checking, etc
  */

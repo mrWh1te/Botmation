@@ -32,7 +32,7 @@ export const login = ({username, password}: BotAuthOptions): BotAction => async(
     click(FORM_AUTH_SUBMIT_BUTTON_SELECTOR),
     waitForNavigation(),
     log('Login Complete'),
-    saveCookies('cookies')
+    saveCookies('instagram')
   )
 
 //

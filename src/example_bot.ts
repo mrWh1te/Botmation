@@ -10,13 +10,15 @@ import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
 
 // General BotAction's
 import { log, logError } from '@mationbot/actions/console'
-import { ifThen, screenshot, givenThat } from '@mationbot/actions/utilities'
+import { screenshot, givenThat, wait } from '@mationbot/actions/utilities'
 
 // Instagram specific BotAction's
 import { favoriteAllFrom } from '@bots/instagram/actions/feed'
 import { login, isGuest } from '@bots/instagram/actions/auth'
 import { loadCookies } from '@mationbot/actions/cookies'
 import { isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal } from '@bots/instagram/actions/modals'
+import { goTo } from '@mationbot/actions/navigation'
+import { getInstagramBaseUrl } from '@bots/instagram/helpers/urls'
 
 // Main Script
 (async () => {
@@ -45,14 +47,16 @@ import { isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal } from 
 
       // After initial load, Instagram sometimes prompts the User with a modal...
       // Deal with the "Turn On Notifications" Modal, if it shows up
-      ifThen(isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal()),
+      givenThat(isTurnOnNotificationsModalActive)(
+        closeTurnOnNotificationsModal()
+      ),
+
+      goTo(getInstagramBaseUrl()),
+      wait(5000),
       screenshot('feed'),
-      // wait(5000),
-      // goTo('feed'), // TODO: figure out the url, and request it anyway, to be sure we're on the feed page since it won't navigate if already there
-      favoriteAllFrom('user1', 'user2'),
-      log('Done interacting with feed, now going to view stories'),
-      // warning('3 sec delay'),
-      // wait(3000)
+
+      favoriteAllFrom('user1', 'user2'), // TBI (to be implemented)
+      log('Done with feed'),
     )
     //   viewAllStoriesFrom('user1', 'user2')
     

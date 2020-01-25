@@ -96,6 +96,7 @@ export class MationBot implements MationBotInterface {
   async destroy() {
     if (this.activeTab) {
       await this.activeTab.close()
+      console.log('') // add an empty line too console for separation upon next
     }
   }
 }

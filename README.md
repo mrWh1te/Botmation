@@ -19,7 +19,7 @@ Future:
 
 This project focuses on a composable way of chaining bot actions in linear sequences. Interfaced by, `BotAction`, the methods are used in a `MotionBot` instance call of `.actions()`. 
 
-That said, a `BotAction` can represent a whole other chain of actions, by using the `BotActionsChainFactory`. Finally, there is an "if block" `BotAction` called `givenThat()` for conditional action chains.
+That said, a `BotAction` can represent a whole other chain of actions, by using the `BotActionsChainFactory`. Also, there is an "if block" `BotAction` called `givenThat()` for conditional action chains.
 
 Let's see an example:
 ```typescript
@@ -95,9 +95,11 @@ Explore directories in the `src/` folder, to read more documentation on each res
 
 ### BotAction
 
+What you'll spend the majority of your time working with. These factory produced functions are how you control the bots.
+
 A `BotAction` is an async function (returns a promise) that uses a Puppeteer `Page` instance to crawl & interact with the web page (browser tab). They are de-coupled from the `MationBot` class and implement the `BotAction` interface. They are produced from factory methods following the `BotActionFactory` interface. That makes them customizable. These bots have a Declarative `actions()` method that is produced from the `BotActionsChainFactory` method. It's similar to the "pipe" syntax in RxJS, but we are not passing the result/output of one `BotAction` to the next. Hence, it's a chain of resolving promises.
 
-However, it's flexible, given the linear nature of chains. It's possible for a `BotAction` to represent another chain of `BotAction`'s, by re-using the `BotActionsChainFactory`! In theory, you can do this over and over, infinitely, chains of chains of chains.
+It's flexible, given the linear nature of chains. It's possible for a `BotAction` to represent another chain of `BotAction`'s, by re-using the `BotActionsChainFactory`! In theory, you can do this over and over, infinitely, chains of chains of chains.
 
 ### Selectors
 

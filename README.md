@@ -19,6 +19,39 @@ Future:
  - Management web app tool
  - Expanding upon injection to include data attached to the bot, and perhaps options
 
+This project is focuses on a composable way to chain bot actions, interfaced by `BotAction`. The simplest way to use them, is to chain them in a `MotionBot.actions()` call. But, the door is pretty open to your chains. 
+
+A bot action returns a promised to be resolved, before the next one in the list. Therefore, one can wrap a `BotAction` with a higher-order function to return a `BotAction`. You simply use the `BotActionsChainFactory` to build a list of `BotAction`'s.
+
+Let's see an example:
+```typescript
+    // ... removed imports for clarity ...
+
+    // Start up the Instagram bot with the Puppeteer Browser
+    const instagramBot = await MationBot.asyncConstructor(browser)
+
+    // Actions run in a linear sequence, as declared
+    await instagramBot.actions(
+      log('MationBot running'),
+      loadCookies('instagram'),
+      
+      // a special BotAction that works like an if() {}
+      givenThat(isGuest) (
+        screenshot('login'),
+        // a BotAction from our instagram package:
+        login({username: 'instagram username', password: 'instagram password'}) // automatically saves cookies for above loadCookes(...)
+      ),
+
+      goTo(getInstagramBaseUrl()),
+      wait(5000),
+      screenshot('feed'),
+
+      log('Done!'),
+    )
+```
+
+For a complete example, see the included [example_bot.ts](/https://github.com/mrWh1te/Botmation/blob/master/src/example_bot.ts).
+
 ## Getting Started
 
 You will need NodeJS LTS on your machine to run the bot(s). After you have that installed, install the npm dependencies with this command:

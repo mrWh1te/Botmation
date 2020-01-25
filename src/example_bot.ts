@@ -30,7 +30,6 @@ import { getInstagramBaseUrl } from '@bots/instagram/helpers/urls'
     browser = await puppeteer.launch({headless: false})
 
     // Start up the Instagram bot to run in the Puppeteer Browser
-    // Apart from setup, it handles logging in so your bot is ready to go
     const instagramBot = await MationBot.asyncConstructor(browser)
 
     // Actions run in sequence

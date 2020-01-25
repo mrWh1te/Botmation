@@ -56,3 +56,62 @@ export const givenThat =
           await BotActionsChainFactory(tab)(...actions)
         }
       }
+
+/**
+ * 
+ */
+export interface Dictionary {
+  [key: string]: any
+}
+export const forEvery =
+  (collection: any[]) =>
+    (iteratingFunction: (tab: puppeteer.Page, ...args: any[]) => Promise<void>) =>
+      async(tab: puppeteer.Page) => {
+        for(let i = 0; i < collection.length; i++) {
+          await iteratingFunction(tab, collection[i])
+        }
+      }
+// export const forEvery = 
+//   // support numerical index (array), or key based (object)
+//   (collection: any[] | Dictionary) => 
+//     (
+//       iteratingFunction: (...args: any[]) => 
+//         (...actions: BotAction[]) =>
+//           (page: puppeteer.Page) => 
+//             Promise<void> 
+
+
+//         // (...actions: BotAction[]): Promise<void> =>
+//         //   await BotActionsChainFactory()
+//     ) => 
+//       async(tab: puppeteer.Page) => {
+//         if (Array.isArray(collection)) {
+//           for(let i = 0; i < collection.length; i++) {
+//             // await BotActionsChainFactory(tab)(...actions)
+//             await iteratingFunction()()(tab)
+//           }
+//         } else {
+
+//         }
+//       }
+
+      // @example
+      // forEvery(['google.com', 'facebook.com'])(
+      //   (siteName) => (
+      //     // actions list
+      //     screenshot(siteName+'homepage'),
+      //   )
+      // )
+    
+
+      // async(tab: puppeteer.Page) => {
+      //   if (await condition(tab)) {
+      //     await BotActionsChainFactory(tab)(...actions)
+      //   }
+      // }
+
+      // async function asyncForEach(array: any[], callback: Function) {
+      //   for (let index = 0; index < array.length; index++) {
+      //     await callback(array[index], index, array)
+      //   }
+      // }

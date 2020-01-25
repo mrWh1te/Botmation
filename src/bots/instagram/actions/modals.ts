@@ -3,11 +3,9 @@
  */
 import puppeteer from 'puppeteer'
 
-import { MAIN_MODAL_HEADER_SELECTOR } from '@bots/instagram/selectors'
 import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
 
-const TURN_OFF_NOTIFICATIONS_MODAL_HEADER_TEXT = 'Turn on Notifications'
-const TURN_OFF_NOTIFICATIONS_BUTTON_LABEL = 'Not Now'
+import { TURN_OFF_NOTIFICATIONS_BUTTON_LABEL } from '@bots/instagram/constants/modals'
 
 /**
  * @description   Bot action that closes the "Turn on Notifications" modal by clicking a "no" option
@@ -15,17 +13,9 @@ const TURN_OFF_NOTIFICATIONS_BUTTON_LABEL = 'Not Now'
 export const closeTurnOnNotificationsModal = (): BotAction => async (tab: puppeteer.Page): Promise<void> => {
   // click button with text "Not Now" inside the dialog
   // we don't want to deal with Notifications within the web app
-  const [button] = await tab.$x("//button[contains(., '"+TURN_OFF_NOTIFICATIONS_BUTTON_LABEL+"')]")
+  const [button] = await tab.$x("//button[contains(., '" + TURN_OFF_NOTIFICATIONS_BUTTON_LABEL + "')]")
   if (button) {
     await button.click()
   }
 }
 
-//
-// Helpers
-export const isTurnOnNotificationsModalActive = async(tab: puppeteer.Page): Promise<boolean> => {
-  const modalHeader = await tab.$(MAIN_MODAL_HEADER_SELECTOR)
-  const modalHeaderText = await tab.evaluate(el => el === null || el.textContent === null ? '' : el.textContent, modalHeader)
-
-  return modalHeader !== null && modalHeaderText === TURN_OFF_NOTIFICATIONS_MODAL_HEADER_TEXT
-}

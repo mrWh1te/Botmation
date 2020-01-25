@@ -11,14 +11,18 @@ import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
 // General BotAction's
 import { log, logError } from '@mationbot/actions/console'
 import { screenshot, givenThat, wait } from '@mationbot/actions/utilities'
+import { loadCookies } from '@mationbot/actions/cookies'
+import { goTo } from '@mationbot/actions/navigation'
 
 // Instagram specific BotAction's
 import { favoriteAllFrom } from '@bots/instagram/actions/feed'
-import { login, isGuest } from '@bots/instagram/actions/auth'
-import { loadCookies } from '@mationbot/actions/cookies'
-import { isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal } from '@bots/instagram/actions/modals'
-import { goTo } from '@mationbot/actions/navigation'
+import { login } from '@bots/instagram/actions/auth'
+import { closeTurnOnNotificationsModal } from '@bots/instagram/actions/modals'
+
+// Instagram helpers
 import { getInstagramBaseUrl } from '@bots/instagram/helpers/urls'
+import { isGuest } from '@bots/instagram/helpers/auth'
+import { isTurnOnNotificationsModalActive } from '@bots/instagram/helpers/modals'
 
 // Main Script
 (async () => {

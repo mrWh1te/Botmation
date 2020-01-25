@@ -2,7 +2,7 @@
   "name": "botmation",
   "version": "0.0.1",
   "description": "A Puppeteer Library that provides a declarative syntax for web crawler automation",
-  "main": "build/example_bot.js",
+  "main": "./build/example_bot.js",
   "scripts": {
     "build": "tsc",
     "bot": "node .",

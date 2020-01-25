@@ -4,8 +4,8 @@ import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
 import { BotActionsChainFactory } from '@mationbot/factories/bot-actions-chain.factory'
 
 import { goTo, waitForNavigation } from '@mationbot/actions/navigation'
-import { click, type, ifThen } from '@mationbot/actions/utilities'
-import { log, logMessage } from '@mationbot/actions/console'
+import { click, type } from '@mationbot/actions/utilities'
+import { log } from '@mationbot/actions/console'
 
 import { getInstagramLoginUrl } from '@bots/instagram/helpers/urls'
 import { BotAuthOptions } from '@mationbot/interfaces/bot-options.interfaces'
@@ -54,7 +54,5 @@ export const isGuest = async(tab: puppeteer.Page): Promise<boolean> => {
   
   // if you're logged in, Instagram would have redirected you to the feed
   // if you were a guest, logged out, you would be on the Instagram Login URL
-  const isGuest: boolean = tab.url() === getInstagramLoginUrl()
-  logMessage('isGuest = ' + isGuest)
-  return isGuest
+  return tab.url() === getInstagramLoginUrl()
 }

@@ -15,5 +15,11 @@
       "@config": ["config"],
       "@bots/*": ["bots/*"]
     }
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "assets",
+    "scripts",
+    "build"
+  ]
 }

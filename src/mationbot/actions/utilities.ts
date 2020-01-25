@@ -55,6 +55,9 @@ export const ifThen = (condition: (tab: puppeteer.Page) => Promise<boolean>, act
  * @description givenThat(promise resolves to TRUE)(then run this action(...))
  *              A function that returns a function that returns a function
  *              BotFactoryProvider -> BotFactoryAction -> BotAction
+ * 
+ *              In essence, a BotAction to run a given BotAction (2nd usage call) on a promised condition (1st usage call)
+ * @example     givenThat(isGuest)(login(...))
  * @param condition 
  */
 export const givenThat = (condition: (tab: puppeteer.Page) => Promise<boolean>) => (action: BotAction): BotAction => async(tab: puppeteer.Page) => {

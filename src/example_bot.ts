@@ -36,7 +36,10 @@ import { isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal } from 
       log('MationBot running'),
       loadCookies('instagram'),
       
-      givenThat(isGuest)(login({username: ACCOUNT_USERNAME, password: ACCOUNT_PASSWORD})),
+      givenThat(isGuest) ( // functional if xD
+        login({username: ACCOUNT_USERNAME, password: ACCOUNT_PASSWORD})
+        // TODO: add the actions chain factory to the resolution of this BotAction to enable a chain here!
+      ),
 
       // After initial load, Instagram sometimes prompts the User with a modal...
       // Deal with the "Turn On Notifications" Modal, if it shows up

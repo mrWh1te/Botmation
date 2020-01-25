@@ -7,6 +7,7 @@ import { getPageScreenshotLocalFileUrl } from '@helpers/assets'
 
 import { sleep } from '@mationbot/helpers/utilities'
 import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
+import { BotActionsChainFactory } from '@mationbot/factories/bot-actions-chain.factory'
 
 /**
  * @description   Pauses the bot for the provided milliseconds before letting it execute the next Action
@@ -60,8 +61,11 @@ export const ifThen = (condition: (tab: puppeteer.Page) => Promise<boolean>, act
  * @example     givenThat(isGuest)(login(...))
  * @param condition 
  */
-export const givenThat = (condition: (tab: puppeteer.Page) => Promise<boolean>) => (action: BotAction): BotAction => async(tab: puppeteer.Page) => {
-  if (await condition(tab)) {
-    await action(tab)
-  }
-}
+export const givenThat = 
+  (condition: (tab: puppeteer.Page) => Promise<boolean>) => 
+    (...actions: BotAction[]): BotAction => 
+      async(tab: puppeteer.Page) => {
+        if (await condition(tab)) {
+          await BotActionsChainFactory(tab)(...actions)
+        }
+      }

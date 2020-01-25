@@ -58,7 +58,7 @@ export const ifThen = (condition: (tab: puppeteer.Page) => Promise<boolean>, act
  *              BotFactoryProvider -> BotFactoryAction -> BotAction
  * 
  *              In essence, a BotAction to run a given BotAction (2nd usage call) on a promised condition (1st usage call)
- * @example     givenThat(isGuest)(login(...))
+ * @example     givenThat(isGuest)(login(...), closeSomePostLoginModal(),... more BotAction's)
  * @param condition 
  */
 export const givenThat = 

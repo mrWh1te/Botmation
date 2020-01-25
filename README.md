@@ -48,7 +48,7 @@ Let's see an example:
       
       // a special BotAction that works like an if() {}
       givenThat(isGuest) (
-        screenshot('login'),
+        screenshot('login'), // saves screenshot as "login.png" in the screenshots directory
         // a BotAction from our instagram package:
         login({username: 'instagram username', password: 'instagram password'}) // automatically saves cookies
       ),

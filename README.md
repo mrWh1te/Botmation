@@ -21,7 +21,7 @@ This project focuses on a composable way of chaining bot actions in linear seque
 
 That said, a `BotAction` can represent a whole other chain of actions, by using the `BotActionsChainFactory`. Also, there is an "if block" `BotAction` called `givenThat()` for running a chain of actions, if the condition proves TRUE.
 
-Let's see an example:
+Let's see some code:
 ```typescript
     import 'module-alias/register'
     import puppeteer from 'puppeteer'

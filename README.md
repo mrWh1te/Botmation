@@ -41,10 +41,10 @@ Let's see an example:
     import { getInstagramBaseUrl } from '@bots/instagram/helpers/urls'
 
     // Start up the Instagram bot with the Puppeteer Browser
-    const instagramBot = await MationBot.asyncConstructor(browser)
+    const bot = await MationBot.asyncConstructor(browser)
 
     // Actions run in a linear sequence, as declared
-    await instagramBot.actions(
+    await bot.actions(
       log('MationBot running'),
       loadCookies('instagram'),
       

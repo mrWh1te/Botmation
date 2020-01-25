@@ -21,21 +21,19 @@ Future:
 
 ## Getting Started
 
-You will need NodeJS current version or LTS on your machine to run the bot(s), as of writing this. After you have that installed, install the npm dependencies with this command:
+You will need NodeJS LTS on your machine to run the bot(s). After you have that installed, install the npm dependencies with this command:
 
 ```
 $ npm i
 ```
-Once it's done installing npm dependencies, it will run the Botmation CLI script to create the `./src/config.ts` file. Hit "y" when it prompts you if you want to create it now, then follow the questionnaire to completion, then it will automatically generate the file for you. This is a necessary step to get the example Instagram bot running. 
-
-Note, if before a question-mark, there are parenthesis with some text inside, that text represents the default value accepted, if you simply hit enter, with no typing. When it comes to setting the cookies directory, we recommend going with the default value.
+Once that's done, it will automatically run the Botmation CLI script, `createConfigFile`, to create the `./src/config.ts` file for you, following a short prompt. It will ask you for Instagram username and password for the example bot, as well as the cookies directory (which if you're not changing, you can just hit "enter" without typing anything for that)
 
 Then build and run the example bot with this single command:
 ```
 $ npm run botmation
 ```
 
-It will run the example bot code found in `src/example_bot.ts` that will login to Instagram. It's recommended to begin there.
+It will run the example bot code found in `src/example_bot.ts`, which will login to Instagram with the credentials you provided in the script. It's recommended to begin experimenting with that file first.
 
 ## Architecture // Code Scaffolding
 
@@ -99,6 +97,11 @@ $ npm run bot
 ```
 
 This will run the example bot found here: `./src/example_bot.ts`
+
+If you want to change the credentials of the Instagram bot for the example_bot code, mentioned above, simply run this command:
+```
+$ npm run createConfigFile
+```
 
 ## Help
 

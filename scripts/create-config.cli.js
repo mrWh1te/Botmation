@@ -40,7 +40,7 @@ function createConfigFileCLIWalkthrough() {
     //
     // Cookies Directory Path
     // if the dev hits enter without entering any text, we provide the default value
-    var cookiesDirectory = readlineSync.question('Directory for cookies (./assets/cookies/) ? ') || '/assets/cookies/'
+    var cookiesDirectory = readlineSync.question('Directory for cookies (./assets/cookies/) ? ') || './assets/cookies/'
     okay()
 
     //

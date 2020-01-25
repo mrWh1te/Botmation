@@ -25,7 +25,20 @@ A bot action returns a promised to be resolved, before the next one in the list.
 
 Let's see an example:
 ```typescript
-    // ... removed imports for clarity ...
+    import 'module-alias/register'
+    import puppeteer from 'puppeteer'
+
+    import { MationBot } from '@mationbot'
+
+    // General BotAction's
+    import { log } from '@mationbot/actions/console'
+    import { screenshot, givenThat, wait } from '@mationbot/actions/utilities'
+
+    // Instagram specific BotAction's
+    import { loadCookies } from '@mationbot/actions/cookies'
+    import { goTo } from '@mationbot/actions/navigation'
+    import { login, isGuest } from '@bots/instagram/actions/auth'
+    import { getInstagramBaseUrl } from '@bots/instagram/helpers/urls'
 
     // Start up the Instagram bot with the Puppeteer Browser
     const instagramBot = await MationBot.asyncConstructor(browser)
@@ -39,7 +52,7 @@ Let's see an example:
       givenThat(isGuest) (
         screenshot('login'),
         // a BotAction from our instagram package:
-        login({username: 'instagram username', password: 'instagram password'}) // automatically saves cookies for above loadCookes(...)
+        login({username: 'instagram username', password: 'instagram password'}) // automatically saves cookies
       ),
 
       goTo(getInstagramBaseUrl()),

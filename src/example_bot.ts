@@ -45,13 +45,10 @@ const forEach = () => {}
 
       // forEach test / dev
       forEvery(['google.com', 'facebook.com'])(
-        async (tab, siteName) => {
-          // actions list
-          await BotActionsChainFactory(tab)(
-            goTo('http://'+siteName),
-            screenshot(siteName+'-homepage')
-          )
-        }
+        (siteName) => ([
+          goTo('http://'+siteName),
+          screenshot(siteName+'-homepage')
+        ])
       ),
 
 

@@ -61,7 +61,7 @@ Let's see an example:
     )
 ```
 
-For a complete example, see the included [example_bot.ts](/https://github.com/mrWh1te/Botmation/blob/master/src/example_bot.ts).
+For a complete example, see the included [example_bot.ts](/src/example_bot.ts).
 
 ## Getting Started
 

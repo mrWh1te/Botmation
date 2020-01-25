@@ -38,10 +38,21 @@ function createConfigFileCLIWalkthrough() {
     okay()
     
     //
-    // Cookies Directory Path
+    // TODO: directories: assets, assets/screenshots
     // if the dev hits enter without entering any text, we provide the default value
-    var cookiesDirectory = readlineSync.question('Directory for cookies (./assets/cookies/) ? ') || './assets/cookies/'
+    var rootAssetsDirectory = readlineSync.question('Root directory name for all generated assets (assets) ? ') || 'assets' // TODO: adjust code, to prepend './' to ./assets
     okay()
+    
+    //
+    // Cookies Directory
+    // if the dev hits enter without entering any text, we provide the default value
+    var cookiesDirectory = readlineSync.question('Directory name for cookies (cookies) ? ') || 'cookies' // TODO: update code to append backslash (removed it after cookies/, look at cookie code)
+    okay()
+
+    //
+    // Screenshots Directory
+    // if the dev hits enter without entering any text, we provide the default value
+    var sceenshotsDirectory = readlineSync.question('Directory name for screenshots (screenshots) ? ') || 'screenshots' // TODO: adjust code to remove "pages" from current screenshots saving
 
     //
     // Data collected, now let's create the config file

@@ -100,7 +100,7 @@ This will run the example bot found here: `./src/example_bot.ts`
 
 If you want to change the credentials of the Instagram bot for the example_bot code, mentioned above, simply run this command:
 ```
-$ npm run createConfigFile
+$ npm run createconfigfile
 ```
 
 ## Help

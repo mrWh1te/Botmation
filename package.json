@@ -7,8 +7,8 @@
     "build": "tsc",
     "bot": "node .",
     "botmation": "npm run build && npm run bot",
-    "createConfigFile": "node ./scripts/create-config.cli.js",
-    "postinstall": "npm run createConfigFile"
+    "createconfigfile": "node ./scripts/create-config.cli.js",
+    "postinstall": "npm run createconfigfile"
   },
   "keywords": [
     "social",

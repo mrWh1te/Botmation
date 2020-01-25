@@ -33,10 +33,10 @@ Let's see an example:
     // General BotAction's
     import { log } from '@mationbot/actions/console'
     import { screenshot, givenThat, wait } from '@mationbot/actions/utilities'
-
-    // Instagram specific BotAction's
     import { loadCookies } from '@mationbot/actions/cookies'
     import { goTo } from '@mationbot/actions/navigation'
+
+    // Instagram specific BotAction's
     import { login, isGuest } from '@bots/instagram/actions/auth'
     import { getInstagramBaseUrl } from '@bots/instagram/helpers/urls'
 

@@ -17,9 +17,9 @@ Future:
  - Management web app tool
  - Expanding upon injection to include data attached to the bot, and perhaps options
 
-This project is focuses on a composable way to chain bot actions, interfaced by `BotAction`. The simplest way to use them, is to chain them in a `MotionBot.actions()` call. But, the door is pretty open to your chains. 
+This project focuses on a composable way of chaining bot actions in linear sequences. Interfaced by, `BotAction`, the methods are used in a `MotionBot` instance call of `.actions()`. 
 
-A bot action returns a promised to be resolved, before the next one in the list. Therefore, one can wrap a `BotAction` with a higher-order function to return a `BotAction`. You simply use the `BotActionsChainFactory` to build a list of `BotAction`'s.
+That said, a `BotAction` can represent a whole other chain of actions, by using the `BotActionsChainFactory`. Finally, there is an "if block" `BotAction` called `givenThat()` for conditional action chains.
 
 Let's see an example:
 ```typescript

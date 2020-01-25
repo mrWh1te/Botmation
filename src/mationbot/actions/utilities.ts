@@ -3,8 +3,9 @@
  */
 import puppeteer from 'puppeteer'
 
-import { sleep } from '@mationbot/helpers/utilities'
+import { getPageScreenshotLocalFileUrl } from '@helpers/assets'
 
+import { sleep } from '@mationbot/helpers/utilities'
 import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
 
 /**
@@ -29,6 +30,14 @@ export const type = (copy: string): BotAction => async(tab: puppeteer.Page) =>
   await tab.keyboard.type(copy)
 
 /**
+ * @description   Take a PNG screenshot of the current page
+ * @param fileName name of the file to save the PNG as
+ */
+export const screenshot = (fileName: string): BotAction => async(tab: puppeteer.Page) => {
+  await tab.screenshot({path: getPageScreenshotLocalFileUrl(`${fileName}.png`)})
+}
+
+  /**
  * @description  Expirmental `BotActionFactory` If condition resolves to TRUE, then we'll run the action
  *               It provides the developer a way to run an async function for a boolean value to be tested against for TRUE. If that awaited value is true, then it will run the second paramter, the `BotAction`
  *               In case the `condition` async function requires the puppeteer active tab, to crawl/interact in determining TRUE||FALSE, it's injected there as well as the BotAction
@@ -40,3 +49,4 @@ export const ifThen = (condition: (tab: puppeteer.Page) => Promise<boolean>, act
     await action(tab)
   }
 }
+

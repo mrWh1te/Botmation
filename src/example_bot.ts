@@ -9,8 +9,8 @@ import { MationBot } from '@mationbot'
 import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
 
 // General BotAction's
-import { warning, log, logError } from '@mationbot/actions/console'
-import { wait, ifThen } from '@mationbot/actions/utilities'
+import { log, logError } from '@mationbot/actions/console'
+import { ifThen, screenshot } from '@mationbot/actions/utilities'
 
 // Instagram specific BotAction's
 import { favoriteAllFrom } from '@bots/instagram/actions/feed'
@@ -39,6 +39,7 @@ import { isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal } from 
       // After initial load, Instagram sometimes prompts the User with a modal...
       // Deal with the "Turn On Notifications" Modal, if it shows up
       ifThen(isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal()),
+      screenshot('feed'),
       // wait(5000),
       // goTo('feed'), // TODO: figure out the url, and request it anyway, to be sure we're on the feed page since it won't navigate if already there
       favoriteAllFrom('user1', 'user2'),

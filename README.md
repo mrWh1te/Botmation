@@ -23,7 +23,6 @@ That said, a `BotAction` can represent a whole other chain of actions, by using 
 
 Let's see some code:
 ```typescript
-    import 'module-alias/register'
     import puppeteer from 'puppeteer'
 
     import { MationBot } from '@mationbot'

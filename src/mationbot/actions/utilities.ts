@@ -39,12 +39,13 @@ export const screenshot = (fileName: string): BotAction => async(tab: puppeteer.
 }
 
 /**
- * @description givenThat(promise resolves to TRUE)(then run this action(...))
+ * @description givenThat(promise resolves to TRUE)(then run these actions in a chain)
  *              A function that returns a function that returns a function
  *              BotFactoryProvider -> BotFactoryAction -> BotAction
  * 
- *              In essence, a BotAction to run a given BotAction (2nd usage call) on a promised condition (1st usage call)
+ *              In essence, this is a BotAction to run a provided chain of BotActions (2nd usage call), given that a promised condition (1st usage call) resolves to TRUE
  * @example     givenThat(isGuest)(login(...), closeSomePostLoginModal(),... more BotAction's)
+ *              The condition function is async and provided the Puppeteer page instance so you can use it to determine TRUE/FALSE
  * @param condition 
  */
 export const givenThat = 

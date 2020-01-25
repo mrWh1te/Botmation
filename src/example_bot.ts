@@ -34,7 +34,6 @@ import { isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal } from 
     // Actions run in sequence
     await instagramBot.actions(
       log('MationBot running'),
-      log('instagram!!!'),
       loadCookies('instagram'),
       ifThen(isGuest, login({username: ACCOUNT_USERNAME, password: ACCOUNT_PASSWORD})),
       // After initial load, Instagram sometimes prompts the User with a modal...

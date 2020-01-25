@@ -36,10 +36,7 @@ import { isTurnOnNotificationsModalActive, closeTurnOnNotificationsModal } from 
       log('MationBot running'),
       loadCookies('instagram'),
       
-      // ifThen(isGuest, login({username: ACCOUNT_USERNAME, password: ACCOUNT_PASSWORD})),
       givenThat(isGuest)(login({username: ACCOUNT_USERNAME, password: ACCOUNT_PASSWORD})),
-      // if(isGuest)then(login(...)) // ?
-      // maybe... if(isGuest)(login(...)) // !
 
       // After initial load, Instagram sometimes prompts the User with a modal...
       // Deal with the "Turn On Notifications" Modal, if it shows up

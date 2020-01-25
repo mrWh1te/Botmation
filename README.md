@@ -19,7 +19,7 @@ Future:
 
 This project focuses on a composable way of chaining bot actions in linear sequences. Interfaced by, `BotAction`, the methods are used in a `MotionBot` instance call of `.actions()`. 
 
-That said, a `BotAction` can represent a whole other chain of actions, by using the `BotActionsChainFactory`. Also, there is an "if block" `BotAction` called `givenThat()` for conditional action chains.
+That said, a `BotAction` can represent a whole other chain of actions, by using the `BotActionsChainFactory`. Also, there is an "if block" `BotAction` called `givenThat()` for running a chain of actions, if the condition proves TRUE.
 
 Let's see an example:
 ```typescript

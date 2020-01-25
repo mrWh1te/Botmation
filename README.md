@@ -2,9 +2,7 @@
 
 A NodeJS bot, called `MationBot`, for Declaratively using [Puppeteer](https://github.com/puppeteer/puppeteer) in crawling & interacting with the web.
 
-Bot / Auto + mation => Bot + mation
-
-This is a take-over project for [Instamation](https://github.com/mrWh1te/Instamation). Please use this, instead of that.
+Bot // Auto + mation => Bot + mation
 
 ## Overview
 

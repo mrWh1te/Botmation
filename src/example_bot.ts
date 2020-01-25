@@ -51,6 +51,11 @@ const forEach = () => {}
         ])
       ),
 
+      forEvery(['twitter.com'])(
+        (siteName) => goTo('http://'+siteName)
+      ),
+      wait(5000),
+
 
       // loadCookies('instagram'),
 

@@ -72,9 +72,14 @@ export interface Dictionary {
 }
 export const forEvery =
   (collection: any[]) =>
-    (iteratingFunction: (...args: any[]) => BotAction[]) =>
+    (iteratingFunction: (...args: any[]) => BotAction[] | BotAction) =>
       async(tab: puppeteer.Page) => {
         for(let i = 0; i < collection.length; i++) {
-          await BotActionsChainFactory(tab)(...iteratingFunction(collection[i]))
+          const iteratingFunctionResult = iteratingFunction(collection[i])
+          if (Array.isArray(iteratingFunctionResult)) {
+            await BotActionsChainFactory(tab)(...iteratingFunctionResult as Array<BotAction>)
+          } else {
+            await BotActionsChainFactory(tab)(iteratingFunctionResult)
+          }
         }
       }

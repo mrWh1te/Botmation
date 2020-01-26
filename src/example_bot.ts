@@ -23,7 +23,7 @@ import { closeTurnOnNotificationsModal } from '@bots/instagram/actions/modals'
 import { getInstagramBaseUrl } from '@bots/instagram/helpers/urls'
 import { isGuest } from '@bots/instagram/helpers/auth'
 import { isTurnOnNotificationsModalActive } from '@bots/instagram/helpers/modals'
-import { screenshot } from '@mationbot/actions/output'
+import { screenshot, screenshotAll } from '@mationbot/actions/output'
 
 // Main Script
 (async () => {
@@ -37,9 +37,11 @@ import { screenshot } from '@mationbot/actions/output'
     'nytimes.com',
     'foxnews.com',
     'wsj.com',
-    'reuters.com',
-    'bloomberg.com',
+    // 'reuters.com',
+    // 'bloomberg.com',
     'forbes.com',
+    'global.chinadaily.com.cn',
+    'timesofindia.indiatimes.com'
   ]
 
   // Wrap in try/catch, because the bot will throw on Errors requiring dev attention
@@ -55,15 +57,17 @@ import { screenshot } from '@mationbot/actions/output'
       log('MationBot running'),
 
       // script to take screenshots of popular news sites
-      forAll(newsSites)(
-        (siteName) => ([
-          goTo('http://'+siteName),
-          screenshot(siteName+'-homepage')
-        ])
-      ),
+      // forAll(newsSites)(
+      //   (siteName) => ([
+      //     goTo('http://'+siteName),
+      //     screenshot(siteName+'-homepage')
+      //   ])
+      // ),
+      screenshotAll(...newsSites),
+
 
       // example forAll using 1 BotAction instead of an array
-      forAll(['twiiter.com', 'seom.com'])((siteName) => goTo('http://' + siteName)),
+      forAll(['twitter.com', 'facebook.com'])((siteName) => goTo('http://' + siteName)),
 
       // example forAll on a Dictionary with key->value pairs
       forAll({id: 'twitter.com', id2: 'apple.com', id4: 'google.com'})(

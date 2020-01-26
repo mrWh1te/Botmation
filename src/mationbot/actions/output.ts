@@ -16,14 +16,17 @@ export const screenshot = (fileName: string): BotAction => async(tab: puppeteer.
 }
 
 /**
- * @description    
+ * @description    given a list of websites, the bot will visit each, wait for them to load, then take a screenshot to save in the escreenshot directory
  * @param sites ['example.com', 'whatever.com']
+ * @example   screenshotAll('google.com', 'twitter.com')
+ * @experimental
+ * @request   add ability like via a closure, to customize the filename for easier reuse in a cycle (like ability to timestamp the file etc)
  */
 export const screenshotAll = (...sites: string[]): BotAction => async(tab: puppeteer.Page) =>
-  await forAll(sites)( // await needed?
+  forAll(sites)( // await needed?
     (siteName) => ([
       goTo('http://' + siteName),
-      screenshot(siteName+'-homepage')
+      screenshot(siteName)
     ])
   )(tab) 
 

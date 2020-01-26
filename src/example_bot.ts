@@ -10,7 +10,7 @@ import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
 
 // General BotAction's
 import { log, logError } from '@mationbot/actions/console'
-import { givenThat, wait, forEvery } from '@mationbot/actions/utilities'
+import { givenThat, wait, forAll } from '@mationbot/actions/utilities'
 import { loadCookies } from '@mationbot/actions/cookies'
 import { goTo } from '@mationbot/actions/navigation'
 
@@ -29,6 +29,19 @@ import { screenshot } from '@mationbot/actions/output'
 (async () => {
   let browser: puppeteer.Browser
 
+  // mini side project, to scrape and harvest data of news sites over years
+  // then run the data against NLP scripts, etc. to look for interesting patterns
+  // https://www.w3newspapers.com/newssites/
+  const newsSites = [
+    'cnn.com',
+    'nytimes.com',
+    'foxnews.com',
+    'wsj.com',
+    'reuters.com',
+    'bloomberg.com',
+    'forbes.com',
+  ]
+
   // Wrap in try/catch, because the bot will throw on Errors requiring dev attention
   try {
     // Launch Puppeteer to grab the Browser it manages
@@ -41,17 +54,19 @@ import { screenshot } from '@mationbot/actions/output'
     await instagramBot.actions(
       log('MationBot running'),
 
-      // forEach test / dev
-      forEvery(['twitter.com', 'apple.com'])(
+      // script to take screenshots of popular news sites
+      forAll(newsSites)(
         (siteName) => ([
           goTo('http://'+siteName),
           screenshot(siteName+'-homepage')
         ])
       ),
 
-      forEvery(['twiiter.com', 'seom.com'])((siteName) => goTo('http://' + siteName)),
+      // example forAll using 1 BotAction instead of an array
+      forAll(['twiiter.com', 'seom.com'])((siteName) => goTo('http://' + siteName)),
 
-      forEvery({id: 'twitter.com', id2: 'apple.com', id4: 'google.com'})(
+      // example forAll on a Dictionary with key->value pairs
+      forAll({id: 'twitter.com', id2: 'apple.com', id4: 'google.com'})(
         (key: string, value: any) => ([
           goTo('http://'+value),
           screenshot(key+value+'---homepage')

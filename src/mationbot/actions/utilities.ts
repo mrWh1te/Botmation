@@ -49,7 +49,7 @@ export const givenThat =
  *                  then loop through a list of websites to apply those actions on
  *                This permits that
  * @example    with an array for collection
- *  forEvery(['google.com', 'facebook.com'])(
+ *  forAll(['google.com', 'facebook.com'])(
  *    (siteName) => ([ // you can name the variable whatever you want in the closure
  *      goTo('http://' + siteName),
  *      screenshot(siteName + '-homepage')
@@ -57,7 +57,7 @@ export const givenThat =
  *  )
  * 
  * @example    with a dictionary for collection
- *  forEvery({id: 'google.com', someOtherKey: 'apple.com'})(
+ *  forAll({id: 'google.com', someOtherKey: 'apple.com'})(
  *    (key, siteName) => ([
  *      goTo('http://' + siteName)
  *      screenshot(key + siteName + '-homepage')
@@ -65,14 +65,14 @@ export const givenThat =
  *  )
  * 
  * @example   a 1 action script example
- *  forEvery(['google.com'])(
+ *  forAll(['google.com'])(
  *    (siteName) => goTo('http://' + siteName) // or a custom BotAction!
  *  )
  */
 export interface Dictionary {
   [key: string]: any // (key -> value) pairs
 }
-export const forEvery =
+export const forAll =
   (collection: any[] | Dictionary) =>
     (botActionOrActionsFactory: (...args: any[]) => BotAction[] | BotAction) =>
       async(tab: puppeteer.Page) => {

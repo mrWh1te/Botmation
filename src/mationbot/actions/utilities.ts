@@ -5,7 +5,7 @@ import puppeteer from 'puppeteer'
 
 import { getPageScreenshotLocalFileUrl } from '@helpers/assets'
 
-import { sleep } from '@mationbot/helpers/utilities'
+import { sleep, applyBotActionOrActions } from '@mationbot/helpers/utilities'
 import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
 import { BotActionsChainFactory } from '@mationbot/factories/bot-actions-chain.factory'
 
@@ -58,28 +58,51 @@ export const givenThat =
       }
 
 /**
- * @example    
+ * @description   Special BotAction that can take an array of stuff or an object of key value pairs
+ *                to iterate over while applying the closure (function) provided
+ *                The closure's purpose is simply to return a BotAction or BotAction[], but you can run code beforehand!
+ * 
+ *                The original use-case for this concept, was to be able to re-apply a script on multiple websites via a loop
+ *                I've seen multiple examples online, of people using Puppeteer to write a script of actions
+ *                  then loop through a list of websites to apply those actions on
+ *                This permits that
+ * @example    with an array for collection
  *  forEvery(['google.com', 'facebook.com'])(
- *    (siteName) => ([
- *      goTo('http://'+siteName),
- *      screenshot(siteName+'-homepage')
+ *    (siteName) => ([ // you can name the variable whatever you want in the closure
+ *      goTo('http://' + siteName),
+ *      screenshot(siteName + '-homepage')
  *    ])
  *  )
-)
+ * 
+ * @example    with a dictionary for collection
+ *  forEvery({id: 'google.com', someOtherKey: 'apple.com'})(
+ *    (key, siteName) => ([
+ *      goTo('http://' + siteName)
+ *      screenshot(key + siteName + '-homepage')
+ *    ])
+ *  )
+ * 
+ * @example   a 1 action script example
+ *  forEvery(['google.com'])(
+ *    (siteName) => goTo('http://' + siteName) // or a custom BotAction!
+ *  )
  */
 export interface Dictionary {
-  [key: string]: any
+  [key: string]: any // (key -> value) pairs
 }
 export const forEvery =
-  (collection: any[]) =>
-    (iteratingFunction: (...args: any[]) => BotAction[] | BotAction) =>
+  (collection: any[] | Dictionary) =>
+    (botActionOrActionsFactory: (...args: any[]) => BotAction[] | BotAction) =>
       async(tab: puppeteer.Page) => {
-        for(let i = 0; i < collection.length; i++) {
-          const iteratingFunctionResult = iteratingFunction(collection[i])
-          if (Array.isArray(iteratingFunctionResult)) {
-            await BotActionsChainFactory(tab)(...iteratingFunctionResult as Array<BotAction>)
-          } else {
-            await BotActionsChainFactory(tab)(iteratingFunctionResult)
+        if (Array.isArray(collection)) {
+          // Array
+          for(let i = 0; i < collection.length; i++) {
+            await applyBotActionOrActions(tab, botActionOrActionsFactory(collection[i]))
+          }
+        } else {
+          // Dictionary
+          for (const [key, value] of Object.entries(collection)) {
+            await applyBotActionOrActions(tab, botActionOrActionsFactory(key, value))
           }
         }
       }

@@ -44,18 +44,19 @@ const forEach = () => {}
       log('MationBot running'),
 
       // forEach test / dev
-      forEvery(['google.com', 'facebook.com'])(
+      forEvery(['twitter.com', 'apple.com'])(
         (siteName) => ([
           goTo('http://'+siteName),
           screenshot(siteName+'-homepage')
         ])
       ),
 
-      forEvery(['twitter.com'])(
-        (siteName) => goTo('http://'+siteName)
+      forEvery({id: 'twitter.com', id2: 'apple.com', id4: 'google.com'})(
+        (key: string, value: any) => ([
+          goTo('http://'+value),
+          screenshot(key+value+'---homepage')
+        ])
       ),
-      wait(5000),
-
 
       // loadCookies('instagram'),
 

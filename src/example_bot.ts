@@ -10,7 +10,7 @@ import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
 
 // General BotAction's
 import { log, logError } from '@mationbot/actions/console'
-import { screenshot, givenThat, wait, forEvery } from '@mationbot/actions/utilities'
+import { givenThat, wait, forEvery } from '@mationbot/actions/utilities'
 import { loadCookies } from '@mationbot/actions/cookies'
 import { goTo } from '@mationbot/actions/navigation'
 
@@ -23,9 +23,7 @@ import { closeTurnOnNotificationsModal } from '@bots/instagram/actions/modals'
 import { getInstagramBaseUrl } from '@bots/instagram/helpers/urls'
 import { isGuest } from '@bots/instagram/helpers/auth'
 import { isTurnOnNotificationsModalActive } from '@bots/instagram/helpers/modals'
-import { BotActionsChainFactory } from '@mationbot/factories/bot-actions-chain.factory'
-
-const forEach = () => {}
+import { screenshot } from '@mationbot/actions/output'
 
 // Main Script
 (async () => {

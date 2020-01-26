@@ -17,28 +17,6 @@ export const wait = (milliseconds: number): BotAction => async() =>
   await sleep(milliseconds)
 
 /**
- * @description   Manually click an element on the page based on the query selector provided
- * @param selector 
- */
-export const click = (selector: string): BotAction => async(tab: puppeteer.Page) =>
-  await tab.click(selector)
-
-/**
- * @description   Using the keyboard, being typing. It's best that you focus/click a form input element 1st, or something similar
- * @param copy 
- */
-export const type = (copy: string): BotAction => async(tab: puppeteer.Page) =>
-  await tab.keyboard.type(copy)
-
-/**
- * @description   Take a PNG screenshot of the current page
- * @param fileName name of the file to save the PNG as
- */
-export const screenshot = (fileName: string): BotAction => async(tab: puppeteer.Page) => {
-  await tab.screenshot({path: getPageScreenshotLocalFileUrl(`${fileName}.png`)})
-}
-
-/**
  * @description givenThat(promise resolves to TRUE)(then run these actions in a chain)
  *              A function that returns a function that returns a function
  *              BotFactoryProvider -> BotFactoryAction -> BotAction

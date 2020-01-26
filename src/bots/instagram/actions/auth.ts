@@ -4,7 +4,6 @@ import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
 import { BotActionsChainFactory } from '@mationbot/factories/bot-actions-chain.factory'
 
 import { goTo, waitForNavigation } from '@mationbot/actions/navigation'
-import { click, type } from '@mationbot/actions/utilities'
 import { log } from '@mationbot/actions/console'
 
 import { getInstagramLoginUrl } from '@bots/instagram/helpers/urls'
@@ -15,6 +14,7 @@ import {
   FORM_AUTH_SUBMIT_BUTTON_SELECTOR
 } from '@bots/instagram/selectors'
 import { saveCookies } from '@mationbot/actions/cookies'
+import { click, type } from '@mationbot/actions/input'
 
 /**
  * @description  BotAction that attempts the login flow for Instagram

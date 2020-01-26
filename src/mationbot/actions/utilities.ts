@@ -36,7 +36,11 @@ export const givenThat =
       }
 
 /**
- * @description   Special BotAction that can take an array of stuff or an object of key value pairs
+ * @description   A forEach method to loop a collection of something, to run a chain of actions against with that something locally scoped
+ * 
+ *                aka forEachActions
+ * 
+ *                Special BotAction that can take an array of stuff or an object of key value pairs
  *                to iterate over while applying the closure (function) provided
  *                The closure's purpose is simply to return a BotAction or BotAction[], but you can run code beforehand!
  * 

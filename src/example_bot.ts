@@ -49,6 +49,8 @@ import { screenshot } from '@mationbot/actions/output'
         ])
       ),
 
+      forEvery(['twiiter.com', 'seom.com'])((siteName) => goTo('http://' + siteName)),
+
       forEvery({id: 'twitter.com', id2: 'apple.com', id4: 'google.com'})(
         (key: string, value: any) => ([
           goTo('http://'+value),

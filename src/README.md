@@ -4,7 +4,7 @@ Botmation's main source code is all in TypeScript. The built JavaScript is trans
 
 ## Overview
 
-6 Directories, without their own mindsets and views.
+6 Directories, with their own mindsets and purpose.
 
 1) `botnation/` for future "BotNation" web app
 2) `bots/` for service/site specific code (actions, helpers)

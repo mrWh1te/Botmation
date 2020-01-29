@@ -2,11 +2,11 @@
   "name": "botmation",
   "version": "0.0.1",
   "description": "A Puppeteer Library that provides a declarative syntax for web crawler automation",
-  "main": "./build/example_bot.js",
+  "main": "./build/playground_bot.js",
   "scripts": {
     "build": "tsc",
-    "bot": "node .",
-    "botmation": "npm run build && npm run bot",
+    "playground": "node .",
+    "botmation:": "npm run build && npm run playground",
     "createconfigfile": "node ./scripts/create-config.cli.js",
     "postinstall": "npm run createconfigfile"
   },

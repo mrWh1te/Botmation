@@ -18,7 +18,7 @@ import { goTo } from '@mationbot/actions/navigation'
 import { favoriteAllFrom } from '@bots/instagram/actions/feed'
 import { login } from '@bots/instagram/actions/auth'
 import { closeTurnOnNotificationsModal } from '@bots/instagram/actions/modals'
-import { screenshot, screenshotAll } from '@mationbot/actions/output'
+import { screenshot } from '@mationbot/actions/output'
 
 // Instagram helpers
 import { getInstagramBaseUrl, getInstagramLoginUrl } from '@bots/instagram/helpers/urls'
@@ -55,16 +55,6 @@ import { isTurnOnNotificationsModalActive } from '@bots/instagram/helpers/modals
     // Actions run in sequence
     await instagramBot.actions(
       log('MationBot running'),
-
-      // script to take screenshots of popular news sites
-      // forAll(newsSites)(
-      //   (siteName) => ([
-      //     goTo('http://'+siteName),
-      //     screenshot(siteName+'-homepage')
-      //   ])
-      // ),
-      // screenshotAll(...newsSites),
-
 
       // example forAll using 1 BotAction instead of an array
       // forAll(['twitter.com', 'facebook.com'])((siteName) => goTo('http://' + siteName)),

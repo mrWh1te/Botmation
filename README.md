@@ -68,7 +68,9 @@ Let's see some code:
     )
 ```
 
-For a complete example, see the included [example_bot.ts](/src/example_bot.ts).
+For complete examples, see the included [here](/src/examples/).
+
+For the latest actions, including experimental, check out the [playground bot](/src/playground_bot.ts)
 
 ## Getting Started
 
@@ -77,14 +79,19 @@ You will need NodeJS LTS on your machine to run the bot(s). After you have that 
 ```
 $ npm i
 ```
-Once that's done, it will automatically run the Botmation CLI script, `createConfigFile`, to create the `./src/config.ts` file for you, following a short prompt. It will ask you for Instagram username and password for the example bot, as well as the cookies directory (which if you're not changing, you can just hit "enter" without typing anything for that)
+Once that's done, it will automatically run the Botmation CLI script, `createconfigfile`, to create the `./src/config.ts` file for you, following a short prompt. It will ask you for Instagram username and password for the instagram example bot, as well as the names of various directories (which if you're not changing or using, you can just hit "enter" without typing anything in)
 
-Then build and run the example bot with this single command:
+Then build and run the playground bot with this single command:
 ```
 $ npm run botmation
 ```
 
-It will run the example bot code found in `src/example_bot.ts`, which will login to Instagram with the credentials you provided in the script. It's recommended to begin experimenting with that file first.
+It will run the playground bot code found in `src/playground_bot.ts`, which is using the latest code, most likely experimental.
+
+To run any of the built examples, use `node` like this:
+```
+$ node ./build/examples/instagram.js
+```
 
 ## Architecture // Code Scaffolding
 
@@ -144,12 +151,12 @@ To build the runnable code, run this command:
 $ npm run build
 ```
 
-To run the built code, run this command:
+To run the built playground bot's code, run this command:
 ```
-$ npm run bot
+$ npm run playground
 ```
 
-This will run the example bot found here: `./src/example_bot.ts`
+This will run the example bot found here: `./src/playground_bot.ts`
 
 If you want to change the credentials of the Instagram bot for the example_bot code, mentioned above, simply run this command:
 ```

@@ -108,7 +108,7 @@ function saveConfigFile(fileText) {
 }
 
 //
-// Templates
+// Template
 function getConfigFileText(username, password, assetsDirectory, cookiesDirectory, screenshotsDirectory) {
   return `
 

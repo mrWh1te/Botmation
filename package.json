@@ -11,7 +11,8 @@
     "postinstall": "npm run createconfigfile",
     "example/instagram": "npm run build && node ./build/examples/instagram.js",
     "example/puppeteer-cluster": "npm run build && node ./build/examples/puppeteer-cluster.js",
-    "example/screenshots": "npm run build && node ./build/examples/screenshots.js"
+    "example/screenshots": "npm run build && node ./build/examples/screenshots.js",
+    "tests": "jest"
   },
   "keywords": [
     "social",
@@ -31,8 +32,10 @@
     "puppeteer-cluster": "^0.18.0"
   },
   "devDependencies": {
+    "@types/jest": "^25.1.0",
     "@types/node": "^13.1.8",
     "@types/puppeteer": "^2.0.0",
+    "jest": "^25.1.0",
     "module-alias": "^2.2.2",
     "readline-sync": "^1.4.10",
     "typescript": "^3.7.5"

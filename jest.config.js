@@ -7,5 +7,8 @@ module.exports = {
     "@helpers/(.*)": "<rootDir>/build/helpers/$1.js",
     "@config": "<rootDir>/build/config.js",
     "@bots/(.*)": "<rootDir>/build/bots/$1.js"
-  }
+  },
+  testPathIgnorePatterns: [
+    "<rootDir>/build/"
+  ]
 };

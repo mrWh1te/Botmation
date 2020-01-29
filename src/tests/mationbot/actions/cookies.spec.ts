@@ -1,15 +1,27 @@
 import { saveCookies } from "@mationbot/actions/cookies"
+import { MationBot } from "@mationbot"
+import { goTo } from "@mationbot/actions/navigation"
+import { screenshot } from "@mationbot/actions/output"
 
 describe('MationBot Action Factory: Cookies', () => {
-  
+  let bot: MationBot
+
   beforeAll(async () => {
-    await page.goto('https://google.com');
-  });
+    bot = new MationBot(page)
+
+    console.log(JSON.stringify(screenshot))
+
+    // example of running a BotAction, without a MationBot instance
+    // they are de-coupled :)
+    await screenshot('what-is-this')(page)
+    
+  })
 
   it('should be titled "Google"', async () => {
-    await expect(page.title()).resolves.toMatch('Google');
-  });
-});
+    await page.goto('https://google.com')
+    await expect(page.title()).resolves.toMatch('Google')
+  })
+})
 
 
 

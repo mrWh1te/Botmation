@@ -70,7 +70,7 @@ Let's see some code:
 
 For complete examples, see the included [here](/src/examples/).
 
-For the latest actions, including experimental, check out the [playground bot](/src/playground_bot.ts)
+For the latest actions, including experimental under development, check out the [playground bot](/src/playground_bot.ts).
 
 ## Getting Started
 

@@ -86,16 +86,19 @@ Then build and run the playground bot with this single command:
 $ npm run botmation
 ```
 
-It will run the playground bot code found in `src/playground_bot.ts`, which is using the latest code, most likely experimental.
+It will run the playground bot code found in `src/playground_bot.ts`, which is using the latest code, most likely experimental `BotAction`'s.
 
-Here is how to run any of the examples (you have to build the JS code before you run any of these):
+## Example Bots
+
+In the `./src/examples` directory, exists a small collection of simple bots, for to you to copy and paste.
+
+Run any of the bots with their respective command:
 ```
-$ npm run build
 $ npm run example/instagram
 $ npm run example/screenshots
 $ npm run example/puppeteer-cluster
 ```
-For every built .js file in the `./build/examples` directory, there is a corresponding npm script to run it.
+These commands will run the build script beforehand, so whatever changes saved to the TypeScript code, will be seen.
 
 ## Architecture // Code Scaffolding
 

@@ -9,9 +9,9 @@
     "botmation:": "npm run build && npm run playground",
     "createconfigfile": "node ./scripts/create-config.cli.js",
     "postinstall": "npm run createconfigfile",
-    "example/instagram": "node ./build/examples/instagram.js",
-    "example/puppeteer-cluster": "node ./build/examples/puppeteer-cluster.js",
-    "example/screenshots": "node ./build/examples/screenshots.js"
+    "example/instagram": "npm run build && node ./build/examples/instagram.js",
+    "example/puppeteer-cluster": "npm run build && node ./build/examples/puppeteer-cluster.js",
+    "example/screenshots": "npm run build && node ./build/examples/screenshots.js"
   },
   "keywords": [
     "social",

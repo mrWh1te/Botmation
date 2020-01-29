@@ -140,7 +140,7 @@ cluster.queue(data, async(page, ...) => {
 
 ```
 
-You can provide "Task" functions to the `cluster.queue()` method, so the Function provided, doesn't run on all workers (bots), so each bot can do its own thing.
+You can provide "Task" functions, as separate `MationBot` bots, to the `cluster.queue()` method, so each bot can do its own thing. A complete working example is [available here bot](/src/examples/puppeteer-cluster.ts).
 
 ## Manual Script Running
 

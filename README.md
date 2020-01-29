@@ -13,11 +13,11 @@ Current:
 In dev:
   - General Instagram Crawling/Interacting `BotAction`'s
   - Clean Up / Docs
+  - Mascot team
 
 Planned:
   - unit testing & a little e2e
   - /examples with improved scripting
-  - upgraded createconfigfile script with overload flag `-o` || `-overwrite`
 
 Future:
  - Management web app tool
@@ -152,8 +152,9 @@ This will run the example bot found here: `./src/example_bot.ts`
 
 If you want to change the credentials of the Instagram bot for the example_bot code, mentioned above, simply run this command:
 ```
-$ npm run createconfigfile
+$ npm run createconfigfile overwrite
 ```
+Instead of `overwrite` you can provide the shorthand `o`, to run the create config file script to overwrite the current config file.
 
 ## Help
 

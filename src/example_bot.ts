@@ -20,7 +20,7 @@ import { login } from '@bots/instagram/actions/auth'
 import { closeTurnOnNotificationsModal } from '@bots/instagram/actions/modals'
 
 // Instagram helpers
-import { getInstagramBaseUrl } from '@bots/instagram/helpers/urls'
+import { getInstagramBaseUrl, getInstagramLoginUrl } from '@bots/instagram/helpers/urls'
 import { isGuest } from '@bots/instagram/helpers/auth'
 import { isTurnOnNotificationsModalActive } from '@bots/instagram/helpers/modals'
 import { screenshot, screenshotAll } from '@mationbot/actions/output'
@@ -63,21 +63,21 @@ import { screenshot, screenshotAll } from '@mationbot/actions/output'
       //     screenshot(siteName+'-homepage')
       //   ])
       // ),
-      screenshotAll(...newsSites),
+      // screenshotAll(...newsSites),
 
 
       // example forAll using 1 BotAction instead of an array
-      forAll(['twitter.com', 'facebook.com'])((siteName) => goTo('http://' + siteName)),
+      // forAll(['twitter.com', 'facebook.com'])((siteName) => goTo('http://' + siteName)),
 
       // example forAll on a Dictionary with key->value pairs
-      forAll({id: 'twitter.com', id2: 'apple.com', id4: 'google.com'})(
-        (key: string, value: any) => ([
-          goTo('http://'+value),
-          screenshot(key+value+'---homepage')
-        ])
-      ),
+      // forAll({id: 'twitter.com', id2: 'apple.com', id4: 'google.com'})(
+      //   (key: string, value: any) => ([
+      //     goTo('http://'+value),
+      //     screenshot(key+value+'---homepage')
+      //   ])
+      // ),
 
-      // loadCookies('instagram'),
+      loadCookies('instagram'),
 
       // TODO: localstorage
       // TODO: IndexedDB
@@ -85,6 +85,7 @@ import { screenshot, screenshotAll } from '@mationbot/actions/output'
       // special BotAction for running a chain of BotAction's, if the condition's promise == TRUE
 
       givenThat(isGuest) (
+        goTo(getInstagramLoginUrl()),
         screenshot('login'),
         login({username: ACCOUNT_USERNAME, password: ACCOUNT_PASSWORD})
       ),
@@ -101,13 +102,17 @@ import { screenshot, screenshotAll } from '@mationbot/actions/output'
 
       favoriteAllFrom('user1', 'user2'), // TBI (to be implemented) // TODO: implement
       log('Done with feed'),
+      //   viewAllStoriesFrom('user1', 'user2') // TODO: implement
     )
-    //   viewAllStoriesFrom('user1', 'user2') // TODO: implement
     
-    await instagramBot.destroy() // closes the tab inside the browser that it was crawling/acting on
+    await instagramBot.closePage()
   } catch (error) {
     logError(error)
     
+    setTimeout(async() => {
+      if (browser) await browser.close()
+    })
+  } finally {
     setTimeout(async() => {
       if (browser) await browser.close()
     })

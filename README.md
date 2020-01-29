@@ -12,6 +12,12 @@ Current:
 
 In dev:
   - General Instagram Crawling/Interacting `BotAction`'s
+  - Clean Up / Docs
+
+Planned:
+  - unit testing & a little e2e
+  - /examples with improved scripting
+  - upgraded createconfigfile script with overload flag `-o` || `-overwrite`
 
 Future:
  - Management web app tool
@@ -35,7 +41,7 @@ Let's see some code:
 
     // Instagram specific
     import { login, isGuest } from '@bots/instagram/actions/auth'
-    import { getInstagramBaseUrl } from '@bots/instagram/helpers/urls'
+    import { getInstagramBaseUrl, getInstagramLoginUrl } from '@bots/instagram/helpers/urls'
 
     // Start up the Instagram bot with the Puppeteer Browser
     const bot = await MationBot.asyncConstructor(browser)
@@ -47,6 +53,7 @@ Let's see some code:
       
       // a special BotAction that works like an if() {}
       givenThat(isGuest) (
+        goTo(getInstagramLoginUrl()),
         screenshot('login'), // saves screenshot as "login.png" in the screenshots directory
         // a BotAction from our instagram package:
         login({username: 'instagram username', password: 'instagram password'}) // automatically saves cookies

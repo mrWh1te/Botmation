@@ -9,5 +9,5 @@ export interface BotActionFactory extends Function {
 }
 
 export interface BotAction extends Function {
-  (tab: puppeteer.Page) : Promise<void> // async function for pupeeteer manipulation of page, sequentially
+  (page: puppeteer.Page) : Promise<void> // async function for pupeeteer manipulation of page, sequentially
 }

@@ -7,5 +7,5 @@ import { BotOptions } from './bot-options.interfaces'
  */
 export interface MationBotInterface {
   setup(browser: puppeteer.Browser, options: BotOptions): Promise<void>
-  destroy(): Promise<void>
+  closePage(): Promise<void>
 }

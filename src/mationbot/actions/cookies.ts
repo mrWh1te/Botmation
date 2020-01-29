@@ -1,10 +1,11 @@
 import puppeteer from 'puppeteer'
 import { promises as fs } from 'fs'
 
-import { COOKIES_DIRECTORY_PATH } from '@config'
+import { ASSETS_COOKIES_DIRECTORY, ROOT_ASSETS_DIRECTORY } from '@config'
 
 import { BotAction } from "@mationbot/interfaces/bot-action.interfaces"
-import { logError } from './console'
+import { logError } from '@mationbot/actions/console'
+import { createURL } from '@mationbot/helpers/urls'
 
 /**
  * @description   Parse page's cookies to save as JSON in local file
@@ -14,7 +15,7 @@ import { logError } from './console'
 export const saveCookies = (fileName: string): BotAction => async(page: puppeteer.Page) => {
   try {
     const cookies = await page.cookies()
-    await fs.writeFile(`${COOKIES_DIRECTORY_PATH}${fileName}.json`, JSON.stringify(cookies, null, 2))
+    await fs.writeFile(`${createURL('.', ROOT_ASSETS_DIRECTORY, ASSETS_COOKIES_DIRECTORY)}${fileName}.json`, JSON.stringify(cookies, null, 2))
   } catch(error) {
     logError('[BotAction:saveCookies] ' + error)
   }
@@ -27,7 +28,7 @@ export const saveCookies = (fileName: string): BotAction => async(page: puppetee
  */
 export const loadCookies = (fileName: string): BotAction => async(page: puppeteer.Page) => {
   try {
-    const file = await fs.readFile(`${COOKIES_DIRECTORY_PATH}${fileName}.json`)
+    const file = await fs.readFile(`${createURL('.', ROOT_ASSETS_DIRECTORY, ASSETS_COOKIES_DIRECTORY)}${fileName}.json`)
     const cookies = JSON.parse(file.toString())
 
     for (const cookie of cookies) {

@@ -15,8 +15,10 @@ import { MationBotInterface } from './interfaces/mation-bot.interface'
  * @description   Declarative bot for operating a Puppeteer browser tab (page)
  */
 export class MationBot implements MationBotInterface {
-  // Puppeteer
-  private activeTab: puppeteer.Page
+  /**
+   * @description   Page/Tab of the brower the bot is crawling
+   */
+  private page: puppeteer.Page
 
   // MationBot specific
   private options: BotOptions
@@ -24,8 +26,8 @@ export class MationBot implements MationBotInterface {
   /**
    * @param options optional partial to overload default option values (parsed from the config.ts file)
    */
-  constructor(tab: puppeteer.Page, options: Partial<BotOptions> = {}) {
-    this.activeTab = tab
+  constructor(page: puppeteer.Page, options: Partial<BotOptions> = {}) {
+    this.page = page
     this.options = {
       // Default Config TBI (db credentials, etc, what have you, not yet at the project when this is needed)
 
@@ -41,10 +43,10 @@ export class MationBot implements MationBotInterface {
   public static async asyncConstructor(browser: puppeteer.Browser, options?: Partial<BotOptions>) {
     // Grab the first open page (tab) from the browser, otherwise make a new one
     const pages = await browser.pages()
-    const tab = pages.length === 0 ? await browser.newPage() : pages[0] // does this need an await at the start of the expression? That edge case has to be tested, since on browser launch, there is a page open
+    const page = pages.length === 0 ? await browser.newPage() : pages[0] // does this need an await at the start of the expression? That edge case has to be tested, since on browser launch, there is a page open
 
     // Provide the browser, tab it will be operating in, and any optional overloading options
-    const bot = new MationBot(tab, options)
+    const bot = new MationBot(page, options)
     await bot.setup()
     return bot
   }
@@ -88,14 +90,17 @@ export class MationBot implements MationBotInterface {
    * @param actions  
    */
   public async actions(...actions: BotAction[]): Promise<void> {
-    return BotActionsChainFactory(this.activeTab)(...actions)
+    return BotActionsChainFactory(this.page)(...actions)
   }
 
   //
   // Clean up
-  async destroy() {
-    if (this.activeTab) {
-      await this.activeTab.close()
+  /**
+   * @description   Close the Page/Tab from the browser that the bot was crawling
+   */
+  async closePage() {
+    if (this.page) {
+      await this.page.close()
       console.log('') // add an empty line too console for separation upon next
     }
   }

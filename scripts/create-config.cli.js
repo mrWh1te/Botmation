@@ -6,12 +6,26 @@ const configFilePath = './src/config.ts'
 // Header Print
 printHeader()
 
+emptyLine()
+let overwriteFileIfExists = false
+
+// Check for `overwrite` flag to skip file existence check before creating one
+// supports shorthand notation, `o`
+if (process.argv.indexOf('overwrite') !== -1 || process.argv.indexOf('o') !== -1) {
+  overwriteFileIfExists = true
+}
+
 // 1. Detect if the config file has already been created
 try {
-  if (fs.existsSync(configFilePath)) {
+  if (fs.existsSync(configFilePath) ) {
     // file exists, do nothing
     console.log('[NOTICE] File: "./src/config.ts" exists\n')
-    completeSuccess()
+    if (overwriteFileIfExists) {
+      console.log('[NOTICE] Flag `overwrite` provided, lets recreate the config file')
+      createConfigFileCLIWalkthrough()
+    } else {
+      completeSuccess()
+    }
   } else {
     console.log('[NOTICE] File: "./src/config.ts" is missing\n')
     createConfigFileCLIWalkthrough()
@@ -40,23 +54,24 @@ function createConfigFileCLIWalkthrough() {
     //
     // TODO: directories: assets, assets/screenshots
     // if the dev hits enter without entering any text, we provide the default value
-    var rootAssetsDirectory = readlineSync.question('Root directory name for all generated assets (assets) ? ') || 'assets' // TODO: adjust code, to prepend './' to ./assets
+    var rootAssetsDirectory = readlineSync.question('Root directory name for all generated assets (assets) ? ') || 'assets'
     okay()
     
     //
     // Cookies Directory
     // if the dev hits enter without entering any text, we provide the default value
-    var cookiesDirectory = readlineSync.question('Directory name for cookies (cookies) ? ') || 'cookies' // TODO: update code to append backslash (removed it after cookies/, look at cookie code)
+    var cookiesDirectory = readlineSync.question('Directory name for cookies (cookies) ? ') || 'cookies'
     okay()
 
     //
     // Screenshots Directory
     // if the dev hits enter without entering any text, we provide the default value
-    var sceenshotsDirectory = readlineSync.question('Directory name for screenshots (screenshots) ? ') || 'screenshots' // TODO: adjust code to remove "pages" from current screenshots saving
+    var sceenshotsDirectory = readlineSync.question('Directory name for screenshots (screenshots) ? ') || 'screenshots'
+    okay()
 
     //
     // Data collected, now let's create the config file
-    saveConfigFile(getConfigFileText(instagramUsername, instagramPassword, cookiesDirectory))
+    saveConfigFile(getConfigFileText(instagramUsername, instagramPassword, rootAssetsDirectory, cookiesDirectory, sceenshotsDirectory))
   } else {
     // Another key was pressed.
     console.log('Okay, good bye')
@@ -94,8 +109,9 @@ function saveConfigFile(fileText) {
 
 //
 // Templates
-function getConfigFileText(username, password, cookiesDirectory) {
+function getConfigFileText(username, password, assetsDirectory, cookiesDirectory, screenshotsDirectory) {
   return `
+
   /**
    * Main Configuration to setup the Bot
    */
@@ -103,11 +119,21 @@ function getConfigFileText(username, password, cookiesDirectory) {
   export const ACCOUNT_USERNAME = '${username}'
   export const ACCOUNT_PASSWORD = '${password}'
 
-  // TODO: determine how to manage auth of multiple bots
+  /**
+   * @description   Root directory for outputted assets
+   *                Screenshots, Cookies, etc. directories below are put in this one, which is in the root directory of the project
+   * @default   'assets'
+   */
+  export const ROOT_ASSETS_DIRECTORY = '${assetsDirectory}'
 
   /**
-   * @note from the root project directory
-   * @default   \`./assets/cookies/\`
+   * @note
+   * @default   'cookies'
    */
-  export const COOKIES_DIRECTORY_PATH = '${cookiesDirectory}'`
+  export const ASSETS_COOKIES_DIRECTORY = '${cookiesDirectory}'
+
+  /**
+   * @default   'screenshots'
+   */
+  export const ASSETS_SCREENSHOTS_DIRECTORY = '${screenshotsDirectory}'`
 }

@@ -24,7 +24,8 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^3.0.0",
-    "puppeteer": "^2.0.0"
+    "puppeteer": "^2.0.0",
+    "puppeteer-cluster": "^0.18.0"
   },
   "devDependencies": {
     "@types/node": "^13.1.8",

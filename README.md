@@ -127,7 +127,7 @@ Follow the "Getting Started" section in getting the file ready, since it's ignor
 
 ## Running a Nation of Bots
 
-The `MationBot` class supports the [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) package to run multiple bots in parallel! An example script will be provided in the future, but the heart of it, looks like:
+The `MationBot` class supports the [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) package to run multiple bots concurrently! Here's how the heart of it looks:
 
 ```
 cluster.queue(data, async(page, ...) => {
@@ -140,7 +140,7 @@ cluster.queue(data, async(page, ...) => {
 
 ```
 
-You can provide "Task" functions, as separate `MationBot` bots, to the `cluster.queue()` method, so each bot can do its own thing. A complete working example is [available here](/src/examples/puppeteer-cluster.ts).
+You can provide "Task" functions, wrapping separate `MationBot` bots actions, to the `cluster.queue()` method, so each bot can operate individually. A complete working example is [available here](/src/examples/puppeteer-cluster.ts) running three bots concurrently.
 
 ## Manual Script Running
 

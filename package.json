@@ -33,11 +33,14 @@
   },
   "devDependencies": {
     "@types/jest": "^25.1.0",
+    "@types/jest-environment-puppeteer": "^4.3.1",
     "@types/node": "^13.1.8",
     "@types/puppeteer": "^2.0.0",
     "jest": "^25.1.0",
+    "jest-puppeteer": "^4.4.0",
     "module-alias": "^2.2.2",
     "readline-sync": "^1.4.10",
+    "ts-jest": "^25.0.0",
     "typescript": "^3.7.5"
   },
   "_moduleAliases": {

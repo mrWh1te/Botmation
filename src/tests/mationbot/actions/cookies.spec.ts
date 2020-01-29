@@ -1,17 +1,30 @@
-import { saveCookies } from "@mationbot/actions/cookies";
+import { saveCookies } from "@mationbot/actions/cookies"
 
-describe("MationBot Actions: Cookies", async() => {
-  await test("saveCookies() should grab the page's cookies then save them as JSON to a file", async() => {
-    const fileName = 'mrcookies'
+describe('MationBot Action Factory: Cookies', () => {
+  
+  beforeAll(async () => {
+    await page.goto('https://google.com');
+  });
 
-    // test setup, page with a cookie(s) to save (expect against/asset against)
+  it('should be titled "Google"', async () => {
+    await expect(page.title()).resolves.toMatch('Google');
+  });
+});
 
-    saveCookies(fileName)
 
 
-    expect(filterByTerm(input, "link")).toEqual(output);
-  })
-})
+// describe("MationBot Actions: Cookies", async() => {
+//   await test("saveCookies() should grab the page's cookies then save them as JSON to a file", async() => {
+//     const fileName = 'mrcookies'
+
+//     // test setup, page with a cookie(s) to save (expect against/asset against)
+
+//     await saveCookies(fileName)(page)
+
+
+//     expect(filterByTerm(input, "link")).toEqual(output);
+//   })
+// })
 
 
 

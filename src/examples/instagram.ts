@@ -10,15 +10,15 @@ import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
 
 // General BotAction's
 import { log, logError } from '@mationbot/actions/console'
-import { givenThat, wait, forAll } from '@mationbot/actions/utilities'
+import { givenThat, wait } from '@mationbot/actions/utilities'
 import { loadCookies, saveCookies } from '@mationbot/actions/cookies'
 import { goTo } from '@mationbot/actions/navigation'
+import { screenshot } from '@mationbot/actions/output'
 
 // Instagram specific BotAction's
 import { favoriteAllFrom } from '@bots/instagram/actions/feed'
 import { login } from '@bots/instagram/actions/auth'
 import { closeTurnOnNotificationsModal } from '@bots/instagram/actions/modals'
-import { screenshot, screenshotAll } from '@mationbot/actions/output'
 
 // Instagram helpers
 import { getInstagramBaseUrl, getInstagramLoginUrl } from '@bots/instagram/helpers/urls'
@@ -29,66 +29,23 @@ import { isTurnOnNotificationsModalActive } from '@bots/instagram/helpers/modals
 (async () => {
   let browser: puppeteer.Browser
 
-  // mini side project, to scrape and harvest data of news sites over years
-  // then run the data against NLP scripts, etc. to look for interesting patterns
-  // https://www.w3newspapers.com/newssites/
-  const newsSites = [
-    'cnn.com',
-    'nytimes.com',
-    'foxnews.com',
-    'wsj.com',
-    // 'reuters.com',
-    // 'bloomberg.com',
-    'forbes.com',
-    'global.chinadaily.com.cn',
-    'timesofindia.indiatimes.com'
-  ]
-
-  // Wrap in try/catch, because the bot will throw on Errors requiring dev attention
   try {
-    // Launch Puppeteer to grab the Browser it manages
     browser = await puppeteer.launch({headless: false})
-
-    // Start up the Instagram bot to run in the Puppeteer Browser
     const instagramBot = await MationBot.asyncConstructor(browser)
 
-    // Actions run in sequence
     await instagramBot.actions(
       log('MationBot running'),
 
-      // script to take screenshots of popular news sites
-      // forAll(newsSites)(
-      //   (siteName) => ([
-      //     goTo('http://'+siteName),
-      //     screenshot(siteName+'-homepage')
-      //   ])
-      // ),
-      // screenshotAll(...newsSites),
-
-
-      // example forAll using 1 BotAction instead of an array
-      // forAll(['twitter.com', 'facebook.com'])((siteName) => goTo('http://' + siteName)),
-
-      // example forAll on a Dictionary with key->value pairs
-      // forAll({id: 'twitter.com', id2: 'apple.com', id4: 'google.com'})(
-      //   (key: string, value: any) => ([
-      //     goTo('http://'+value),
-      //     screenshot(key+value+'---homepage')
-      //   ])
-      // ),
-
+      // Takes the name of the file to load cookies from
+      // Match this value with the same used in saveCookies()
       loadCookies('instagram'),
 
-      // TODO: localstorage
-      // TODO: IndexedDB
-      
-      // special BotAction for running a chain of BotAction's, if the condition's promise == TRUE
-
+      // Special action that resolves a Promise for TRUE
+      // only on TRUE, does it run the chain of actions
       givenThat(isGuest) (
         goTo(getInstagramLoginUrl()),
-        screenshot('login'),
         login({username: ACCOUNT_USERNAME, password: ACCOUNT_PASSWORD}),
-        saveCookies('instagram')
+        saveCookies('instagram') // the Bot will skip login, on next run, by loading cookies 
       ),
 
       // After initial load, Instagram sometimes prompts the User with a modal...
@@ -97,11 +54,12 @@ import { isTurnOnNotificationsModalActive } from '@bots/instagram/helpers/modals
         closeTurnOnNotificationsModal()
       ),
 
+      // Go to the main homepage/feed
       goTo(getInstagramBaseUrl()),
       wait(5000),
       screenshot('feed'),
-
       favoriteAllFrom('user1', 'user2'), // TBI (to be implemented) // TODO: implement
+
       log('Done with feed'),
       //   viewAllStoriesFrom('user1', 'user2') // TODO: implement
     )
@@ -119,4 +77,4 @@ import { isTurnOnNotificationsModalActive } from '@bots/instagram/helpers/modals
     })
   }
   
-})();
+})()

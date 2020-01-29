@@ -13,7 +13,6 @@ import {
   FORM_AUTH_PASSWORD_INPUT_SELECTOR,
   FORM_AUTH_SUBMIT_BUTTON_SELECTOR
 } from '@bots/instagram/selectors'
-import { saveCookies } from '@mationbot/actions/cookies'
 import { click, type } from '@mationbot/actions/input'
 
 /**
@@ -31,7 +30,6 @@ export const login = ({username, password}: BotAuthOptions): BotAction => async(
     type(password),
     click(FORM_AUTH_SUBMIT_BUTTON_SELECTOR),
     waitForNavigation(),
-    log('Login Complete'),
-    saveCookies('instagram')
+    log('Login Complete')
   )
   

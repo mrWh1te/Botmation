@@ -56,7 +56,8 @@ Let's see some code:
         goTo(getInstagramLoginUrl()),
         screenshot('login'), // saves screenshot as "login.png" in the screenshots directory
         // a BotAction from our instagram package:
-        login({username: 'instagram username', password: 'instagram password'}) // automatically saves cookies
+        login({username: 'instagram username', password: 'instagram password'}),
+        saveCookes('instagram')
       ),
 
       goTo(getInstagramBaseUrl()),

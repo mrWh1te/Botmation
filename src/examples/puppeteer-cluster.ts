@@ -1,17 +1,18 @@
-require("module-alias/register");
+require("module-alias/register")
+
 import { Cluster } from 'puppeteer-cluster'
 import puppeteer from 'puppeteer'
 
 import { MationBot } from '@mationbot'
 import { goTo } from '@mationbot/actions/navigation'
 import { screenshot } from '@mationbot/actions/output'
-import { logError } from '@mationbot/actions/console';
+import { logError } from '@mationbot/actions/console'
 
 (async () => {
     try {
         const cluster = await Cluster.launch({
             concurrency: Cluster.CONCURRENCY_BROWSER, // browser / page, Incognito mode
-            maxConcurrency: 2 // max number of bots
+            maxConcurrency: 3 // max number of bots
         })
     
         // We don't define a task and instead use own functions
@@ -47,9 +48,10 @@ import { logError } from '@mationbot/actions/console';
         cluster.queue('https://github.com/', githubBot)
         cluster.queue('https://www.typescriptlang.org/', typescriptBot)
     
+        // Wait for it to finish up
         await cluster.idle()
         await cluster.close()
     } catch(error) {
         logError(error)
     }
-})();
+})()

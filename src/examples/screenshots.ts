@@ -11,6 +11,7 @@ import { log, logError } from '@mationbot/actions/console'
 import { forAll } from '@mationbot/actions/utilities'
 import { goTo } from '@mationbot/actions/navigation'
 import { screenshot, screenshotAll } from '@mationbot/actions/output'
+import { getDefaultGoToPageOptions } from '@mationbot/helpers/navigation'
 
 (async () => {
   let browser: puppeteer.Browser
@@ -43,20 +44,20 @@ import { screenshot, screenshotAll } from '@mationbot/actions/output'
       // use the screenshot() BotAction to specify the filename
       // but you must navigate to where you want to snapshot first
       goTo('http://google.com'),
-      screenshot('google-homepage'),
+      screenshot('google-homepage-yea-its-an-example'),
 
       // using a forAll() to take many screenshots while 
       // specifying the screenshot filename
       forAll(newsSites)(
         (siteName) => ([
           // 1) The bot visits the site
-          goTo('http://' + siteName),
+          goTo('https://' + siteName, getDefaultGoToPageOptions({waitUntil: 'domcontentloaded'})), // these sites sometimes have lingering network calls, could be ads, could be a service down
           // 2) The bot snaps a screenshot then saves it as:
           screenshot('news-' + siteName)
         ])
       ),
     
-      log('Done taking pictures'),
+      log('Done taking screenshots'),
     )
     
     await bot.closePage()

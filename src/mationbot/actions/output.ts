@@ -24,7 +24,7 @@ export const screenshot = (fileName: string): BotAction => async(tab: puppeteer.
 export const screenshotAll = (...sites: string[]): BotAction => async(tab: puppeteer.Page) =>
   forAll(sites)(
     (siteName) => ([
-      goTo('http://' + siteName),
+      goTo('https://' + siteName),
       screenshot(siteName)
     ])
   )(tab)

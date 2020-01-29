@@ -88,10 +88,14 @@ $ npm run botmation
 
 It will run the playground bot code found in `src/playground_bot.ts`, which is using the latest code, most likely experimental.
 
-To run any of the built examples, use `node` like this:
+Here is how to run any of the examples (you have to build the JS code before you run any of these):
 ```
-$ node ./build/examples/instagram.js
+$ npm run build
+$ npm run example/instagram
+$ npm run example/screenshots
+$ npm run example/puppeteer-cluster
 ```
+For every built .js file in the `./build/examples` directory, there is a corresponding npm script to run it.
 
 ## Architecture // Code Scaffolding
 
@@ -162,7 +166,7 @@ If you want to change the credentials of the Instagram bot for the example_bot c
 ```
 $ npm run createconfigfile overwrite
 ```
-Instead of `overwrite` you can provide the shorthand `o`, to run the create config file script to overwrite the current config file.
+Instead of `overwrite` you can provide the shorthand `o`, to run the create config file script with it set to overwrite the current config file. It will still ask you, just in case.
 
 ## Help
 

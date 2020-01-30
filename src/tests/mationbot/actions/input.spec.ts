@@ -42,7 +42,7 @@ describe('[MationBot:Action Factory] Input', () => {
   })
 
   //
-  // Actual test of puppeteer input actions for clicking and typing as wrapped BotAction factory methods
+  // Unit test of these actions for clicking and typing as wrapped BotAction factory methods
   it('should focus on input, by click(), then type() "My cat is black" into it', async() => {
     await click(inputDOMSelector)(page)
     await type(inputCopy)(page)

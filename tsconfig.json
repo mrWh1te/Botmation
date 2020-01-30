@@ -21,6 +21,7 @@
     "assets",
     "scripts",
     "build",
+    "src/tests",
     "jest-puppeteer.config.js",
     "jest.config.js"
   ]

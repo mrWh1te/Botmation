@@ -48,7 +48,6 @@ describe('[MationBot:Action Factory] Input', () => {
     await type(inputCopy)(page)
 
     const formInputEl = await page.$(inputDOMSelector)
-
     const formInputValue = await formInputEl?.getProperty('value')
     const formInputValueJSON = await formInputValue?.jsonValue()
 

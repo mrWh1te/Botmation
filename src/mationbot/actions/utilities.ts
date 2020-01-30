@@ -3,7 +3,9 @@
  */
 import { Page } from 'puppeteer'
 
-import { sleep, applyBotActionOrActions } from '@mationbot/helpers/utilities'
+import { sleep } from '@helpers/utilities'
+
+import { applyBotActionOrActions } from '@mationbot/helpers/utilities'
 import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
 import { BotActionsChainFactory } from '@mationbot/factories/bot-actions-chain.factory'
 

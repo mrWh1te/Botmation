@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer'
+import { Page } from 'puppeteer'
 
 import { BotAction } from "@mationbot/interfaces/bot-action.interfaces"
 import { getPageScreenshotLocalFileUrl } from '@helpers/assets'
@@ -10,7 +10,7 @@ import { goTo } from '@mationbot/actions/navigation'
  * @description   Take a PNG screenshot of the current page
  * @param fileName name of the file to save the PNG as
  */
-export const screenshot = (fileName: string): BotAction => async(tab: puppeteer.Page) => {
+export const screenshot = (fileName: string): BotAction => async(tab: Page) => {
   await tab.screenshot({path: getPageScreenshotLocalFileUrl(`${fileName}.png`)})
 }
 
@@ -21,7 +21,7 @@ export const screenshot = (fileName: string): BotAction => async(tab: puppeteer.
  * @experimental
  * @request   add ability like via a closure, to customize the filename for easier reuse in a cycle (like ability to timestamp the file etc)
  */
-export const screenshotAll = (...sites: string[]): BotAction => async(tab: puppeteer.Page) =>
+export const screenshotAll = (...sites: string[]): BotAction => async(tab: Page) =>
   forAll(sites)(
     (siteName) => ([
       goTo('https://' + siteName),

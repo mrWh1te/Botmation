@@ -10,7 +10,7 @@ export const sleep = async(milliseconds: number): Promise<any> =>
 
 
 
-import puppeteer from 'puppeteer'
+import { Page } from 'puppeteer'
 
 import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
 import { BotActionsChainFactory } from '@mationbot/factories/bot-actions-chain.factory'
@@ -20,7 +20,7 @@ import { BotActionsChainFactory } from '@mationbot/factories/bot-actions-chain.f
  * @param tab 
  * @param actions 
  */
-export const applyBotActionOrActions = async(tab: puppeteer.Page, actions: BotAction[] | BotAction) => {
+export const applyBotActionOrActions = async(tab: Page, actions: BotAction[] | BotAction) => {
   if (Array.isArray(actions)) {
     await BotActionsChainFactory(tab)(...actions)
   } else {

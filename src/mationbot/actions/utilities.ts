@@ -1,7 +1,7 @@
 /**
  * @description   This higher order functions can be shared across multiple bots, given the uility of their nature (not specific)
  */
-import puppeteer from 'puppeteer'
+import { Page } from 'puppeteer'
 
 import { sleep, applyBotActionOrActions } from '@mationbot/helpers/utilities'
 import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
@@ -25,9 +25,9 @@ export const wait = (milliseconds: number): BotAction => async() =>
  * @param condition 
  */
 export const givenThat = 
-  (condition: (tab: puppeteer.Page) => Promise<boolean>) => 
+  (condition: (tab: Page) => Promise<boolean>) => 
     (...actions: BotAction[]): BotAction => 
-      async(tab: puppeteer.Page) => {
+      async(tab: Page) => {
         if (await condition(tab)) {
           await BotActionsChainFactory(tab)(...actions)
         }
@@ -73,7 +73,7 @@ export interface Dictionary {
 export const forAll =
   (collection: any[] | Dictionary) =>
     (botActionOrActionsFactory: (...args: any[]) => BotAction[] | BotAction) =>
-      async(tab: puppeteer.Page) => {
+      async(tab: Page) => {
         if (Array.isArray(collection)) {
           // Array
           for(let i = 0; i < collection.length; i++) {

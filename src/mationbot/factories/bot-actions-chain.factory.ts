@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer'
+import { Page } from 'puppeteer'
 
 import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
 
@@ -8,7 +8,7 @@ import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
  * @example       see `login()` under `./src/bots/instagram/auth.ts`
  * @param tab 
  */
-export const BotActionsChainFactory = (tab: puppeteer.Page) => async (...actions: BotAction[]): Promise<void> =>
+export const BotActionsChainFactory = (tab: Page) => async (...actions: BotAction[]): Promise<void> =>
   actions.reduce(
     async(chain, action) => {
       // Resolve the last returned promise

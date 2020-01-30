@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer'
+import { Page } from 'puppeteer'
 
 import { goTo } from '@mationbot/actions/navigation'
 import { getInstagramLoginUrl } from '@bots/instagram/helpers/urls'
@@ -7,7 +7,7 @@ import { getInstagramLoginUrl } from '@bots/instagram/helpers/urls'
 // Helpers
 
 // Future: Go into the data, directly, and grab from the database, IndexedDB (redux). There is no data if guest
-export const isLoggedIn = async(tab: puppeteer.Page): Promise<boolean> => {
+export const isLoggedIn = async(tab: Page): Promise<boolean> => {
   // Go to the login page
   await goTo(getInstagramLoginUrl())(tab)
   
@@ -16,5 +16,5 @@ export const isLoggedIn = async(tab: puppeteer.Page): Promise<boolean> => {
   return tab.url() !== getInstagramLoginUrl()
 }
 
-export const isGuest = async(tab: puppeteer.Page): Promise<boolean> =>
+export const isGuest = async(tab: Page): Promise<boolean> =>
   !(await isLoggedIn(tab))

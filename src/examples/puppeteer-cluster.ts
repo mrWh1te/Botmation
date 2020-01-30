@@ -1,7 +1,7 @@
 require("module-alias/register")
 
 import { Cluster } from 'puppeteer-cluster'
-import puppeteer from 'puppeteer'
+import { Page } from 'puppeteer'
 
 import { MationBot } from '@mationbot'
 import { goTo } from '@mationbot/actions/navigation'
@@ -16,7 +16,7 @@ import { logError } from '@mationbot/actions/console'
         })
     
         // We don't define a task and instead use own functions
-        const nodeJsBot = async ({ page, data: url }: {page: puppeteer.Page, data: any}) => {
+        const nodeJsBot = async ({ page, data: url }: {page: Page, data: any}) => {
             const bot = new MationBot(page);
     
             await bot.actions(
@@ -25,7 +25,7 @@ import { logError } from '@mationbot/actions/console'
             )
         }
     
-        const githubBot = async ({ page, data: url }: {page: puppeteer.Page, data: any}) => {
+        const githubBot = async ({ page, data: url }: {page: Page, data: any}) => {
             const bot = new MationBot(page);
     
             await bot.actions(
@@ -34,7 +34,7 @@ import { logError } from '@mationbot/actions/console'
             )
         }
     
-        const typescriptBot = async ({ page, data: url }: {page: puppeteer.Page, data: any}) => {
+        const typescriptBot = async ({ page, data: url }: {page: Page, data: any}) => {
             const bot = new MationBot(page);
     
             await bot.actions(

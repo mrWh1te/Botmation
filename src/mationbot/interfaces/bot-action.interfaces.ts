@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer'
+import { Page } from 'puppeteer'
 
 /**
  * @description   Base Interface for the Higher-Order Action implementations to enable IDE assistance, strong type checking, etc
@@ -9,5 +9,5 @@ export interface BotActionFactory extends Function {
 }
 
 export interface BotAction extends Function {
-  (page: puppeteer.Page) : Promise<void> // async function for pupeeteer manipulation of page, sequentially
+  (page: Page) : Promise<void> // async function for pupeeteer manipulation of page, sequentially
 }

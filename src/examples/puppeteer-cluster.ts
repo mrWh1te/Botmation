@@ -3,10 +3,16 @@ require("module-alias/register")
 import { Cluster } from 'puppeteer-cluster'
 import { Page } from 'puppeteer'
 
-import { MationBot } from '@mationbot'
+// Actions
 import { goTo } from '@mationbot/actions/navigation'
 import { screenshot } from '@mationbot/actions/output'
 import { logError } from '@mationbot/actions/console'
+
+// Class for injecting the page
+import { MationBot } from '@mationbot'
+
+// Purely functional approach
+import { BotActionsChainFactory as Bot } from '@mationbot/factories/bot-actions-chain.factory'
 
 (async () => {
     try {
@@ -17,15 +23,15 @@ import { logError } from '@mationbot/actions/console'
     
         // We don't define a task and instead use own functions
         const nodeJsBot = async ({ page, data: url }: {page: Page, data: any}) => {
-            const bot = new MationBot(page);
-    
-            await bot.actions(
+            // Functional
+            await Bot(page)(
                 goTo(url),
                 screenshot(url.replace(/[^a-zA-Z]/g, '_'))
             )
         }
     
         const githubBot = async ({ page, data: url }: {page: Page, data: any}) => {
+            // Imperative OO
             const bot = new MationBot(page);
     
             await bot.actions(

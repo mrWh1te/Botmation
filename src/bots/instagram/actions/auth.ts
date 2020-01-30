@@ -20,9 +20,9 @@ import { click, type } from '@mationbot/actions/input'
  *               This BotAction is a great example of how 1 Action can wrap a whole other list of Action's, while using the same actions() code design
  * @param {username, password} destructured from BotAuthOptions 
  */
-export const login = ({username, password}: BotAuthOptions): BotAction => async(tab: Page) =>
+export const login = ({username, password}: BotAuthOptions): BotAction => async(page: Page) =>
   // This is how a single BotAction can run its own sequence of BotAction's prior to the next call of the original bot.actions() sequence
-  BotActionsChainFactory(tab)(
+  BotActionsChainFactory(page)(
     goTo(getInstagramLoginUrl()),
     click(FORM_AUTH_USERNAME_INPUT_SELECTOR),
     type(username),

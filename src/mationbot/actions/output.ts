@@ -10,8 +10,8 @@ import { goTo } from '@mationbot/actions/navigation'
  * @description   Take a PNG screenshot of the current page
  * @param fileName name of the file to save the PNG as
  */
-export const screenshot = (fileName: string): BotAction => async(tab: Page) => {
-  await tab.screenshot({path: getPageScreenshotLocalFileUrl(`${fileName}.png`)})
+export const screenshot = (fileName: string): BotAction => async(page: Page) => {
+  await page.screenshot({path: getPageScreenshotLocalFileUrl(`${fileName}.png`)})
 }
 
 /**
@@ -21,10 +21,10 @@ export const screenshot = (fileName: string): BotAction => async(tab: Page) => {
  * @experimental
  * @request   add ability like via a closure, to customize the filename for easier reuse in a cycle (like ability to timestamp the file etc)
  */
-export const screenshotAll = (...sites: string[]): BotAction => async(tab: Page) =>
+export const screenshotAll = (...sites: string[]): BotAction => async(page: Page) =>
   forAll(sites)(
     (siteName) => ([
       goTo('https://' + siteName),
       screenshot(siteName)
     ])
-  )(tab)
+  )(page)

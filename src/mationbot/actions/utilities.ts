@@ -25,11 +25,11 @@ export const wait = (milliseconds: number): BotAction => async() =>
  * @param condition 
  */
 export const givenThat = 
-  (condition: (tab: Page) => Promise<boolean>) => 
+  (condition: (page: Page) => Promise<boolean>) => 
     (...actions: BotAction[]): BotAction => 
-      async(tab: Page) => {
-        if (await condition(tab)) {
-          await BotActionsChainFactory(tab)(...actions)
+      async(page: Page) => {
+        if (await condition(page)) {
+          await BotActionsChainFactory(page)(...actions)
         }
       }
 
@@ -73,16 +73,16 @@ export interface Dictionary {
 export const forAll =
   (collection: any[] | Dictionary) =>
     (botActionOrActionsFactory: (...args: any[]) => BotAction[] | BotAction) =>
-      async(tab: Page) => {
+      async(page: Page) => {
         if (Array.isArray(collection)) {
           // Array
           for(let i = 0; i < collection.length; i++) {
-            await applyBotActionOrActions(tab, botActionOrActionsFactory(collection[i]))
+            await applyBotActionOrActions(page, botActionOrActionsFactory(collection[i]))
           }
         } else {
           // Dictionary
           for (const [key, value] of Object.entries(collection)) {
-            await applyBotActionOrActions(tab, botActionOrActionsFactory(key, value))
+            await applyBotActionOrActions(page, botActionOrActionsFactory(key, value))
           }
         }
       }

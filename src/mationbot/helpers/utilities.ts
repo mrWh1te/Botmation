@@ -17,13 +17,13 @@ import { BotActionsChainFactory } from '@mationbot/factories/bot-actions-chain.f
 
 /**
  * 
- * @param tab 
+ * @param page 
  * @param actions 
  */
-export const applyBotActionOrActions = async(tab: Page, actions: BotAction[] | BotAction) => {
+export const applyBotActionOrActions = async(page: Page, actions: BotAction[] | BotAction) => {
   if (Array.isArray(actions)) {
-    await BotActionsChainFactory(tab)(...actions)
+    await BotActionsChainFactory(page)(...actions)
   } else {
-    await BotActionsChainFactory(tab)(actions)
+    await BotActionsChainFactory(page)(actions)
   }
 }

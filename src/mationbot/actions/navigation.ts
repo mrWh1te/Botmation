@@ -10,19 +10,19 @@ import { logWarning } from '@mationbot/actions/console'
  * @description   Single Higher Order Function for Page Changing
  * @param url
  */
-export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAction => async(tab: Page) => {
+export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAction => async(page: Page) => {
   if (!goToOptions) {
     // optional param, when not provided, we provide the default value
     goToOptions = getDefaultGoToPageOptions()
   }
 
-  if (tab.url() === url) {
+  if (page.url() === url) {
     // same url
     logWarning('[Action:goTo] url requested is already active')
     return
   }
 
-  await tab.goto(url, goToOptions)
+  await page.goto(url, goToOptions)
 }
 
 /**

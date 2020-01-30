@@ -12,7 +12,7 @@ import { MationBotInterface } from './interfaces/mation-bot.interface'
 
 /**
  * @name          MationBot
- * @description   Declarative bot for operating a Puppeteer browser tab (page)
+ * @description   Declarative bot for operating a Puppeteer browser page (tab)
  */
 export class MationBot implements MationBotInterface {
   /**
@@ -66,7 +66,7 @@ export class MationBot implements MationBotInterface {
 
     // Future: provide data in the chain, it would be options but more -> data: { auth: authData, feed: feedDb, etc}, options/config: {db: dbOptions, etc} (so data and somekind of base options for configuration of various dependencies)
     // so in the future we can run these actions against db data, not programmed data
-    //   To implement: follow the flow of injecting the "tab" (puppeteer.Page) from scope of the factory call, likewise, we'll inject options, but maybe have renamed to simply data or store
+    //   To implement: follow the flow of injecting the "page" (puppeteer.Page) from scope of the factory call, likewise, we'll inject options, but maybe have renamed to simply data or store
   }
 
   /**

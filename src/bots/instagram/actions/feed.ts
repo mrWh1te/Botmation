@@ -11,6 +11,6 @@ import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
  * @description   Favorite all published photos from these usernames
  * @param usernames 
  */
-export const favoriteAllFrom = (...usernames: string[]): BotAction => async(tab: Page) => {
+export const favoriteAllFrom = (...usernames: string[]): BotAction => async(page: Page) => {
   console.log(`favorite all from ${usernames.join(', ')}`)
 }

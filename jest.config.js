@@ -2,11 +2,11 @@ module.exports = {
   preset: 'jest-puppeteer',
   transform: {"\\.ts$": ['ts-jest']},
   moduleNameMapper: {
-    "@mationbot/(.*)": "<rootDir>/build/mationbot/$1.js",
-    "@mationbot": "<rootDir>/build/mationbot",
-    "@helpers/(.*)": "<rootDir>/build/helpers/$1.js",
-    "@config": "<rootDir>/build/config.js",
-    "@bots/(.*)": "<rootDir>/build/bots/$1.js"
+    "@mationbot/(.*)": "<rootDir>/src/mationbot/$1.ts",
+    "@mationbot": "<rootDir>/src/mationbot",
+    "@helpers/(.*)": "<rootDir>/src/helpers/$1.ts",
+    "@config": "<rootDir>/src/config.ts",
+    "@bots/(.*)": "<rootDir>/src/bots/$1.ts"
   },
   testPathIgnorePatterns: [
     "<rootDir>/build/"

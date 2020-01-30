@@ -3,8 +3,6 @@
  */
 import puppeteer from 'puppeteer'
 
-import { getPageScreenshotLocalFileUrl } from '@helpers/assets'
-
 import { sleep, applyBotActionOrActions } from '@mationbot/helpers/utilities'
 import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
 import { BotActionsChainFactory } from '@mationbot/factories/bot-actions-chain.factory'

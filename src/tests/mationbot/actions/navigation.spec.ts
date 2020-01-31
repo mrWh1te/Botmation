@@ -28,14 +28,14 @@ describe('[MationBot:Action Factory] Navigation', () => {
   it('should call puppeteer\'s page goto() method with the provided options', async () => {
     await goTo(EXAMPLE_URL)(mockPage as any as Page)
 
-    await expect(mockPage.url).toBeCalled() // are we checking the URL before requesting to go to it to prevent unnecessary requests?
-    await expect(mockPage.goto).toBeCalledWith('http://localhost:8080/example.html', getDefaultGoToPageOptions()) // are we providing default options, is the action relaying the correct url
+    expect(mockPage.url).toBeCalled() // are we checking the URL before requesting to go to it to prevent unnecessary requests?
+    expect(mockPage.goto).toBeCalledWith('http://localhost:8080/example.html', getDefaultGoToPageOptions()) // are we providing default options, is the action relaying the correct url
   })
 
   it('should call puppeteer\'s waitForNavigation() method', async () => {    
     await waitForNavigation()(mockPage as any as Page)
 
-    await expect(mockPage.waitForNavigation).toBeCalled()
+    expect(mockPage.waitForNavigation).toBeCalled()
   })
 
   //

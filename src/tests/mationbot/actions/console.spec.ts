@@ -11,7 +11,7 @@ describe('[MationBot:Action Factory] Console', () => {
   beforeAll(() => {
     // We can do Integration instead, by jest.fn() the log, then checking we call it with params
     console.log = function() {
-      logs.push([].slice.call(arguments));
+      logs.push([].slice.call(arguments))
     }
   })  
 

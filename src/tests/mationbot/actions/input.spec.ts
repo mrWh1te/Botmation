@@ -26,7 +26,7 @@ describe('[MationBot:Action Factory] Input', () => {
     
     await click(FORM_SUBMIT_BUTTON_SELECTOR)(mockPage as any as Page)
 
-    await expect(mockPage.click).toBeCalledWith('form button[type="submit"]')
+    expect(mockPage.click).toBeCalledWith('form button[type="submit"]')
   })
 
   it('should call puppeteer\'s page keyboard type method with the provided copy', async () => {
@@ -38,7 +38,7 @@ describe('[MationBot:Action Factory] Input', () => {
     
     await type(inputCopy)(mockPage as any as Page)
 
-    await expect(mockPage.keyboard.type).toBeCalledWith('My cat is black')
+    expect(mockPage.keyboard.type).toBeCalledWith('My cat is black')
   })
 
   //
@@ -51,7 +51,7 @@ describe('[MationBot:Action Factory] Input', () => {
     const formInputValue = await formInputEl?.getProperty('value')
     const formInputValueJSON = await formInputValue?.jsonValue()
 
-    await expect(formInputValueJSON).toEqual('My cat is black')
+    expect(formInputValueJSON).toEqual('My cat is black')
   })
   
 })

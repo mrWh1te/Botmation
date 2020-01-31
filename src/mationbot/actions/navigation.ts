@@ -17,7 +17,7 @@ export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAct
   }
 
   if (page.url() === url) {
-    // same url
+    // same url check
     logWarning('[Action:goTo] url requested is already active')
     return
   }

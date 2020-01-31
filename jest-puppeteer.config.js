@@ -1,7 +1,7 @@
 // jest-puppeteer.config.js
 module.exports = {
   server: {
-    command: './node_modules/http-server/bin/http-server ./src/tests/server',
+    command: 'npm run localsite',
     port: 8080
   },
 }

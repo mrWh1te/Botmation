@@ -21,7 +21,7 @@ import { BotActionsChainFactory as Bot } from '@mationbot/factories/bot-actions-
             maxConcurrency: 3 // max number of bots
         })
     
-        // We don't define a task and instead use own functions
+        // We don't define a task and instead use Task functions
         const nodeJsBot = async ({ page, data: url }: {page: Page, data: any}) => 
             // Functional
             await Bot(page)(
@@ -33,7 +33,7 @@ import { BotActionsChainFactory as Bot } from '@mationbot/factories/bot-actions-
     
         const githubBot = async ({ page, data: url }: {page: Page, data: any}) => {
             // Imperative OO
-            const bot = new MationBot(page);
+            const bot = new MationBot(page)
     
             await bot.actions(
                 goTo(url),

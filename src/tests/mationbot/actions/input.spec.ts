@@ -2,19 +2,19 @@ import { Page } from 'puppeteer'
 
 import { click, type } from "@mationbot/actions/input"
 
+import { FORM_SUBMIT_BUTTON_SELECTOR, FORM_TEXT_INPUT_SELECTOR } from '@tests/selectors'
+import { BASE_URL } from '@tests/urls'
+
 /**
  * @description   Input Action Factory
  *                The factory methods here return BotAction's for the bots to input into the page as User
  *                  ie mouse click, keyboard typing
  */
 describe('[MationBot:Action Factory] Input', () => {
-  const inputDOMSelector = 'html body form input'
-  const buttonDOMSelector = 'html body form button'
-
   const inputCopy = 'My cat is black'
 
   beforeAll(async() => {
-    await page.goto('http://localhost:8080')
+    await page.goto(BASE_URL)
   })
 
   //
@@ -24,9 +24,9 @@ describe('[MationBot:Action Factory] Input', () => {
       click: jest.fn()
     }
     
-    await click(buttonDOMSelector)(mockPage as any as Page)
+    await click(FORM_SUBMIT_BUTTON_SELECTOR)(mockPage as any as Page)
 
-    await expect(mockPage.click).toBeCalledWith('html body form button')
+    await expect(mockPage.click).toBeCalledWith('form button[type="submit"]')
   })
 
   it('should call puppeteer\'s page keyboard type method with the provided copy', async () => {
@@ -44,10 +44,10 @@ describe('[MationBot:Action Factory] Input', () => {
   //
   // Unit test of these actions for clicking and typing as wrapped BotAction factory methods
   it('should focus on input, by click(), then type() "My cat is black" into it', async() => {
-    await click(inputDOMSelector)(page)
+    await click(FORM_TEXT_INPUT_SELECTOR)(page)
     await type(inputCopy)(page)
 
-    const formInputEl = await page.$(inputDOMSelector)
+    const formInputEl = await page.$(FORM_TEXT_INPUT_SELECTOR)
     const formInputValue = await formInputEl?.getProperty('value')
     const formInputValueJSON = await formInputValue?.jsonValue()
 

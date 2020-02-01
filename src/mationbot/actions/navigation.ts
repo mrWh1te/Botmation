@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer'
+import { Page } from 'puppeteer'
 import { DirectNavigationOptions } from 'puppeteer'
 
 import { BotAction } from '@mationbot/interfaces/bot-action.interfaces'
@@ -10,24 +10,24 @@ import { logWarning } from '@mationbot/actions/console'
  * @description   Single Higher Order Function for Page Changing
  * @param url
  */
-export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAction => async(tab: puppeteer.Page) => {
+export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAction => async(page: Page) => {
   if (!goToOptions) {
     // optional param, when not provided, we provide the default value
     goToOptions = getDefaultGoToPageOptions()
   }
 
-  if (tab.url() === url) {
-    // same url
+  if (page.url() === url) {
+    // same url check
     logWarning('[Action:goTo] url requested is already active')
     return
   }
 
-  await tab.goto(url, goToOptions)
+  await page.goto(url, goToOptions)
 }
 
 /**
  * @description   Wait for navigation to complete. Helpful after submitting a form, liking logging in.
  */
-export const waitForNavigation = (): BotAction => async(page: puppeteer.Page) => {
+export const waitForNavigation = (): BotAction => async(page: Page) => {
   await page.waitForNavigation()
 }

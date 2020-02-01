@@ -13,13 +13,17 @@
       "@mationbot/*": ["mationbot/*"],
       "@helpers/*": ["helpers/*"],
       "@config": ["config"],
-      "@bots/*": ["bots/*"]
+      "@bots/*": ["bots/*"],
+      "@tests/*": ["tests/*"]
     }
   },
   "exclude": [
     "node_modules",
     "assets",
     "scripts",
-    "build"
+    "build",
+    // "src/tests", // leave out for the IDE, helps module alias based imports
+    "jest-puppeteer.config.js",
+    "jest.config.js"
   ]
 }

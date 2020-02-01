@@ -1,12 +1,18 @@
 require("module-alias/register")
 
 import { Cluster } from 'puppeteer-cluster'
-import puppeteer from 'puppeteer'
+import { Page } from 'puppeteer'
 
-import { MationBot } from '@mationbot'
+// Actions
 import { goTo } from '@mationbot/actions/navigation'
 import { screenshot } from '@mationbot/actions/output'
-import { logError } from '@mationbot/actions/console'
+import { logError, log } from '@mationbot/actions/console'
+
+// Class for injecting the page
+import { MationBot } from '@mationbot'
+
+// Purely functional approach
+import { BotActionsChainFactory as Bot } from '@mationbot/factories/bot-actions-chain.factory'
 
 (async () => {
     try {
@@ -15,33 +21,34 @@ import { logError } from '@mationbot/actions/console'
             maxConcurrency: 3 // max number of bots
         })
     
-        // We don't define a task and instead use own functions
-        const nodeJsBot = async ({ page, data: url }: {page: puppeteer.Page, data: any}) => {
-            const bot = new MationBot(page);
+        // We don't define a task and instead use Task functions
+        const nodeJsBot = async ({ page, data: url }: {page: Page, data: any}) => 
+            // Functional
+            await Bot(page)(
+                goTo(url),
+                screenshot(url.replace(/[^a-zA-Z]/g, '_')),
+                log('screenshot of ' + url + ' saved')
+            )
+        
+    
+        const githubBot = async ({ page, data: url }: {page: Page, data: any}) => {
+            // Imperative OO
+            const bot = new MationBot(page)
     
             await bot.actions(
                 goTo(url),
-                screenshot(url.replace(/[^a-zA-Z]/g, '_'))
+                screenshot(url.replace(/[^a-zA-Z]/g, '_')),
+                log('screenshot of ' + url + ' saved')
             )
         }
     
-        const githubBot = async ({ page, data: url }: {page: puppeteer.Page, data: any}) => {
-            const bot = new MationBot(page);
-    
-            await bot.actions(
+        const typescriptBot = async ({ page, data: url }: {page: Page, data: any}) => 
+            // Imperative OO, 1 line
+            await (new MationBot(page)).actions( // if you're not doing the above functional way, you could rename MationBot to Bot in the import using 'as'
                 goTo(url),
-                screenshot(url.replace(/[^a-zA-Z]/g, '_'))
+                screenshot(url.replace(/[^a-zA-Z]/g, '_')),
+                log('screenshot of ' + url + ' saved')
             )
-        }
-    
-        const typescriptBot = async ({ page, data: url }: {page: puppeteer.Page, data: any}) => {
-            const bot = new MationBot(page);
-    
-            await bot.actions(
-                goTo(url),
-                screenshot(url.replace(/[^a-zA-Z]/g, '_'))
-            )
-        }
     
         // Run the bots
         cluster.queue('https://nodejs.org/', nodeJsBot)

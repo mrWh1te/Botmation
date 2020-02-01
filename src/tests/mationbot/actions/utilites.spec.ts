@@ -34,26 +34,37 @@ describe('[MationBot:Action Factory] Utilities', () => {
 
   //
   // givenThat() Unit Test
-  it('should resolve the condition and ONLY run the chain of actions of the resolved condition equals TRUE', async() => {
+  it('should resolve the condition and ONLY run the chain of actions if the resolved condition equals TRUE', async() => {
     const conditionResolvingTRUE = async(page: Page) => new Promise<boolean>(resolve => resolve(true))
     const conditionResolvingFALSE = async(page: Page) => new Promise<boolean>(resolve => resolve(false))
-    // const conditionReject = async(page: Page) => new Promise((resolve, reject) => reject()) // TODO: 
+    const conditionReject = async(page: Page) => new Promise<boolean>((resolve, reject) => reject(new Error('test')))
 
+    // These actions should run
     await givenThat(conditionResolvingTRUE)(
       click('example selector 1'),
       type('example copy 1')
     )(mockPage)
 
+    // These actions should NOT run
     await givenThat(conditionResolvingFALSE)(
       click('example selector 2'),
       type('example copy 2')
     )(mockPage)
+
+    // These actions should NOT run
+    await givenThat(conditionReject)(
+      click('example selector 2'),
+      type('example copy 2')
+    )
 
     expect(mockPage.click).toHaveBeenNthCalledWith(1, 'example selector 1')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, 'example copy 1')
 
     expect(mockPage.click).not.toHaveBeenNthCalledWith(2, 'example selector 2')
     expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(2, 'example copy 2')
+
+    expect(mockPage.click).not.toHaveBeenNthCalledWith(3, 'example selector 2')
+    expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(3, 'example copy 2')
   })
 
   //

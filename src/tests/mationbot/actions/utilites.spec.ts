@@ -75,7 +75,7 @@ describe('[MationBot:Action Factory] Utilities', () => {
   })
 
   //
-  // forAll() Unit Test
+  // forAll() Unit Tests
   it('should call the list of Actions for each item in the array provided', async() => {
     const urls = ['example.html', 'example2.html', 'success.html']
 
@@ -97,8 +97,9 @@ describe('[MationBot:Action Factory] Utilities', () => {
       'form input[name="password"]': 'example password'
     }
 
-    // idea of this test is for a particular use-case where provided collection is an object whose keys are html selectors for form inputs, and the values are things to type
-    // so it would be one data structure for doing form input, in a succinct format
+    // idea of this test is for a particular use-case where provided collection is an object, 
+    // whose keys are html selectors for form inputs, and the values are things to type in them
+    // so it would be one data structure for doing form input, in one succinct format
     await forAll(keyValuePairs)(
       (elementSelector, copyToType) => ([
         click(elementSelector),

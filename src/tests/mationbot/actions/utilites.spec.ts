@@ -3,8 +3,9 @@ import { Page } from 'puppeteer'
 import { getDefaultGoToPageOptions } from '@mationbot/helpers/navigation'
 
 import { BASE_URL } from '@tests/urls'
-import { givenThat } from '@mationbot/actions/utilities'
+import { givenThat, forAll } from '@mationbot/actions/utilities'
 import { click, type } from '@mationbot/actions/input'
+import { goTo } from '@mationbot/actions/navigation'
 
 /**
  * @description   Utilities Action Factory
@@ -12,15 +13,21 @@ import { click, type } from '@mationbot/actions/input'
  */
 describe('[MationBot:Action Factory] Utilities', () => {
 
-  let mockPage: Page = {
-    click: jest.fn(),
-    keyboard: {
-      type: jest.fn()
-    }
-  } as any as Page
+  let mockPage: Page
 
   beforeAll(async() => {
     await page.goto(BASE_URL, getDefaultGoToPageOptions())
+  })
+
+  beforeEach(() => {
+    mockPage = {
+      click: jest.fn(),
+      keyboard: {
+        type: jest.fn()
+      },
+      url: jest.fn(() => ''),
+      goto: jest.fn()
+    } as any as Page
   })
 
   //
@@ -70,7 +77,19 @@ describe('[MationBot:Action Factory] Utilities', () => {
   //
   // forAll() Unit Test
   it('should call the list of Actions for each item in the array provided', async() => {
-    expect(1).toEqual(1)
+    const urls = ['example.html', 'example2.html', 'success.html']
+
+    await forAll(urls)(
+      (webPage) => ([
+        goTo('http://localhost:8080/' + webPage)
+      ])
+    )(mockPage)
+
+    // Note given the mock, these url's don't have to be real
+    expect(mockPage.url).toHaveBeenNthCalledWith(3) // called 3 times
+    expect(mockPage.goto).toHaveBeenNthCalledWith(1, 'http://localhost:8080/example.html', getDefaultGoToPageOptions())
+    expect(mockPage.goto).toHaveBeenNthCalledWith(2, 'http://localhost:8080/example2.html', getDefaultGoToPageOptions())
+    expect(mockPage.goto).toHaveBeenNthCalledWith(3, 'http://localhost:8080/success.html', getDefaultGoToPageOptions())
   })
   it('should call the list of Actions for each key->value pair in the object provided', async() => {
     expect(1).toEqual(1)

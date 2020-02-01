@@ -92,6 +92,24 @@ describe('[MationBot:Action Factory] Utilities', () => {
     expect(mockPage.goto).toHaveBeenNthCalledWith(3, 'http://localhost:8080/success.html', getDefaultGoToPageOptions())
   })
   it('should call the list of Actions for each key->value pair in the object provided', async() => {
-    expect(1).toEqual(1)
+    const keyValuePairs = {
+      'form input[name="username"]': 'example username',
+      'form input[name="password"]': 'example password'
+    }
+
+    // idea of this test is for a particular use-case where provided collection is an object whose keys are html selectors for form inputs, and the values are things to type
+    // so it would be one data structure for doing form input, in a succinct format
+    await forAll(keyValuePairs)(
+      (elementSelector, copyToType) => ([
+        click(elementSelector),
+        type(copyToType)
+      ])
+    )(mockPage)
+
+    expect(mockPage.click).toHaveBeenNthCalledWith(1, 'form input[name="username"]')
+    expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, 'example username')
+
+    expect(mockPage.click).toHaveBeenNthCalledWith(2, 'form input[name="password"]')
+    expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(2, 'example password')
   })
 })

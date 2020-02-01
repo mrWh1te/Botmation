@@ -8,24 +8,26 @@ Bot // Auto + mation => Bot + mation
 
 Current:
  - `MationBot` class with method `actions()` for declaratively executing async tasks, `BotAction`'s, sequentially
+   - supports completely functional approach, bypassing the Class by using the `BotActionsChainFactory`
  - Social media site specific action's ie Instagram for automating login
+ - unit/integration testing of all `BotAction` factory methods
+ - e2e testing for the `MationBot` class constructor, static asyncConstructor
+ - unit testing of `BotActionsChainFactory` with nesting
+ - example bots (including how to run bots concurrently using `puppeteer-cluster`)
 
 In dev:
-  - General Instagram Crawling/Interacting `BotAction`'s
-  - Clean Up / Docs
-  - Mascot team
-
-Planned:
-  - unit testing & a little e2e
-  - /examples with improved scripting
+  - Instagram Specific Crawling/Interacting `BotAction`'s
+  - Cleaning Up / Preparing Docs for v1
+  - Mascot team (working with a talented Artist)
+  - CI setup with TravisCI to require passing tests, before merging code
 
 Future:
- - Management web app tool
- - Expanding upon injection to include data attached to the bot, and perhaps options
+ - Management web app tool (might do Electron, and try to run the bots from the Electron app)
+ - Expanding upon injection to include data attached to the bot, and perhaps options (depending on the requirements of the management app)
 
-This project focuses on a composable way of chaining bot actions in linear sequences. Interfaced by, `BotAction`, the methods are used in a `MotionBot` instance call of `.actions()`. 
+This project focuses on a composable way of chaining bot actions in linear sequences. Interfaced by, `BotAction`, the methods are used in a `MotionBot` instance call of `.actions()`. That said, you can simple use the `BotActionsChainFactory` by supplying it the page directly, for a completely functional approach.
 
-That said, a `BotAction` can represent a whole other chain of actions, by using the `BotActionsChainFactory`. Also, there is an "if block" `BotAction` called `givenThat()` for running a chain of actions, if the condition proves TRUE.
+A `BotAction` can represent a whole other chain of actions, by re-using the `BotActionsChainFactory`. All of these are de-coupled functions, which made testing much simpler.
 
 Let's see some code:
 ```typescript

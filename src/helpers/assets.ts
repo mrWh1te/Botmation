@@ -11,5 +11,5 @@ import { ROOT_ASSETS_DIRECTORY, ASSETS_SCREENSHOTS_DIRECTORY } from "@config"
  * @return  string   relative to script root directory, the url to a page screenshot asset (file)
  * @example  getPageScreenshotLocalFileUrl('photo.png') => 'assets/screenshots/pages/photo.png'
  */
-export const getPageScreenshotLocalFileUrl = (fileName: string): string => 
+export const getScreenshotLocalFilePath = (fileName: string): string => 
   createURL('.', ROOT_ASSETS_DIRECTORY, ASSETS_SCREENSHOTS_DIRECTORY) + fileName

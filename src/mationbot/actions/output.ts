@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 
 import { BotAction } from "@mationbot/interfaces/bot-action.interfaces"
-import { getPageScreenshotLocalFileUrl } from '@helpers/assets'
+import { getScreenshotLocalFilePath } from '@helpers/assets'
 
 import { forAll } from '@mationbot/actions/utilities'
 import { goTo } from '@mationbot/actions/navigation'
@@ -11,7 +11,7 @@ import { goTo } from '@mationbot/actions/navigation'
  * @param fileName name of the file to save the PNG as
  */
 export const screenshot = (fileName: string): BotAction => async(page: Page) => {
-  await page.screenshot({path: getPageScreenshotLocalFileUrl(`${fileName}.png`)})
+  await page.screenshot({path: getScreenshotLocalFilePath(`${fileName}.png`)})
 }
 
 /**

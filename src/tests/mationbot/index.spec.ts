@@ -31,7 +31,6 @@ describe('[MationBot:Wrappers] Class & Factory', () => {
       click(FORM_SUBMIT_BUTTON_SELECTOR)
     )
 
-    await expect(page.title()).resolves.toMatch('Testing: Form Submit Success')
     expect(page.url()).toEqual('http://localhost:8080/success.html?answer=loremlipsum')
   })
 
@@ -50,7 +49,6 @@ describe('[MationBot:Wrappers] Class & Factory', () => {
     const browserPages = await browser.pages()
     const browerPage = browserPages[0]
 
-    await expect(browerPage.title()).resolves.toMatch('Testing: Form Submit Success')
     expect(browerPage.url()).toEqual('http://localhost:8080/success.html?answer=loremlipsumloremlipsum')
   })
 
@@ -64,10 +62,6 @@ describe('[MationBot:Wrappers] Class & Factory', () => {
       click(FORM_SUBMIT_BUTTON_SELECTOR)
     )
 
-    // fix for not working in Travis CI
-    const title = await page.title()
-
-    expect(title).toMatch('Testing: Form Submit Success')
     expect(page.url()).toEqual('http://localhost:8080/success.html?answer=functional')
   })
 

@@ -1,4 +1,5 @@
 # Botmation
+[![Build Status](https://travis-ci.com/mrWh1te/Botmation.svg?branch=master)](https://travis-ci.com/mrWh1te/Botmation)
 
 A NodeJS bot, called `MationBot`, for Declaratively using [Puppeteer](https://github.com/puppeteer/puppeteer) in crawling & interacting with the web.
 

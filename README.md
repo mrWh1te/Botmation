@@ -14,13 +14,13 @@ Current:
  - unit/integration testing of all `BotAction` factory methods
  - e2e testing for the `MationBot` class constructor, static asyncConstructor
  - unit testing of `BotActionsChainFactory` with nesting
+ - travisCI running builds (required passing latest code via PR's b4 merge)
  - example bots (including how to run bots concurrently using `puppeteer-cluster`)
 
 In dev:
   - Instagram Specific Crawling/Interacting `BotAction`'s
   - Cleaning Up / Preparing Docs for v1
   - Mascot team (working with a talented Artist)
-  - CI setup with TravisCI to require passing tests, before merging code
 
 Future:
  - Management web app tool (might do Electron, and try to run the bots from the Electron app)

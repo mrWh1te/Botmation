@@ -3,4 +3,4 @@ build
 src/config.ts
 
 assets/cookies/*
-# assets/screenshots/*
+assets/screenshots/*

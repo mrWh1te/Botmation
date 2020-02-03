@@ -7,6 +7,7 @@ addons:
       - libgconf-2-4
 cache: npm
 install:
-  - npm i
+  - npm install --ignore-scripts # Ignore Botmation CLI
+  - npm rebuild puppeteer # but, we didn't want to ignore this postinstall script
 script:
   - jest

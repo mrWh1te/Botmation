@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+  - 12
+addons:
+  apt:
+    packages:
+      # Ubuntu 16+ does not install this dependency by default, so we need to install it ourselves
+      - libgconf-2-4
+cache: npm
+install:
+  - export NG_CLI_ANALYTICS=ci
+  - npm i
+script:
+  - npm run build
+  - jest

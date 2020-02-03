@@ -3,6 +3,13 @@ var fs = require('fs')
 
 const configFilePath = './src/config.ts'
 
+if (process.argv.indexOf('baseonly') !== -1) {
+  // this particular argument for CI, when we dont want a walkthrough
+  // but the bare necessities of the config file to run the tests
+  saveConfigFile(getConfigFileText('', '', 'assets', 'cookies', 'screenshots'))
+  return
+}
+
 // Header Print
 printHeader()
 

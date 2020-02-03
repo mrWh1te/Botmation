@@ -2,7 +2,7 @@ import { Page } from 'puppeteer'
 
 import { getDefaultGoToPageOptions } from '@mationbot/helpers/navigation'
 
-import { BASE_URL, EXAMPLE_URL, EXAMPLE_URL2 } from '@tests/urls'
+import { BASE_URL, EXAMPLE_URL } from '@tests/urls'
 import { FORM_TEXT_INPUT_SELECTOR, FORM_SUBMIT_BUTTON_SELECTOR } from '@tests/selectors'
 import { click, type } from '@mationbot/actions/input'
 import { goTo } from '@mationbot/actions/navigation'
@@ -15,7 +15,7 @@ import { BotActionsChainFactory } from '@mationbot/factories/bot-actions-chain.f
  */
 describe('[MationBot:Wrappers] Class & Factory', () => {
 
-  beforeAll(async() => {
+  beforeEach(async() => {
     await page.goto(BASE_URL, getDefaultGoToPageOptions())
   })
 
@@ -49,6 +49,12 @@ describe('[MationBot:Wrappers] Class & Factory', () => {
 
     const browserPages = await browser.pages()
     const browerPage = browserPages[0]
+
+    const url = browserPages[0].url()
+    const url2 = browserPages[1].url()
+
+    console.log('[ASYNC Construct] url = ' + url)
+    console.log('[ASYNC Construct] url2 = ' + url2)
 
     await expect(browerPage.title()).resolves.toMatch('Testing: Form Submit Success')
     expect(browerPage.url()).toEqual('http://localhost:8080/success.html?answer=loremlipsumloremlipsum')

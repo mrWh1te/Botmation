@@ -56,6 +56,9 @@ describe('[MationBot:Wrappers] Class & Factory', () => {
     console.log('[ASYNC Construct] url = ' + url)
     console.log('[ASYNC Construct] url2 = ' + url2)
 
+    const title = await browerPage.title()
+    console.log('[ASYNC C] title = ' + title)
+
     await expect(browerPage.title()).resolves.toMatch('Testing: Form Submit Success')
     expect(browerPage.url()).toEqual('http://localhost:8080/success.html?answer=loremlipsumloremlipsum')
   })

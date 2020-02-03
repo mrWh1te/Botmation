@@ -50,15 +50,6 @@ describe('[MationBot:Wrappers] Class & Factory', () => {
     const browserPages = await browser.pages()
     const browerPage = browserPages[0]
 
-    const url = browserPages[0].url()
-    const url2 = browserPages[1].url()
-
-    console.log('[ASYNC Construct] url = ' + url)
-    console.log('[ASYNC Construct] url2 = ' + url2)
-
-    const title = await browerPage.title()
-    console.log('[ASYNC C] title = ' + title)
-
     await expect(browerPage.title()).resolves.toMatch('Testing: Form Submit Success')
     expect(browerPage.url()).toEqual('http://localhost:8080/success.html?answer=loremlipsumloremlipsum')
   })
@@ -72,6 +63,11 @@ describe('[MationBot:Wrappers] Class & Factory', () => {
       type('functional'),
       click(FORM_SUBMIT_BUTTON_SELECTOR)
     )
+
+    console.log('[functional] url = ' + page.url())
+
+    const title = await page.title()
+    console.log('[functional] title = ' + title)
 
     await expect(page.title()).resolves.toMatch('Testing: Form Submit Success')
     expect(page.url()).toEqual('http://localhost:8080/success.html?answer=functional')

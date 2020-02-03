@@ -64,12 +64,10 @@ describe('[MationBot:Wrappers] Class & Factory', () => {
       click(FORM_SUBMIT_BUTTON_SELECTOR)
     )
 
-    console.log('[functional] url = ' + page.url())
-
+    // fix for not working in Travis CI
     const title = await page.title()
-    console.log('[functional] title = ' + title)
 
-    await expect(page.title()).resolves.toMatch('Testing: Form Submit Success')
+    expect(title).toMatch('Testing: Form Submit Success')
     expect(page.url()).toEqual('http://localhost:8080/success.html?answer=functional')
   })
 

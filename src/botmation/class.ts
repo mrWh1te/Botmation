@@ -34,6 +34,7 @@ export class Botmation implements BotmationInterface {
     this.options = options
     this.injects = injects
   }
+  
   /**
    * @description    Runs the actual constructor then runs async setup code before returning the `Botmation` instance
    * @param  options   optional to override default options

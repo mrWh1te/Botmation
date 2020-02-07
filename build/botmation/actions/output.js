@@ -8,8 +8,9 @@ const urls_1 = require("../helpers/urls");
  * @param fileName name of the file to save the PNG as
  */
 exports.screenshot = (fileName) => async (page, options) => {
-    await page.screenshot({ path: urls_1.getFileUrl(options.screenshots_directory, options) + `${fileName}.png` });
-    // await page.screenshot({path: getScreenshotLocalFilePath(`${fileName}.png`)})
+    const fileUrl = urls_1.getFileUrl(options.screenshots_directory, options, fileName) + '.png';
+    console.log('[screenshot] fileUrl = ' + fileUrl);
+    await page.screenshot({ path: fileUrl });
 };
 /**
  * @description    given a list of websites, the bot will visit each, wait for them to load, then take a screenshot to save in the escreenshot directory

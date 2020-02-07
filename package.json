@@ -41,16 +41,8 @@
     "http-server": "^0.12.1",
     "jest": "^25.1.0",
     "jest-puppeteer": "^4.4.0",
-    "module-alias": "^2.2.2",
     "readline-sync": "^1.4.10",
     "ts-jest": "^25.0.0",
     "typescript": "^3.7.5"
-  },
-  "_moduleAliases": {
-    "@mationbot": "./build/botmation",
-    "@botmation": "./build/botmation",
-    "@helpers": "./build/helpers",
-    "@config": "./build/config.js",
-    "@bots": "./build/bots"
   }
 }

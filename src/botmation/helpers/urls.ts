@@ -14,9 +14,19 @@ const createFolderURL = (...folderNames: string[]): string =>
  * @param fileName 
  */
 export const getFileUrl = (fileDirectory: string, {parent_output_directory}: BotOptions, fileName: string = ''): string => {
+  const fileNameWithPrefix = fileName === '' ? '' : '/' + fileName // prefix with folder (optional)
+
   if (parent_output_directory) {
-    return createFolderURL(parent_output_directory, fileDirectory) + fileName
+    if (fileDirectory) {
+      return createFolderURL(parent_output_directory, fileDirectory) + fileNameWithPrefix
+    }
+
+    return createFolderURL(parent_output_directory) + fileNameWithPrefix
   }
 
-  return createFolderURL(fileDirectory) + fileName
+  if (fileDirectory) {
+    return createFolderURL(fileDirectory) + fileNameWithPrefix
+  }
+  
+  return fileNameWithPrefix
 }

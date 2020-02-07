@@ -11,8 +11,9 @@ const urls_1 = require("../helpers/urls");
 exports.saveCookies = (fileName) => async (page, options) => {
     try {
         const cookies = await page.cookies();
-        // await fs.writeFile(`${createURL('.', options.parent_output_directory?, ASSETS_COOKIES_DIRECTORY)}${fileName}.json`, JSON.stringify(cookies, null, 2))
-        await fs_1.promises.writeFile(`${urls_1.getFileUrl(options.cookies_directory, options)}${fileName}.json`, JSON.stringify(cookies, null, 2));
+        const cookiesFile = urls_1.getFileUrl(options.cookies_directory, options, fileName) + '.json';
+        console.log('[saveCookies] cookiesFile = ' + cookiesFile);
+        await fs_1.promises.writeFile(cookiesFile, JSON.stringify(cookies, null, 2));
     }
     catch (error) {
         console_1.logError('[BotAction:saveCookies] ' + error);
@@ -24,15 +25,20 @@ exports.saveCookies = (fileName) => async (page, options) => {
  * @example loadCookies('./cookies.json')
  */
 exports.loadCookies = (fileName) => async (page, options) => {
+    const cookiesFile = urls_1.getFileUrl(options.cookies_directory, options, fileName) + '.json';
+    console.log('[loadCookies] cookiesFile = ' + cookiesFile);
     try {
-        // const file = await fs.readFile(`${createURL('.', ROOT_ASSETS_DIRECTORY, ASSETS_COOKIES_DIRECTORY)}${fileName}.json`)
-        const file = await fs_1.promises.readFile(`${urls_1.getFileUrl(options.cookies_directory, options)}${fileName}.json`);
+        const cookiesFile = urls_1.getFileUrl(options.cookies_directory, options, fileName) + '.json';
+        console_1.log('[loadCookies] cookiesFile = ' + cookiesFile);
+        const file = await fs_1.promises.readFile(cookiesFile);
         const cookies = JSON.parse(file.toString());
         for (const cookie of cookies) {
             await page.setCookie(cookie);
         }
     }
     catch (error) {
+        const cookiesFile = urls_1.getFileUrl(options.cookies_directory, options, fileName) + '.json';
+        console_1.log('[loadCookies] cookiesFile = ' + cookiesFile);
         console_1.logError('[BotAction:loadCookies] ' + error);
     }
 };

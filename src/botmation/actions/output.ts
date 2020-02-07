@@ -11,8 +11,10 @@ import { getFileUrl } from '../helpers/urls'
  * @param fileName name of the file to save the PNG as
  */
 export const screenshot = (fileName: string): BotAction => async(page: Page, options) => {
-  await page.screenshot({path: getFileUrl(options.screenshots_directory, options) + `${fileName}.png`})
-  // await page.screenshot({path: getScreenshotLocalFilePath(`${fileName}.png`)})
+  const fileUrl = getFileUrl(options.screenshots_directory, options, fileName) + '.png'
+  console.log('[screenshot] fileUrl = ' + fileUrl)
+
+  await page.screenshot({path: fileUrl})
 }
 
 /**

@@ -7,6 +7,6 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 // Class
-__export(require("./botmation.class"));
+__export(require("./class"));
 // Main Actions Factory
 __export(require("./factories/bot-actions-chain.factory"));

@@ -12,8 +12,15 @@ const createFolderURL = (...folderNames) => folderNames.reduce((folderUrl, folde
  * @param fileName
  */
 exports.getFileUrl = (fileDirectory, { parent_output_directory }, fileName = '') => {
+    const fileNameWithPrefix = fileName === '' ? '' : '/' + fileName; // prefix with folder (optional)
     if (parent_output_directory) {
-        return createFolderURL(parent_output_directory, fileDirectory) + fileName;
+        if (fileDirectory) {
+            return createFolderURL(parent_output_directory, fileDirectory) + fileNameWithPrefix;
+        }
+        return createFolderURL(parent_output_directory) + fileNameWithPrefix;
     }
-    return createFolderURL(fileDirectory) + fileName;
+    if (fileDirectory) {
+        return createFolderURL(fileDirectory) + fileNameWithPrefix;
+    }
+    return fileNameWithPrefix;
 };

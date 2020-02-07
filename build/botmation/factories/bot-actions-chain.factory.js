@@ -11,5 +11,5 @@ exports.BotActionsChainFactory = (page, overloadOptions = {}, ...injects) => asy
     // Resolve the last returned promise
     await chain;
     // Inject the active page into the BotAction, for it to operate on
-    return action(page, bot_options_1.getDefaultBotOptions(overloadOptions), injects);
+    return action(page, bot_options_1.getDefaultBotOptions(overloadOptions), ...injects);
 }, Promise.resolve());

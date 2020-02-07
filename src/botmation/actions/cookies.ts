@@ -2,7 +2,7 @@ import { Page } from 'puppeteer'
 import { promises as fs } from 'fs'
 
 import { BotAction } from '../interfaces/bot-action.interfaces'
-import { logError } from './console'
+import { logError, log } from './console'
 import { getFileUrl } from '../helpers/urls'
 
 /**
@@ -13,8 +13,9 @@ import { getFileUrl } from '../helpers/urls'
 export const saveCookies = (fileName: string): BotAction => async(page: Page, options) => {
   try {
     const cookies = await page.cookies()
-    // await fs.writeFile(`${createURL('.', options.parent_output_directory?, ASSETS_COOKIES_DIRECTORY)}${fileName}.json`, JSON.stringify(cookies, null, 2))
-    await fs.writeFile(`${getFileUrl(options.cookies_directory, options)}${fileName}.json`, JSON.stringify(cookies, null, 2))
+    const cookiesFile = getFileUrl(options.cookies_directory, options, fileName) + '.json'
+    console.log('[saveCookies] cookiesFile = ' + cookiesFile)
+    await fs.writeFile(cookiesFile, JSON.stringify(cookies, null, 2))
   } catch(error) {
     logError('[BotAction:saveCookies] ' + error)
   }
@@ -26,15 +27,21 @@ export const saveCookies = (fileName: string): BotAction => async(page: Page, op
  * @example loadCookies('./cookies.json')
  */
 export const loadCookies = (fileName: string): BotAction => async(page: Page, options) => {
+  const cookiesFile = getFileUrl(options.cookies_directory, options, fileName) + '.json'
+  console.log('[loadCookies] cookiesFile = ' + cookiesFile)
+
   try {
-    // const file = await fs.readFile(`${createURL('.', ROOT_ASSETS_DIRECTORY, ASSETS_COOKIES_DIRECTORY)}${fileName}.json`)
-    const file = await fs.readFile(`${getFileUrl(options.cookies_directory, options)}${fileName}.json`)
+    const cookiesFile = getFileUrl(options.cookies_directory, options, fileName) + '.json'
+    log('[loadCookies] cookiesFile = ' + cookiesFile)
+    const file = await fs.readFile(cookiesFile)
     const cookies = JSON.parse(file.toString())
 
     for (const cookie of cookies) {
       await page.setCookie(cookie)
     }
   } catch(error) {
+    const cookiesFile = getFileUrl(options.cookies_directory, options, fileName) + '.json'
+    log('[loadCookies] cookiesFile = ' + cookiesFile)
     logError('[BotAction:loadCookies] ' + error)
   }
 }

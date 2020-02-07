@@ -1,18 +1,18 @@
 # Botmation
 [![Build Status](https://travis-ci.com/mrWh1te/Botmation.svg?branch=master)](https://travis-ci.com/mrWh1te/Botmation) ![GitHub](https://img.shields.io/github/license/mrWh1te/Botmation)
 
-A NodeJS bot, called `MationBot`, for Declaratively using [Puppeteer](https://github.com/puppeteer/puppeteer) in crawling & interacting with the web.
+A NodeJS bot, called `Botmation`, for Declaratively using [Puppeteer](https://github.com/puppeteer/puppeteer) in crawling & interacting with the web.
 
 Bot // Auto + mation => Bot + mation
 
 ## Overview
 
 Current:
- - `MationBot` class with method `actions()` for declaratively executing async tasks, `BotAction`'s, sequentially
+ - `Botmation` class with method `actions()` for declaratively executing async tasks, `BotAction`'s, sequentially
    - supports completely functional approach, bypassing the Class by using the `BotActionsChainFactory`
  - Social media site specific action's ie Instagram for automating login
  - unit/integration testing of all `BotAction` factory methods
- - e2e testing for the `MationBot` class constructor, static asyncConstructor
+ - e2e testing for the `Botmation` class constructor, static asyncConstructor
  - unit testing of `BotActionsChainFactory` with nesting
  - travisCI running builds (required passing latest code via PR's b4 merge)
  - example bots (including how to run bots concurrently using `puppeteer-cluster`)
@@ -34,24 +34,24 @@ Let's see some code:
 ```typescript
     import puppeteer from 'puppeteer'
 
-    import { MationBot } from '@mationbot'
+    import { Botmation } from 'botmation'
 
     // General BotAction's
-    import { log } from '@mationbot/actions/console'
-    import { screenshot, givenThat, wait } from '@mationbot/actions/utilities'
-    import { loadCookies } from '@mationbot/actions/cookies'
-    import { goTo } from '@mationbot/actions/navigation'
+    import { log } from 'botmation/actions/console'
+    import { screenshot, givenThat, wait } from 'botmation/actions/utilities'
+    import { loadCookies } from 'botmation/actions/cookies'
+    import { goTo } from 'botmation/actions/navigation'
 
     // Instagram specific
     import { login, isGuest } from '@bots/instagram/actions/auth'
     import { getInstagramBaseUrl, getInstagramLoginUrl } from '@bots/instagram/helpers/urls'
 
     // Start up the Instagram bot with the Puppeteer Browser
-    const bot = await MationBot.asyncConstructor(browser)
+    const bot = await Botmation.asyncConstructor(browser)
 
     // Actions run in a linear sequence, as declared
     await bot.actions(
-      log('MationBot running'),
+      log('Botmation running'),
       loadCookies('instagram'),
       
       // a special BotAction that works like an if() {}
@@ -111,7 +111,7 @@ In terms of code patterns, it falls into 2 groups:
 
 Which has yet, to start development. A web app tool for reporting and management of the bots.
 
-2) MationBot
+2) Botmation
 
 Which is the heart and soul of this project. It provides a single class that has a Declarative `actions()` method, for chaining `BotAction`'s in an async sequence. These `BotAction`'s are provided by `BotActionFactory` methods. That allows for dev's to customize the `BotAction`, while injecting the active Puppeteer page for interaction (while keeping the door open for other injectables)
 
@@ -121,7 +121,7 @@ Explore directories in the `src/` folder, to read more documentation on each res
 
 What you'll spend the majority of your time working with. These factory produced functions are how you control the bots.
 
-A `BotAction` is an async function (returns a promise) that uses a Puppeteer `Page` instance to crawl & interact with the web page (browser tab). They are de-coupled from the `MationBot` class and implement the `BotAction` interface. They are produced from factory methods following the `BotActionFactory` interface. That makes them customizable. These bots have a Declarative `actions()` method that is produced from the `BotActionsChainFactory` method. It's similar to the "pipe" syntax in RxJS, but we are not passing the result/output of one `BotAction` to the next. Hence, it's a chain of resolving promises.
+A `BotAction` is an async function (returns a promise) that uses a Puppeteer `Page` instance to crawl & interact with the web page (browser tab). They are de-coupled from the `Botmation` class and implement the `BotAction` interface. They are produced from factory methods following the `BotActionFactory` interface. That makes them customizable. These bots have a Declarative `actions()` method that is produced from the `BotActionsChainFactory` method. It's similar to the "pipe" syntax in RxJS, but we are not passing the result/output of one `BotAction` to the next. Hence, it's a chain of resolving promises.
 
 It's flexible, given the linear nature of chains. It's possible for a `BotAction` to represent another chain of `BotAction`'s, by re-using the `BotActionsChainFactory`! In theory, you can do this over and over, infinitely, chains of chains of chains.
 
@@ -137,11 +137,11 @@ Follow the "Getting Started" section in getting the file ready, since it's ignor
 
 ## Running a Nation of Bots
 
-The `MationBot` class supports the [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) package to run multiple bots concurrently! Here's how the heart of it looks:
+The `Botmation` class supports the [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) package to run multiple bots concurrently! Here's how the heart of it looks:
 
 ```
 cluster.queue(data, async(page, ...) => {
-  const bot = new MationBot(page)
+  const bot = new Botmation(page)
 
   await bot.actions(
     ...
@@ -150,7 +150,7 @@ cluster.queue(data, async(page, ...) => {
 
 ```
 
-You can provide "Task" functions, wrapping separate `MationBot` bots actions, to the `cluster.queue()` method, so each bot can operate individually. A complete working example is [available here](/src/examples/puppeteer-cluster.ts) running three bots concurrently.
+You can provide "Task" functions, wrapping separate `Botmation` bots actions, to the `cluster.queue()` method, so each bot can operate individually. A complete working example is [available here](/src/examples/puppeteer-cluster.ts) running three bots concurrently.
 
 ## Manual Script Running
 

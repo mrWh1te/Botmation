@@ -11,7 +11,7 @@ import { botOptions } from '@tests/mocks/bot-options.mock'
  *                The factory methods here return BotAction's for the bots to input into the page as User
  *                  ie mouse click, keyboard typing
  */
-describe('[MationBot:Action Factory] Input', () => {
+describe('[Botmation:Action Factory] Input', () => {
   const inputCopy = 'My cat is black'
 
   beforeAll(async() => {
@@ -23,9 +23,9 @@ describe('[MationBot:Action Factory] Input', () => {
   it('should call puppeteer\'s page click method with the provided DOM selector', async () => {
     const mockPage = {
       click: jest.fn()
-    }
+    } as any as Page
     
-    await click(FORM_SUBMIT_BUTTON_SELECTOR)(mockPage as any as Page, botOptions)
+    await click(FORM_SUBMIT_BUTTON_SELECTOR)(mockPage, botOptions)
 
     expect(mockPage.click).toBeCalledWith('form button[type="submit"]')
   })
@@ -35,9 +35,9 @@ describe('[MationBot:Action Factory] Input', () => {
       keyboard: {
         type: jest.fn()
       }
-    }
+    } as any as Page
     
-    await type(inputCopy)(mockPage as any as Page, botOptions)
+    await type(inputCopy)(mockPage, botOptions)
 
     expect(mockPage.keyboard.type).toBeCalledWith('My cat is black')
   })

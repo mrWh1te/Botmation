@@ -32,7 +32,7 @@ import { isTurnOnNotificationsModalActive } from 'botmation/bots/instagram/helpe
     const instagramBot = await Botmation.asyncConstructor(browser)
 
     await instagramBot.actions(
-      log('MationBot running'),
+      log('Botmation running'),
 
       // Takes the name of the file to load cookies from
       // Match this value with the same used in saveCookies()

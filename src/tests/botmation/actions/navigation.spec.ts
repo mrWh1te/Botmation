@@ -13,7 +13,7 @@ import { botOptions } from '@tests/mocks/bot-options.mock'
  *                The factory methods here return BotAction's for the bots to input into the page as User
  *                  ie goto, waiting for navigation to complete on change
  */
-describe('[MationBot:Action Factory] Navigation', () => {
+describe('[Botmation:Action Factory] Navigation', () => {
   const mockPage = {
     goto: jest.fn(),
     url: jest.fn(() => BASE_URL),

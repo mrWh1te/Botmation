@@ -19,8 +19,13 @@ exports.wait = (milliseconds) => async () => await utilities_1.sleep(millisecond
  * @param condition
  */
 exports.givenThat = (condition) => (...actions) => async (page, options, ...injects) => {
-    if (await condition(page, options, ...injects)) {
-        await bot_actions_chain_factory_1.BotActionsChainFactory(page, options, ...injects)(...actions);
+    try {
+        if (await condition(page, options, ...injects)) {
+            await bot_actions_chain_factory_1.BotActionsChainFactory(page, options, ...injects)(...actions);
+        }
+    }
+    catch (error) {
+        // logError(error)
     }
 };
 exports.forAll = (collection) => (botActionOrActionsFactory) => async (page, options, ...injects) => {
@@ -37,4 +42,20 @@ exports.forAll = (collection) => (botActionOrActionsFactory) => async (page, opt
         }
     }
 };
-// TODO: while loop, like givenThat but while, with maybe a special optional exit condition, for just in case?
+/**
+ * @description    Similar to givenThat, except it will keep running the sequence of actions until the condition is no longer TRUE
+ * @experimental
+ * @param condition
+ */
+exports.doWhile = (condition) => (...actions) => async (page, options, ...injects) => {
+    try {
+        let resolvedCondition = await condition(page, options, ...injects);
+        while (resolvedCondition) {
+            await bot_actions_chain_factory_1.BotActionsChainFactory(page, options, ...injects)(...actions);
+            resolvedCondition = await condition(page, options, ...injects);
+        }
+    }
+    catch (error) {
+        // logError(error)
+    }
+};

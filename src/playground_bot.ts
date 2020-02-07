@@ -54,7 +54,7 @@ import { isTurnOnNotificationsModalActive } from 'botmation/bots/instagram/helpe
 
     // Actions run in sequence
     await instagramBot.actions(
-      log('MationBot running'),
+      log('Botmation running'),
 
       // example forAll using 1 BotAction instead of an array
       // forAll(['twitter.com', 'facebook.com'])((siteName) => goTo('http://' + siteName)),

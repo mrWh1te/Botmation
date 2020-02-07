@@ -44,7 +44,7 @@ import { BotActionsChainFactory as Bot } from 'botmation/factories/bot-actions-c
     
         const typescriptBot = async ({ page, data: url }: {page: Page, data: any}) => 
             // Imperative OO, 1 line
-            await (new Botmation(page)).actions( // if you're not doing the above functional way, you could rename MationBot to Bot in the import using 'as'
+            await (new Botmation(page)).actions( // if you're not doing the above functional way, you could rename Botmation to Bot in the import using 'as'
                 goTo(url),
                 screenshot(url.replace(/[^a-zA-Z]/g, '_')),
                 log('screenshot of ' + url + ' saved')

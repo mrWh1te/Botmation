@@ -14,7 +14,7 @@ import { getFileUrl } from '@botmation/helpers/urls'
  *                    The idea of input vs output factory methods came from I/O
  *                    So this can be screenshots, maybe logging information to a file, etc
  */
-describe('[MationBot:Action Factory] Output', () => {
+describe('[Botmation:Action Factory] Output', () => {
   const SCREENSHOT_FILENAME = 'test-screenshot-1'
 
   let mockPage: Page

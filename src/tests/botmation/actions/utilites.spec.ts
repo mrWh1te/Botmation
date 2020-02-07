@@ -12,7 +12,7 @@ import { botOptions } from '@tests/mocks/bot-options.mock'
  * @description   Utilities Action Factory
  *                The factory methods here return BotAction's for the bots to handle more complex use-cases
  */
-describe('[MationBot:Action Factory] Utilities', () => {
+describe('[Botmation:Action Factory] Utilities', () => {
 
   let mockPage: Page
 

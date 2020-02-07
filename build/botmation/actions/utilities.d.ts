@@ -58,3 +58,9 @@ export interface Dictionary {
     [key: string]: any;
 }
 export declare const forAll: (collection: any[] | Dictionary) => (botActionOrActionsFactory: (...args: any[]) => BotAction | BotAction[]) => (page: Page, options: BotOptions, ...injects: any[]) => Promise<void>;
+/**
+ * @description    Similar to givenThat, except it will keep running the sequence of actions until the condition is no longer TRUE
+ * @experimental
+ * @param condition
+ */
+export declare const doWhile: (condition: (page: Page, options: BotOptions, ...injects: any[]) => Promise<boolean>) => (...actions: BotAction[]) => BotAction;

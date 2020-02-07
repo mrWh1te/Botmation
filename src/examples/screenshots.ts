@@ -34,7 +34,7 @@ import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
 
     // Bot's automations
     await bot.actions(
-      log('MationBot running'),
+      log('Botmation running'),
 
       // Taking screenshots of many sites 
       // filenames are the url's

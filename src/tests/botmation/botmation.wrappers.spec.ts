@@ -10,10 +10,10 @@ import { Botmation } from 'botmation/botmation.class'
 import { BotActionsChainFactory } from 'botmation/factories/bot-actions-chain.factory'
 
 /**
- * @description   Test the Wrappers (MationBot class and the BotActionsChainFactory)
+ * @description   Test the Wrappers (Botmation class and the BotActionsChainFactory)
  *                The factory methods here return BotAction's for the bots to handle more complex use-cases
  */
-describe('[MationBot:Wrappers] Class & Factory', () => {
+describe('[Botmation:Wrappers] Class & Factory', () => {
 
   beforeEach(async() => {
     await page.goto(BASE_URL, getDefaultGoToPageOptions())
@@ -21,7 +21,7 @@ describe('[MationBot:Wrappers] Class & Factory', () => {
 
   //
   // Regular Class Instance
-  it('should create a MationBot instance then run the actions', async() => {
+  it('should create a Botmation instance then run the actions', async() => {
     const bot = new Botmation(page)
 
     await bot.actions(
@@ -36,7 +36,7 @@ describe('[MationBot:Wrappers] Class & Factory', () => {
 
   //
   // Async Class Instance
-  it('should create a MationBot instance using the static asyncConstructor() then run the actions', async() => {
+  it('should create a Botmation instance using the static asyncConstructor() then run the actions', async() => {
     const bot = await Botmation.asyncConstructor(browser)
 
     await bot.actions(

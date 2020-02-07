@@ -1,4 +1,4 @@
-# MationBot Class
+# Botmation Class
 
 The main class that encapsulates Puppeteer's page as the one it crawls and interacts in.
 

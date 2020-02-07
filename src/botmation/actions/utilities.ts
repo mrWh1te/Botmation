@@ -95,4 +95,22 @@ export const forAll =
         }
       }
 
-// TODO: while loop, like givenThat but while, with maybe a special optional exit condition, for just in case?
+/**
+ * @description    Similar to givenThat, except it will keep running the sequence of actions until the condition is no longer TRUE
+ * @experimental
+ * @param condition 
+ */
+export const doWhile = 
+  (condition: (page: Page, options: BotOptions, ...injects: any[]) => Promise<boolean>) => 
+    (...actions: BotAction[]): BotAction => 
+      async(page: Page, options, ...injects) => {
+        try {
+          let resolvedCondition = await condition(page, options, ...injects)
+          while (resolvedCondition) {
+            await BotActionsChainFactory(page, options, ...injects)(...actions)
+            resolvedCondition = await condition(page, options, ...injects)
+          }
+        } catch (error) {
+          // logError(error)
+        }
+      }

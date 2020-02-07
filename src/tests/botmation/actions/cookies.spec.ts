@@ -15,7 +15,7 @@ import { getFileUrl } from '@botmation/helpers/urls'
  * @note          The testing strategy focuses on unit-testing the file-system part of saving/loading cookies (writing/reading a JSON file)
  *                  then does a integration test in calling the correct Puppeteer methods in injecting or reading cookies from a Page
  */
-describe('[MationBot:Action Factory] Cookies', () => {
+describe('[Botmation:Action Factory] Cookies', () => {
   const BOT_OPTIONS = {
     parent_output_directory: 'assets',
     cookies_directory: 'cookies'

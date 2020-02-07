@@ -6,7 +6,7 @@ import { botOptions } from '@tests/mocks/bot-options.mock'
  *                The factory methods here return BotAction's for the bots to log themed messages in console
  * @note          These messages are logged to the Node console, not the Puppeteer page console.
  */
-describe('[MationBot:Action Factory] Console', () => {
+describe('[Botmation:Action Factory] Console', () => {
   let logs: any[]
 
   beforeAll(() => {

@@ -20,7 +20,7 @@ export class Botmation implements BotmationInterface {
    */
   private page: Page
 
-  // MationBot specific
+  // Botmation specific
   private options: Partial<BotOptions>
 
   // Injectables for your custom BotAction's
@@ -35,7 +35,7 @@ export class Botmation implements BotmationInterface {
     this.injects = injects
   }
   /**
-   * @description    Runs the actual constructor then runs async setup code before returning the `MationBot` instance
+   * @description    Runs the actual constructor then runs async setup code before returning the `Botmation` instance
    * @param  options   optional to override default options
    */
   public static async asyncConstructor(browser: Browser, options: Partial<BotOptions> = {}, ...injects: any[]): Promise<Botmation> {

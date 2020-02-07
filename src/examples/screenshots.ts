@@ -4,7 +4,7 @@
 import 'module-alias/register'
 import puppeteer from 'puppeteer'
 
-import { MationBot } from '@mationbot'
+import { MationBot } from '@mationbot/mation-bot.class'
 
 // General BotAction's
 import { log, logError } from '@mationbot/actions/console'

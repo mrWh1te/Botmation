@@ -4,7 +4,7 @@
 import 'module-alias/register'
 import puppeteer from 'puppeteer'
 
-import { MationBot } from '@mationbot'
+import { MationBot } from '@mationbot/mation-bot.class'
 
 import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
 

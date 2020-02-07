@@ -1,5 +1,11 @@
 node_modules
-build
+
+build/bots
+build/examples
+build/tests
+build/config.js
+build/playground_bot.js
+
 src/config.ts
 
 assets/cookies/*

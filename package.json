@@ -1,7 +1,7 @@
 {
   "name": "botmation",
-  "version": "0.0.1",
-  "description": "A Puppeteer Library that provides a declarative syntax for web crawler automation",
+  "version": "1.0.0",
+  "description": "A Puppeteer Wrapper that provides a declarative syntax for web crawler automation",
   "main": "./build/playground_bot.js",
   "scripts": {
     "build": "tsc",

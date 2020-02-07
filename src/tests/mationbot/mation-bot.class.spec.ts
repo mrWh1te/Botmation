@@ -6,7 +6,7 @@ import { BASE_URL, EXAMPLE_URL } from '@tests/urls'
 import { FORM_TEXT_INPUT_SELECTOR, FORM_SUBMIT_BUTTON_SELECTOR } from '@tests/selectors'
 import { click, type } from '@mationbot/actions/input'
 import { goTo } from '@mationbot/actions/navigation'
-import { MationBot } from '@mationbot'
+import { MationBot } from '@mationbot/mation-bot.class'
 import { BotActionsChainFactory } from '@mationbot/factories/bot-actions-chain.factory'
 
 /**

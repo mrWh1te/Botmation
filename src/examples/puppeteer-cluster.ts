@@ -9,7 +9,7 @@ import { screenshot } from '@mationbot/actions/output'
 import { logError, log } from '@mationbot/actions/console'
 
 // Class for injecting the page
-import { MationBot } from '@mationbot'
+import { MationBot } from '@mationbot/mation-bot.class'
 
 // Purely functional approach
 import { BotActionsChainFactory as Bot } from '@mationbot/factories/bot-actions-chain.factory'

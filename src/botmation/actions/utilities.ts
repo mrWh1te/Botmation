@@ -8,6 +8,8 @@ import { sleep } from '../helpers/utilities'
 import { applyBotActionOrActions } from '../helpers/actions'
 import { BotAction } from '../interfaces/bot-action.interfaces'
 import { BotActionsChainFactory } from '../factories/bot-actions-chain.factory'
+import { BotOptions } from '../interfaces/bot-options.interfaces'
+import { logError } from './console'
 
 /**
  * @description   Pauses the bot for the provided milliseconds before letting it execute the next Action
@@ -27,11 +29,15 @@ export const wait = (milliseconds: number): BotAction => async() =>
  * @param condition 
  */
 export const givenThat = 
-  (condition: (page: Page) => Promise<boolean>) => 
+  (condition: (page: Page, options: BotOptions, ...injects: any[]) => Promise<boolean>) => 
     (...actions: BotAction[]): BotAction => 
-      async(page: Page) => {
-        if (await condition(page)) {
-          await BotActionsChainFactory(page)(...actions)
+      async(page: Page, options, ...injects) => {
+        try {
+          if (await condition(page, options, ...injects)) {
+            await BotActionsChainFactory(page, options, ...injects)(...actions)
+          }
+        } catch (error) {
+          // logError(error)
         }
       }
 
@@ -75,16 +81,18 @@ export interface Dictionary {
 export const forAll =
   (collection: any[] | Dictionary) =>
     (botActionOrActionsFactory: (...args: any[]) => BotAction[] | BotAction) =>
-      async(page: Page) => {
+      async(page: Page, options: BotOptions, ...injects: any[]) => {
         if (Array.isArray(collection)) {
           // Array
           for(let i = 0; i < collection.length; i++) {
-            await applyBotActionOrActions(page, botActionOrActionsFactory(collection[i]))
+            await applyBotActionOrActions(page, options, botActionOrActionsFactory(collection[i]), ...injects)
           }
         } else {
           // Dictionary
           for (const [key, value] of Object.entries(collection)) {
-            await applyBotActionOrActions(page, botActionOrActionsFactory(key, value))
+            await applyBotActionOrActions(page, options, botActionOrActionsFactory(key, value), ...injects)
           }
         }
       }
+
+// TODO: while loop, like givenThat but while, with maybe a special optional exit condition, for just in case?

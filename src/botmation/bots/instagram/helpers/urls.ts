@@ -1,4 +1,3 @@
-import { createURL } from "botmation/helpers/urls"
 import { INSTAGRAM_URL_EXT_LOGIN, INSTAGRAM_BASE_URL } from "botmation/bots/instagram/constants/urls"
 
 /**
@@ -6,7 +5,7 @@ import { INSTAGRAM_URL_EXT_LOGIN, INSTAGRAM_BASE_URL } from "botmation/bots/inst
  */
 
 export const getInstagramBaseUrl = () =>
-  createURL(INSTAGRAM_BASE_URL)
+  INSTAGRAM_BASE_URL + '/'
 
 export const getInstagramLoginUrl = () => 
-  createURL(INSTAGRAM_BASE_URL, INSTAGRAM_URL_EXT_LOGIN)
+  getInstagramBaseUrl() + INSTAGRAM_URL_EXT_LOGIN + '/'

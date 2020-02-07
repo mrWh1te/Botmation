@@ -3,9 +3,10 @@ import { Page } from 'puppeteer'
 import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
 
 import { BASE_URL } from '@tests/urls'
-import { getCookiesLocalFilePath } from 'botmation/helpers/assets'
 import { fileExist, deleteFile } from 'botmation/helpers/files'
 import { saveCookies, loadCookies } from 'botmation/actions/cookies'
+import { BotOptions } from 'botmation/interfaces/bot-options.interfaces'
+import { getFileUrl } from '@botmation/helpers/urls'
 
 /**
  * @description   Cookies Action Factory
@@ -15,6 +16,11 @@ import { saveCookies, loadCookies } from 'botmation/actions/cookies'
  *                  then does a integration test in calling the correct Puppeteer methods in injecting or reading cookies from a Page
  */
 describe('[MationBot:Action Factory] Cookies', () => {
+  const BOT_OPTIONS = {
+    parent_output_directory: 'assets',
+    cookies_directory: 'cookies'
+  } as any as BotOptions
+
   const COOKIES_FILENAME = 'test-cookies-1'
   const COOKIES_JSON = [
     {
@@ -42,16 +48,16 @@ describe('[MationBot:Action Factory] Cookies', () => {
   //
   // saveCookies() Unit/Integration Test
   it('should call puppeteer\'s page cookies() method then create a JSON file of that data in the Cookies directory', async() => {
-    await saveCookies(COOKIES_FILENAME)(mockPage as any as Page)
+    await saveCookies(COOKIES_FILENAME)(mockPage, BOT_OPTIONS)
 
     expect(mockPage.cookies).toBeCalled()
-    await expect(fileExist(getCookiesLocalFilePath('test-cookies-1.json'))).resolves.toEqual(true)
+    await expect(fileExist(getFileUrl(BOT_OPTIONS.cookies_directory, BOT_OPTIONS) + 'test-cookies-1.json')).resolves.toEqual(true)
   })
 
   //
   // loadCookies() Unit/Integration Test
   it('should loadCookies() from filename provided by injecting that data from the file into the Puppeteer Page', async() => {
-    await loadCookies(COOKIES_FILENAME)(mockPage as any as Page)
+    await loadCookies(COOKIES_FILENAME)(mockPage, BOT_OPTIONS)
 
     expect(mockPage.setCookie).toHaveBeenNthCalledWith(1, {
       "name": "sessionid",
@@ -70,9 +76,11 @@ describe('[MationBot:Action Factory] Cookies', () => {
   // Clean up
   afterAll(async() => {
     // The saveCookies() unit-test creates a specific file, let's delete it, to prevent future false positive's
-    const TEST_COOKIES_FILE_EXISTS = await fileExist(getCookiesLocalFilePath(COOKIES_FILENAME + '.json'))
+    const cookiesFileUrl = getFileUrl(BOT_OPTIONS.cookies_directory, BOT_OPTIONS) +  COOKIES_FILENAME + '.json'
+
+    const TEST_COOKIES_FILE_EXISTS = await fileExist(cookiesFileUrl)
     if (TEST_COOKIES_FILE_EXISTS) {
-      await deleteFile(getCookiesLocalFilePath(COOKIES_FILENAME + '.json'))
+      await deleteFile(cookiesFileUrl)
     }
   })
 })

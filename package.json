@@ -1,6 +1,6 @@
 {
   "name": "botmation",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "A Puppeteer Wrapper that provides a declarative syntax for web crawler automation",
   "main": "./build/mationbot/module.js",
   "types": "./build/mationbot/module.d.ts",

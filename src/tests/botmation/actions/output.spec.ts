@@ -4,8 +4,9 @@ import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
 
 import { BASE_URL } from '@tests/urls'
 import { screenshot, screenshotAll } from 'botmation/actions/output'
-import { getScreenshotLocalFilePath } from 'botmation/helpers/assets'
 import { fileExist, deleteFile } from 'botmation/helpers/files'
+import { botOptions } from '@tests/mocks/bot-options.mock'
+import { getFileUrl } from '@botmation/helpers/urls'
 
 /**
  * @description   Output Action Factory
@@ -33,38 +34,40 @@ describe('[MationBot:Action Factory] Output', () => {
   //
   // screenshot() Integration Test
   it('should call puppeteer\'s page screenshot() method with the provided options', async() => {
-    await screenshot(SCREENSHOT_FILENAME)(mockPage as any as Page)
+    await screenshot(SCREENSHOT_FILENAME)(mockPage, botOptions)
 
-    expect(mockPage.screenshot).toBeCalledWith({path: getScreenshotLocalFilePath('test-screenshot-1.png')})
+    expect(mockPage.screenshot).toBeCalledWith({path: getFileUrl(botOptions.screenshots_directory, botOptions) + 'test-screenshot-1.png'})
   })
 
   //
   // screenshot() Unit Test
   it('should create a PNG file in the screenshots directory with the provided filename', async() => {
-    await screenshot(SCREENSHOT_FILENAME)(page)
+    await screenshot(SCREENSHOT_FILENAME)(page, botOptions)
 
-    await expect(fileExist(getScreenshotLocalFilePath('test-screenshot-1.png'))).resolves.toEqual(true)
+    await expect(fileExist(getFileUrl(botOptions.screenshots_directory, botOptions) + 'test-screenshot-1.png')).resolves.toEqual(true)
   })
 
   //
   // screenshotAll() Integration test
   it('should screenshotAll(...) sites by calling goTo then screenshot, on each one', async() => {
-    await screenshotAll('google.com', 'twitter.com')(mockPage as any as Page)
+    await screenshotAll('google.com', 'twitter.com')(mockPage, botOptions)
 
     expect(mockPage.goto).toHaveBeenNthCalledWith(1, 'https://google.com', getDefaultGoToPageOptions())
-    expect(mockPage.screenshot).toHaveBeenNthCalledWith(1, {path: getScreenshotLocalFilePath('google.com.png')})
+    expect(mockPage.screenshot).toHaveBeenNthCalledWith(1, {path: getFileUrl(botOptions.screenshots_directory, botOptions) + 'google.com.png'})
 
     expect(mockPage.goto).toHaveBeenLastCalledWith('https://twitter.com', getDefaultGoToPageOptions())
-    expect(mockPage.screenshot).toHaveBeenLastCalledWith({path: getScreenshotLocalFilePath('twitter.com.png')})
+    expect(mockPage.screenshot).toHaveBeenLastCalledWith({path: getFileUrl(botOptions.screenshots_directory, botOptions) + 'twitter.com.png'})
   })
 
   //
   // Clean up
   afterAll(async() => {
     // The screenshot() unit-test creates a specific file, let's delete it, to prevent future false positive's
-    const TEST_SCREENSHOT_FILE_EXISTS = await fileExist(getScreenshotLocalFilePath(SCREENSHOT_FILENAME+'.png'))
+    const fileUrl = getFileUrl(botOptions.screenshots_directory, botOptions) + SCREENSHOT_FILENAME + '.png'
+
+    const TEST_SCREENSHOT_FILE_EXISTS = await fileExist(fileUrl)
     if (TEST_SCREENSHOT_FILE_EXISTS) {
-      await deleteFile(getScreenshotLocalFilePath(SCREENSHOT_FILENAME+'.png'))
+      await deleteFile(fileUrl)
     }
   })
 })

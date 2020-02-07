@@ -1,4 +1,5 @@
 import { log, warning, error } from 'botmation/actions/console'
+import { botOptions } from '@tests/mocks/bot-options.mock'
 
 /**
  * @description   Console Action Factory
@@ -22,7 +23,7 @@ describe('[MationBot:Action Factory] Console', () => {
   //
   // Unit Tests
   it('should log a message to console', async () => {
-    await log('example message')(page)
+    await log('example message')(page, botOptions)
 
     // Get around the Chalk styling
     expect(logs[0][0]).toEqual(expect.stringMatching('Log:'))
@@ -30,7 +31,7 @@ describe('[MationBot:Action Factory] Console', () => {
   })
 
   it('should log a warning to console', async () => {    
-    await warning('example warning')(page)
+    await warning('example warning')(page, botOptions)
 
     // Get around the Chalk styling
     expect(logs[0][0]).toEqual(expect.stringMatching('Warning:'))
@@ -38,7 +39,7 @@ describe('[MationBot:Action Factory] Console', () => {
   })
 
   it('should log an error to console', async () => {    
-    await error('example error')(page)
+    await error('example error')(page, botOptions)
 
     // Get around the Chalk styling
     expect(logs[0][0]).toEqual(expect.stringMatching('Error:'))

@@ -6,7 +6,7 @@ import puppeteer from 'puppeteer'
 
 import { Botmation } from 'botmation/botmation.class'
 
-import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
+// import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
 
 // General BotAction's
 import { log, logError } from 'botmation/actions/console'
@@ -77,7 +77,7 @@ import { isTurnOnNotificationsModalActive } from 'botmation/bots/instagram/helpe
       givenThat(isGuest) (
         goTo(getInstagramLoginUrl()),
         screenshot('login'),
-        login({username: ACCOUNT_USERNAME, password: ACCOUNT_PASSWORD}),
+        login({username: '', password: ''}),
         saveCookies('instagram')
       ),
 

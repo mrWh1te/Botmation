@@ -6,8 +6,6 @@ import puppeteer from 'puppeteer'
 
 import { Botmation } from 'botmation/botmation.class'
 
-import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
-
 // General BotAction's
 import { log, logError } from 'botmation/actions/console'
 import { givenThat, wait } from 'botmation/actions/utilities'
@@ -44,7 +42,7 @@ import { isTurnOnNotificationsModalActive } from 'botmation/bots/instagram/helpe
       // only on TRUE, does it run the chain of actions
       givenThat(isGuest) (
         goTo(getInstagramLoginUrl()),
-        login({username: ACCOUNT_USERNAME, password: ACCOUNT_PASSWORD}),
+        login({username: 'ACCOUNT_USERNAME', password: 'ACCOUNT_PASSWORD'}),
         saveCookies('instagram') // the Bot will skip login, on next run, by loading cookies 
       ),
 

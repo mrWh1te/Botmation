@@ -6,6 +6,7 @@ import { BASE_URL } from '@tests/urls'
 import { givenThat, forAll } from 'botmation/actions/utilities'
 import { click, type } from 'botmation/actions/input'
 import { goTo } from 'botmation/actions/navigation'
+import { botOptions } from '@tests/mocks/bot-options.mock'
 
 /**
  * @description   Utilities Action Factory
@@ -50,19 +51,19 @@ describe('[MationBot:Action Factory] Utilities', () => {
     await givenThat(conditionResolvingTRUE)(
       click('example selector 1'),
       type('example copy 1')
-    )(mockPage)
+    )(mockPage, botOptions)
 
     // These actions should NOT run
     await givenThat(conditionResolvingFALSE)(
       click('example selector 2'),
       type('example copy 2')
-    )(mockPage)
+    )(mockPage, botOptions)
 
     // These actions should NOT run
     await givenThat(conditionReject)(
       click('example selector 2'),
       type('example copy 2')
-    )
+    )(mockPage, botOptions)
 
     expect(mockPage.click).toHaveBeenNthCalledWith(1, 'example selector 1')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, 'example copy 1')
@@ -83,7 +84,7 @@ describe('[MationBot:Action Factory] Utilities', () => {
       (webPage) => ([
         goTo('http://localhost:8080/' + webPage)
       ])
-    )(mockPage)
+    )(mockPage, botOptions)
 
     // Note given the mock, these url's don't have to be real
     expect(mockPage.url).toHaveBeenNthCalledWith(3) // called 3 times
@@ -105,7 +106,7 @@ describe('[MationBot:Action Factory] Utilities', () => {
         click(elementSelector),
         type(copyToType)
       ])
-    )(mockPage)
+    )(mockPage, botOptions)
 
     expect(mockPage.click).toHaveBeenNthCalledWith(1, 'form input[name="username"]')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, 'example username')

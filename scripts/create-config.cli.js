@@ -1,5 +1,8 @@
 var readlineSync = require('readline-sync')
 var fs = require('fs')
+var path = require('path')
+
+var appRoot = require('app-root-path')
 
 const configFilePath = './src/config.ts'
 
@@ -12,6 +15,16 @@ if (process.argv.indexOf('baseonly') !== -1) {
 
 // Header Print
 printHeader()
+
+//
+
+console.log('1 = ' + path.resolve(__dirname).split('/node_modules')[0])
+console.log('2 = ' + path.dirname(require.main.filename))
+console.log('3 = ' + __dirname)
+
+// outisde4 of scripts/ botmatoin/ node_modules/ to root project directory from here
+
+//
 
 emptyLine()
 let overwriteFileIfExists = false
@@ -48,7 +61,7 @@ if (process.argv.indexOf('overwrite') !== -1 || process.argv.indexOf('o') !== -1
 
   async function createConfigFileCLIWalkthrough() {
     // 2. Check with the dev, if they want to use this script, since the config file is not a hard requirement
-    if (readlineSync.keyInYN('Do you want to create it now?')) {
+    if (readlineSync.keyInYN('Do you want to customize it?')) {
       // 'Y' key was pressed.
       okay()
       
@@ -72,13 +85,13 @@ if (process.argv.indexOf('overwrite') !== -1 || process.argv.indexOf('o') !== -1
       //
       // Cookies Directory
       // if the dev hits enter without entering any text, we provide the default value
-      cookiesDirectory = readlineSync.question('Directory name for cookies (cookies) ? ') || 'cookies'
+      cookiesDirectory = readlineSync.question('Assets directory name for cookies (cookies) ? ') || 'cookies'
       okay()
   
       //
       // Screenshots Directory
       // if the dev hits enter without entering any text, we provide the default value
-      sceenshotsDirectory = readlineSync.question('Directory name for screenshots (screenshots) ? ') || 'screenshots'
+      sceenshotsDirectory = readlineSync.question('Assets directory name for screenshots (screenshots) ? ') || 'screenshots'
       okay()
   
       //
@@ -86,12 +99,16 @@ if (process.argv.indexOf('overwrite') !== -1 || process.argv.indexOf('o') !== -1
       await saveConfigFile(getConfigFileText(instagramUsername, instagramPassword, rootAssetsDirectory, cookiesDirectory, sceenshotsDirectory))
     } else {
       // Another key was pressed.
+      await saveConfigFile(getConfigFileText('', '', 'assets', 'cookies', 'screenshots'))
       console.log('Okay, good bye')
+      return
     }
   }
 })()
 
-async function createAssetDirectories(assetsDirectory, screenshotsDirectory, cookiesDirectory) {
+async function createAssetDirectories(assetsDirectory = 'assets', screenshotsDirectory = 'screenshots', cookiesDirectory = 'cookies') {
+  console.log('[createAssetDirectories] assetsDirectory = ' + assetsDirectory)
+  console.log('[APP ROOT] = ', + appRoot)
   await createDirectoryIfNotExist(assetsDirectory)
   await createDirectoryIfNotExist(assetsDirectory + '/' + screenshotsDirectory)
   await createDirectoryIfNotExist(assetsDirectory + '/' + cookiesDirectory)
@@ -99,7 +116,7 @@ async function createAssetDirectories(assetsDirectory, screenshotsDirectory, coo
 
 async function createDirectoryIfNotExist(directory) {
   return new Promise(async(resolve) => {
-    fs.access(myDir, function(err) {
+    fs.access('./' + directory, async(err) => {
       if (err && err.code === 'ENOENT') {
         await createDirectory(directory)
         return resolve()

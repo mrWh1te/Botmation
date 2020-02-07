@@ -21,32 +21,30 @@ export class Botmation implements BotmationInterface {
   private page: Page
 
   // MationBot specific
-  private options: BotOptions
+  private options: Partial<BotOptions>
+
+  // Injectables for your custom BotAction's
+  private injects: any[]
 
   /**
    * @param options optional partial to overload default option values (parsed from the config.ts file)
    */
-  constructor(page: Page, options: Partial<BotOptions> = {}) {
+  constructor(page: Page, options: Partial<BotOptions> = {}, ...injects: any[]) {
     this.page = page
-    this.options = {
-      // Default Config TBI (db credentials, etc, what have you, not yet at the project when this is needed)
-
-      // Currently, options are not injected into `BotAction`s, but can be, come time! Simple tweak to add
-      // Overload config with provided options (optional)
-      ...options
-    }
+    this.options = options
+    this.injects = injects
   }
   /**
    * @description    Runs the actual constructor then runs async setup code before returning the `MationBot` instance
    * @param  options   optional to override default options
    */
-  public static async asyncConstructor(browser: Browser, options?: Partial<BotOptions>): Promise<Botmation> {
+  public static async asyncConstructor(browser: Browser, options: Partial<BotOptions> = {}, ...injects: any[]): Promise<Botmation> {
     // Grab the first open page (tab) from the browser, otherwise make a new one
     const pages = await browser.pages()
     const page = pages.length === 0 ? await browser.newPage() : pages[0] // does this need an await at the start of the expression? That edge case has to be tested, since on browser launch, there is a page open
 
     // Provide the browser, tab it will be operating in, and any optional overloading options
-    return new Botmation(page, options)
+    return new Botmation(page, options, injects)
   }
 
   /**
@@ -70,7 +68,7 @@ export class Botmation implements BotmationInterface {
    * @param actions  
    */
   public async actions(...actions: BotAction[]): Promise<void> {
-    return BotActionsChainFactory(this.page)(...actions)
+    return BotActionsChainFactory(this.page, this.options, ...this.injects)(...actions)
   }
 
   //

@@ -1,21 +1,20 @@
 import { Page } from 'puppeteer'
 import { promises as fs } from 'fs'
 
-import { ASSETS_COOKIES_DIRECTORY, ROOT_ASSETS_DIRECTORY } from '../../config'
-
 import { BotAction } from '../interfaces/bot-action.interfaces'
 import { logError } from './console'
-import { createURL } from '../helpers/urls'
+import { getFileUrl } from '../helpers/urls'
 
 /**
  * @description   Parse page's cookies to save as JSON in local file
  * @param fileName 
  * @example saveCookies('cookies') -> creates `cookies.json`
  */
-export const saveCookies = (fileName: string): BotAction => async(page: Page) => {
+export const saveCookies = (fileName: string): BotAction => async(page: Page, options) => {
   try {
     const cookies = await page.cookies()
-    await fs.writeFile(`${createURL('.', ROOT_ASSETS_DIRECTORY, ASSETS_COOKIES_DIRECTORY)}${fileName}.json`, JSON.stringify(cookies, null, 2))
+    // await fs.writeFile(`${createURL('.', options.parent_output_directory?, ASSETS_COOKIES_DIRECTORY)}${fileName}.json`, JSON.stringify(cookies, null, 2))
+    await fs.writeFile(`${getFileUrl(options.cookies_directory, options)}${fileName}.json`, JSON.stringify(cookies, null, 2))
   } catch(error) {
     logError('[BotAction:saveCookies] ' + error)
   }
@@ -26,9 +25,10 @@ export const saveCookies = (fileName: string): BotAction => async(page: Page) =>
  * @param fileName 
  * @example loadCookies('./cookies.json')
  */
-export const loadCookies = (fileName: string): BotAction => async(page: Page) => {
+export const loadCookies = (fileName: string): BotAction => async(page: Page, options) => {
   try {
-    const file = await fs.readFile(`${createURL('.', ROOT_ASSETS_DIRECTORY, ASSETS_COOKIES_DIRECTORY)}${fileName}.json`)
+    // const file = await fs.readFile(`${createURL('.', ROOT_ASSETS_DIRECTORY, ASSETS_COOKIES_DIRECTORY)}${fileName}.json`)
+    const file = await fs.readFile(`${getFileUrl(options.cookies_directory, options)}${fileName}.json`)
     const cookies = JSON.parse(file.toString())
 
     for (const cookie of cookies) {

@@ -22,7 +22,7 @@ export declare class Botmation implements BotmationInterface {
      */
     constructor(page: Page, options?: Partial<BotOptions>, ...injects: any[]);
     /**
-     * @description    Runs the actual constructor then runs async setup code before returning the `MationBot` instance
+     * @description    Runs the actual constructor then runs async setup code before returning the `Botmation` instance
      * @param  options   optional to override default options
      */
     static asyncConstructor(browser: Browser, options?: Partial<BotOptions>, ...injects: any[]): Promise<Botmation>;

@@ -19,7 +19,7 @@ class Botmation {
         this.injects = injects;
     }
     /**
-     * @description    Runs the actual constructor then runs async setup code before returning the `MationBot` instance
+     * @description    Runs the actual constructor then runs async setup code before returning the `Botmation` instance
      * @param  options   optional to override default options
      */
     static async asyncConstructor(browser, options = {}, ...injects) {

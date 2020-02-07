@@ -4,7 +4,7 @@
 import 'module-alias/register'
 import puppeteer from 'puppeteer'
 
-import { Botmation } from 'botmation/botmation.class'
+import { Botmation } from '@botmation/class'
 
 // General BotAction's
 import { log, logError } from 'botmation/actions/console'

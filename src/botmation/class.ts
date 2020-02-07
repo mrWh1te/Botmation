@@ -20,7 +20,7 @@ export class Botmation implements BotmationInterface {
    */
   private page: Page
 
-  // Botmation specific
+  // Botmation specific TODO: include support for Page's options ?
   private options: Partial<BotOptions>
 
   // Injectables for your custom BotAction's
@@ -69,6 +69,27 @@ export class Botmation implements BotmationInterface {
    */
   public async actions(...actions: BotAction[]): Promise<void> {
     return BotActionsChainFactory(this.page, this.options, ...this.injects)(...actions)
+  }
+
+  /**
+   * @description    Public method to update the Options if needed
+   * TODO: test
+   * @param options 
+   */
+  public updateOptions(options: Partial<BotOptions>) {
+    this.options = {
+      ...this.options,
+      ...options
+    }
+  }
+
+  /**
+   * @description    Public method to set the Injects if needed
+   * TODO: test
+   * @param injects 
+   */
+  public setInjects(...injects: any[]) {
+    this.injects = injects
   }
 
   //

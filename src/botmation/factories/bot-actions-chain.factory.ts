@@ -16,7 +16,7 @@ export const BotActionsChainFactory = (page: Page, overloadOptions: Partial<BotO
       // Resolve the last returned promise
       await chain
       // Inject the active page into the BotAction, for it to operate on
-      return action(page, getDefaultBotOptions(overloadOptions), injects)
+      return action(page, getDefaultBotOptions(overloadOptions), ...injects)
     }, 
     Promise.resolve()
   )

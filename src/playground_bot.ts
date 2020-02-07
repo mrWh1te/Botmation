@@ -1,10 +1,9 @@
 /**
  * @description  Simple Example Script
  */
-import 'module-alias/register'
 import puppeteer from 'puppeteer'
 
-import { Botmation } from 'botmation/botmation.class'
+import { Botmation } from '@botmation/class'
 
 // import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
 

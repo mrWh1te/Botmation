@@ -3,7 +3,7 @@
  */
 
 // Class
-export * from './botmation.class'
+export * from './class'
 
 // Main Actions Factory
 export * from './factories/bot-actions-chain.factory'

@@ -6,7 +6,7 @@ import { BASE_URL, EXAMPLE_URL } from '@tests/urls'
 import { FORM_TEXT_INPUT_SELECTOR, FORM_SUBMIT_BUTTON_SELECTOR } from '@tests/selectors'
 import { click, type } from 'botmation/actions/input'
 import { goTo } from 'botmation/actions/navigation'
-import { Botmation } from 'botmation/botmation.class'
+import { Botmation } from '@botmation/class'
 import { BotActionsChainFactory } from 'botmation/factories/bot-actions-chain.factory'
 
 /**

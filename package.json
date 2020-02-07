@@ -2,7 +2,8 @@
   "name": "botmation",
   "version": "1.0.0",
   "description": "A Puppeteer Wrapper that provides a declarative syntax for web crawler automation",
-  "main": "./build/playground_bot.js",
+  "main": "./build/mationbot/module.js",
+  "types": "./build/mationbot/module.d.ts",
   "scripts": {
     "build": "tsc",
     "playground": "node .",
@@ -49,7 +50,8 @@
     "typescript": "^3.7.5"
   },
   "_moduleAliases": {
-    "@mationbot": "./build/mationbot",
+    "@mationbot": "./build/botmation",
+    "@botmation": "./build/botmation",
     "@helpers": "./build/helpers",
     "@config": "./build/config.js",
     "@bots": "./build/bots"

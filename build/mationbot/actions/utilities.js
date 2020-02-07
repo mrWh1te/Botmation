@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const utilities_1 = require("@helpers/utilities");
-const utilities_2 = require("@mationbot/helpers/utilities");
-const bot_actions_chain_factory_1 = require("@mationbot/factories/bot-actions-chain.factory");
+const utilities_1 = require("../../helpers/utilities");
+const utilities_2 = require("../helpers/utilities");
+const bot_actions_chain_factory_1 = require("../factories/bot-actions-chain.factory");
 /**
  * @description   Pauses the bot for the provided milliseconds before letting it execute the next Action
  * @param milliseconds

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const bot_actions_chain_factory_1 = require("@mationbot/factories/bot-actions-chain.factory");
+require("module-alias/register");
+const bot_actions_chain_factory_1 = require("../factories/bot-actions-chain.factory");
 /**
  *
  * @param page

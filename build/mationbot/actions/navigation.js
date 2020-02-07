@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const navigation_1 = require("@mationbot/helpers/navigation");
-const console_1 = require("@mationbot/actions/console");
+const navigation_1 = require("../helpers/navigation");
+const console_1 = require("../actions/console");
 /**
  * @description   Single Higher Order Function for Page Changing
  * @param url

@@ -1,33 +1,30 @@
-"use strict";
 /**
  * @description    Main source code wrapper to encapsulate main methods for configuring the bot (cookies, page, etc)
  *                 This bot uses a Puppeteer.Page, `activeTab`, to inject into factory produced `BotAction` methods
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-const bot_actions_chain_factory_1 = require("./factories/bot-actions-chain.factory");
+import { Page, Browser } from 'puppeteer';
+import { BotOptions } from './interfaces/bot-options.interfaces';
+import { BotAction } from './interfaces/bot-action.interfaces';
+import { MationBotInterface } from './interfaces/mation-bot.interface';
 /**
  * @name          MationBot
  * @description   Declarative bot for operating a Puppeteer browser page (tab)
  */
-class MationBot {
+export declare class MationBot implements MationBotInterface {
+    /**
+     * @description   Page/Tab of the brower the bot is crawling
+     */
+    private page;
+    private options;
     /**
      * @param options optional partial to overload default option values (parsed from the config.ts file)
      */
-    constructor(page, options = {}) {
-        this.page = page;
-        this.options = Object.assign({}, options);
-    }
+    constructor(page: Page, options?: Partial<BotOptions>);
     /**
      * @description    Runs the actual constructor then runs async setup code before returning the `MationBot` instance
      * @param  options   optional to override default options
      */
-    static async asyncConstructor(browser, options) {
-        // Grab the first open page (tab) from the browser, otherwise make a new one
-        const pages = await browser.pages();
-        const page = pages.length === 0 ? await browser.newPage() : pages[0]; // does this need an await at the start of the expression? That edge case has to be tested, since on browser launch, there is a page open
-        // Provide the browser, tab it will be operating in, and any optional overloading options
-        return new MationBot(page, options);
-    }
+    static asyncConstructor(browser: Browser, options?: Partial<BotOptions>): Promise<MationBot>;
     /**
      * @description   Run BotAction's in sequence - Declaratively
      *                Supports the higher-order functions in the actions/ directory
@@ -48,19 +45,9 @@ class MationBot {
      *                  )
      * @param actions
      */
-    async actions(...actions) {
-        return bot_actions_chain_factory_1.BotActionsChainFactory(this.page)(...actions);
-    }
-    //
-    // Clean up
+    actions(...actions: BotAction[]): Promise<void>;
     /**
      * @description   Close the Page/Tab from the browser that the bot was crawling
      */
-    async closePage() {
-        if (this.page) {
-            await this.page.close();
-            console.log(''); // add an empty line too console for separation upon next
-        }
-    }
+    closePage(): Promise<void>;
 }
-exports.MationBot = MationBot;

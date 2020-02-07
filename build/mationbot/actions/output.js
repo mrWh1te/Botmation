@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const assets_1 = require("@helpers/assets");
-const utilities_1 = require("@mationbot/actions/utilities");
-const navigation_1 = require("@mationbot/actions/navigation");
+const assets_1 = require("../../helpers/assets");
+const utilities_1 = require("../actions/utilities");
+const navigation_1 = require("../actions/navigation");
 /**
  * @description   Take a PNG screenshot of the current page
  * @param fileName name of the file to save the PNG as

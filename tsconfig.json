@@ -8,12 +8,13 @@
     "moduleResolution": "node",
     "baseUrl": "./src",
     "esModuleInterop": true,
+    "declaration": true,
     "paths": {
-      "@mationbot": ["mationbot/index"],
-      "@mationbot/*": ["mationbot/*"],
-      "@helpers/*": ["helpers/*"],
+      "@botmation": ["botmation/index"],
+      "@botmation/*": ["botmation/*"],
+      "@helpers/*": ["botmation/helpers/*"],
       "@config": ["config"],
-      "@bots/*": ["bots/*"],
+      "@bots/*": ["botmation/bots/*"],
       "@tests/*": ["tests/*"]
     }
   },

@@ -6,7 +6,7 @@ import { BASE_URL } from '@tests/urls'
 import { screenshot, screenshotAll } from 'botmation/actions/output'
 import { fileExist, deleteFile } from 'botmation/helpers/files'
 import { botOptions } from '@tests/mocks/bot-options.mock'
-import { getFileUrl } from '@botmation/helpers/urls'
+import { getFileUrl } from '@botmation/helpers/assets'
 
 /**
  * @description   Output Action Factory

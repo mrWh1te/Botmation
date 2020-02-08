@@ -6,7 +6,7 @@ import { BASE_URL } from '@tests/urls'
 import { fileExist, deleteFile } from 'botmation/helpers/files'
 import { saveCookies, loadCookies } from 'botmation/actions/cookies'
 import { BotOptions } from 'botmation/interfaces/bot-options.interfaces'
-import { getFileUrl } from '@botmation/helpers/urls'
+import { getFileUrl } from '@botmation/helpers/assets'
 
 /**
  * @description   Cookies Action Factory

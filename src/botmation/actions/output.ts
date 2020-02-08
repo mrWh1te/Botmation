@@ -4,7 +4,7 @@ import { BotAction } from "../interfaces/bot-action.interfaces"
 
 import { forAll } from './utilities'
 import { goTo } from './navigation'
-import { getFileUrl } from '../helpers/urls'
+import { getFileUrl } from '../helpers/assets'
 
 /**
  * @description   Take a PNG screenshot of the current page

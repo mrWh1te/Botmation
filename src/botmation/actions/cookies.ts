@@ -3,7 +3,7 @@ import { promises as fs } from 'fs'
 
 import { BotAction } from '../interfaces/bot-action.interfaces'
 import { logError, log } from './console'
-import { getFileUrl } from '../helpers/urls'
+import { getFileUrl } from '../helpers/assets'
 
 /**
  * @description   Parse page's cookies to save as JSON in local file

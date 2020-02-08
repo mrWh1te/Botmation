@@ -54,6 +54,12 @@ export declare class Botmation implements BotmationInterface {
      */
     updateOptions(options: Partial<BotOptions>): void;
     /**
+     * @description    Override whatever overloading partial of options we have with what's given
+     *                 Missing options are provided default values
+     * @param options
+     */
+    setOptions(options: Partial<BotOptions>): void;
+    /**
      * @description    Public method to set the Injects if needed
      * TODO: test
      * @param injects

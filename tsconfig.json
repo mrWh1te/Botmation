@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "commonjs",
+    "target": "es5",
     "allowJs": true,
-    "outDir": "build",
+    "outDir": "./dist/",
+    "module": "es6",
+    "jsx": "react",
+    "noImplicitAny": true,
     "strict": true,
     "moduleResolution": "node",
     "baseUrl": "./src",
+    "sourceMap": true,
     "esModuleInterop": true,
     "declaration": true,
     "paths": {
@@ -22,8 +25,8 @@
     "node_modules",
     "assets",
     "scripts",
-    "build",
-    // "src/tests", // leave out for the IDE, helps module alias based imports
+    "dist",
+    "src/tests",
     "jest-puppeteer.config.js",
     "jest.config.js"
   ]

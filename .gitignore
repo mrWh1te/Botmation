@@ -1,10 +1,6 @@
 node_modules
 
-build/bots
-build/examples
-build/tests
-build/config.js
-build/playground_bot.js
+dist
 
 src/config.ts
 

@@ -2,7 +2,7 @@ import { Page } from 'puppeteer'
 import { promises as fs } from 'fs'
 
 import { BotAction } from '../interfaces/bot-action.interfaces'
-import { logError, log } from './console'
+import { logError } from './console'
 import { getFileUrl } from '../helpers/assets'
 
 /**

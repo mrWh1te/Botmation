@@ -5,7 +5,7 @@
   "main": "./build/botmation/module.js",
   "types": "./build/botmation/module.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "./node_modules/webpack/bin/webpack.js",
     "playground": "node .",
     "botmation": "npm run build && npm run playground",
     "example/instagram": "npm run build && node ./build/examples/instagram.js",
@@ -43,6 +43,9 @@
     "jest-puppeteer": "^4.4.0",
     "readline-sync": "^1.4.10",
     "ts-jest": "^25.0.0",
-    "typescript": "^3.7.5"
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.5",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
   }
 }

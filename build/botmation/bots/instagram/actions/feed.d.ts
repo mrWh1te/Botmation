@@ -4,6 +4,7 @@ import { BotAction } from '../../../interfaces/bot-action.interfaces';
  * @param usernames
  */
 /**
+ * TODO: implement, use doWhile(scrolling feed)(like posts) until we can't scroll anymore (NO, found bottom of page, that message that there are no more new posts)
  * @description   Favorite all published photos from these usernames
  * @param usernames
  */

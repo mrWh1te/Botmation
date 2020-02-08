@@ -2,14 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const utilities_1 = require("./utilities");
 const navigation_1 = require("./navigation");
-const urls_1 = require("../helpers/urls");
+const assets_1 = require("../helpers/assets");
 /**
  * @description   Take a PNG screenshot of the current page
  * @param fileName name of the file to save the PNG as
  */
 exports.screenshot = (fileName) => async (page, options) => {
-    const fileUrl = urls_1.getFileUrl(options.screenshots_directory, options, fileName) + '.png';
-    console.log('[screenshot] fileUrl = ' + fileUrl);
+    const fileUrl = assets_1.getFileUrl(options.screenshots_directory, options, fileName) + '.png';
+    // console.log('[screenshot] fileUrl = ' + fileUrl)
     await page.screenshot({ path: fileUrl });
 };
 /**

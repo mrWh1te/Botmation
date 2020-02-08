@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
 const console_1 = require("./console");
-const urls_1 = require("../helpers/urls");
+const assets_1 = require("../helpers/assets");
 /**
  * @description   Parse page's cookies to save as JSON in local file
  * @param fileName
@@ -11,7 +11,7 @@ const urls_1 = require("../helpers/urls");
 exports.saveCookies = (fileName) => async (page, options) => {
     try {
         const cookies = await page.cookies();
-        await fs_1.promises.writeFile(urls_1.getFileUrl(options.cookies_directory, options, fileName) + '.json', JSON.stringify(cookies, null, 2));
+        await fs_1.promises.writeFile(assets_1.getFileUrl(options.cookies_directory, options, fileName) + '.json', JSON.stringify(cookies, null, 2));
     }
     catch (error) {
         console_1.logError('[BotAction:saveCookies] ' + error);
@@ -24,7 +24,7 @@ exports.saveCookies = (fileName) => async (page, options) => {
  */
 exports.loadCookies = (fileName) => async (page, options) => {
     try {
-        const file = await fs_1.promises.readFile(urls_1.getFileUrl(options.cookies_directory, options, fileName) + '.json');
+        const file = await fs_1.promises.readFile(assets_1.getFileUrl(options.cookies_directory, options, fileName) + '.json');
         const cookies = JSON.parse(file.toString());
         for (const cookie of cookies) {
             await page.setCookie(cookie);

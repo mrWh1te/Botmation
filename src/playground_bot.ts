@@ -3,18 +3,15 @@
  */
 import puppeteer from 'puppeteer'
 
-import { Botmation } from '@botmation/class'
-
-// import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
+import { Botmation } from 'botmation/class'
 
 // General BotAction's
 import { log, logError } from 'botmation/actions/console'
-import { givenThat, wait, forAll } from 'botmation/actions/utilities'
+import { givenThat, wait } from 'botmation/actions/utilities'
 import { loadCookies, saveCookies } from 'botmation/actions/cookies'
 import { goTo } from 'botmation/actions/navigation'
 
 // Instagram specific BotAction's
-import { favoriteAllFrom } from 'botmation/bots/instagram/actions/feed'
 import { login } from 'botmation/bots/instagram/actions/auth'
 import { closeTurnOnNotificationsModal } from 'botmation/bots/instagram/actions/modals'
 import { screenshot } from 'botmation/actions/output'
@@ -31,17 +28,17 @@ import { isTurnOnNotificationsModalActive } from 'botmation/bots/instagram/helpe
   // mini side project, to scrape and harvest data of news sites over years
   // then run the data against NLP scripts, etc. to look for interesting patterns
   // https://www.w3newspapers.com/newssites/
-  const newsSites = [
-    'cnn.com',
-    'nytimes.com',
-    'foxnews.com',
-    'wsj.com',
-    // 'reuters.com',
-    // 'bloomberg.com',
-    'forbes.com',
-    'global.chinadaily.com.cn',
-    'timesofindia.indiatimes.com'
-  ]
+  // const newsSites = [
+  //   'cnn.com',
+  //   'nytimes.com',
+  //   'foxnews.com',
+  //   'wsj.com',
+  //   // 'reuters.com',
+  //   // 'bloomberg.com',
+  //   'forbes.com',
+  //   'global.chinadaily.com.cn',
+  //   'timesofindia.indiatimes.com'
+  // ]
 
   // Wrap in try/catch, because the bot will throw on Errors requiring dev attention
   try {
@@ -90,9 +87,7 @@ import { isTurnOnNotificationsModalActive } from 'botmation/bots/instagram/helpe
       wait(5000),
       screenshot('feed'),
 
-      favoriteAllFrom('user1', 'user2'), // TBI (to be implemented) // TODO: implement
       log('Done with feed'),
-      //   viewAllStoriesFrom('user1', 'user2') // TODO: implement
     )
     
     await instagramBot.closePage()

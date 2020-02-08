@@ -12,7 +12,7 @@ import { getFileUrl } from '../helpers/urls'
  */
 export const screenshot = (fileName: string): BotAction => async(page: Page, options) => {
   const fileUrl = getFileUrl(options.screenshots_directory, options, fileName) + '.png'
-  console.log('[screenshot] fileUrl = ' + fileUrl)
+  // console.log('[screenshot] fileUrl = ' + fileUrl)
 
   await page.screenshot({path: fileUrl})
 }

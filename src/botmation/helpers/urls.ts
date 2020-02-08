@@ -16,7 +16,7 @@ const createFolderURL = (...folderNames: string[]): string =>
 export const getFileUrl = (fileDirectory: string, {parent_output_directory}: BotOptions, fileName: string = ''): string => {
   const fileNameWithPrefix = fileName === '' ? '' : '/' + fileName // prefix with folder (optional)
 
-  if (parent_output_directory) {
+  if (parent_output_directory) { // do we need to specify more in condition? not empty string either? ''
     if (fileDirectory) {
       return createFolderURL(parent_output_directory, fileDirectory) + fileNameWithPrefix
     }

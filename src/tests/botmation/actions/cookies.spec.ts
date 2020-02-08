@@ -51,7 +51,7 @@ describe('[Botmation:Action Factory] Cookies', () => {
     await saveCookies(COOKIES_FILENAME)(mockPage, BOT_OPTIONS)
 
     expect(mockPage.cookies).toBeCalled()
-    await expect(fileExist(getFileUrl(BOT_OPTIONS.cookies_directory, BOT_OPTIONS) + 'test-cookies-1.json')).resolves.toEqual(true)
+    await expect(fileExist(getFileUrl(BOT_OPTIONS.cookies_directory, BOT_OPTIONS) + '/test-cookies-1.json')).resolves.toEqual(true)
   })
 
   //

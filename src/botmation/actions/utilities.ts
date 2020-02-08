@@ -80,7 +80,7 @@ export interface Dictionary {
 }
 export const forAll =
   (collection: any[] | Dictionary) =>
-    (botActionOrActionsFactory: (...args: any[]) => BotAction[] | BotAction) =>
+    (botActionOrActionsFactory: (...args: any[]) => BotAction[] | BotAction): BotAction =>
       async(page: Page, options: BotOptions, ...injects: any[]) => {
         if (Array.isArray(collection)) {
           // Array

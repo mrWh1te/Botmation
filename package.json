@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "playground": "node .",
-    "botmation:": "npm run build && npm run playground",
+    "botmation": "npm run build && npm run playground",
     "example/instagram": "npm run build && node ./build/examples/instagram.js",
     "example/puppeteer-cluster": "npm run build && node ./build/examples/puppeteer-cluster.js",
     "example/screenshots": "npm run build && node ./build/examples/screenshots.js",

@@ -36,7 +36,7 @@ describe('[Botmation:Action Factory] Output', () => {
   it('should call puppeteer\'s page screenshot() method with the provided options', async() => {
     await screenshot(SCREENSHOT_FILENAME)(mockPage, botOptions)
 
-    expect(mockPage.screenshot).toBeCalledWith({path: getFileUrl(botOptions.screenshots_directory, botOptions) + 'test-screenshot-1.png'})
+    expect(mockPage.screenshot).toBeCalledWith({path: getFileUrl(botOptions.screenshots_directory, botOptions) + '/test-screenshot-1.png'})
   })
 
   //
@@ -44,7 +44,7 @@ describe('[Botmation:Action Factory] Output', () => {
   it('should create a PNG file in the screenshots directory with the provided filename', async() => {
     await screenshot(SCREENSHOT_FILENAME)(page, botOptions)
 
-    await expect(fileExist(getFileUrl(botOptions.screenshots_directory, botOptions) + 'test-screenshot-1.png')).resolves.toEqual(true)
+    await expect(fileExist(getFileUrl(botOptions.screenshots_directory, botOptions) + '/test-screenshot-1.png')).resolves.toEqual(true)
   })
 
   //
@@ -53,17 +53,17 @@ describe('[Botmation:Action Factory] Output', () => {
     await screenshotAll('google.com', 'twitter.com')(mockPage, botOptions)
 
     expect(mockPage.goto).toHaveBeenNthCalledWith(1, 'https://google.com', getDefaultGoToPageOptions())
-    expect(mockPage.screenshot).toHaveBeenNthCalledWith(1, {path: getFileUrl(botOptions.screenshots_directory, botOptions) + 'google.com.png'})
+    expect(mockPage.screenshot).toHaveBeenNthCalledWith(1, {path: getFileUrl(botOptions.screenshots_directory, botOptions) + '/google.com.png'})
 
     expect(mockPage.goto).toHaveBeenLastCalledWith('https://twitter.com', getDefaultGoToPageOptions())
-    expect(mockPage.screenshot).toHaveBeenLastCalledWith({path: getFileUrl(botOptions.screenshots_directory, botOptions) + 'twitter.com.png'})
+    expect(mockPage.screenshot).toHaveBeenLastCalledWith({path: getFileUrl(botOptions.screenshots_directory, botOptions) + '/twitter.com.png'})
   })
 
   //
   // Clean up
   afterAll(async() => {
     // The screenshot() unit-test creates a specific file, let's delete it, to prevent future false positive's
-    const fileUrl = getFileUrl(botOptions.screenshots_directory, botOptions) + SCREENSHOT_FILENAME + '.png'
+    const fileUrl = getFileUrl(botOptions.screenshots_directory, botOptions, SCREENSHOT_FILENAME) + '.png'
 
     const TEST_SCREENSHOT_FILE_EXISTS = await fileExist(fileUrl)
     if (TEST_SCREENSHOT_FILE_EXISTS) {

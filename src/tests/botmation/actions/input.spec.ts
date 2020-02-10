@@ -1,10 +1,10 @@
 import { Page } from 'puppeteer'
 
-import { click, type } from "botmation/actions/input"
+import { click, type } from "../../../botmation/actions/input"
 
-import { FORM_SUBMIT_BUTTON_SELECTOR, FORM_TEXT_INPUT_SELECTOR } from '@tests/selectors'
-import { BASE_URL } from '@tests/urls'
-import { botOptions } from '@tests/mocks/bot-options.mock'
+import { FORM_SUBMIT_BUTTON_SELECTOR, FORM_TEXT_INPUT_SELECTOR } from '../../selectors'
+import { BASE_URL } from '../../urls'
+import { botOptions } from '../../mocks/bot-options.mock'
 
 /**
  * @description   Input Action Factory

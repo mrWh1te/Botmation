@@ -1,12 +1,12 @@
 import { Page } from 'puppeteer'
 
-import { goTo, waitForNavigation } from 'botmation/actions/navigation'
-import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
-import { click } from 'botmation/actions/input'
+import { goTo, waitForNavigation } from '../../../botmation/actions/navigation'
+import { getDefaultGoToPageOptions } from '../../../botmation/helpers/navigation'
+import { click } from '../../../botmation/actions/input'
 
-import { BASE_URL, EXAMPLE_URL } from '@tests/urls'
-import { FORM_SUBMIT_BUTTON_SELECTOR } from '@tests/selectors'
-import { botOptions } from '@tests/mocks/bot-options.mock'
+import { BASE_URL, EXAMPLE_URL } from '../../urls'
+import { FORM_SUBMIT_BUTTON_SELECTOR } from '../../selectors'
+import { botOptions } from '../../mocks/bot-options.mock'
 
 /**
  * @description   Navigation Action Factory

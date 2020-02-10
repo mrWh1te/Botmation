@@ -1,4 +1,4 @@
-import { createFolderURL, getFileUrl } from '@botmation/helpers/assets'
+import { createFolderURL, getFileUrl } from '../../../botmation/helpers/assets'
 
 /**
  * @description   Helpers: Assets (ie screenshots, cookies)

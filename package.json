@@ -2,8 +2,8 @@
   "name": "botmation",
   "version": "0.0.2",
   "description": "A Puppeteer Wrapper that provides a declarative syntax for web crawler automation",
-  "module": "./dist/Botmation.classes.js",
-  "types": "./dist/src/botmation/module.d.ts",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "./node_modules/webpack/bin/webpack.js",
     "tests": "npm run test",

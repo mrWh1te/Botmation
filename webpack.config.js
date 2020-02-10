@@ -47,17 +47,15 @@ module.exports = {
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
-        exclude: [
-          path.resolve(__dirname, 'node_modules/'),
-        ]
-      },
+        exclude: /node_modules/
+      }
     ],
   },
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ],
   },
   output: {
-    globalObject: `typeof self !== 'undefined' ? self : this`,
+    globalObject: `typeof self !== 'undefined' ? self : this`, // for missing `window` error
     path: path.resolve(__dirname, 'dist'),
     filename: (chunkData) => {
       switch(chunkData.chunk.name) {

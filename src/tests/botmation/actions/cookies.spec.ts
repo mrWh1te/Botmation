@@ -1,12 +1,12 @@
 import { Page } from 'puppeteer'
 
-import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
+import { getDefaultGoToPageOptions } from '../../../botmation/helpers/navigation'
 
-import { BASE_URL } from '@tests/urls'
-import { fileExist, deleteFile } from 'botmation/helpers/files'
-import { saveCookies, loadCookies } from 'botmation/actions/cookies'
-import { BotOptions } from 'botmation/interfaces/bot-options.interfaces'
-import { getFileUrl } from '@botmation/helpers/assets'
+import { BASE_URL } from '../../urls'
+import { fileExist, deleteFile } from '../../../botmation/helpers/files'
+import { saveCookies, loadCookies } from '../../../botmation/actions/cookies'
+import { BotOptions } from '../../../botmation/interfaces/bot-options.interfaces'
+import { getFileUrl } from '../../../botmation/helpers/assets'
 
 /**
  * @description   Cookies Action Factory

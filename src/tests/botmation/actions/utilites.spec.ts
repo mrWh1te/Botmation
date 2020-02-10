@@ -1,12 +1,13 @@
 import { Page } from 'puppeteer'
 
-import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
+import { getDefaultGoToPageOptions } from '../../../botmation/helpers/navigation'
 
-import { BASE_URL } from '@tests/urls'
-import { givenThat, forAll } from 'botmation/actions/utilities'
-import { click, type } from 'botmation/actions/input'
-import { goTo } from 'botmation/actions/navigation'
-import { botOptions } from '@tests/mocks/bot-options.mock'
+import { givenThat, forAll } from '../../../botmation/actions/utilities'
+import { click, type } from '../../../botmation/actions/input'
+import { goTo } from '../../../botmation/actions/navigation'
+
+import { BASE_URL } from '../../urls'
+import { botOptions } from '../../mocks/bot-options.mock'
 
 /**
  * @description   Utilities Action Factory

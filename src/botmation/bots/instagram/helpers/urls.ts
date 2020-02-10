@@ -1,4 +1,4 @@
-import { INSTAGRAM_URL_EXT_LOGIN, INSTAGRAM_BASE_URL } from "botmation/bots/instagram/constants/urls"
+import { INSTAGRAM_URL_EXT_LOGIN, INSTAGRAM_BASE_URL } from "../constants/urls"
 
 /**
  * @description   Provides helpful methods for parsing URL's and getting URL's to crawl (ie Instagram login URL)

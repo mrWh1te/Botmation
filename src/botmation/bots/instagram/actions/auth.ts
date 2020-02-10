@@ -11,8 +11,8 @@ import {
   FORM_AUTH_USERNAME_INPUT_SELECTOR,
   FORM_AUTH_PASSWORD_INPUT_SELECTOR,
   FORM_AUTH_SUBMIT_BUTTON_SELECTOR
-} from 'botmation/bots/instagram/selectors'
-import { click, type } from 'botmation/actions/input'
+} from '../selectors'
+import { click, type } from '../../../actions/input'
 
 
 

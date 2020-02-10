@@ -1,4 +1,4 @@
-import { BotOptions } from "@botmation/interfaces/bot-options.interfaces"
+import { BotOptions } from "botmation/interfaces/bot-options.interfaces"
 
 /**
  * @description   See unit tests for edge-case examples

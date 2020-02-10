@@ -2,15 +2,10 @@
   "name": "botmation",
   "version": "0.0.2",
   "description": "A Puppeteer Wrapper that provides a declarative syntax for web crawler automation",
-  "main": "./build/botmation/module.js",
-  "types": "./build/botmation/module.d.ts",
+  "module": "./dist/Botmation.classes.js",
+  "types": "./dist/src/botmation/module.d.ts",
   "scripts": {
     "build": "./node_modules/webpack/bin/webpack.js",
-    "playground": "node .",
-    "botmation": "npm run build && npm run playground",
-    "example/instagram": "npm run build && node ./build/examples/instagram.js",
-    "example/puppeteer-cluster": "npm run build && node ./build/examples/puppeteer-cluster.js",
-    "example/screenshots": "npm run build && node ./build/examples/screenshots.js",
     "tests": "npm run test",
     "test": "jest",
     "localtestsite": "./node_modules/http-server/bin/http-server ./src/tests/server"
@@ -34,10 +29,11 @@
     "skip": "0.0.13"
   },
   "devDependencies": {
-    "@types/jest": "^25.1.0",
+    "@types/jest": "^25.1.2",
     "@types/jest-environment-puppeteer": "^4.3.1",
     "@types/node": "^13.1.8",
     "@types/puppeteer": "^2.0.0",
+    "copy-webpack-plugin": "^5.1.1",
     "http-server": "^0.12.1",
     "jest": "^25.1.0",
     "jest-puppeteer": "^4.4.0",

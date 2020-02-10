@@ -6,7 +6,7 @@ module.exports = {
     "@tests/(.*)": "<rootDir>/src/tests/$1.ts"
   },
   testPathIgnorePatterns: [
-    "<rootDir>/build/",
+    "<rootDir>/dist/",
     "<rootDir>/src/tests/server/"
   ]
 };

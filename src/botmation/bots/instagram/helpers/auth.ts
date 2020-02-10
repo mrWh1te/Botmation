@@ -1,8 +1,9 @@
 import { Page } from 'puppeteer'
 
-import { goTo } from 'botmation/actions/navigation'
-import { getInstagramLoginUrl } from 'botmation/bots/instagram/helpers/urls'
-import { BotOptions } from 'botmation/interfaces/bot-options.interfaces'
+import { goTo } from '../../../actions/navigation'
+import { BotOptions } from '../../../interfaces/bot-options.interfaces'
+
+import { getInstagramLoginUrl } from './urls'
 
 //
 // Helpers

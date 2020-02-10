@@ -27,7 +27,12 @@
     "scripts",
     "dist",
     "src/tests",
+    "src/examples",
     "jest-puppeteer.config.js",
-    "jest.config.js"
+    "jest.config.js",
+    "webpack.config.js"
+  ],
+  "include": [
+    "src/botmation/**/*"
   ]
 }

@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 
-import { MAIN_MODAL_HEADER_SELECTOR } from 'botmation/bots/instagram/selectors'
-import { TURN_OFF_NOTIFICATIONS_MODAL_HEADER_TEXT } from 'botmation/bots/instagram/constants/modals'
+import { MAIN_MODAL_HEADER_SELECTOR } from '../selectors'
+import { TURN_OFF_NOTIFICATIONS_MODAL_HEADER_TEXT } from '../constants/modals'
 
 //
 // Helpers

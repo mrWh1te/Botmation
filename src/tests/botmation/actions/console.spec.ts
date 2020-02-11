@@ -1,4 +1,4 @@
-import { log, warning, error } from '../../../botmation/actions/console'
+import { log, warning, error } from 'botmation/actions/console'
 import { botOptions } from '../../mocks/bot-options.mock'
 
 /**

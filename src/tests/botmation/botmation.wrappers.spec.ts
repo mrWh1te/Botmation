@@ -1,13 +1,13 @@
 import { Page } from 'puppeteer'
 
-import { getDefaultGoToPageOptions } from '../../botmation/helpers/navigation'
+import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
+import { click, type } from 'botmation/actions/input'
+import { goTo } from 'botmation/actions/navigation'
+import { Botmation } from 'botmation/class'
+import { BotActionsChainFactory } from 'botmation/factories/bot-actions-chain.factory'
 
 import { BASE_URL, EXAMPLE_URL } from '../urls'
 import { FORM_TEXT_INPUT_SELECTOR, FORM_SUBMIT_BUTTON_SELECTOR } from '../selectors'
-import { click, type } from '../../botmation/actions/input'
-import { goTo } from '../../botmation/actions/navigation'
-import { Botmation } from '../../botmation/class'
-import { BotActionsChainFactory } from '../../botmation/factories/bot-actions-chain.factory'
 
 /**
  * @description   Test the Wrappers (Botmation class and the BotActionsChainFactory)

@@ -5,9 +5,9 @@ import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
 import { BASE_URL } from '../../urls'
 import { botOptions } from '../../mocks/bot-options.mock'
 
-import { screenshot, screenshotAll } from '../../../botmation/actions/output'
-import { fileExist, deleteFile } from '../../../botmation/helpers/files'
-import { getFileUrl } from '../../../botmation/helpers/assets'
+import { screenshot, screenshotAll } from 'botmation/actions/output'
+import { fileExist, deleteFile } from 'botmation/helpers/files'
+import { getFileUrl } from 'botmation/helpers/assets'
 
 /**
  * @description   Output Action Factory

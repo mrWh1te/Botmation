@@ -1,5 +1,3 @@
-require("module-alias/register")
-
 import { Cluster } from 'puppeteer-cluster'
 import { Page } from 'puppeteer'
 

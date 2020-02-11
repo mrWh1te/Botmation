@@ -4,10 +4,10 @@
   "description": "A Puppeteer Wrapper that provides a declarative syntax for web crawler automation",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "type": "module",
   "scripts": {
     "bundle": "./node_modules/webpack/bin/webpack.js",
-    "build": "tsc",
+    "build0": "tsc",
+    "build": "./node_modules/webpack/bin/webpack.js --config webpack.dev.config.js",
     "playground": "node ./build/playground_bot.js",
     "test": "jest",
     "localtestsite": "./node_modules/http-server/bin/http-server ./src/tests/server"
@@ -44,6 +44,7 @@
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.5",
     "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.10",
+    "webpack-node-externals": "^1.7.2"
   }
 }

@@ -4,6 +4,7 @@
 
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+var nodeExternals = require('webpack-node-externals');
 
 module.exports = {
   entry: {
@@ -75,6 +76,7 @@ module.exports = {
     library: 'botmation',
     umdNamedDefine: true
   },
+  target: 'node',
   devtool: 'source-map',
   optimization: {
     minimize: false
@@ -92,6 +94,9 @@ module.exports = {
           // Remap somethings
           packageJSON.module = './index.js'
           packageJSON.types = './index.d.ts'
+          // // "type": "module",
+          packageJSON.type = 'module'
+
           // Get rid of these scripts
           delete packageJSON.scripts
 
@@ -100,8 +105,9 @@ module.exports = {
       }
     ])
   ],
-  mode: 'production',
+  mode: 'development',
   node: {
     fs: 'empty'
-  }
+  },
+  externals: [nodeExternals()]
 };

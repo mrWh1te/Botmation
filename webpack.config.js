@@ -91,10 +91,9 @@ module.exports = {
         transform: (content) => {
           let packageJSON = JSON.parse(content.toString())
 
-          // Remap somethings
+          // Distribution setup
           packageJSON.module = './index.js'
           packageJSON.types = './index.d.ts'
-          // // "type": "module",
           packageJSON.type = 'module'
 
           // Get rid of these scripts

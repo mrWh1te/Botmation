@@ -61,7 +61,6 @@ module.exports = {
     extensions: [ '.tsx', '.ts', '.js' ],
   },
   output: {
-    globalObject: `typeof self !== 'undefined' ? self : this`, // for missing `window` error
     path: path.resolve(__dirname, 'dist'),
     filename: (chunkData) => {
       switch(chunkData.chunk.name) {

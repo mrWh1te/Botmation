@@ -38,7 +38,6 @@ module.exports = {
   },
   target: 'node',
   output: {
-    globalObject: `typeof self !== 'undefined' ? self : this`, // for missing `window` error
     path: path.resolve(__dirname, 'build'),
     filename: (chunkData) => {
       switch(chunkData.chunk.name) {

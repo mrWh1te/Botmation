@@ -22,7 +22,10 @@
     "reporting",
     "tool",
     "bot",
-    "crawler"
+    "crawler",
+    "puppeteer",
+    "declarative",
+    "imperative"
   ],
   "author": "Michael Lage",
   "license": "MIT",
@@ -41,7 +44,6 @@
     "http-server": "^0.12.1",
     "jest": "^25.1.0",
     "jest-puppeteer": "^4.4.0",
-    "readline-sync": "^1.4.10",
     "ts-jest": "^25.0.0",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.5",

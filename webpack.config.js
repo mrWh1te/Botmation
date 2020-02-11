@@ -94,7 +94,14 @@ module.exports = {
           // Distribution setup
           packageJSON.module = './index.js'
           packageJSON.types = './index.d.ts'
-          packageJSON.type = 'module'
+
+          // Move puppeteer dependency to peer
+          const puppeteerValue = packageJSON.dependencies.puppeteer
+          delete packageJSON.dependencies.puppeteer
+
+          packageJSON.peerDependencies = {
+            "puppeteer": puppeteerValue
+          }
 
           // Get rid of these scripts
           delete packageJSON.scripts

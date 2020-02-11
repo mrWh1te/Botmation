@@ -50,7 +50,7 @@ module.exports = {
         use: [{
           loader: 'ts-loader',
           options: {
-            configFile: 'tsconfig.bundle.json'
+            configFile: 'tsconfig.dist.json'
           }
         }],
         exclude: ['/node_modules']

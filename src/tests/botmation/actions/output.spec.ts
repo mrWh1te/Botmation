@@ -1,6 +1,5 @@
 import { Page } from 'puppeteer'
 
-// import { getDefaultGoToPageOptions } from '../../../botmation/helpers/navigation'
 import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
 
 import { BASE_URL } from '../../urls'

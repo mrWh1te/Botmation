@@ -24,7 +24,6 @@
     "webpack.config.js"
   ],
   "include": [
-    "src/botmation/**/*",
-    "src/tests/**/*"
+    "src/botmation/**/*"
   ]
 }

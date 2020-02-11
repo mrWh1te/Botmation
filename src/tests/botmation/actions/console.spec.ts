@@ -1,5 +1,5 @@
 import { log, warning, error } from 'botmation/actions/console'
-import { botOptions } from '../../mocks/bot-options.mock'
+import { botOptions } from 'tests/mocks/bot-options.mock'
 
 /**
  * @description   Console Action Factory

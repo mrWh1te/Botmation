@@ -2,8 +2,8 @@ import { Page } from 'puppeteer'
 
 import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
 
-import { BASE_URL } from '../../urls'
-import { botOptions } from '../../mocks/bot-options.mock'
+import { BASE_URL } from 'tests/urls'
+import { botOptions } from 'tests/mocks/bot-options.mock'
 
 import { screenshot, screenshotAll } from 'botmation/actions/output'
 import { fileExist, deleteFile } from 'botmation/helpers/files'

@@ -1,6 +1,6 @@
 {
   "name": "botmation",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "A Puppeteer Wrapper that provides a declarative syntax for web crawler automation",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",

@@ -1,19 +1,16 @@
 {
   "name": "botmation",
-  "version": "0.0.1",
-  "description": "A Puppeteer Library that provides a declarative syntax for web crawler automation",
-  "main": "./build/playground_bot.js",
+  "version": "0.1.0",
+  "description": "A Puppeteer Wrapper that provides a declarative syntax for web crawler automation",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "playground": "node .",
-    "botmation:": "npm run build && npm run playground",
-    "createconfigfile": "node ./scripts/create-config.cli.js",
-    "createbaseconfigfile": "node ./scripts/create-config.cli.js baseonly",
-    "postinstall": "npm run createconfigfile",
-    "example/instagram": "npm run build && node ./build/examples/instagram.js",
-    "example/puppeteer-cluster": "npm run build && node ./build/examples/puppeteer-cluster.js",
-    "example/screenshots": "npm run build && node ./build/examples/screenshots.js",
-    "tests": "npm run test",
+    "dist": "./node_modules/webpack/bin/webpack.js",
+    "build": "./node_modules/webpack/bin/webpack.js --config webpack.dev.config.js",
+    "playground": "node ./build/playground_bot.js",
+    "examples/instagram": "node ./build/examples/instagram.js",
+    "examples/puppeteer-cluster": "node ./build/examples/puppeteer-cluster.js",
+    "examples/screenshots": "node ./build/examples/screenshots.js",
     "test": "jest",
     "localtestsite": "./node_modules/http-server/bin/http-server ./src/tests/server"
   },
@@ -25,7 +22,10 @@
     "reporting",
     "tool",
     "bot",
-    "crawler"
+    "crawler",
+    "puppeteer",
+    "declarative",
+    "imperative"
   ],
   "author": "Michael Lage",
   "license": "MIT",
@@ -36,22 +36,19 @@
     "skip": "0.0.13"
   },
   "devDependencies": {
-    "@types/jest": "^25.1.0",
+    "@types/jest": "^25.1.2",
     "@types/jest-environment-puppeteer": "^4.3.1",
     "@types/node": "^13.1.8",
     "@types/puppeteer": "^2.0.0",
+    "copy-webpack-plugin": "^5.1.1",
     "http-server": "^0.12.1",
     "jest": "^25.1.0",
     "jest-puppeteer": "^4.4.0",
-    "module-alias": "^2.2.2",
-    "readline-sync": "^1.4.10",
     "ts-jest": "^25.0.0",
-    "typescript": "^3.7.5"
-  },
-  "_moduleAliases": {
-    "@mationbot": "./build/mationbot",
-    "@helpers": "./build/helpers",
-    "@config": "./build/config.js",
-    "@bots": "./build/bots"
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.5",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-node-externals": "^1.7.2"
   }
 }

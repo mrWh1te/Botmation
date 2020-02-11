@@ -1,29 +1,26 @@
 /**
  * @description  Simple Example Script
  */
-import 'module-alias/register'
 import puppeteer from 'puppeteer'
 
-import { MationBot } from '@mationbot'
-
-import { ACCOUNT_USERNAME, ACCOUNT_PASSWORD } from '@config'
+import { Botmation } from 'botmation'
 
 // General BotAction's
-import { log, logError } from '@mationbot/actions/console'
-import { givenThat, wait } from '@mationbot/actions/utilities'
-import { loadCookies, saveCookies } from '@mationbot/actions/cookies'
-import { goTo } from '@mationbot/actions/navigation'
-import { screenshot } from '@mationbot/actions/output'
+import { log, logError } from 'botmation/actions/console'
+import { givenThat, wait } from 'botmation/actions/utilities'
+import { loadCookies, saveCookies } from 'botmation/actions/cookies'
+import { goTo } from 'botmation/actions/navigation'
+import { screenshot } from 'botmation/actions/output'
 
 // Instagram specific BotAction's
-import { favoriteAllFrom } from '@bots/instagram/actions/feed'
-import { login } from '@bots/instagram/actions/auth'
-import { closeTurnOnNotificationsModal } from '@bots/instagram/actions/modals'
+import { favoriteAllFrom } from 'botmation/bots/instagram/actions/feed'
+import { login } from 'botmation/bots/instagram/actions/auth'
+import { closeTurnOnNotificationsModal } from 'botmation/bots/instagram/actions/modals'
 
 // Instagram helpers
-import { getInstagramBaseUrl, getInstagramLoginUrl } from '@bots/instagram/helpers/urls'
-import { isGuest } from '@bots/instagram/helpers/auth'
-import { isTurnOnNotificationsModalActive } from '@bots/instagram/helpers/modals'
+import { getInstagramBaseUrl, getInstagramLoginUrl } from 'botmation/bots/instagram/helpers/urls'
+import { isGuest } from 'botmation/bots/instagram/helpers/auth'
+import { isTurnOnNotificationsModalActive } from 'botmation/bots/instagram/helpers/modals'
 
 // Main Script
 (async () => {
@@ -31,10 +28,10 @@ import { isTurnOnNotificationsModalActive } from '@bots/instagram/helpers/modals
 
   try {
     browser = await puppeteer.launch({headless: false})
-    const instagramBot = await MationBot.asyncConstructor(browser)
+    const instagramBot = await Botmation.asyncConstructor(browser)
 
     await instagramBot.actions(
-      log('MationBot running'),
+      log('Botmation running'),
 
       // Takes the name of the file to load cookies from
       // Match this value with the same used in saveCookies()
@@ -44,7 +41,7 @@ import { isTurnOnNotificationsModalActive } from '@bots/instagram/helpers/modals
       // only on TRUE, does it run the chain of actions
       givenThat(isGuest) (
         goTo(getInstagramLoginUrl()),
-        login({username: ACCOUNT_USERNAME, password: ACCOUNT_PASSWORD}),
+        login({username: 'ACCOUNT_USERNAME', password: 'ACCOUNT_PASSWORD'}),
         saveCookies('instagram') // the Bot will skip login, on next run, by loading cookies 
       ),
 

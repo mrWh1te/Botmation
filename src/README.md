@@ -10,28 +10,28 @@ Botmation's main source code is all in TypeScript. The built JavaScript is trans
 2) `bots/` for service/site specific code (actions, helpers)
 3) `examples/` various bot examples (instagram, running a cluster)
 4) `helpers/` shared folder for functions across the other sibling directories
-5) `mationbot/` the rock that this project is built on for the `MationBot` class
+5) `botmation/` the rock that this project is built on for the `Botmation` class
 6) `tests/` we are using jest for our testing & have the environment preset for puppeteer
 
-This project is centered around (5) `MationBot`. Everything builds on top of it. 
+This project is centered around (5) `Botmation`. Everything builds on top of it. 
 
 ### BotNation
 
 To be developed
 
-A web app to manage all bots and review reports of the bots' actions. Will be developed, after `MationBot` completes v1.
+A web app to manage all bots and review reports of the bots' actions. Will be developed, after `Botmation` completes v1.
 
-### MationBot
+### Botmation
 
-`MationBot` class implements `MationBotInterface`
+`Botmation` class implements `BotmationInterface`
 
 It's the class for instantiating bots. Create an instance, for each bot.
 
 OOP as a wrapper, setup, encapsulating the Puppeteer page that the bot will operate on, while providing some OOP accessor/mutator methods for changing that page instance, destroying the bot when done, but took a step back, away from OOP design patterns, in providing a loosely coupled Declarative pattern for scraping and interacting with the page. This was done for a few reasons.
 
-It keeps the `MationBot` class short, since we don't have a bunch of methods to implement in dealing with all the possible actions. All of these actions are separated (away from the class) async functions (return promises), following the `BotAction` interface. To use a `BotAction`, you use the `BotAction`'s Factory method. That way, you can customize the action, with dynamic scoping, then it enables the `MationBot` to inject the Puppeteer page, and whatever else it may need, in the future. The door was left open. We can change the "chain" like flow, of `actions()`, into a "pipe", where the resolved result of the past promise is provided as input into the next!
+It keeps the `Botmation` class short, since we don't have a bunch of methods to implement in dealing with all the possible actions. All of these actions are separated (away from the class) async functions (return promises), following the `BotAction` interface. To use a `BotAction`, you use the `BotAction`'s Factory method. That way, you can customize the action, with dynamic scoping, then it enables the `Botmation` to inject the Puppeteer page, and whatever else it may need, in the future. The door was left open. We can change the "chain" like flow, of `actions()`, into a "pipe", where the resolved result of the past promise is provided as input into the next!
 
-You run `BotAction`'s via `MationBot`'s special public method called `actions()`. It takes a list of Actions, to be ran in an async sequence. It's a chain of resolving promises, but your not restricted in how you chain them up, you can chain lists (chain on chains!). The `actions()` method's functionality was stripped away from the Class into its own Factory method called `BotActionsChainFactory`. That way, you can reuse the same functionality inside your own `BotAction`! Therefore, an Action can be another chain of Actions! A good example is the `login()` `BotAction` for instagram, found here: `/bots/instagram/actions/auth.ts`
+You run `BotAction`'s via `Botmation`'s special public method called `actions()`. It takes a list of Actions, to be ran in an async sequence. It's a chain of resolving promises, but your not restricted in how you chain them up, you can chain lists (chain on chains!). The `actions()` method's functionality was stripped away from the Class into its own Factory method called `BotActionsChainFactory`. That way, you can reuse the same functionality inside your own `BotAction`! Therefore, an Action can be another chain of Actions! A good example is the `login()` `BotAction` for instagram, found here: `/bots/instagram/actions/auth.ts`
 
 ### Bots
 
@@ -53,4 +53,4 @@ It's the `puppeteer-cluster.ts` file. Shows a way to use the `puppeteer-cluster`
 
 ##### Screenshots Bot
 
-It's the `screenshots.ts` file. Shows the various ways to use the screenshot `BotAction`'s found in `./mationbot/actions/output.ts`.
+It's the `screenshots.ts` file. Shows the various ways to use the screenshot `BotAction`'s found in `./botmation/actions/output.ts`.

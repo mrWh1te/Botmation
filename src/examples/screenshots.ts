@@ -1,17 +1,16 @@
 /**
  * @description  Simple Example Script
  */
-import 'module-alias/register'
 import puppeteer from 'puppeteer'
 
-import { MationBot } from '@mationbot'
+import { Botmation } from 'botmation'
 
 // General BotAction's
-import { log, logError } from '@mationbot/actions/console'
-import { forAll } from '@mationbot/actions/utilities'
-import { goTo } from '@mationbot/actions/navigation'
-import { screenshot, screenshotAll } from '@mationbot/actions/output'
-import { getDefaultGoToPageOptions } from '@mationbot/helpers/navigation'
+import { log, logError } from 'botmation/actions/console'
+import { forAll } from 'botmation/actions/utilities'
+import { goTo } from 'botmation/actions/navigation'
+import { screenshot, screenshotAll } from 'botmation/actions/output'
+import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
 
 (async () => {
   let browser: puppeteer.Browser
@@ -30,11 +29,11 @@ import { getDefaultGoToPageOptions } from '@mationbot/helpers/navigation'
   // Wrap in try/catch, because the bot will throw on Errors requiring dev attention
   try {
     browser = await puppeteer.launch({headless: false})
-    const bot = await MationBot.asyncConstructor(browser)
+    const bot = await Botmation.asyncConstructor(browser)
 
     // Bot's automations
     await bot.actions(
-      log('MationBot running'),
+      log('Botmation running'),
 
       // Taking screenshots of many sites 
       // filenames are the url's

@@ -1,18 +1,16 @@
-require("module-alias/register")
-
 import { Cluster } from 'puppeteer-cluster'
 import { Page } from 'puppeteer'
 
 // Actions
-import { goTo } from '@mationbot/actions/navigation'
-import { screenshot } from '@mationbot/actions/output'
-import { logError, log } from '@mationbot/actions/console'
+import { goTo } from 'botmation/actions/navigation'
+import { screenshot } from 'botmation/actions/output'
+import { logError, log } from 'botmation/actions/console'
 
 // Class for injecting the page
-import { MationBot } from '@mationbot'
+import { Botmation } from 'botmation'
 
 // Purely functional approach
-import { BotActionsChainFactory as Bot } from '@mationbot/factories/bot-actions-chain.factory'
+import { BotActionsChainFactory as Bot } from 'botmation/factories/bot-actions-chain.factory'
 
 (async () => {
     try {
@@ -33,7 +31,7 @@ import { BotActionsChainFactory as Bot } from '@mationbot/factories/bot-actions-
     
         const githubBot = async ({ page, data: url }: {page: Page, data: any}) => {
             // Imperative OO
-            const bot = new MationBot(page)
+            const bot = new Botmation(page)
     
             await bot.actions(
                 goTo(url),
@@ -44,7 +42,7 @@ import { BotActionsChainFactory as Bot } from '@mationbot/factories/bot-actions-
     
         const typescriptBot = async ({ page, data: url }: {page: Page, data: any}) => 
             // Imperative OO, 1 line
-            await (new MationBot(page)).actions( // if you're not doing the above functional way, you could rename MationBot to Bot in the import using 'as'
+            await (new Botmation(page)).actions( // if you're not doing the above functional way, you could rename Botmation to Bot in the import using 'as'
                 goTo(url),
                 screenshot(url.replace(/[^a-zA-Z]/g, '_')),
                 log('screenshot of ' + url + ' saved')

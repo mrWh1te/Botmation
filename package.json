@@ -4,9 +4,11 @@
   "description": "A Puppeteer Wrapper that provides a declarative syntax for web crawler automation",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "type": "module",
   "scripts": {
-    "build": "./node_modules/webpack/bin/webpack.js",
-    "tests": "npm run test",
+    "bundle": "./node_modules/webpack/bin/webpack.js",
+    "build": "tsc",
+    "playground": "node ./build/playground_bot.js",
     "test": "jest",
     "localtestsite": "./node_modules/http-server/bin/http-server ./src/tests/server"
   },

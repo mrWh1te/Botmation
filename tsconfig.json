@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2017",
     "allowJs": true,
-    "outDir": "./dist/",
-    "module": "es6",
+    "outDir": "./build/",
+    "module": "commonjs",
     "jsx": "react",
     "noImplicitAny": true,
     "strict": true,
@@ -14,17 +14,16 @@
     "declaration": true
   },
   "exclude": [
-    "node_modules",
     "assets",
     "scripts",
     "dist",
-    "src/examples",
+    "build",
+    "node_modules",
     "jest-puppeteer.config.js",
     "jest.config.js",
     "webpack.config.js"
   ],
   "include": [
-    "src/botmation/**/*",
-    "src/tests/**/*"
+    "src/**/*"
   ]
 }

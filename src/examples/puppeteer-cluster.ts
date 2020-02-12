@@ -22,6 +22,7 @@ import { BotActionsChainFactory as Bot } from 'botmation/factories/bot-actions-c
         //
         // In this example, they are essentially doing the same thing each, which therefore could rewrite this better
         //    But, they each can do their own unique set of actions, navigating, interacting with their own sites
+        // This library supports 2 approaches, Object Oriented 
         //
 
         const githubBot = async ({ page, data: url }: {page: Page, data: any}) => {

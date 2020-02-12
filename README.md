@@ -1,5 +1,5 @@
 # Botmation
-[![Build Status](https://travis-ci.com/mrWh1te/Botmation.svg?branch=master)](https://travis-ci.com/mrWh1te/Botmation) ![GitHub](https://img.shields.io/github/license/mrWh1te/Botmation)
+[![Build Status](https://travis-ci.com/mrWh1te/Botmation.svg?branch=master)](https://travis-ci.com/mrWh1te/Botmation) [![dependencies Status](https://david-dm.org/mrWh1te/Botmation/status.svg)](https://david-dm.org/mrWh1te/Botmation) ![GitHub](https://img.shields.io/github/license/mrWh1te/Botmation)
 
 A NodeJS bot, called `Botmation`, for Declaratively using [Puppeteer](https://github.com/puppeteer/puppeteer) in crawling & interacting with the web.
 

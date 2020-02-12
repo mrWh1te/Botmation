@@ -18,19 +18,14 @@ import { BotActionsChainFactory as Bot } from 'botmation/factories/bot-actions-c
             concurrency: Cluster.CONCURRENCY_BROWSER, // browser / page, Incognito mode
             maxConcurrency: 3 // max number of bots
         })
-    
-        // We don't define a task and instead use Task functions
-        const nodeJsBot = async ({ page, data: url }: {page: Page, data: any}) => 
-            // Functional
-            await Bot(page)(
-                goTo(url),
-                screenshot(url.replace(/[^a-zA-Z]/g, '_')),
-                log('screenshot of ' + url + ' saved')
-            )
-        
-    
+
+        //
+        // In this example, they are essentially doing the same thing each, which therefore could rewrite this better
+        //    But, they each can do their own unique set of actions, navigating, interacting with their own sites
+        //
+
         const githubBot = async ({ page, data: url }: {page: Page, data: any}) => {
-            // Imperative OO
+            // Imperative OO approach
             const bot = new Botmation(page)
     
             await bot.actions(
@@ -41,12 +36,24 @@ import { BotActionsChainFactory as Bot } from 'botmation/factories/bot-actions-c
         }
     
         const typescriptBot = async ({ page, data: url }: {page: Page, data: any}) => 
-            // Imperative OO, 1 line
+            // Imperative OO approach, on 1 line
             await (new Botmation(page)).actions( // if you're not doing the above functional way, you could rename Botmation to Bot in the import using 'as'
                 goTo(url),
                 screenshot(url.replace(/[^a-zA-Z]/g, '_')),
                 log('screenshot of ' + url + ' saved')
             )
+    
+        const nodeJsBot = async ({ page, data: url }: {page: Page, data: any}) => 
+            // Functional approach
+            await Bot(page)(
+                goTo(url),
+                screenshot(url.replace(/[^a-zA-Z]/g, '_')),
+                log('screenshot of ' + url + ' saved')
+            )
+
+        //
+        // You can use any approach with any one of these bots
+        //
     
         // Run the bots
         cluster.queue('https://nodejs.org/', nodeJsBot)

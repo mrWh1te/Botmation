@@ -63,62 +63,51 @@ import { screenshot } from 'botmation/actions/output';
 
 To get started with Bot Actions, visit the [Botmation: Actions documentation](/src/botmation/actions/README.md).
 
-## Examples
+# Examples
 
 In the `./src/examples` directory, exists a small collection of simple bots, for to you to copy and paste.
 
-Run any of the bots with their respective command:
-```
-$ npm run example/instagram
-$ npm run example/screenshots
-$ npm run example/puppeteer-cluster
-```
-These commands will run the build script beforehand, so whatever changes saved to the TypeScript code, will be seen.
-
-# Testing
-
-Testing is done with [Jest](https://jestjs.io/). The testing coverage is focused on unit-testing the unique functionality provided by the library, integration testing the use of puppeteer's page's public methods, and e2e testing of the Object-Oriented class and Functional factory using a jest puppeteer preset.
-
-Learn more about testing with the [Botmation: Tests documentation](/src/tests/README.md).
-
-## Running a Nation of Bots
-
-The `Botmation` class supports the [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) package to run multiple bots concurrently! Here's how the heart of it looks:
-
-```
-cluster.queue(data, async(page, ...) => {
-  const bot = new Botmation(page)
-
-  await bot.actions(
-    ...
-  )
-})
-
-```
-
-You can provide "Task" functions, wrapping separate `Botmation` bots actions, to the `cluster.queue()` method, so each bot can operate individually. A complete working example is [available here](/src/examples/puppeteer-cluster.ts) running three bots concurrently.
-
-## Manual Script Running
-
-You can manually run the scripts ran by the main `botmation` script, in "Getting Started".
-
-To build the runnable code, run this command:
+Try try any of them out, first build the source code:
 ```
 $ npm run build
 ```
 
-To run the built playground bot's code, run this command:
+Then run any example, like:
+```
+$ npm run example/simple_objectoriented
+$ npm run example/simple_functional
+$ npm run example/instagram
+$ npm run example/screenshots
+```
+
+# Running Bots Concurrently
+
+This project works with the [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) module, in running multiple bots, concurrently!
+
+You can see the [puppeteer-cluster example here](/src/examples/puppeteer-cluster.ts). 
+You can try it out by running these commands:
+```
+$ npm run build
+$ npm run example/puppeteer-cluster
+```
+
+# Library Tests
+
+Testing is done with [Jest](https://jestjs.io/). The testing coverage is focused on unit-testing each Bot Action, integration testing the use of puppeteer's page's public methods in those actions, and e2e testing of the Object-Oriented class and Functional factory.
+
+Learn more about testing with the [Botmation: Tests documentation](/src/tests/README.md).
+
+## Library Development
+
+To build the library locally, run this command:
+```
+$ npm run build
+```
+
+The [playground_bot](/src/playground_bot.ts) is a dedicated code space for trying out new Bot Actions, etc. You can run it's code, after running the build command, with:
 ```
 $ npm run playground
 ```
-
-This will run the example bot found here: `./src/playground_bot.ts`
-
-If you want to change the credentials of the Instagram bot for the example_bot code, mentioned above, simply run this command:
-```
-$ npm run createconfigfile overwrite
-```
-Instead of `overwrite` you can provide the shorthand `o`, to run the create config file script with it set to overwrite the current config file. It will still ask you, just in case.
 
 ## Issues, Feature Requests
 
@@ -128,11 +117,10 @@ When reporting bugs, please provide sample code to recreate the bug, relevant er
 
 ## Contributors
 
-### Code Contributors
+### Code
 
-[mrWh1te](https://github.com/mrWh1te) - [Blog](https://copynpaste.me)
+[Michael Lage](https://github.com/mrWh1te) - [Blog](https://copynpaste.me)
 
-### Design Contributors
+### Art
 
-
-
+[Patrick Capeto](https://www.instagram.com/patrick.capeto/) - [Email](mailto:me@patrickcapeto.com)

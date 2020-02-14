@@ -8,6 +8,8 @@
     "dist": "./node_modules/webpack/bin/webpack.js",
     "build": "./node_modules/webpack/bin/webpack.js --config webpack.build.config.js",
     "playground": "node ./build/playground_bot.js",
+    "examples/simple_functional": "node ./build/examples/simple_functional.js",
+    "examples/simple_objectoriented": "node ./build/examples/simple_objectoriented.js",
     "examples/instagram": "node ./build/examples/instagram.js",
     "examples/puppeteer-cluster": "node ./build/examples/puppeteer-cluster.js",
     "examples/screenshots": "node ./build/examples/screenshots.js",

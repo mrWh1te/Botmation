@@ -11,11 +11,11 @@ The name is a mix of Bot & Automation
 Why choose Botmation?
 ------------------
 
-It enables devs to re-use any action, or sequence of actions, with its simple composable format (chain).
+It enables devs to re-use any action, or sequence of actions, with a simple composable format (chain).
 
-It gives devs the option to use either an Object-Oriented class or follow a purely Functional approach with the `BotActionsChainFactory`.
+It gives devs the option to use either an Object-Oriented class or follow a purely Functional approach.
 
-It enables devs to write more code with less characters, by chaining sequences of actions together with one `await` function call.
+It enables devs to write more functionality with less code.
 
 Install
 -------
@@ -26,6 +26,26 @@ First make sure you have installed the latest version of [node.js](http://nodejs
 From NPM for programmatic use:
 
     npm install botmation
+
+# Getting Started
+
+There are simple examples to help you get started, and it depends on your preference of programming: Object-Oriented or Functional. 
+
+1) Object-Oriented
+
+You can use the `Botmation` [class](/src/botmation/class.ts). It provides two different constructor approaches, one static async method and a regular sync constructor method, depending on how you want to use it. Either way, you're going to use the `actions()` method, from the object instance, to run a chain of Bot Actions. 
+
+See the [object-oriented example code](/src/examples/simple_objectoriented.ts) to get you started.
+
+2) Functional
+
+The `Botmation` class's `actions()` method is de-coupled from the class, meaning the function was replaced with a higher order function, called the [BotActionsChainFactory](/src/botmation/factories/bot-actions-chain.factory.ts). That factory function creates the Bot Actions chain function, but without losing any core functionality, you can use it directly.
+
+See the [functional example code](/src/examples/simple_functional.ts) to get you started.
+
+Either way, you'll use and create your own Bot Actions, to run in a chain. It's possible to compose chains of chains. Therefore, it makes it easy to reuse code, and effectively unit test your code, with less. 
+
+Learn more about [Bot Actions here](/src/botmation/actions/README.md).
 
 # API Reference
 
@@ -41,80 +61,9 @@ import { goTo } from 'botmation/actions/navigation';
 import { screenshot } from 'botmation/actions/output';
 ```
 
-To learn about the Bot Actions, visit the [Botmation: Actions docs](/src/botmation/actions/README.md).
+To get started with Bot Actions, visit the [Botmation: Actions documentation](/src/botmation/actions/README.md).
 
-# Examples
-
-# Library Testing
-
- - `Botmation` class with method `actions()` for declaratively executing async tasks, `BotAction`'s, sequentially
-   - supports completely functional approach, bypassing the Class by using the `BotActionsChainFactory`
- - Social media site specific action's ie Instagram for automating login
- - unit/integration testing of all `BotAction` factory methods
- - e2e testing for the `Botmation` class constructor, static asyncConstructor
- - unit testing of `BotActionsChainFactory` with nesting
- - travisCI running builds (required passing latest code via PR's b4 merge)
- - example bots (including how to run bots concurrently using `puppeteer-cluster`)
-
-In dev:
-  - Instagram Specific Crawling/Interacting `BotAction`'s
-  - Cleaning Up / Preparing Docs for v1
-  - Mascot team (working with a talented Artist)
-
-Future:
- - Management web app tool (might do Electron, and try to run the bots from the Electron app)
- - Expanding upon injection to include data attached to the bot, and perhaps options (depending on the requirements of the management app)
-
-This project focuses on a composable way of chaining bot actions in linear sequences. Interfaced by, `BotAction`, the methods are used in a `MotionBot` instance call of `.actions()`. That said, you can simple use the `BotActionsChainFactory` by supplying it the page directly, for a completely functional approach.
-
-A `BotAction` can represent a whole other chain of actions, by re-using the `BotActionsChainFactory`. All of these are de-coupled functions, which made testing much simpler.
-
-Let's see some code:
-```typescript
-    import puppeteer from 'puppeteer'
-
-    import { Botmation } from 'botmation'
-
-    // General BotAction's
-    import { log } from 'botmation/actions/console'
-    import { screenshot, givenThat, wait } from 'botmation/actions/utilities'
-    import { loadCookies } from 'botmation/actions/cookies'
-    import { goTo } from 'botmation/actions/navigation'
-
-    // Instagram specific
-    import { login, isGuest } from '@bots/instagram/actions/auth'
-    import { getInstagramBaseUrl, getInstagramLoginUrl } from '@bots/instagram/helpers/urls'
-
-    // Start up the Instagram bot with the Puppeteer Browser
-    const bot = await Botmation.asyncConstructor(browser)
-
-    // Actions run in a linear sequence, as declared
-    await bot.actions(
-      log('Botmation running'),
-      loadCookies('instagram'),
-      
-      // a special BotAction that works like an if() {}
-      givenThat(isGuest) (
-        goTo(getInstagramLoginUrl()),
-        screenshot('login'), // saves screenshot as "login.png" in the screenshots directory
-        // a BotAction from our instagram package:
-        login({username: 'instagram username', password: 'instagram password'}),
-        saveCookes('instagram')
-      ),
-
-      goTo(getInstagramBaseUrl()),
-      wait(5000),
-      screenshot('feed'),
-
-      log('Done!'),
-    )
-```
-
-For complete examples, see the included [here](/src/examples/).
-
-For the latest actions, including experimental under development, check out the [playground bot](/src/playground_bot.ts).
-
-## Example Bots
+## Examples
 
 In the `./src/examples` directory, exists a small collection of simple bots, for to you to copy and paste.
 
@@ -125,6 +74,12 @@ $ npm run example/screenshots
 $ npm run example/puppeteer-cluster
 ```
 These commands will run the build script beforehand, so whatever changes saved to the TypeScript code, will be seen.
+
+# Testing
+
+Testing is done with [Jest](https://jestjs.io/). The testing coverage is focused on unit-testing the unique functionality provided by the library, integration testing the use of puppeteer's page's public methods, and e2e testing of the Object-Oriented class and Functional factory using a jest puppeteer preset.
+
+Learn more about testing with the [Botmation: Tests documentation](/src/tests/README.md).
 
 ## Running a Nation of Bots
 

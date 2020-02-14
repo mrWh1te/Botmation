@@ -102,6 +102,9 @@ module.exports = {
             "puppeteer": puppeteerValue
           }
 
+          // Remove the puppeteer-cluster dependency (used for one of the examples)
+          delete packageJSON.dependencies['puppeteer-cluster']
+
           // Get rid of these scripts
           delete packageJSON.scripts
 

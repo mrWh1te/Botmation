@@ -6,7 +6,7 @@ import puppeteer from 'puppeteer'
 import { Botmation } from 'botmation'
 
 // General BotAction's
-import { log, logError } from 'botmation/actions/console'
+import { log } from 'botmation/actions/console'
 import { givenThat, wait } from 'botmation/actions/utilities'
 import { loadCookies, saveCookies } from 'botmation/actions/cookies'
 import { goTo } from 'botmation/actions/navigation'
@@ -21,6 +21,7 @@ import { closeTurnOnNotificationsModal } from 'botmation/bots/instagram/actions/
 import { getInstagramBaseUrl, getInstagramLoginUrl } from 'botmation/bots/instagram/helpers/urls'
 import { isGuest } from 'botmation/bots/instagram/helpers/auth'
 import { isTurnOnNotificationsModalActive } from 'botmation/bots/instagram/helpers/modals'
+import { logError } from 'botmation/helpers/console'
 
 // Main Script
 (async () => {

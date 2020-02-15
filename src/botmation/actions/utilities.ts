@@ -9,7 +9,6 @@ import { applyBotActionOrActions } from '../helpers/actions'
 import { BotAction } from '../interfaces/bot-action.interfaces'
 import { BotActionsChainFactory } from '../factories/bot-actions-chain.factory'
 import { BotOptions } from '../interfaces/bot-options.interfaces'
-import { logError } from './console'
 
 /**
  * @description   Pauses the bot for the provided milliseconds before letting it execute the next Action

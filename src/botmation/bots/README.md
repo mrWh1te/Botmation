@@ -1,9 +1,12 @@
-# Botmation Bots
+<h1>Botmation: Bots</h1>
 
-We are going to support a few websites with tailored `BotAction`'s for login, and basic crawling/interacting.
+Bots directory are site specific Bot Actions. If you're interested in automating your social media, check out what we already have created for you to help you get done faster!
 
-## Overview
+Please, feel free to open pull-requests to add new sites and actions, to the collection!
 
-Currently, we only support "Instagram". This project was originally called `Instamation`, as a bot for Instagram automation. However, the patterns proved useful enough to break apart in favor of supporting any website.
+Instagram
+---------
+Supports login.
 
-Plans exist for Twitter, and Tinder
+
+More coming soon

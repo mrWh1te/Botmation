@@ -5,9 +5,10 @@ import puppeteer from 'puppeteer'
 import { BotActionsChainFactory as Bot } from 'botmation'
 
 // General BotAction's
-import { log, logError } from 'botmation/actions/console'
+import { log } from 'botmation/actions/console'
 import { goTo } from 'botmation/actions/navigation'
 import { screenshot } from 'botmation/actions/output'
+import { logError } from 'botmation/helpers/console'
 
 (async () => {
   let browser: puppeteer.Browser

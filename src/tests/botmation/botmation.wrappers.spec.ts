@@ -46,10 +46,8 @@ describe('[Botmation:Wrappers] Class & Factory', () => {
       click(FORM_SUBMIT_BUTTON_SELECTOR)
     )
 
-    const browserPages = await browser.pages()
-    const browerPage = browserPages[0]
-
-    expect(browerPage.url()).toEqual('http://localhost:8080/success.html?answer=loremlipsumloremlipsum')
+    const page = bot.getPage()
+    expect(page.url()).toEqual('http://localhost:8080/success.html?answer=loremlipsumloremlipsum')
   })
 
   //

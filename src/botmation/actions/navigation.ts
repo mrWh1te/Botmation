@@ -3,8 +3,7 @@ import { DirectNavigationOptions } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-action.interfaces'
 import { getDefaultGoToPageOptions } from '../helpers/navigation'
-
-import { logWarning } from './console'
+import { logWarning } from '../helpers/console'
 
 /**
  * @description   Single Higher Order Function for Page Changing

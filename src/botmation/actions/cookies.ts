@@ -2,8 +2,8 @@ import { Page } from 'puppeteer'
 import { promises as fs } from 'fs'
 
 import { BotAction } from '../interfaces/bot-action.interfaces'
-import { logError } from './console'
 import { getFileUrl } from '../helpers/assets'
+import { logError } from '../helpers/console'
 
 /**
  * @description   Parse page's cookies to save as JSON in local file

@@ -4,13 +4,14 @@ import { Page } from 'puppeteer'
 // Actions
 import { goTo } from 'botmation/actions/navigation'
 import { screenshot } from 'botmation/actions/output'
-import { logError, log } from 'botmation/actions/console'
+import { log } from 'botmation/actions/console'
 
 // Class for injecting the page
 import { Botmation } from 'botmation'
 
 // Purely functional approach
 import { BotActionsChainFactory as Bot } from 'botmation/factories/bot-actions-chain.factory'
+import { logError } from 'botmation/helpers/console'
 
 (async () => {
     try {

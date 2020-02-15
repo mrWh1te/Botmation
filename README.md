@@ -9,7 +9,7 @@ A TypeScript library for using [Puppeteer](https://github.com/puppeteer/puppetee
 The name is a mix of Bot & Automation
 
 Why choose Botmation?
-------------------
+---------------------
 
 It enables devs to re-use any action, or sequence of actions, with a simple composable format (chain).
 
@@ -69,26 +69,26 @@ In the `./src/examples` directory, exists a small collection of simple bots, for
 
 Try try any of them out, first build the source code:
 ```
-$ npm run build
+npm run build
 ```
 
 Then run any example, like:
 ```
-$ npm run example/simple_objectoriented
-$ npm run example/simple_functional
-$ npm run example/instagram
-$ npm run example/screenshots
+npm run examples/simple_objectoriented
+npm run examples/simple_functional
+npm run examples/instagram
+npm run examples/screenshots
 ```
 
 # Running Bots Concurrently
 
 This project works with the [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) module, in running multiple bots, concurrently!
 
-You can see the [puppeteer-cluster example here](/src/examples/puppeteer-cluster.ts). 
-You can try it out by running these commands:
+To get started, check out the [puppeteer-cluster example code](/src/examples/puppeteer-cluster.ts). 
+You can run the code, with these commands:
 ```
-$ npm run build
-$ npm run example/puppeteer-cluster
+npm run build
+npm run examples/puppeteer-cluster
 ```
 
 # Library Tests
@@ -101,12 +101,12 @@ Learn more about testing with the [Botmation: Tests documentation](/src/tests/RE
 
 To build the library locally, run this command:
 ```
-$ npm run build
+npm run build
 ```
 
 The [playground_bot](/src/playground_bot.ts) is a dedicated code space for trying out new Bot Actions, etc. You can run it's code, after running the build command, with:
 ```
-$ npm run playground
+npm run playground
 ```
 
 ## Issues, Feature Requests

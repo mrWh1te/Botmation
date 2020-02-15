@@ -10,6 +10,7 @@ module.exports = {
     "<rootDir>/src/tests/server/"
   ],
   modulePathIgnorePatterns: [
-    "<rootDir>/dist/"
+    "<rootDir>/dist/",
+    "<rootDir>/build/"
   ]
 };

@@ -6,7 +6,7 @@ import puppeteer from 'puppeteer'
 import { Botmation } from './botmation'
 
 // General BotAction's
-import { log, logError } from './botmation/actions/console'
+import { log, warning } from './botmation/actions/console'
 import { givenThat, wait } from './botmation/actions/utilities'
 import { loadCookies, saveCookies } from './botmation/actions/cookies'
 import { goTo } from './botmation/actions/navigation'
@@ -20,6 +20,7 @@ import { screenshot } from './botmation/actions/output'
 import { getInstagramBaseUrl, getInstagramLoginUrl } from './botmation/bots/instagram/helpers/urls'
 import { isGuest } from './botmation/bots/instagram/helpers/auth'
 import { isTurnOnNotificationsModalActive } from './botmation/bots/instagram/helpers/modals'
+import { logError } from 'botmation/helpers/console'
 
 // Main Script
 (async () => {
@@ -51,6 +52,7 @@ import { isTurnOnNotificationsModalActive } from './botmation/bots/instagram/hel
     // Actions run in sequence
     await instagramBot.actions(
       log('Botmation running'),
+      warning('test'),
 
       // example forAll using 1 BotAction instead of an array
       // forAll(['twitter.com', 'facebook.com'])((siteName) => goTo('http://' + siteName)),

@@ -73,6 +73,19 @@ export class Botmation implements BotmationInterface {
   }
 
   /**
+   * @param page {Puppeteer.Page}
+   */
+  setPage(page: Page) {
+    this.page = page
+  }
+  /**
+   * @param page {Puppeteer.Page}
+   */
+  getPage(): Page {
+    return this.page
+  }
+
+  /**
    * @description    Public method to update the Options if needed
    * TODO: test
    * @param options 

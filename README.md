@@ -47,7 +47,7 @@ Either way, you'll use and create your own Bot Actions, to run in a chain. It's 
 
 Learn more about [Bot Actions here](/src/botmation/actions/README.md).
 
-# API Reference
+# Library Reference
 
 Assuming installation via NPM, you can load the class or the bot actions chain factory like this:
 ```javascript

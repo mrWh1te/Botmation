@@ -1,4 +1,7 @@
-<h1>Botmation</h1>
+<h1>
+    <img src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/group.jpg" alt="Botmation" width="400">
+    Botmation
+</h1>
 
 [![Build Status](https://travis-ci.com/mrWh1te/Botmation.svg?branch=master)](https://travis-ci.com/mrWh1te/Botmation) 
 [![dependencies Status](https://david-dm.org/mrWh1te/Botmation/status.svg)](https://david-dm.org/mrWh1te/Botmation) 

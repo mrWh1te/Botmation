@@ -3,8 +3,6 @@ node_modules
 dist
 build
 
-*.png
-
 src/config.ts
 
 assets/cookies/*

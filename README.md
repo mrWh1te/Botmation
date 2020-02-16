@@ -1,6 +1,7 @@
 <h1>
     <img src="https://raw.githubusercontent.com/mrWh1te/Botmation/major-v-1-prep/assets/art/group.jpg" alt="Botmation" width="400">
     <!-- <img src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/group.jpg" alt="Botmation" width="400"> -->
+    <br />
     Botmation
 </h1>
 

@@ -158,4 +158,6 @@ These higher order functions provides utilities to the programmer in building Bh
 
 - `wait(milliseconds: number)`
 
-  This simple bot action, holds execution of the next bot action from running until the period of time provided, passes. This is the one bot action that doesn't have proper testing for, see Issue #8.
+  This simple bot action (like the main other groups that are not another level higher in order), this one pauses execution of the next bot action until the period of time provided, passes. It's more utility in nature, hence it's inclusion in this group. 
+  
+  This is the one bot action that doesn't have proper testing for, see Issue #8.

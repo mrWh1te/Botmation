@@ -96,7 +96,7 @@ npm run examples/puppeteer-cluster
 
 # Library Tests
 
-Testing is done with [Jest](https://jestjs.io/). The testing coverage is focused on unit-testing each Bot Action, integration testing the use of puppeteer's page's public methods in those actions, and e2e testing of the Object-Oriented class and Functional factory.
+All our testing is done with [Jest](https://jestjs.io/).
 
 Learn more about testing with the [Botmation: Tests documentation](/src/tests/README.md).
 

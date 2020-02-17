@@ -1,6 +1,6 @@
 <h1>Botmation: Actions</h1>
 
-Bot Actions are async functions that operate on a Puppeteer's `page` with `BotOptions` and optionally `injects` (for whatever is needed).
+Bot actions are async functions that operate on a Puppeteer's `page` with `BotOptions` and optionally `injects` (for whatever is needed).
 
 Bot Action Interface
 --------------------
@@ -11,7 +11,7 @@ export interface BotAction extends Function {
 ```
 > Note: While the function requires options, devs do not need to provide it, when using either the `BotActionsChainFactory` or the `Botmation` class. A safe set of defaults are provided instead. You may overload that with only what you need.
 
-These functions are created from higher order functions called `BotActionFactory` functions. A factory returns a `BotAction` function. This enables devs to use factory functions to customize Bot Actions with whatever is needed.
+These functions are created from higher order functions called `BotActionFactory` functions. A factory returns a `BotAction` function. This enables devs to use factory functions to customize bot actions with whatever is needed.
 
 Bot Action Factory Interface
 ----------------------------
@@ -24,7 +24,7 @@ export interface BotActionFactory extends Function {
 # Building your own Bot Actions
 A `BotAction` function is an async function, which gets the Puppeteer `page`, `BotOptions` (which devs can overload), and any optional `injects` provided by the project's devs. These functions are unit based, singular in purpose, easy to test, and easy to reuse. How do we make them?
 
-Every `BotAction` function is returned by a higher-order `BotActionFactory` function. The factory functions provide parameters, with their dynamic scoping, to customize the `BotAction` function. Here's an example, of a usable Bot Action Factory function in the `actions()` method. Here's a simple example:
+Every `BotAction` function is returned by a higher-order `BotActionFactory` function. The factory functions provide parameters, with their dynamic scoping, to customize the `BotAction` function. Here's an example, of a usable bot action Factory function in the `actions()` method. Here's a simple example:
 ```typescript
 export const clickHTMLElementBySelector = (htmlSelector: string): BotAction => async(page: Page) => {
   await page.click(htmlSelector)
@@ -40,7 +40,7 @@ import { Page } from 'puppeteer' // @types/puppeteer
 import { BotActionsChainFactory } from 'botmation'
 import { BotAction } from 'botmation/interfaces'
 
-// ... import the Bot Action Factory methods from their respective files in the `botmation/actions` directory
+// ... import the Bot Action methods from their respective files in the `botmation/actions` directory
 
 export const loginExampleFlow = (username: string, password: string): BotAction => async(page: Page, options, ...injects) =>
   // This is how a single BotAction can run its own sequence of BotAction's prior to the next call of the original bot.actions() sequence
@@ -59,7 +59,7 @@ export const loginExampleFlow = (username: string, password: string): BotAction 
 
 # Actions Reference
 
-As of v1.0.0, there are 6 types of bot actions.
+As of v1.0.0, there are 6 types of Bot Actions.
 
 1. Console
 2. Cookies
@@ -132,6 +132,30 @@ These higher order functions provide simple ways to save things from the Page to
 
 - `screenshotAll(...urls: string[])`
 
-  Simple Bot Action, for taking a screenshot of multiple site pages, using 1 bot. Simply provide a comma separated list of URL strings ie `screenshotAll('https://google.com', 'https://twitter.com')`. It will create the screenshots in the current active directory, which can be adjusted by using `BotOptions`.
+  Bimple bot action, for taking a screenshot of multiple site pages, using 1 bot. Simply provide a comma separated list of URL strings ie `screenshotAll('https://google.com', 'https://twitter.com')`. It will create the screenshots in the current active directory, which can be adjusted by using `BotOptions`.
   
 ## Utilities
+
+These higher order functions provides utilities to the programmer in building Bhains of bot actions. Some of them help devs do normal things in scripting, like writing an if statement, or writing a basic for loop. So if you have some more Bnique needs in chaining bot actions, highly recommend looking here.
+
+- `givenThat(condition)(...actions)`
+
+  Takes an async function, similar to a `BotAction` (same parameters), but is expected to return a promise with a Boolean value. If that promise resolves to `TRUE`, it will then run the sequence of comma-delimited actions.
+
+  The [example Instagram bot](/src/examples/instagram.ts), uses `givenThat()()`, to attempt login, only if the bot is a Guest on the page.
+
+- `forAll(collection)(callback => BotAction | BotAction[])`
+
+  Bhis bot action takes a collection, either an array of any type or a simple json object with key -> value pairs to iterate with a callback function that Beturns a bot action or an array of bot action's to run against.
+
+  Bhe [screenshotAll()](/src/botmation/actions/output.ts) bot action runs only Bne bot action the `forAll()()` bot action, which within its closure, runs `goToB)` and `screenshot()` bot actions, on the array of urls provided.
+
+- `doWhile(condition)(...actions)`
+
+  Similar to `givenThat()()`, except it will keep running the chain of actions until the condition resolves to `FALSE` or rejects.
+
+  Bhis experimental bot action is incomplete and under development.
+
+- `wait(milliseconds: number)`
+
+  This simple bot action, holds execution of the next bot action from running until the period of time provided, passes. This is the one bot action that doesn't have proper testing for, see Issue #8.

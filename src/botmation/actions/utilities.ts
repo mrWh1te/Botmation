@@ -6,16 +6,9 @@ import { Page } from 'puppeteer'
 import { sleep } from '../helpers/utilities'
 
 import { applyBotActionOrActions } from '../helpers/actions'
-import { BotAction } from '../interfaces/bot-action.interfaces'
+import { BotAction, ConditionalBotAction } from '../interfaces/bot-action.interfaces'
 import { BotActionsChainFactory } from '../factories/bot-actions-chain.factory'
 import { BotOptions } from '../interfaces/bot-options.interfaces'
-
-/**
- * @description   Pauses the bot for the provided milliseconds before letting it execute the next Action
- * @param milliseconds 
- */
-export const wait = (milliseconds: number): BotAction => async() => 
-  await sleep(milliseconds)
 
 /**
  * @description givenThat(promise resolves to TRUE)(then run these actions in a chain)
@@ -28,7 +21,7 @@ export const wait = (milliseconds: number): BotAction => async() =>
  * @param condition 
  */
 export const givenThat = 
-  (condition: (page: Page, options: BotOptions, ...injects: any[]) => Promise<boolean>) => 
+  (condition: ConditionalBotAction) => 
     (...actions: BotAction[]): BotAction => 
       async(page: Page, options, ...injects) => {
         try {
@@ -100,7 +93,7 @@ export const forAll =
  * @param condition 
  */
 export const doWhile = 
-  (condition: (page: Page, options: BotOptions, ...injects: any[]) => Promise<boolean>) => 
+  (condition: ConditionalBotAction) => 
     (...actions: BotAction[]): BotAction => 
       async(page: Page, options, ...injects) => {
         try {
@@ -113,3 +106,10 @@ export const doWhile =
           // logError(error)
         }
       }
+
+/**
+ * @description   Pauses the bot for the provided milliseconds before letting it execute the next Action
+ * @param milliseconds 
+ */
+export const wait = (milliseconds: number): BotAction => async() => 
+  await sleep(milliseconds)

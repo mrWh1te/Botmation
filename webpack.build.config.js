@@ -1,5 +1,7 @@
 /**
  * @description   Dev bundling of playground & examples
+ * 
+ *                For library development
  */
 
 const path = require('path');

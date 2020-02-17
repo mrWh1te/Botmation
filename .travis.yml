@@ -8,6 +8,6 @@ addons:
 cache: npm
 install:
   - npm install --ignore-scripts
-  - npm rebuild puppeteer # but run the scripts for puppeteer
+  - npm rebuild puppeteer
 script:
   - jest

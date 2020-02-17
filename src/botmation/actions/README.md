@@ -21,6 +21,41 @@ export interface BotActionFactory extends Function {
 }
 ```
 
+# Building your own Bot Actions
+A `BotAction` function is an async function, which gets the Puppeteer `page`, `BotOptions` (which devs can overload), and any optional `injects` provided by the project's devs. These functions are unit based, singular in purpose, easy to test, and easy to reuse. How do we make them?
+
+Every `BotAction` function is returned by a higher-order `BotActionFactory` function. The factory functions provide parameters, with their dynamic scoping, to customize the `BotAction` function. Here's an example, of a usable Bot Action Factory function in the `actions()` method. Here's a simple example:
+```typescript
+export const clickHTMLElementBySelector = (htmlSelector: string): BotAction => async(page: Page) => {
+  await page.click(htmlSelector)
+}
+```
+Since we are not using the Bot `options` or any `injects`, we don't need to include them in the function's parameters.
+
+That is a great example of reusable unit of a `BotAction`, something single purpose, is more easily reused. Now let's take a step back, and group some of these units into one easy to use `BotAction`. It is possible to reuse any other `BotAction` functions, in a single `BotAction` function, by reusing  the `BotActionsChainFactory` function. See, you can make chains of `BotAction` functions, this way, to call them, one by one. A great example, is the Instagram specific [login()](/src/botmation/bots/instagram/actions/auth.ts) `BotAction` that uses `goTo()`, `click()`, and `type()` to handle a login flow.
+
+Here's an example:
+```typescript
+import { Page } from 'puppeteer' // @types/puppeteer
+import { BotActionsChainFactory } from 'botmation'
+import { BotAction } from 'botmation/interfaces'
+
+// ... import the Bot Action Factory methods from their respective files in the `botmation/actions` directory
+
+export const loginExampleFlow = (username: string, password: string): BotAction => async(page: Page, options, ...injects) =>
+  // This is how a single BotAction can run its own sequence of BotAction's prior to the next call of the original bot.actions() sequence
+  BotActionsChainFactory(page, options, ...injects)(
+    goTo('http://example.com/login.html'),
+    click('form input[name="username"]'),
+    type(username),
+    click('form input[name="password"]'),
+    type(password),
+    click('form button[type="submit"]'),
+    waitForNavigation(),
+    log('Login Complete')
+  )
+```
+
 
 # Actions Reference
 

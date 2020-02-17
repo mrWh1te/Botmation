@@ -2,12 +2,10 @@ import { BotAction } from '../interfaces/bot-action.interfaces'
 import { logMessage, logWarning, logError } from '../helpers/console'
 
 /**
- * @description   The following Actions are specific to the Console, for the Developer
- *                It's only about logging strings into the Console, with some kind of coloring
+ * @description   The following Actions are specific to the NodeJS Console, for the Developer
+ *                It's only about logging strings into the Console, with identifying coloring and spacing
  */
 
-//
-// Actions
 export const log = (message: string): BotAction => async() =>
   logMessage(message)
 

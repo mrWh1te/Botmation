@@ -1,5 +1,10 @@
 import chalk from 'chalk'
 
+/**
+ * @description   We use the package 'chalk' to add color to the messages logged in console
+ * @note          The colors don't seem to work in a regular Windows console, but the spacing does
+ */
+
 // Chalk Themes
 const logTheme = chalk.bgGreen;
 const warningTheme = chalk.bgYellow

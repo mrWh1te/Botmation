@@ -1,6 +1,6 @@
 <h1>Botmation: Helpers</h1>
 
-Helpers are de-coupled functions to help in various tasks.
+Helpers are single purpose functions to help with various tasks.
 
 # Helpers Reference
 

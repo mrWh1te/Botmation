@@ -1,18 +1,18 @@
 import { Page } from 'puppeteer'
 
-import { BotAction } from '../../../interfaces/bot-action.interfaces'
-import { BotActionsChainFactory } from '../../../factories/bot-actions-chain.factory'
+import { BotAction } from 'botmation/interfaces/bot-action.interfaces'
+import { BotActionsChainFactory } from 'botmation/factories/bot-actions-chain.factory'
 
-import { goTo, waitForNavigation } from '../../../actions/navigation'
-import { log } from '../../../actions/console'
+import { goTo, waitForNavigation } from 'botmation/actions/navigation'
+import { log } from 'botmation/actions/console'
 
-import { getInstagramLoginUrl } from '../../../bots/instagram/helpers/urls'
+import { getInstagramLoginUrl } from 'botmation/bots/instagram/helpers/urls'
 import { 
   FORM_AUTH_USERNAME_INPUT_SELECTOR,
   FORM_AUTH_PASSWORD_INPUT_SELECTOR,
   FORM_AUTH_SUBMIT_BUTTON_SELECTOR
 } from '../selectors'
-import { click, type } from '../../../actions/input'
+import { click, type } from 'botmation/actions/input'
 
 
 

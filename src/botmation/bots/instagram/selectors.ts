@@ -1,5 +1,5 @@
 /**
- * @description   DOM selectors for crawling the web pages' features
+ * @description   DOM selectors specific to Instagram
  */
 
 //

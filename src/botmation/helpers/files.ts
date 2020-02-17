@@ -6,7 +6,7 @@ const fs = require('fs')
  * @param filePath 
  * @return Promise<boolean>
  */
-export const fileExist = (filePath: string) => 
+export const fileExist = (filePath: string): Promise<boolean> => 
   new Promise(resolve => {
     fs.access(filePath, fs.F_OK, (err: any) => {
       if (err) {
@@ -18,7 +18,11 @@ export const fileExist = (filePath: string) =>
     })
   })
    
-export const deleteFile = (filePath: string) =>
+/**
+ * @description   Simple method to delete a file, promise based (used in cleaning up files created during tests)
+ * @param filePath 
+ */  
+export const deleteFile = (filePath: string): Promise<void> =>
   new Promise((resolve, reject) => {
     fs.unlink(filePath, function (err: any) {
       if (err) return reject(err)

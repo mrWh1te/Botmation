@@ -29,16 +29,12 @@ import { logError } from 'botmation/helpers/console'
       log('Screenshot taken')
     )
     
-    // close the page when you're done
+    // close when done
     await page.close()
+    await browser.close()
   } catch (error) {
     logError(error)
     
-    setTimeout(async() => {
-      if (browser) await browser.close()
-    })
-  } finally {
-    // close the browser when done
     setTimeout(async() => {
       if (browser) await browser.close()
     })

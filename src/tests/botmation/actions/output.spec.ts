@@ -51,13 +51,13 @@ describe('[Botmation:Action Factory] Output', () => {
   //
   // screenshotAll() Integration test
   it('should screenshotAll(...) sites by calling goTo then screenshot, on each one', async() => {
-    await screenshotAll('google.com', 'twitter.com')(mockPage, botOptions)
+    await screenshotAll('https://google.com', 'https://twitter.com')(mockPage, botOptions)
 
     expect(mockPage.goto).toHaveBeenNthCalledWith(1, 'https://google.com', getDefaultGoToPageOptions())
-    expect(mockPage.screenshot).toHaveBeenNthCalledWith(1, {path: getFileUrl(botOptions.screenshots_directory, botOptions) + '/google.com.png'})
+    expect(mockPage.screenshot).toHaveBeenNthCalledWith(1, {path: getFileUrl(botOptions.screenshots_directory, botOptions, 'https___google_com.png')})
 
     expect(mockPage.goto).toHaveBeenLastCalledWith('https://twitter.com', getDefaultGoToPageOptions())
-    expect(mockPage.screenshot).toHaveBeenLastCalledWith({path: getFileUrl(botOptions.screenshots_directory, botOptions) + '/twitter.com.png'})
+    expect(mockPage.screenshot).toHaveBeenLastCalledWith({path: getFileUrl(botOptions.screenshots_directory, botOptions, 'https___twitter_com.png')})
   })
 
   //

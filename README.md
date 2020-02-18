@@ -1,179 +1,125 @@
-# Botmation
-[![Build Status](https://travis-ci.com/mrWh1te/Botmation.svg?branch=master)](https://travis-ci.com/mrWh1te/Botmation) ![GitHub](https://img.shields.io/github/license/mrWh1te/Botmation)
+<h1>
+    <img src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/group.jpg" alt="Botmation" width="400">
+    Botmation
+</h1>
 
-A NodeJS bot, called `Botmation`, for Declaratively using [Puppeteer](https://github.com/puppeteer/puppeteer) in crawling & interacting with the web.
+[![Build Status](https://travis-ci.com/mrWh1te/Botmation.svg?branch=master)](https://travis-ci.com/mrWh1te/Botmation) 
+[![dependencies Status](https://david-dm.org/mrWh1te/Botmation/status.svg)](https://david-dm.org/mrWh1te/Botmation) 
+![GitHub](https://img.shields.io/github/license/mrWh1te/Botmation)
 
-Bot // Auto + mation => Bot + mation
+A TypeScript library for using [Puppeteer](https://github.com/puppeteer/puppeteer) in a declarative way.
 
-## Overview
+The name is a mix of Bot & Automation
 
-Current:
- - `Botmation` class with method `actions()` for declaratively executing async tasks, `BotAction`'s, sequentially
-   - supports completely functional approach, bypassing the Class by using the `BotActionsChainFactory`
- - Social media site specific action's ie Instagram for automating login
- - unit/integration testing of all `BotAction` factory methods
- - e2e testing for the `Botmation` class constructor, static asyncConstructor
- - unit testing of `BotActionsChainFactory` with nesting
- - travisCI running builds (required passing latest code via PR's b4 merge)
- - example bots (including how to run bots concurrently using `puppeteer-cluster`)
+Why choose Botmation?
+---------------------
 
-In dev:
-  - Instagram Specific Crawling/Interacting `BotAction`'s
-  - Cleaning Up / Preparing Docs for v1
-  - Mascot team (working with a talented Artist)
+It enables devs to do more with Puppeteer while writing less code.
 
-Future:
- - Management web app tool (might do Electron, and try to run the bots from the Electron app)
- - Expanding upon injection to include data attached to the bot, and perhaps options (depending on the requirements of the management app)
+It gives devs the tools to build Bot Actions in single purpose units and chains of units.
 
-This project focuses on a composable way of chaining bot actions in linear sequences. Interfaced by, `BotAction`, the methods are used in a `MotionBot` instance call of `.actions()`. That said, you can simple use the `BotActionsChainFactory` by supplying it the page directly, for a completely functional approach.
+It empowers devs with composable Architecture and choice in approach of Object-Oriented or Functional.
 
-A `BotAction` can represent a whole other chain of actions, by re-using the `BotActionsChainFactory`. All of these are de-coupled functions, which made testing much simpler.
+Install
+-------
 
-Let's see some code:
-```typescript
-    import puppeteer from 'puppeteer'
+First make sure you have installed the latest version of [node.js](http://nodejs.org/)
+(You may need to restart your computer after this step).
 
-    import { Botmation } from 'botmation'
+Then install it with `npm`:
 
-    // General BotAction's
-    import { log } from 'botmation/actions/console'
-    import { screenshot, givenThat, wait } from 'botmation/actions/utilities'
-    import { loadCookies } from 'botmation/actions/cookies'
-    import { goTo } from 'botmation/actions/navigation'
+    npm install botmation
 
-    // Instagram specific
-    import { login, isGuest } from '@bots/instagram/actions/auth'
-    import { getInstagramBaseUrl, getInstagramLoginUrl } from '@bots/instagram/helpers/urls'
+# Getting Started
 
-    // Start up the Instagram bot with the Puppeteer Browser
-    const bot = await Botmation.asyncConstructor(browser)
+This project is centered around running units of Puppeteer code, or chains of those units, all called Bot Actions. It's a highly reusable approach to building Puppeteer scripts. To get started, read the [Botmation: Actions documentation](/src/botmation/actions/README.md). Besides that, there are two approaches to running these Bot Actions: Object-Oriented or Functional.
 
-    // Actions run in a linear sequence, as declared
-    await bot.actions(
-      log('Botmation running'),
-      loadCookies('instagram'),
-      
-      // a special BotAction that works like an if() {}
-      givenThat(isGuest) (
-        goTo(getInstagramLoginUrl()),
-        screenshot('login'), // saves screenshot as "login.png" in the screenshots directory
-        // a BotAction from our instagram package:
-        login({username: 'instagram username', password: 'instagram password'}),
-        saveCookes('instagram')
-      ),
+1) Object-Oriented
 
-      goTo(getInstagramBaseUrl()),
-      wait(5000),
-      screenshot('feed'),
+The `Botmation` [class](/src/botmation/class.ts) provides two different constructor approaches in creating instances: one static async method and a regular sync constructor method. Either way, after creating an instance, use the `actions()` method, to run a chain of Bot Actions.
 
-      log('Done!'),
-    )
+See the [object-oriented example code](/src/examples/simple_objectoriented.ts).
+
+2) Functional
+
+The `Botmation` class's `actions()` method is loosely-coupled with the class. Its functionality is provided by a higher order function, called the [BotActionsChainFactory](/src/botmation/factories/bot-actions-chain.factory.ts) function. That factory function creates the `Botmation` `actions()` function. It's built loosely, so without losing any core functionality, you can skip the class, by using it directly.
+
+See the [functional example code](/src/examples/simple_functional.ts).
+
+# Library Reference
+
+After intalling through `npm`, you can import the class or the bot actions chain factory directly from the main module:
+```javascript
+// Class or the Bot Chains Factory
+import { Botmation, BotActionsChainFactory } from 'botmation';
+```
+The actions are organized in various files in the `/actions` directory, to be imported from each group:
+```javascript
+// Example of importing a couple of bot actions
+import { goTo } from 'botmation/actions/navigation';
+import { screenshot } from 'botmation/actions/output';
 ```
 
-For complete examples, see the included [here](/src/examples/).
+To learn how to use, chain and make Bot Actions, visit the [Botmation: Actions documentation](/src/botmation/actions/README.md).
 
-For the latest actions, including experimental under development, check out the [playground bot](/src/playground_bot.ts).
-
-## Getting Started
-
-You will need NodeJS LTS on your machine to run the bot(s). After you have that installed, install the npm dependencies with this command:
-
-```
-$ npm i
-```
-Once that's done, it will automatically run the Botmation CLI script, `createconfigfile`, to create the `./src/config.ts` file for you, following a short prompt. It will ask you for Instagram username and password for the instagram example bot, as well as the names of various directories (which if you're not changing or using, you can just hit "enter" without typing anything in)
-
-Then build and run the playground bot with this single command:
-```
-$ npm run botmation
-```
-
-It will run the playground bot code found in `src/playground_bot.ts`, which is using the latest code, most likely experimental `BotAction`'s.
-
-## Example Bots
+# Examples
 
 In the `./src/examples` directory, exists a small collection of simple bots, for to you to copy and paste.
 
-Run any of the bots with their respective command:
+If you clone this repo, you can try any of them out, after building the source code:
 ```
-$ npm run example/instagram
-$ npm run example/screenshots
-$ npm run example/puppeteer-cluster
-```
-These commands will run the build script beforehand, so whatever changes saved to the TypeScript code, will be seen.
-
-## Architecture // Code Scaffolding
-
-In terms of code patterns, it falls into 2 groups:
-
-1) BotNation
-
-Which has yet, to start development. A web app tool for reporting and management of the bots.
-
-2) Botmation
-
-Which is the heart and soul of this project. It provides a single class that has a Declarative `actions()` method, for chaining `BotAction`'s in an async sequence. These `BotAction`'s are provided by `BotActionFactory` methods. That allows for dev's to customize the `BotAction`, while injecting the active Puppeteer page for interaction (while keeping the door open for other injectables)
-
-Explore directories in the `src/` folder, to read more documentation on each respective part. `README.md` files were added in the base structure, and more will be added, come time. Better documentation in the future.
-
-### BotAction
-
-What you'll spend the majority of your time working with. These factory produced functions are how you control the bots.
-
-A `BotAction` is an async function (returns a promise) that uses a Puppeteer `Page` instance to crawl & interact with the web page (browser tab). They are de-coupled from the `Botmation` class and implement the `BotAction` interface. They are produced from factory methods following the `BotActionFactory` interface. That makes them customizable. These bots have a Declarative `actions()` method that is produced from the `BotActionsChainFactory` method. It's similar to the "pipe" syntax in RxJS, but we are not passing the result/output of one `BotAction` to the next. Hence, it's a chain of resolving promises.
-
-It's flexible, given the linear nature of chains. It's possible for a `BotAction` to represent another chain of `BotAction`'s, by re-using the `BotActionsChainFactory`! In theory, you can do this over and over, infinitely, chains of chains of chains.
-
-### Selectors
-
-In the `bots/` directory, for each website, there is a `selectors.ts` file that describe the main DOM elements, a bot will interact with, ie the auth form's login input (to click for focus, so the bot can type the username).
-
-### Config
-
-The main config file is `src/config.ts`. It's used by the example bot script for saving Instagram auth credentials. 
-
-Follow the "Getting Started" section in getting the file ready, since it's ignored by Git (if you clone the project, it will be missing). There is a planned CLI script to automatically build it for you, upon various input.
-
-## Running a Nation of Bots
-
-The `Botmation` class supports the [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) package to run multiple bots concurrently! Here's how the heart of it looks:
-
-```
-cluster.queue(data, async(page, ...) => {
-  const bot = new Botmation(page)
-
-  await bot.actions(
-    ...
-  )
-})
-
+npm run build
 ```
 
-You can provide "Task" functions, wrapping separate `Botmation` bots actions, to the `cluster.queue()` method, so each bot can operate individually. A complete working example is [available here](/src/examples/puppeteer-cluster.ts) running three bots concurrently.
-
-## Manual Script Running
-
-You can manually run the scripts ran by the main `botmation` script, in "Getting Started".
-
-To build the runnable code, run this command:
+Then run any example::
 ```
-$ npm run build
+npm run examples/simple_objectoriented
+npm run examples/simple_functional
+npm run examples/instagram
+npm run examples/screenshots
 ```
 
-To run the built playground bot's code, run this command:
+# Running Bots Concurrently
+
+This project works with the [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) module, in running multiple bots, concurrently!
+
+To get started, check out the [puppeteer-cluster example code](/src/examples/puppeteer-cluster.ts). 
+If you clone this repo, install dependencies, you can run the example code, with these commands:
 ```
-$ npm run playground
+npm run build
+npm run examples/puppeteer-cluster
 ```
 
-This will run the example bot found here: `./src/playground_bot.ts`
+# Library Tests
 
-If you want to change the credentials of the Instagram bot for the example_bot code, mentioned above, simply run this command:
+All our testing is done with [Jest](https://jestjs.io/).
+
+Learn more about the library's testing strategy and coverage with the [Botmation: Tests documentation](/src/tests/README.md).
+
+## Library Development
+
+Clone the repo, then install dependencies. You can build the library locally with this command:
 ```
-$ npm run createconfigfile overwrite
+npm run build
 ```
-Instead of `overwrite` you can provide the shorthand `o`, to run the create config file script with it set to overwrite the current config file. It will still ask you, just in case.
 
-## Help
+The [playground_bot](/src/playground_bot.ts) is a dedicated spot for trying out new Bot Actions, etc. You can run it's code, after running the build command, with:
+```
+npm run playground
+```
 
-Feel free to open Issues in Github. Please provide sample code, screenshots, and any other relevant information.
+## Issues & Feature Requests
+
+Open Issues on Github. Please specify if it's a feature request or a bug.
+
+When reporting bugs, please provide sample code to recreate the bug, relevant error messages/logs, and any other information that may help.
+
+## Contributors
+
+### Code
+
+[Michael Lage](https://github.com/mrWh1te) - [Blog](https://copynpaste.me)
+
+### Art
+
+[Patrick Capeto](https://www.instagram.com/patrick.capeto/) - [Email](mailto:me@patrickcapeto.com)

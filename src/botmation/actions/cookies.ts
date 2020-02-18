@@ -2,11 +2,12 @@ import { Page } from 'puppeteer'
 import { promises as fs } from 'fs'
 
 import { BotAction } from '../interfaces/bot-action.interfaces'
-import { logError } from './console'
 import { getFileUrl } from '../helpers/assets'
+import { logError } from '../helpers/console'
 
 /**
  * @description   Parse page's cookies to save as JSON in local file
+ *                Relies on BotOptions (options), to determine URL
  * @param fileName 
  * @example saveCookies('cookies') -> creates `cookies.json`
  */
@@ -21,8 +22,9 @@ export const saveCookies = (fileName: string): BotAction => async(page: Page, op
 
 /**
  * @description   Parse the file created with saveCookies() into cookies to load into the page
+ *                Relies on BotOptions (options), to determine URL
  * @param fileName 
- * @example loadCookies('./cookies.json')
+ * @example loadCookies('cookies')
  */
 export const loadCookies = (fileName: string): BotAction => async(page: Page, options) => {
   try {

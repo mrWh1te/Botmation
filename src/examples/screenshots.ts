@@ -6,11 +6,12 @@ import puppeteer from 'puppeteer'
 import { Botmation } from 'botmation'
 
 // General BotAction's
-import { log, logError } from 'botmation/actions/console'
+import { log } from 'botmation/actions/console'
 import { forAll } from 'botmation/actions/utilities'
 import { goTo } from 'botmation/actions/navigation'
 import { screenshot, screenshotAll } from 'botmation/actions/output'
 import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
+import { logError } from 'botmation/helpers/console'
 
 (async () => {
   let browser: puppeteer.Browser

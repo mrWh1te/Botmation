@@ -1,5 +1,7 @@
 /**
  * @description   Dev bundling of playground & examples
+ * 
+ *                For library development
  */
 
 const path = require('path');
@@ -12,6 +14,8 @@ module.exports = {
     'playground_bot': path.resolve(__dirname, 'src/playground_bot.ts'),
     //
     // Examples
+    'examples/simple_functional': path.resolve(__dirname, 'src/examples/simple_functional.ts'),
+    'examples/simple_objectoriented': path.resolve(__dirname, 'src/examples/simple_objectoriented.ts'),
     'examples/instagram': path.resolve(__dirname, 'src/examples/instagram.ts'),
     'examples/puppeteer-cluster': path.resolve(__dirname, 'src/examples/puppeteer-cluster.ts'),
     'examples/screenshots': path.resolve(__dirname, 'src/examples/screenshots.ts'),

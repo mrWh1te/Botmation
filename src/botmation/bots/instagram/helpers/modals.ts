@@ -3,8 +3,6 @@ import { Page } from 'puppeteer'
 import { MAIN_MODAL_HEADER_SELECTOR } from '../selectors'
 import { TURN_OFF_NOTIFICATIONS_MODAL_HEADER_TEXT } from '../constants/modals'
 
-//
-// Helpers
 /**
  * @description   Returns a promise that resolves TRUE, if the "Turn on Notifications" modal is in view
  * @param page 

@@ -3,7 +3,7 @@
  */
 import { Page } from 'puppeteer'
 
-import { BotAction } from '../../../interfaces/bot-action.interfaces'
+import { BotAction } from 'botmation/interfaces/bot-action.interfaces'
 
 import { TURN_OFF_NOTIFICATIONS_BUTTON_LABEL } from '../constants/modals'
 

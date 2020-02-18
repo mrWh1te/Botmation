@@ -3,21 +3,20 @@ import { DirectNavigationOptions } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-action.interfaces'
 import { getDefaultGoToPageOptions } from '../helpers/navigation'
-
-import { logWarning } from './console'
+import { logWarning } from '../helpers/console'
 
 /**
  * @description   Single Higher Order Function for Page Changing
+ *                If the URL given to navigate too is the same as the existing one, it will skip navigation and log a warning
  * @param url
  */
 export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAction => async(page: Page) => {
   if (!goToOptions) {
-    // optional param, when not provided, we provide the default value
     goToOptions = getDefaultGoToPageOptions()
   }
 
+  // same url check
   if (page.url() === url) {
-    // same url check
     logWarning('[Action:goTo] url requested is already active')
     return
   }
@@ -26,7 +25,7 @@ export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAct
 }
 
 /**
- * @description   Wait for navigation to complete. Helpful after submitting a form, liking logging in.
+ * @description   Wait for navigation to complete. Helpful after submitting a form that causes change pages to occur, ie logging in
  */
 export const waitForNavigation = (): BotAction => async(page: Page) => {
   await page.waitForNavigation()

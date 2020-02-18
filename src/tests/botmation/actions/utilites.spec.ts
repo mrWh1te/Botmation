@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 
 import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
-import { givenThat, forAll } from 'botmation/actions/utilities'
+import { givenThat, forAll, doWhile, forAsLong } from 'botmation/actions/utilities'
 import { click, type } from 'botmation/actions/input'
 import { goTo } from 'botmation/actions/navigation'
 
@@ -113,5 +113,127 @@ describe('[Botmation:Action Factory] Utilities', () => {
 
     expect(mockPage.click).toHaveBeenNthCalledWith(2, 'form input[name="password"]')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(2, 'example password')
+  })
+
+  //
+  // doWhile() Unit Test
+  it('should run the actions then check the condition to run the actions in a loop until the condition rejects or resolves FALSE', async() => {
+    const conditionResolvingFALSE = async(page: Page) => new Promise<boolean>(resolve => resolve(false))
+    const conditionReject = async(page: Page) => new Promise<boolean>((resolve, reject) => reject(new Error('test')))
+
+    // Main test
+    let conditionResolvingCount = 0;
+    const conditionResolvesTrueUntil3rdResolveAsFalse = async(page: Page) =>
+      new Promise<boolean>(resolve => {
+        // let it resolve True twice, then resolve False
+        if (conditionResolvingCount > 1) {
+          return resolve(false)
+        }
+
+        conditionResolvingCount++
+        return resolve(true)
+      })
+
+    // These actions should run 3 times, then stop
+    // 1st time because doWhile always runs the actions at least once without checking the condition
+    // 2nd time is the first time the condition resolves True
+    // 3rd time is the second time the condition resolves True
+    // 4th time is when condition finally resolves False
+    await doWhile(conditionResolvesTrueUntil3rdResolveAsFalse)(
+      click('1'),
+      type('1')
+    )(mockPage, botOptions)
+
+    expect(mockPage.click).toHaveBeenNthCalledWith(1, '1')
+    expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, '1')
+
+    expect(mockPage.click).toHaveBeenNthCalledWith(2, '1')
+    expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(2, '1')
+
+    expect(mockPage.click).toHaveBeenNthCalledWith(3, '1')
+    expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(3, '1')
+
+    expect(mockPage.click).not.toHaveBeenNthCalledWith(4, '1')
+    expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(4, '1')
+
+    // These actions should run only once
+    await doWhile(conditionResolvingFALSE)(
+      click('2'),
+      type('2')
+    )(mockPage, botOptions)
+
+    expect(mockPage.click).toHaveBeenNthCalledWith(4, '2')
+    expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(4, '2')
+
+    expect(mockPage.click).not.toHaveBeenNthCalledWith(5, '2')
+    expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(5, '2')
+
+    // These actions should run only once
+    await doWhile(conditionReject)(
+      click('3'),
+      type('3')
+    )(mockPage, botOptions)
+
+    expect(mockPage.click).toHaveBeenNthCalledWith(5, '3')
+    expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(5, '3')
+
+    expect(mockPage.click).not.toHaveBeenNthCalledWith(6, '3')
+    expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(6, '3')
+  })
+
+  //
+  // forAsLong() Unit Test
+  it('should check the condition before running the actions in a loop until the condition rejects or resolves FALSE', async() => {
+    const conditionResolvingFALSE = async(page: Page) => new Promise<boolean>(resolve => resolve(false))
+    const conditionReject = async(page: Page) => new Promise<boolean>((resolve, reject) => reject(new Error('test')))
+
+    // Main test
+    let conditionResolvingCount = 0;
+    const conditionResolvesTrueUntil3rdResolveAsFalse = async(page: Page) =>
+      new Promise<boolean>(resolve => {
+        // let it resolve True twice, then resolve False
+        if (conditionResolvingCount > 1) {
+          return resolve(false)
+        }
+
+        conditionResolvingCount++
+        return resolve(true)
+      })
+
+    // These actions should run 2 times, then stop
+    // 1st time because condition resolves True
+    // 2nd time because the condition resolves True
+    // 3rd time is when condition finally resolves False
+    await forAsLong(conditionResolvesTrueUntil3rdResolveAsFalse)(
+      click('1'),
+      type('1')
+    )(mockPage, botOptions)
+
+    expect(mockPage.click).toHaveBeenNthCalledWith(1, '1')
+    expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, '1')
+
+    expect(mockPage.click).toHaveBeenNthCalledWith(2, '1')
+    expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(2, '1')
+
+    expect(mockPage.click).not.toHaveBeenNthCalledWith(3, '1')
+    expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(3, '1')
+
+    // These actions should not run
+    await forAsLong(conditionResolvingFALSE)(
+      click('2'),
+      type('2')
+    )(mockPage, botOptions)
+
+    expect(mockPage.click).not.toHaveBeenNthCalledWith(3, '2')
+    expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(3, '2')
+
+    // These actions should not run
+    await forAsLong(conditionReject)(
+      click('3'),
+      type('3')
+    )(mockPage, botOptions)
+
+    expect(mockPage.click).not.toHaveBeenNthCalledWith(3, '3')
+    expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(3, '3')
   })
 })

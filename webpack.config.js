@@ -1,5 +1,7 @@
 /**
  * @description   Separated bundles for various parts of the library
+ * 
+ *                Creates the npm distribution modules
  */
 
 const path = require('path');
@@ -50,7 +52,7 @@ module.exports = {
         use: [{
           loader: 'ts-loader',
           options: {
-            configFile: 'tsconfig.bundle.json'
+            configFile: 'tsconfig.dist.json'
           }
         }],
         exclude: ['/node_modules']
@@ -82,7 +84,7 @@ module.exports = {
   },
   plugins: [
     new CopyPlugin([
-      // Copy over and tweak the package.json for npm 
+      // Copy over and tweak the package.json for npm package
       { 
         from: 'package.json', 
         to: 'package.json',
@@ -101,6 +103,9 @@ module.exports = {
           packageJSON.peerDependencies = {
             "puppeteer": puppeteerValue
           }
+
+          // Remove the puppeteer-cluster dependency (not required to use library, it's for an example)
+          delete packageJSON.dependencies['puppeteer-cluster']
 
           // Get rid of these scripts
           delete packageJSON.scripts

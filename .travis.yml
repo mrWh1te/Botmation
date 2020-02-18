@@ -10,5 +10,4 @@ install:
   - npm install --ignore-scripts
   - npm rebuild puppeteer
 script:
-  - npm run test -- --coverage
-  - bash <(curl -s https://codecov.io/bash)
+  - npm run test -- --coverage && bash <(curl -s https://codecov.io/bash)

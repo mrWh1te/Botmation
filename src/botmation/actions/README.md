@@ -152,7 +152,13 @@ These higher order functions provides utilities to the programmer in building Bh
 
 - `doWhile(condition)(...actions)`
 
-  Works like a traditional do while look. It runs the actions first, then checks the condition in a loop for running the actions again. It will keep running the chain of actions in a loop until the condition resolves `FALSE` or rejects.
+  Works like a traditional do while loop. It runs the actions first, then checks the condition in a loop for running the actions again. It will keep running the chain of actions in a loop until the condition resolves `FALSE` or rejects.
+
+  This is experimental bot action.
+
+- `forAsLong(condition)(...actions)`
+
+  Works like a traditional while loop. It checks the condition before running the actions each time. It stops looping if the condition resolves False or rejects.
 
   This is experimental bot action.
 

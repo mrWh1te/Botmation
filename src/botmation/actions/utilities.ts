@@ -108,13 +108,15 @@ export const doWhile =
       }
 
 /**
- * @description    This works like a traditional while loop. It checks the condition each time before running the actions
+ * @description    This works like a traditional while loop. It resolves the condition each time before running the actions, and only runs the actions if the value resolved is True. 
  *                    aka
  *                 like givenThat except it loops again at the end of the bot actions chain for as long as the condition resolves True
  * @experimental
  * @param condition 
  * @example     forAsLong(isLoggedIn)(
- *                // .. run the bot actions
+ *                goTo(...),
+ *                click(...),
+ *                //...
  *              )
  */
 export const forAsLong = 

@@ -11,8 +11,6 @@
 
 A TypeScript library for using [Puppeteer](https://github.com/puppeteer/puppeteer) in a declarative way.
 
-The name is a mix of Bot & Automation
-
 Why choose Botmation?
 ---------------------
 

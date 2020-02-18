@@ -1,7 +1,7 @@
 <h1>
-    <img src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/group.jpg" alt="Botmation" width="400">
     Botmation
 </h1>
+<img src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/group.jpg" alt="Botmation" width="400">
 
 [![Build Status](https://travis-ci.com/mrWh1te/Botmation.svg?branch=master)](https://travis-ci.com/mrWh1te/Botmation) 
 [![codecov](https://codecov.io/gh/mrWh1te/Botmation/branch/master/graph/badge.svg)](https://codecov.io/gh/mrWh1te/Botmation)

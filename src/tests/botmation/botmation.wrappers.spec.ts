@@ -54,9 +54,7 @@ describe('[Botmation:Wrappers] Class & Factory', () => {
     const mockPage = {
       click: jest.fn()
     } as any as Page
-    const mockPages = {
-      length: 0
-    }
+    const mockPages = [] as any // no pages 
     // the async constructor method's purpose is to get the page (tab) from the browser
     // so if none, it needs to create it, then use it
     const mockBrowser = {

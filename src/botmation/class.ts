@@ -111,6 +111,7 @@ export class Botmation implements BotmationInterface {
   /**
    * @description    Public method to set the Injects if needed
    * @param injects 
+   * @experimental   Injects are new
    */
   public setInjects(...injects: any[]) {
     this.injects = injects
@@ -122,7 +123,6 @@ export class Botmation implements BotmationInterface {
   async closePage(): Promise<void> {
     if (this.page) {
       await this.page.close()
-      console.log('') // add an empty line too console for separation upon next
     }
   }
 }

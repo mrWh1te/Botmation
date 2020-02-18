@@ -6,7 +6,7 @@ import { BotOptions } from "../interfaces/bot-options.interfaces"
  *                ie screenshot(), saveCookies() rely on BotOptions for determining URL 
  * @param options 
  */
-export const getDefaultBotOptions = (options: Partial<BotOptions>): BotOptions => ({
+export const getDefaultBotOptions = (options: Partial<BotOptions> = {}): BotOptions => ({
   screenshots_directory: '',
   cookies_directory: '',
   ...options

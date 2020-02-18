@@ -1,18 +1,20 @@
 import { sleep } from 'botmation/helpers/utilities'
 
 /**
- * @description   Helpers: Assets (ie screenshots, cookies)
+ * @description   Helpers: Utilities
  */
 describe('[Botmation:Helpers] Utilities', () => {
   let setTimeoutFn = setTimeout
 
   afterAll(() => {
+      // the test mocks the global setTimeout, so restore
+      // it to original value after the test completes
       global.setTimeout = setTimeoutFn
   })
 
   //
   // sleep
-  it('should return a promise for pausing execution (bot action wait() relies on this)', async () => {
+  it('should return a promise for pausing execution by calling setTimeout', async () => {
     const mockSetTimeout = jest.fn()
     global.setTimeout = (fn: Function, milliseconds: number) => {
         mockSetTimeout(milliseconds)

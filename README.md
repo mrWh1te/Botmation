@@ -16,11 +16,13 @@ The name is a mix of Bot & Automation
 Why choose Botmation?
 ---------------------
 
-It enables devs to do more with Puppeteer while writing less code.
+It enables devs to use Puppeteer with less code.
 
-It gives devs the tools to build Bot Actions in single purpose units and chains of units.
+It gives devs tools to build reusable Puppeteer code with single purpose units called bot actions.
 
-It empowers devs with composable Architecture and choice in approach of Object-Oriented or Functional.
+It empowers devs with composable Architecture to chain bot actions together.
+
+It gives choice in approach: Object-Oriented or Functional.
 
 Install
 -------

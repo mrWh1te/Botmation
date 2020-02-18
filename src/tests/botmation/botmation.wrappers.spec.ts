@@ -1,4 +1,4 @@
-import { Page } from 'puppeteer'
+import { Page, Browser } from 'puppeteer'
 
 import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
 import { click, type } from 'botmation/actions/input'
@@ -48,6 +48,29 @@ describe('[Botmation:Wrappers] Class & Factory', () => {
 
     const page = bot.getPage()
     expect(page.url()).toEqual('http://localhost:8080/success.html?answer=loremlipsumloremlipsum')
+  })
+  it('should create a Botmation instance using the static asyncConstructor() and create a new page when the browser has none automatically', async() => {
+    /// this mocked use-case is for when the browser provided has no tabs open
+    const mockPage = {
+      click: jest.fn()
+    } as any as Page
+    const mockPages = [] as any // no pages 
+    // the async constructor method's purpose is to get the page (tab) from the browser
+    // so if none, it needs to create it, then use it
+    const mockBrowser = {
+      pages: jest.fn(() => mockPages),
+      newPage: jest.fn(() => mockPage)
+    } as any as Browser
+    
+    const bot = await Botmation.asyncConstructor(mockBrowser)
+
+    await bot.actions(
+      click('example html selector')
+    )
+
+    expect(mockBrowser.pages).toHaveBeenCalled()
+    expect(mockBrowser.newPage).toHaveBeenCalled()
+    expect(mockPage.click).toHaveBeenCalledWith('example html selector')
   })
 
   //

@@ -7,7 +7,7 @@
 [![dependencies Status](https://david-dm.org/mrWh1te/Botmation/status.svg)](https://david-dm.org/mrWh1te/Botmation) 
 ![GitHub](https://img.shields.io/github/license/mrWh1te/Botmation)
 
-<img src="https://raw.githubusercontent.com/mrWh1te/Botmation/final-checkup/assets/art/banner/1556x379v2.png" alt="Botmation" width="400">
+<img src="https://raw.githubusercontent.com/mrWh1te/Botmation/final-checkup/assets/art/banner/1556x379v2.png" alt="Botmation" width="474">
 
 A TypeScript library for using [Puppeteer](https://github.com/puppeteer/puppeteer) in a declarative way.
 

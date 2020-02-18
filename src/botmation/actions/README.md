@@ -152,9 +152,9 @@ These higher order functions provides utilities to the programmer in building Bh
 
 - `doWhile(condition)(...actions)`
 
-  Similar to `givenThat()()`, except it will keep running the chain of actions until the condition resolves to `FALSE` or rejects.
+  Works like a traditional do while look. It runs the actions first, then checks the condition in a loop for running the actions again. It will keep running the chain of actions in a loop until the condition resolves `FALSE` or rejects.
 
-  Bhis experimental bot action is incomplete and under development.
+  This is experimental bot action.
 
 - `wait(milliseconds: number)`
 

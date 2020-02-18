@@ -36,7 +36,7 @@ Then install it with `npm`:
 
 # Getting Started
 
-This project is centered around running units of Puppeteer code, or chains of those units, all called Bot Actions. It's a highly reusable approach to building Puppeteer scripts. To get started, read the [Botmation: Actions documentation](/src/botmation/actions/README.md). Besides that, there are two approaches to running these Bot Actions: Object-Oriented or Functional.
+This project is about running units of Puppeteer code called Bot Actions. It's a highly reusable approach to building Puppeteer scripts. To learn more about Bot Actions, read the [Botmation: Actions documentation](/src/botmation/actions/README.md). So when it comes to using these actions, there are two approaches: Object-Oriented or Functional.
 
 1) Object-Oriented
 
@@ -64,7 +64,7 @@ import { goTo } from 'botmation/actions/navigation';
 import { screenshot } from 'botmation/actions/output';
 ```
 
-To learn how to use, chain and make Bot Actions, visit the [Botmation: Actions documentation](/src/botmation/actions/README.md).
+To learn how to make & chain your own Bot Actions, visit the [Botmation: Actions documentation](/src/botmation/actions/README.md).
 
 # Examples
 

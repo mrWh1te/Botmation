@@ -12,5 +12,16 @@ module.exports = {
   modulePathIgnorePatterns: [
     "<rootDir>/dist/",
     "<rootDir>/build/"
+  ],
+  // Code Coverage, pass the --coverage flag in CLI to run
+  coverageDirectory: '<rootDir>/build/coverage',
+  collectCoverageFrom: [
+    "**/botmation/**/*.ts",
+    "!**/botmation/bots/**/*.ts",
+    "!**/botmation/index.ts",
+    "!**/node_modules/**",
+    "!**/build/**",
+    "!**/dist/**",
+    "!**/assets/**",
   ]
 };

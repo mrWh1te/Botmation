@@ -11,3 +11,4 @@ install:
   - npm rebuild puppeteer
 script:
   - npm run test -- --coverage
+  - bash <(curl -s https://codecov.io/bash)

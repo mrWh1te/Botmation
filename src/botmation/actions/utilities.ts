@@ -90,8 +90,7 @@ export const forAll =
  *                    aka
  *                 Do the actions, and continue to keep doing them While this condition is TRUE
  * @experimental
- * @param condition 
- * @note           This is under development! Not considered ready, yet
+ * @param condition
  */
 export const doWhile = 
   (condition: ConditionalBotAction) => 
@@ -99,6 +98,31 @@ export const doWhile =
       async(page: Page, options, ...injects) => {
         try {
           let resolvedCondition = true // doWhile -> run the code, then check the condition on whether or not we should run the code again
+          while (resolvedCondition) {
+            await BotActionsChainFactory(page, options, ...injects)(...actions)
+            resolvedCondition = await condition(page, options, ...injects)
+          }
+        } catch (error) {
+          // logError(error)
+        }
+      }
+
+/**
+ * @description    This works like a traditional while loop. It checks the condition each time before running the actions
+ *                    aka
+ *                 like givenThat except it loops again at the end of the bot actions chain for as long as the condition resolves True
+ * @experimental
+ * @param condition 
+ * @example     forAsLong(isLoggedIn)(
+ *                // .. run the bot actions
+ *              )
+ */
+export const forAsLong = 
+  (condition: ConditionalBotAction) => 
+    (...actions: BotAction[]): BotAction => 
+      async(page: Page, options, ...injects) => {
+        try {
+          let resolvedCondition = await(condition(page, options, ...injects))
           while (resolvedCondition) {
             await BotActionsChainFactory(page, options, ...injects)(...actions)
             resolvedCondition = await condition(page, options, ...injects)

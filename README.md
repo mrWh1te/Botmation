@@ -68,14 +68,14 @@ To learn how to use, chain and make Bot Actions, visit the [Botmation: Actions d
 
 # Examples
 
-In the `./src/examples` directory, exists a small collection of simple bots, for to you to copy and paste.
+In the `./src/examples` [directory](/src/examples), exists a small collection of simple bots, to help you get going.
 
 If you clone this repo, you can try any of them out, after building the source code:
 ```
 npm run build
 ```
 
-Then run any example::
+Then run each with their own command:
 ```
 npm run examples/simple_objectoriented
 npm run examples/simple_functional

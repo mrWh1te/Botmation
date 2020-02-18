@@ -86,7 +86,9 @@ export const forAll =
       }
 
 /**
- * @description    Similar to givenThat, except it will keep running the sequence of actions until the condition is no longer TRUE
+ * @description    This works like a traditional doWhile. Do these actions, then check the condition on whether or not we should do them again, and again and again
+ *                    aka
+ *                 Do the actions, and continue to keep doing them While this condition is TRUE
  * @experimental
  * @param condition 
  * @note           This is under development! Not considered ready, yet
@@ -96,7 +98,7 @@ export const doWhile =
     (...actions: BotAction[]): BotAction => 
       async(page: Page, options, ...injects) => {
         try {
-          let resolvedCondition = await condition(page, options, ...injects)
+          let resolvedCondition = true // doWhile -> run the code, then check the condition on whether or not we should run the code again
           while (resolvedCondition) {
             await BotActionsChainFactory(page, options, ...injects)(...actions)
             resolvedCondition = await condition(page, options, ...injects)

@@ -17,7 +17,7 @@ Why choose Botmation?
 
 It enables devs to use Puppeteer with less code. <img alt="Baby Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/baby_bot.PNG" width="175" align="right">
 
-It gives devs tools to build reusable Puppeteer code with single purpose units called bot actions.
+It gives devs tools to build reusable Puppeteer code with single purpose functions called bot actions.
 
 It empowers devs with composable Architecture to chain bot actions together.
 

@@ -87,8 +87,9 @@ npm run examples/screenshots
 This project works with the [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) module, in running multiple bots, concurrently! <img alt="Blue Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/blue_bot.PNG" width="175" align="right">
 
 To get started, check out the [puppeteer-cluster example code](/src/examples/puppeteer-cluster.ts). 
-<img alt="Orange Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/orange_bot.PNG" width="175" align="left">If you clone this repo, install dependencies, you can run the example code, with these commands:
+If you clone this repo, install dependencies, you can run the example code, with these commands:
 
+<img alt="Orange Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/orange_bot.PNG" width="175" align="left">
 ```
 npm run build
 npm run examples/puppeteer-cluster

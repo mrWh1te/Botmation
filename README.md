@@ -15,9 +15,9 @@ A TypeScript library for using [Puppeteer](https://github.com/puppeteer/puppetee
 Why choose Botmation?
 ---------------------
 
-It enables devs to use Puppeteer with less code.
+It enables devs to use Puppeteer with less code. <img alt="Baby Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/baby_bot.PNG" width="175" align="right">
 
-It gives devs tools to build reusable Puppeteer code with single purpose units called bot actions. <img alt="Baby Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/baby_bot.PNG" width="175" align="right">
+It gives devs tools to build reusable Puppeteer code with single purpose units called bot actions.
 
 It empowers devs with composable Architecture to chain bot actions together.
 

@@ -90,17 +90,17 @@ npm run examples/screenshots
 
 This project works with the [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) module, so you can run multiple bots concurrently!
 
-To get started, you can check out the [puppeteer-cluster example code](/src/examples/puppeteer-cluster.ts). 
+To get started, check out the [examples/puppeteer-cluster.ts](/src/examples/puppeteer-cluster.ts) on how to wire up various chains of actions to multiple bots running concurrently. 
 
-If you clone this repo locally, then install npm dependencies, you can run that example code, with these command:
+To try out the example, clone this repo locally, install npm dependencies, then run this command:
 
 ```
 npm run build & npm run examples/puppeteer-cluster
 ```
 
-# Library Development
+It will build the project source code then run the puppeteer-cluster example linked above.
 
-<img alt="Orange Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/orange_bot.PNG" width="175" align="right">
+# Library Development
 
 Clone the repo, then install dependencies. You can build the library locally with this command:
 ```
@@ -108,6 +108,9 @@ npm run build
 ```
 
 The [playground_bot](/src/playground_bot.ts) is a dedicated spot for trying out new Bot Actions, etc. You can run it's code, after running the build command, with:
+
+<img alt="Orange Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/orange_bot.PNG" width="175" align="right">
+
 ```
 npm run playground
 ```

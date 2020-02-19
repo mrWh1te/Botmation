@@ -35,6 +35,8 @@ Then install it with `npm`:
 
 # Getting Started
 
+<img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
+
 This project is about running units of Puppeteer code called Bot Actions. It's a highly reusable approach to building Puppeteer scripts. To learn more about Bot Actions, read the [Botmation: Actions documentation](/src/botmation/actions/README.md). So when it comes to using these actions, there are two approaches: Object-Oriented or Functional.
 
 1) Object-Oriented
@@ -96,15 +98,15 @@ If you clone this repo locally, then install npm dependencies, you can run that 
 npm run build & npm run examples/puppeteer-cluster
 ```
 
-<!-- <img alt="Blue Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/blue_bot.PNG" width="175" align="right"> -->
-
 # Library Tests
 
 All our testing is done with [Jest](https://jestjs.io/).
 
 Learn more about the library's testing strategy and coverage with the [Botmation: Tests documentation](/src/tests/README.md).
 
-## Library Development
+# Library Development
+
+<img alt="Blue Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/blue_bot.PNG" width="150" align="right">
 
 Clone the repo, then install dependencies. You can build the library locally with this command:
 ```

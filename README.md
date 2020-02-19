@@ -51,7 +51,7 @@ See the [functional example code](/src/examples/simple_functional.ts).
 
 # Library Reference
 
-After intalling through `npm`, you can import the class or the bot actions chain factory directly from the main module:
+After intalling through `npm`, you can import the class or the bot actions chain factory directly from the main module: <img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
 ```javascript
 // Class or the Bot Chains Factory
 import { Botmation, BotActionsChainFactory } from 'botmation';

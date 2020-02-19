@@ -65,7 +65,7 @@ import { goTo } from 'botmation/actions/navigation';
 import { screenshot } from 'botmation/actions/output';
 ```
 
-To learn how to make & chain your own Bot Actions, visit the [Botmation: Actions documentation](/src/botmation/actions/README.md).
+To learn about the available Bot Actions, how to chain them together, and how to make your own, visit the [Botmation: Actions documentation](/src/botmation/actions/README.md).
 
 # Examples
 

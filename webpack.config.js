@@ -112,6 +112,11 @@ module.exports = {
 
           return JSON.stringify(packageJSON)
         } 
+      },
+      { 
+        from: 'README.md', 
+        to: 'README.md',
+        toType: 'file'
       }
     ])
   ],

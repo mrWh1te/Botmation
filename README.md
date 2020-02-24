@@ -19,9 +19,9 @@ It enables devs to use Puppeteer with less code. <img alt="Baby Bot" src="https:
 
 It has a loose architectural pattern to build chains of simple reusable functions called Bot Actions.
 
-It main factory function is intended to be reused in building nested chains of Bot Actions.
+It embraces flexibility with its design that enables the nesting of Bot Action chains.
 
-It gives choice, ie: Object-Oriented or purely Functional.
+It gives choice, like in approach: Object-Oriented or purely Functional.
 
 Install
 -------
@@ -39,38 +39,36 @@ If you're just getting started, install `puppeteer` & `@types/puppeteer`:
 
 # Getting Started
 
-This project is about breaking down Puppeteer code into simple reusable functions called Bot Actions. To get started using, chainging and making your own Bot Actions, read the [Botmation: Actions documentation](/src/botmation/actions/README.md). When it comes to using these actions, there are two provided approaches: Object-Oriented or Functional.
+This project is about breaking down Puppeteer code into simple reusable functions called Bot Actions. To get started with available Bot Actions, and how to make your own, read the [Botmation: Actions documentation](/src/botmation/actions/README.md). When it comes to using these actions, there are two provided approaches: Object-Oriented and Functional.
 
 ### 1) Object-Oriented
 
 <img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="180" align="right">
 
-The `Botmation` [class](/src/botmation/class.ts) gives you two options in creating an object instance. 1) Provide a browser `page` from a Puppeteer instance to the main class constructor. 2) Provide the browser from a Puppeteer instance to the static class method `asyncConstrutor()`. The first approach is good when you want finer control of the actual page ("Chrome" tab) that the Bot will operate in. The second approach is a little easier, but gives you less control on which browser page is used. 
+The `Botmation` [class](/src/botmation/class.ts) gives you two options in creating an object instance. 1) Provide a browser `page` from a Puppeteer instance to the main class constructor. 2) Provide the browser from a Puppeteer instance to the static class method `asyncConstrutor()`. The first approach is good when you want finer control of the browser page ("Chrome" tab) used. The second approach is a little simpler, but gives you less control on which page (browser tab) is used. 
 
-Either way, after creating an instance, use the `actions()` method, to compose a chain of Bot Actions. These will run in sequence, one after the other. They are simple `async` functions, awaited one at a time, in a container, if you will, called `actions()`. 
+Either way, after creating an instance, use the `actions()` method, to compose a chain of Bot Actions. These will run in sequence, one after the other. They are simple `async` functions, awaited one at a time, in a promise resolving function, called `actions()`.
 
 See the [object-oriented example code](/src/examples/simple_objectoriented.ts) to get started.
 
 ### 2) Functional
 
-The `Botmation` class's `actions()` method is actually provided by a higher order function, called the [BotActionsChainFactory](/src/botmation/factories/bot-actions-chain.factory.ts) function. It's the center piece of this project. It's an async function to run a chain of Bot Actions, in the order provided.
+The `Botmation` class's `actions()` method is provided by a higher order function, called the [BotActionsChainFactory](/src/botmation/factories/bot-actions-chain.factory.ts) function. It's the center piece of this project. It's an async function to resolve a chain of promises, or in this context, a chain of Bot Actions, one link at a time.
 
-Therefore, you can skip the Object-Oriented Botmation class by directly using this function.
-
-Also, it's recommended, to reuse this function in building reusable chains of Bot Actions as separate Bot Actions themselves. So one Bot Action can represent a chain of Bot Actions. It's composable that way. Read all about Bot Actions in the [Botmation: Actions documentation](/src/botmation/actions/README.md).
+Therefore, you can skip the Object-Oriented Botmation class by directly using this function and without losing any core functionality. It can even be reused inside a Bot Action to make one action call a chain of other actions! Read more in the [Botmation: Actions documentation](/src/botmation/actions/README.md).
 
 See the [functional example code](/src/examples/simple_functional.ts) to get started.
 
 # Library Reference
 
-After intalling through `npm`, you can import either the class or the main Factory function from the main module: <img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
+After intalling through `npm`, you can import either the `Botmation` class or the main `BotActionsChainFactory` function from the main module: <img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
 ```javascript
 // Class or the Bot Chains Factory
-import { Botmation, BotActionsChainFactory as Bot } from 'botmation';
+import { Botmation, BotActionsChainFactory as Bot } from 'botmation'; // Object Oriented, or Purely Functional
 ```
 The actions are organized in various files in the `/actions` directory. As of v1.0.x, there are 6 groups of actions you can import from:
 ```javascript
-// Examples of importing various Bot Actions
+// Examples of importing a Bot Action from each group
 import { log } from 'botmation/actions/console';
 import { saveCookies } from 'botmation/actions/cookies';
 import { click, type } from 'botmation/actions/input';
@@ -106,13 +104,13 @@ This project works with the [puppeteer-cluster](https://github.com/thomasdondorf
 
 To get started, check out the [examples/puppeteer-cluster.ts](/src/examples/puppeteer-cluster.ts) on how to set up multiple bots. You can use both the Object-Oriented class or go purely functional. The example has both. 
 
-You can copy/paste the code locally or clone this repo, install the npm dependencies, then run this command:
+You can copy/paste the code locally or clone this repo locally, install the npm dependencies, then run this command:
 
 ```
 npm run build & npm run examples/puppeteer-cluster
 ```
 
-It will build the project source code then run the puppeteer-cluster example linked above.
+It will build the project source code then run the puppeteer-cluster example.
 
 # Library Development
 

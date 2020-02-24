@@ -1,6 +1,6 @@
 <h1>Botmation: Actions</h1>
 
-Bot actions are async functions that operate on a Puppeteer's `page` with `BotOptions` and optionally `injects` (for whatever is needed).
+Bot Actions are async functions, each doing a single thing. They are given the Puppeteer's `page`, the current `BotOptions` and any optional `injects`.
 
 Bot Action Interface
 --------------------
@@ -9,9 +9,9 @@ export interface BotAction extends Function {
   (page: Page, options: BotOptions, ...injects: any[]) : Promise<void>
 }
 ```
-> Note: While the function requires options, devs do not need to provide it, when using either the `BotActionsChainFactory` or the `Botmation` class. A safe set of defaults are provided instead. You may overload that with only what you need.
+> Note: While the function requires options, you do not need to provide any, since the `BotActionsChainFactory`, which is where these actions are called, will provide a safe set of default values for `options`. You may overload it through the `BotActionsChainFactory` or with a `Botmation` class method.
 
-These functions are created from higher order functions called `BotActionFactory` functions. A factory returns a `BotAction` function. This enables devs to use factory functions to customize bot actions with whatever is needed.
+These functions are created from higher order functions called `BotActionFactory` functions. They each return a `BotAction` function. This enables devs to use higher order functions to provide customization to their Bot Actions.
 
 Bot Action Factory Interface
 ----------------------------
@@ -22,40 +22,58 @@ export interface BotActionFactory extends Function {
 ```
 
 # Building your own Bot Actions
-A `BotAction` function is an async function, which gets the Puppeteer `page`, `BotOptions` (which devs can overload), and any optional `injects` provided by the project's devs. These functions are unit based, singular in purpose, easy to test, and easy to reuse. How do we make them?
+A `BotAction` function is an async function, which is provided the Puppeteer `page`, a safe set of `BotOptions` values (which devs can overload), and any optional `injects` added by you. These functions are single focused, easy to test, and easy to use. How do we make them?
 
-Every `BotAction` function is returned by a higher-order `BotActionFactory` function. The factory functions provide parameters, with their dynamic scoping, to customize the `BotAction` function. Here's an example, of a usable bot action Factory function in the `actions()` method. Here's a simple example:
+Most `BotAction` functions are returned by their higher-order `BotActionFactory` functions. These higher order functions provide parameters, with their dynamic scoping, to customize their `BotAction` function. Here's an example, of a complete Bot Action with its Factory function that customizes the effect of its `BotAction`:
 ```typescript
-export const clickHTMLElementBySelector = (htmlSelector: string): BotAction => async(page: Page) => {
-  await page.click(htmlSelector)
-}
+// Higher Order BotActionFactory Function
+export const click = (htmlSelector: string): BotAction =>
+  // Returns an async BotAction Function
+  async(page: Page) => {
+    await page.click(htmlSelector) // use higher order params to customize
+  }
 ```
-Since we are not using the Bot `options` or any `injects`, we don't need to include them in the function's parameters.
+> Note: Since we are not using the Bot `options` or any `injects` in the `BotAction`, we don't need to include them in the higher order function's parameters.
 
-That is a great example of reusable unit of a `BotAction`, something single purpose, is more easily reused. Now let's take a step back, and group some of these units into one easy to use `BotAction`. It is possible to reuse any other `BotAction` functions, in a single `BotAction` function, by reusing  the `BotActionsChainFactory` function. See, you can make chains of `BotAction` functions, this way, to call them, one by one. A great example, is the Instagram specific [login()](/src/botmation/bots/instagram/actions/auth.ts) `BotAction` that uses `goTo()`, `click()`, and `type()` to handle a login flow.
+That is a great example of a single purpose, reusable `BotAction` function. It's the foundational level of building blocks that a `BotAction` can be. It directly uses Puppeteer code from the `page` instance. There are no other `BotAction` functions, but it's possible, and pragamtic at times, to have a `BotAction` wrap one other `BotAction` or a chain of `BotAction` functions.
 
-Here's an example:
+### BotAction Wraps One BotAction
+Given the utility functions, you may find yourself writing simple BotAction's to wrap units of functionality in a reusable way. One example of which is the Output Bot Action [screenshotAll](/src/botmation/actions/output.ts):
 ```typescript
-import { Page } from 'puppeteer' // @types/puppeteer
-import { BotActionsChainFactory } from 'botmation'
-import { BotAction } from 'botmation/interfaces'
-
-// ... import the Bot Action methods from their respective files in the `botmation/actions` directory
-
-export const loginExampleFlow = (username: string, password: string): BotAction => async(page: Page, options, ...injects) =>
-  // This is how a single BotAction can run its own sequence of BotAction's prior to the next call of the original bot.actions() sequence
-  BotActionsChainFactory(page, options, ...injects)(
-    goTo('http://example.com/login.html'),
-    click('form input[name="username"]'),
-    type(username),
-    click('form input[name="password"]'),
-    type(password),
-    click('form button[type="submit"]'),
-    waitForNavigation(),
-    log('Login Complete')
-  )
+// Factory Function for a list of url's
+export const screenshotAll = (...urls: string[]): BotAction => 
+  async(page: Page, options) =>
+    // calling the Bot Action's Factory Function
+    await forAll(urls)(
+      (url) => ([
+        goTo(url),
+        screenshot(url.replace(/[^a-zA-Z]/g, '_'))
+      ])
+    )(page, options) // by calling it twice to provide the page, and optionally options & injects
 ```
+You have to call the BotAction through its Factory function. Since `BotAction` functions are `async`, you have to `await` the call. A function call, inside a function call resolving the higher order function down to the returned function to call in one go.
 
+### BotAction Wraps a Chain of BotAction's
+Now let's take a step back, and group any of these `BotAction` functions into a single reusable chain of a `BotAction` function. It is possible for one `BotAction` to represent another chain of `BotAction` functions that must complete before the next `BotAction` runs. By using the `BotActionsChainFactory` function, we can create a `BotAction` that runs a chain of `BotAction` functions, in order, one by one. One example is the Instagram specific [login()](/src/botmation/bots/instagram/actions/auth.ts) `BotAction` that chains `goTo()`, `click()`, and `type()` to handle a login flow:
+```typescript
+export const login = ({username, password}: {username: string, password: string}): BotAction => 
+  async(page: Page, options, ...injects) =>
+    // This is how a single BotAction can run its own sequence of BotAction's prior to the next call of the original bot.actions() sequence
+    BotActionsChainFactory(page, options, ...injects)(
+      goTo(getInstagramLoginUrl()),
+      click(FORM_AUTH_USERNAME_INPUT_SELECTOR),
+      type(username),
+      click(FORM_AUTH_PASSWORD_INPUT_SELECTOR),
+      type(password),
+      click(FORM_AUTH_SUBMIT_BUTTON_SELECTOR),
+      waitForNavigation(),
+      log('Login Complete')
+    )
+```
+Now this works because the return type of `BotActionsChainFactory` inner function call and the return type of `BotAction` are both `Promise<void>`, so we can handle them the same way, so happenly, in another `BotActionsChainFactory` call, the main one.
+
+### BotAction Chain Nesting
+Bot Action functions, like any of the above, are each links in the chain, ran one by one. It's a chain of promises. Therefore, you can nest chains inside chains, as deeply as you want. One of the [tests](/src/tests/botmation/botmation.wrappers.spec.ts), verifies this to 1 level of nesting. This is something to be explored upon, but probably best to avoid deep levels of nesting.
 
 # Actions Reference
 

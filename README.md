@@ -47,7 +47,7 @@ This project is about breaking down Puppeteer code into simple reusable function
 
 The `Botmation` [class](/src/botmation/class.ts) gives you two options in creating an object instance. 1) Provide a browser `page` from a Puppeteer instance to the main class constructor. 2) Provide the browser from a Puppeteer instance to the static class method `asyncConstrutor()`. The first approach is good when you want finer control of the browser page ("Chrome" tab) used. The second approach is a little simpler, but gives you less control on which page (browser tab) is used. 
 
-Either way, after creating an instance, use the `actions()` method, to compose a chain of Bot Actions. These will run in sequence, one after the other. They are simple `async` functions, awaited one at a time, in a promise resolving function, called `actions()`.
+Either way, after creating an instance, use the `actions()` method, to compose a chain of Bot Actions. These will run in sequence, one after the other. They are simple `async` functions, awaited one at a time, in a promise resolving chain.
 
 See the [object-oriented example code](/src/examples/simple_objectoriented.ts) to get started.
 

@@ -77,12 +77,12 @@ Bot Action functions, like any of the above, are each links in the chain, ran li
 
 As of v1.0.0, there are 6 types of Bot Actions.
 
-1. Console
-2. Cookies
-3. Input
-4. Navigation
-5. Output
-6. Utilities
+1. [Console](#console)
+2. [Cookies](#cookies)
+3. [Input](#input)
+4. [Navigation](#navigation)
+5. [Output](#output)
+6. [Utilities](#utilities)
 
 ## Console
 

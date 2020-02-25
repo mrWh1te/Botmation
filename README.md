@@ -55,7 +55,7 @@ See the [object-oriented example code](/src/examples/simple_objectoriented.ts) t
 
 The `Botmation` class's `actions()` method is provided by a higher order function, called the [BotActionsChainFactory](/src/botmation/factories/bot-actions-chain.factory.ts) function. It's the center piece of this project. It's an async function to resolve a chain of promises, or in this context, a chain of Bot Actions, one link at a time.
 
-Therefore, you can skip the Object-Oriented Botmation class by directly using this function and without losing any core functionality. It can even be reused inside a Bot Action to make one action call a chain of other actions! Read more in the [Botmation: Actions documentation](/src/botmation/actions/README.md).
+Therefore, you can skip the Object-Oriented Botmation class by directly using this function, without losing any core functionality. It can even be reused inside a Bot Action, to make one action represent a whole other chain of actions! Read more in the [Botmation: Actions documentation](/src/botmation/actions/README.md).
 
 See the [functional example code](/src/examples/simple_functional.ts) to get started.
 

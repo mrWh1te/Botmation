@@ -61,11 +61,13 @@ See the [functional example code](/src/examples/simple_functional.ts) to get sta
 
 # Library Reference
 
-After intalling through `npm`, you can import either the `Botmation` class or the main `BotActionsChainFactory` function from the main module: <img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
+After intalling through `npm`, you can import either the `Botmation` class or the main `BotActionsChainFactory` function from the main module: 
 ```javascript
 // Object Oriented, or Purely Functional
 import { Botmation, BotActionsChainFactory as Bot } from 'botmation';
 ```
+<img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
+
 The actions are organized in various files in the `/actions` directory. As of v1.0.x, there are 6 groups of actions you can import from: 
 ```javascript
 // Examples of importing a Bot Action from each group

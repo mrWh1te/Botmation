@@ -63,8 +63,8 @@ See the [functional example code](/src/examples/simple_functional.ts) to get sta
 
 After intalling through `npm`, you can import either the `Botmation` class or the main `BotActionsChainFactory` function from the main module:
 ```javascript
-// Class or the Bot Chains Factory
-import { Botmation, BotActionsChainFactory as Bot } from 'botmation'; // Object Oriented, or Purely Functional
+// Object Oriented, or Purely Functional
+import { Botmation, BotActionsChainFactory as Bot } from 'botmation';
 ```
 The actions are organized in various files in the `/actions` directory. As of v1.0.x, there are 6 groups of actions you can import from: <img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
 ```javascript

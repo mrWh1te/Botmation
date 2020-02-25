@@ -1,12 +1,11 @@
-import { Page } from 'puppeteer'
+import { Page, Browser } from 'puppeteer'
 
 import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
 import { click, type } from 'botmation/actions/input'
 import { goTo } from 'botmation/actions/navigation'
 import { Botmation } from 'botmation/class'
-import { BotActionsChainFactory } from 'botmation/factories/bot-actions-chain.factory'
 
-import { BASE_URL, EXAMPLE_URL, EXAMPLE_URL2 } from '../urls'
+import { BASE_URL, EXAMPLE_URL } from '../urls'
 import { FORM_TEXT_INPUT_SELECTOR, FORM_SUBMIT_BUTTON_SELECTOR } from '../selectors'
 import { BotOptions } from 'botmation/interfaces'
 import { getDefaultBotOptions } from 'botmation/helpers/bot-options'
@@ -14,10 +13,64 @@ import { getDefaultBotOptions } from 'botmation/helpers/bot-options'
 /**
  * @description   Test the Botmation class methods specific to the Class
  */
-describe('[Botmation] Class Specific', () => {
+describe('[Botmation] Class', () => {
 
   beforeEach(async() => {
     await page.goto(BASE_URL, getDefaultGoToPageOptions())
+  })
+
+  //
+  // Regular Class Instance
+  it('should create a Botmation instance then run the actions', async() => {
+    const bot = new Botmation(page)
+
+    await bot.actions(
+      goTo(EXAMPLE_URL),
+      click(FORM_TEXT_INPUT_SELECTOR),
+      type('loremlipsum'),
+      click(FORM_SUBMIT_BUTTON_SELECTOR)
+    )
+
+    expect(page.url()).toEqual('http://localhost:8080/success.html?answer=loremlipsum')
+  })
+
+  //
+  // Async Class Instance
+  it('should create a Botmation instance using the static asyncConstructor() then run the actions', async() => {
+    const bot = await Botmation.asyncConstructor(browser)
+
+    await bot.actions(
+      goTo(EXAMPLE_URL),
+      click(FORM_TEXT_INPUT_SELECTOR),
+      type('loremlipsumloremlipsum'),
+      click(FORM_SUBMIT_BUTTON_SELECTOR)
+    )
+
+    const page = bot.getPage()
+    expect(page.url()).toEqual('http://localhost:8080/success.html?answer=loremlipsumloremlipsum')
+  })
+  it('should create a Botmation instance using the static asyncConstructor() and create a new page when the browser has none automatically', async() => {
+    /// this mocked use-case is for when the browser provided has no tabs open
+    const mockPage = {
+      click: jest.fn()
+    } as any as Page
+    const mockPages = [] as any // no pages 
+    // the async constructor method's purpose is to get the page (tab) from the browser
+    // so if none, it needs to create it, then use it
+    const mockBrowser = {
+      pages: jest.fn(() => mockPages),
+      newPage: jest.fn(() => mockPage)
+    } as any as Browser
+    
+    const bot = await Botmation.asyncConstructor(mockBrowser)
+
+    await bot.actions(
+      click('example html selector')
+    )
+
+    expect(mockBrowser.pages).toHaveBeenCalled()
+    expect(mockBrowser.newPage).toHaveBeenCalled()
+    expect(mockPage.click).toHaveBeenCalledWith('example html selector')
   })
 
   //

@@ -56,7 +56,7 @@ Now let's take a step back, and group any of these `BotAction` functions into on
 ```typescript
 export const login = ({username, password}: {username: string, password: string}): BotAction => 
   async(page: Page, options, ...injects) =>
-    // This is how a single BotAction can run its own sequence of BotAction's prior to the next call of the original bot.actions() sequence
+    // This is how a single BotAction can be another chain of BotAction's
     BotActionsChainFactory(page, options, ...injects)(
       goTo(getInstagramLoginUrl()),
       click(FORM_AUTH_USERNAME_INPUT_SELECTOR),

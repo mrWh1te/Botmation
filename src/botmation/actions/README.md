@@ -68,7 +68,7 @@ export const login = ({username, password}: {username: string, password: string}
       log('Login Complete')
     )
 ```
-Now this works because the return type of `BotActionsChainFactory` inner function call and the return type of `BotAction` are both `Promise<void>`, so we can handle them the same way, and so happenly, in another `BotActionsChainFactory` call, the main one (ie `actions()`). Now if I lost you, don't worry, have faith, it will all make sense. It's a chain of links. Each one of those links is a function that returns a promise that resolves to void, so we can use other async functions in this context, so a link can be another chain. We can have nested chaining.
+Now this works because the return type of `BotActionsChainFactory` inner function call and the return type of `BotAction` are both `Promise<void>`, so we can handle them the same way, and so happenly, in another `BotActionsChainFactory` call, the main one (ie `actions()`). Now if I lost you, don't worry, it will all make sense. It's a chain of links. Each one of those links is a function that returns a promise that resolves to void. A link can be another chain, as long as we wrap it in one Promise that resolves to void. We do that with `BotActionsChainFactory`. Therefore, we can nest chains of Bot Actions.
 
 ### BotAction Chain Nesting
 Bot Action functions, like any of the above, are each links in the chain, ran linearly. It's a chain of resolving promises. It's possible to nest chains inside chains, and as deeply as you want, in theory. One of the [tests](/src/tests/botmation/factories/bot-actions-chain.factory.spec.ts) verifies this to one level of nesting. This is something to be explored, but probably best to avoid deep levels of nesting.

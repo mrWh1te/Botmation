@@ -71,7 +71,7 @@ export const login = ({username, password}: {username: string, password: string}
 Now this works because the return type of `BotActionsChainFactory` inner function call and the return type of `BotAction` are both `Promise<void>`, so we can handle them the same way, and so happenly, in another `BotActionsChainFactory` call, the main one.
 
 ### BotAction Chain Nesting
-Bot Action functions, like any of the above, are each links in the chain, ran linearly. It's a chain of resolving promises. Therefore, you can nest chains inside chains, and as deeply as you want, in theory. One of the [tests](/src/tests/botmation/botmation.wrappers.spec.ts) verifies this to one level of nesting. This is something to be explored, but probably best to avoid deep levels of nesting.
+Bot Action functions, like any of the above, are each links in the chain, ran linearly. It's a chain of resolving promises. Therefore, you can nest chains inside chains, and as deeply as you want, in theory. One of the [tests](/src/tests/botmation/factories/bot-actions-chain.factory.spec.ts) verifies this to one level of nesting. This is something to be explored, but probably best to avoid deep levels of nesting.
 
 # Actions Reference
 

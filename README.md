@@ -109,7 +109,7 @@ To get started, check out the [examples/puppeteer-cluster.ts](/src/examples/pupp
 You can copy/paste the code locally or clone this repo locally, install the npm dependencies, then run this command:
 
 ```
-npm run build & npm run examples/puppeteer-cluster
+npm run build && npm run examples/puppeteer-cluster
 ```
 
 It will build the project source code then run the puppeteer-cluster example.

@@ -23,3 +23,12 @@ export interface BotAction extends Function {
 export interface ConditionalBotAction extends Function {
   (page: Page, options: BotOptions, ...injects: any[]) : Promise<boolean>
 }
+
+
+export interface BotPipeActionFactory<T> extends Function {
+  (...args: any[]) : BotPipeAction<T>
+}
+
+export interface BotPipeAction<T> extends Function {
+  (page: Page, options: BotOptions, ...injects: any[]) : Promise<T>
+}

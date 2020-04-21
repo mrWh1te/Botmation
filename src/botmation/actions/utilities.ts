@@ -22,7 +22,7 @@ import { BotOptions } from '../interfaces/bot-options.interfaces'
  */
 export const givenThat = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction[]): BotAction => 
+    (...actions: BotAction<void>[]): BotAction<void> => 
       async(page: Page, options, ...injects) => {
         try {
           if (await condition(page, options, ...injects)) {
@@ -70,7 +70,7 @@ export interface Dictionary {
 }
 export const forAll =
   (collection: any[] | Dictionary) =>
-    (botActionOrActionsFactory: (...args: any[]) => BotAction[] | BotAction): BotAction =>
+    (botActionOrActionsFactory: (...args: any[]) => BotAction<void>[] | BotAction<void>): BotAction<void> =>
       async(page: Page, options: BotOptions, ...injects: any[]) => {
         if (Array.isArray(collection)) {
           // Array
@@ -94,7 +94,7 @@ export const forAll =
  */
 export const doWhile = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction[]): BotAction => 
+    (...actions: BotAction<void>[]): BotAction<void> => 
       async(page: Page, options, ...injects) => {
         try {
           let resolvedCondition = true // doWhile -> run the code, then check the condition on whether or not we should run the code again
@@ -121,7 +121,7 @@ export const doWhile =
  */
 export const forAsLong = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction[]): BotAction => 
+    (...actions: BotAction<void>[]): BotAction<void> => 
       async(page: Page, options, ...injects) => {
         try {
           let resolvedCondition = await(condition(page, options, ...injects))
@@ -138,5 +138,5 @@ export const forAsLong =
  * @description   Pauses the bot for the provided milliseconds before letting it execute the next Action
  * @param milliseconds 
  */
-export const wait = (milliseconds: number): BotAction => async() => 
+export const wait = (milliseconds: number): BotAction<void> => async() => 
   await sleep(milliseconds)

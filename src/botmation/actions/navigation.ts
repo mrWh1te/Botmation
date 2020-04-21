@@ -10,7 +10,7 @@ import { logWarning } from '../helpers/console'
  *                If the URL given to navigate too is the same as the existing one, it will skip navigation and log a warning
  * @param url
  */
-export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAction => async(page: Page) => {
+export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAction<void> => async(page: Page) => {
   if (!goToOptions) {
     goToOptions = getDefaultGoToPageOptions()
   }
@@ -27,6 +27,6 @@ export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAct
 /**
  * @description   Wait for navigation to complete. Helpful after submitting a form that causes change pages to occur, ie logging in
  */
-export const waitForNavigation = (): BotAction => async(page: Page) => {
+export const waitForNavigation = (): BotAction<void> => async(page: Page) => {
   await page.waitForNavigation()
 }

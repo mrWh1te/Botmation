@@ -11,13 +11,16 @@ import { getDefaultBotOptions } from '../helpers/bot-options'
  * @example       see `login()` under `./src/bots/instagram/actions/auth.ts`
  * @param page 
  */
-export const BotActionsChainFactory = (page: Page, overloadOptions: Partial<BotOptions> = {}, ...injects: any[]) => async (...actions: BotAction[]): Promise<void> =>
-  actions.reduce(
-    async(chain, action) => {
-      // Resolve the last returned promise, making a chain of resolved promises
-      await chain
-      // Inject the Puppeteer page into the BotAction, and options (with safe defaults in case none provided), and injects for further needs
-      return action(page, getDefaultBotOptions(overloadOptions), ...injects)
-    }, 
-    Promise.resolve()
-  )
+export const BotActionsChainFactory = 
+  (page: Page, overloadOptions: Partial<BotOptions> = {}, ...injects: any[]) => 
+    async (...actions: BotAction<void>[]): Promise<void> =>
+      actions.reduce(
+        async(chain, action) => {
+          // Resolve the last returned promise, making a chain of resolved promises
+          await chain
+          
+          // Inject the Puppeteer page into the BotAction, and options (with safe defaults in case none provided), and injects for further needs
+          return action(page, getDefaultBotOptions(overloadOptions), ...injects)
+        }, 
+        Promise.resolve()
+      )

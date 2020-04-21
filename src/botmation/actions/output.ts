@@ -11,7 +11,7 @@ import { getFileUrl } from '../helpers/assets'
  *                It relies on `options`, BotOptions, to determine the URL to save the asset in
  * @param fileName name of the file to save the PNG as
  */
-export const screenshot = (fileName: string): BotAction => async(page: Page, options) => {
+export const screenshot = (fileName: string): BotAction<void> => async(page: Page, options) => {
   const fileUrl = getFileUrl(options.screenshots_directory, options, fileName) + '.png'
 
   await page.screenshot({path: fileUrl})
@@ -23,7 +23,7 @@ export const screenshot = (fileName: string): BotAction => async(page: Page, opt
  * @example   screenshotAll('https://google.com', 'https://twitter.com')
  * @request   add ability like via a closure, to customize the filename for easier reuse in a cycle (like ability to timestamp the file etc)
  */
-export const screenshotAll = (...urls: string[]): BotAction => async(page: Page, options) =>
+export const screenshotAll = (...urls: string[]): BotAction<void> => async(page: Page, options) =>
   await forAll(urls)(
     (url) => ([
       goTo(url),

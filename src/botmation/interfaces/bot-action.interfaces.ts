@@ -4,13 +4,13 @@ import { BotOptions } from './bot-options.interfaces'
 /**
  * @description   Base Interface for the Higher-Order Action implementations to enable IDE assistance, strong type checking, etc
  */
-export interface BotActionFactory extends Function {
+export interface BotActionFactory<T> extends Function {
   // Higher-Order Function (Factory) to Produce an Async Function (Returns Promise to be awaited)
-  (...args: any[]) : BotAction
+  (...args: any[]) : BotAction<T>
 }
 
-export interface BotAction extends Function {
-  (page: Page, options: BotOptions, ...injects: any[]) : Promise<void> // async function for pupeeteer manipulation of page, sequentially
+export interface BotAction<T> extends Function {
+  (page: Page, options: BotOptions, ...injects: any[]) : Promise<T>
 }
 
 /**
@@ -22,13 +22,4 @@ export interface BotAction extends Function {
  */
 export interface ConditionalBotAction extends Function {
   (page: Page, options: BotOptions, ...injects: any[]) : Promise<boolean>
-}
-
-
-export interface BotPipeActionFactory<T> extends Function {
-  (...args: any[]) : BotPipeAction<T>
-}
-
-export interface BotPipeAction<T> extends Function {
-  (page: Page, options: BotOptions, ...injects: any[]) : Promise<T>
 }

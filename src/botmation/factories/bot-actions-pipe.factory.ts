@@ -11,14 +11,22 @@ import { getDefaultBotOptions } from '../helpers/bot-options'
  * @note          Since core library code has yet to take advantage of `injects`, it is being omitted here, otherwise the `BotPipeAction` could become more complicated than necessary
  * @param page    Puppeteer.Page
  */
-export const BotActionsPipeFactory = (page: Page, overloadOptions: Partial<BotOptions> = {}) => async (...actions: BotAction[]): Promise<void> =>
-  actions.reduce(
-    async(previousAction, nextAction) => {
-      // Resolve the last returned promise, to provide in the next action, making a pipe of resolved promises, passing data along
-      const resolvedValue = await previousAction
+export const BotActionsPipeFactory = 
+  <T>(page: Page, overloadOptions: Partial<BotOptions> = {}, ...injects: any[]) => 
+    async (...actions: BotAction<any>[]): Promise<T> => {
+      let previousActionResolvedValue
 
-      // Inject the Puppeteer page into the BotAction, and options (with safe defaults in case none provided), and previous action's resolve value
-      return nextAction(page, getDefaultBotOptions(overloadOptions), resolvedValue)
-    }, 
-    Promise.resolve()
-  )
+      for(const action of actions) {
+        let nextActionInjects
+
+        if (previousActionResolvedValue) {
+          nextActionInjects = [previousActionResolvedValue, ...injects]
+        } else {
+          nextActionInjects = [...injects]
+        }
+
+        previousActionResolvedValue = await action(page, getDefaultBotOptions(overloadOptions), ...nextActionInjects)
+      }
+
+      return previousActionResolvedValue
+    }

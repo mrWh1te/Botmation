@@ -8,14 +8,13 @@ import { forAsLong } from '../../../actions/utilities'
  * @description   Favorite all published photos from these usernames
  * @param usernames 
  */
-export const favoriteAllFrom = (...usernames: string[]): BotAction => async(page: Page) => 
+// export const favoriteAllFrom = (...usernames: string[]): BotAction<void> => async(page: Page) => 
   // while (not end of content) { 
   //    consume post data (author name), like button & class for isLike status then "like" the content if a username 
   //    finally scroll (may be optional, bot does not need a window since scroll can occur automatically upon press of "like" button)
   // }
-  await forAsLong()(
 
-  )
-  (page)
+  // await forAsLong()(
 
-  // console.log(`favorite all from ${usernames.join(', ')}`)
+  // )
+  // (page)

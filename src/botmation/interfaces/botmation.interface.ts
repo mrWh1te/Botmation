@@ -9,7 +9,7 @@ import { BotOptions } from './bot-options.interfaces'
  */
 export interface BotmationInterface {
   // Main
-  actions(...actions: BotAction[]): Promise<void>
+  actions(...actions: BotAction<any|void>[]): Promise<void>
   // Page
   setPage(page: Page): void
   getPage(): Page

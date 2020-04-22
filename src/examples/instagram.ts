@@ -13,7 +13,7 @@ import { goTo } from 'botmation/actions/navigation'
 import { screenshot } from 'botmation/actions/output'
 
 // Instagram specific BotAction's
-import { favoriteAllFrom } from 'botmation/bots/instagram/actions/feed'
+// import { favoriteAllFrom } from 'botmation/bots/instagram/actions/feed'
 import { login } from 'botmation/bots/instagram/actions/auth'
 import { closeTurnOnNotificationsModal } from 'botmation/bots/instagram/actions/modals'
 
@@ -56,7 +56,7 @@ import { logError } from 'botmation/helpers/console'
       goTo(getInstagramBaseUrl()),
       wait(5000),
       screenshot('feed'),
-      favoriteAllFrom('user1', 'user2'), // TBI (to be implemented) // TODO: implement
+      // favoriteAllFrom('user1', 'user2'), // TBI (to be implemented) // TODO: implement
 
       log('Done with feed'),
       //   viewAllStoriesFrom('user1', 'user2') // TODO: implement

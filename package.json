@@ -38,8 +38,8 @@
   "author": "Michael Lage",
   "license": "MIT",
   "dependencies": {
-    "chalk": "^3.0.0",
-    "puppeteer": "^2.0.0",
+    "chalk": "^4.0.0",
+    "puppeteer": "^3.0.0",
     "puppeteer-cluster": "^0.20.0"
   },
   "devDependencies": {

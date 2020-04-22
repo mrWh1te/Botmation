@@ -9,7 +9,7 @@ import { BotOptions } from '../interfaces/bot-options.interfaces'
  * @param page 
  * @param actions 
  */
-export const applyBotActionOrActions = async(page: Page, options: BotOptions, actions: BotAction[] | BotAction, ...injects: any[]) => {
+export const applyBotActionOrActions = async(page: Page, options: BotOptions, actions: BotAction<any|void>[] | BotAction<any|void>, ...injects: any[]) => {
   if (Array.isArray(actions)) {
     await BotActionsChainFactory(page, options, ...injects)(...actions)
   } else {

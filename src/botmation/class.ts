@@ -72,8 +72,9 @@ export class Botmation implements BotmationInterface {
    *                  )
    * @param actions  
    */
-  public async actions(...actions: BotAction[]): Promise<void> {
-    return BotActionsChainFactory(this.page, this.options, ...this.injects)(...actions)
+  public async actions(...actions: BotAction<any|void>[]): Promise<any|void> { // TODO verify that this function can return the last returned BotAction value in the chain
+    return BotActionsChainFactory(this.page, this.options, ...this.injects)(...actions) // TODO replace with BotActionsFactory() 
+                                                                              // TODO maintain tests for the BotActionsFactory, and add tests to cover this
   }
 
   /**

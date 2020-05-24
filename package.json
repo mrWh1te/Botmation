@@ -40,7 +40,7 @@
   "dependencies": {
     "chalk": "^4.0.0",
     "puppeteer": "^3.0.0",
-    "puppeteer-cluster": "^0.20.0"
+    "puppeteer-cluster": "^0.21.0"
   },
   "devDependencies": {
     "@types/jest": "^25.1.2",

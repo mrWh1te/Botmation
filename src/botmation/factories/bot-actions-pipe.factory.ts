@@ -5,10 +5,12 @@ import { BotOptions } from '../interfaces/bot-options.interfaces'
 import { getDefaultBotOptions } from '../helpers/bot-options'
 
 /**
- * @description   Similar to BotActionsChainFactory except the output of BotPipeAction's are provided as input for subsequent BotPipeAction's
+ * @description   Similar to BotActionsChainFactory except the output of BotAction's are provided as input for subsequent BotAction's
  *                This can be used within a regular BotActionsChain like forAsLong(reading feed)(pipe the feed data through these special actions)
  * 
- * @note          Since core library code has yet to take advantage of `injects`, it is being omitted here, otherwise the `BotPipeAction` could become more complicated than necessary
+ *                Returned data of one botaction is appended to the end of the `injects` in the subsequent action
+ *                Therefore, if a custom BotAction strongly types the injects, that isn't lost when used after another BotAction that returns a value
+ * 
  * @param page    Puppeteer.Page
  */
 export const BotActionsPipeFactory = 

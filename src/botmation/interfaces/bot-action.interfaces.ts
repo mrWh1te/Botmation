@@ -9,6 +9,9 @@ export interface BotActionFactory<T> extends Function {
   (...args: any[]) : BotAction<T>
 }
 
+/**
+ * 
+ */
 export interface BotAction<T> extends Function {
   (page: Page, options: BotOptions, ...injects: any[]) : Promise<T>
 }

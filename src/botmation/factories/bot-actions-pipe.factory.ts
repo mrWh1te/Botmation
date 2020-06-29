@@ -20,7 +20,7 @@ export const BotActionsPipeFactory =
         let nextActionInjects
 
         if (previousActionResolvedValue) {
-          nextActionInjects = [previousActionResolvedValue, ...injects]
+          nextActionInjects = [...injects, previousActionResolvedValue]
         } else {
           nextActionInjects = [...injects]
         }

@@ -33,8 +33,8 @@ describe('[Botmation:Action Factory] Navigation', () => {
     expect(mockPage.goto).toBeCalledWith('http://localhost:8080/example.html', getDefaultGoToPageOptions()) // are we providing default options, is the action relaying the correct url
   })
 
-  it('should call puppeteer\'s waitForNavigation() method', async() => {    
-    await waitForNavigation()(mockPage, botOptions)
+  it('should call puppeteer\'s waitForNavigation method', async() => {    
+    await waitForNavigation(mockPage, botOptions)
 
     expect(mockPage.waitForNavigation).toBeCalled()
   })
@@ -48,7 +48,7 @@ describe('[Botmation:Action Factory] Navigation', () => {
     // and not after it's already done, which was stalling the test
     await Promise.all([
       click(FORM_SUBMIT_BUTTON_SELECTOR)(page, botOptions),
-      waitForNavigation()(page, botOptions)
+      waitForNavigation(page, botOptions)
     ])
 
     await expect(page.title()).resolves.toMatch('Testing: Form Submit Success')

@@ -30,7 +30,7 @@ export const login = ({username, password}: {username: string, password: string}
     click(FORM_AUTH_PASSWORD_INPUT_SELECTOR),
     type(password),
     click(FORM_AUTH_SUBMIT_BUTTON_SELECTOR),
-    waitForNavigation(),
+    waitForNavigation,
     log('Login Complete')
   )
   

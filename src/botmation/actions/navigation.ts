@@ -27,6 +27,6 @@ export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAct
 /**
  * @description   Wait for navigation to complete. Helpful after submitting a form that causes change pages to occur, ie logging in
  */
-export const waitForNavigation = (): BotAction<void> => async(page: Page) => {
+export const waitForNavigation: BotAction<void> = async(page: Page) => {
   await page.waitForNavigation()
 }

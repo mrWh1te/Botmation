@@ -1,4 +1,3 @@
-import { Page } from 'puppeteer'
 import { promises as fs } from 'fs'
 
 import { BotAction } from '../interfaces/bot-action.interfaces'
@@ -11,7 +10,7 @@ import { logError } from '../helpers/console'
  * @param fileName 
  * @example saveCookies('cookies') -> creates `cookies.json`
  */
-export const saveCookies = (fileName: string): BotAction<void> => async(page: Page, options) => {
+export const saveCookies = (fileName: string): BotAction => async(page, piped, options) => {
   try {
     const cookies = await page.cookies()
     await fs.writeFile(getFileUrl(options.cookies_directory, options, fileName) + '.json', JSON.stringify(cookies, null, 2))
@@ -26,7 +25,7 @@ export const saveCookies = (fileName: string): BotAction<void> => async(page: Pa
  * @param fileName 
  * @example loadCookies('cookies')
  */
-export const loadCookies = (fileName: string): BotAction<void> => async(page: Page, options) => {
+export const loadCookies = (fileName: string): BotAction => async(page, piped, options) => {
   try {
     const file = await fs.readFile(getFileUrl(options.cookies_directory, options, fileName) + '.json')
     const cookies = JSON.parse(file.toString())

@@ -1,5 +1,4 @@
-import { Page } from 'puppeteer'
-import { DirectNavigationOptions } from 'puppeteer'
+import { DirectNavigationOptions, NavigationOptions } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-action.interfaces'
 import { getDefaultGoToPageOptions } from '../helpers/navigation'
@@ -10,7 +9,7 @@ import { logWarning } from '../helpers/console'
  *                If the URL given to navigate too is the same as the existing one, it will skip navigation and log a warning
  * @param url
  */
-export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAction<void> => async(page: Page) => {
+export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAction => async(page) => {
   if (!goToOptions) {
     goToOptions = getDefaultGoToPageOptions()
   }
@@ -25,8 +24,38 @@ export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAct
 }
 
 /**
+ * @description   Go back one page (like hitting the "Back" button in a Browser)
+ * @param options 
+ * @alpha 
+ * @TODO Test this
+ */
+export const goBack = (options?: NavigationOptions): BotAction => async(page) => {
+  await page.goBack(options)  
+}
+
+/**
+ * @description   Go back one page (like hitting the "Back" button in a Browser)
+ * @param options 
+ * @alpha 
+ * @TODO Test this
+ */
+export const goForward = (options?: NavigationOptions): BotAction => async(page) => {
+  await page.goForward(options)  
+}
+
+/**
+ * @description   Reload current page. In case of multiple redirects, the navigation will resolve with the response of the last redirect.
+ * @param options 
+ * @alpha 
+ * @TODO Test this
+ */
+export const reload = (options?: NavigationOptions): BotAction => async(page) => {
+  await page.reload(options)
+}
+
+/**
  * @description   Wait for navigation to complete. Helpful after submitting a form that causes change pages to occur, ie logging in
  */
-export const waitForNavigation: BotAction<void> = async(page: Page) => {
+export const waitForNavigation: BotAction = async(page) => {
   await page.waitForNavigation()
 }

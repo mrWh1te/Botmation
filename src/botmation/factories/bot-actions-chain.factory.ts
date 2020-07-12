@@ -13,14 +13,14 @@ import { getDefaultBotOptions } from '../helpers/bot-options'
  */
 export const BotActionsChainFactory = 
   (page: Page, overloadOptions: Partial<BotOptions> = {}, ...injects: any[]) => 
-    async (...actions: BotAction<void>[]): Promise<void> =>
+    async (...actions: BotAction<void, undefined>[]): Promise<void> =>
       actions.reduce(
         async(chain, action) => {
           // Resolve the last returned promise, making a chain of resolved promises
           await chain
           
           // Inject the Puppeteer page into the BotAction, and options (with safe defaults in case none provided), and injects for further needs
-          return action(page, getDefaultBotOptions(overloadOptions), ...injects)
+          return action(page, undefined, getDefaultBotOptions(overloadOptions), ...injects)
         }, 
         Promise.resolve()
       )

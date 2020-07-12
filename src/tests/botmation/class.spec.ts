@@ -120,7 +120,7 @@ describe('[Botmation] Class', () => {
     expect(botOptions.screenshots_directory).toEqual('')
 
     await bot.actions(
-        (page: Page, options: BotOptions) => new Promise<void>(resolve => {
+        (page: Page, piped: any, options: BotOptions) => new Promise<void>(resolve => {
             botOptions = options
             return resolve()
         })
@@ -150,7 +150,7 @@ describe('[Botmation] Class', () => {
     let newParentOutputDirectoryValue = undefined
 
     await bot.actions(
-        (page: Page, options: BotOptions) => new Promise<void>(resolve => {
+        (page: Page, piped: any, options: BotOptions) => new Promise<void>(resolve => {
             newParentOutputDirectoryValue = options.parent_output_directory
             return resolve()
         })
@@ -172,7 +172,7 @@ describe('[Botmation] Class', () => {
     expect(inject1).toHaveBeenCalled()
 
     await bot.actions(
-        (page: Page, options: BotOptions, ...injects: any[]) => new Promise<void>(resolve => {
+        (page: Page, piped: any, options: BotOptions, ...injects: any[]) => new Promise<void>(resolve => {
             injects[0]()
             return resolve()
         })

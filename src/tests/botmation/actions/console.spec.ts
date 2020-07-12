@@ -23,7 +23,7 @@ describe('[Botmation:Action Factory] Console', () => {
   //
   // Unit Tests
   it('should log a message to console', async () => {
-    await log('example message')(page, botOptions)
+    await log('example message')(page, undefined, botOptions)
 
     // Get around the Chalk styling
     expect(logs[0][0]).toEqual(expect.stringMatching('Log:'))
@@ -31,7 +31,7 @@ describe('[Botmation:Action Factory] Console', () => {
   })
 
   it('should log a warning to console', async () => {    
-    await warning('example warning')(page, botOptions)
+    await warning('example warning')(page, undefined, botOptions)
 
     // Get around the Chalk styling
     expect(logs[0][0]).toEqual(expect.stringMatching('Warning:'))
@@ -39,7 +39,7 @@ describe('[Botmation:Action Factory] Console', () => {
   })
 
   it('should log an error to console', async () => {    
-    await error('example error')(page, botOptions)
+    await error('example error')(page, undefined, botOptions)
 
     // Get around the Chalk styling
     expect(logs[0][0]).toEqual(expect.stringMatching('Error:'))

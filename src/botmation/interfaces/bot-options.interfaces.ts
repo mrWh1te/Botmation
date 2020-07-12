@@ -5,6 +5,11 @@ export interface BotOptions {
   screenshots_directory: string
 
   /**
+   * @description   Directory name for saving PDF's in
+   */
+  pdfs_directory: string
+  
+  /**
    * @description   Directory name for saving cookies in
    */
   cookies_directory: string

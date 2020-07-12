@@ -4,9 +4,9 @@
   "description": "A TypeScript library for using Puppeteer with a declarative syntax in composing web crawler automation",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "repository": { 
-    "type": "git", 
-    "url": "https://github.com/mrWh1te/Botmation.git" 
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrWh1te/Botmation.git"
   },
   "scripts": {
     "dist": "webpack",
@@ -39,6 +39,7 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^4.0.0",
+    "idb": "^5.0.4",
     "puppeteer": "^3.0.0",
     "puppeteer-cluster": "^0.21.0"
   },

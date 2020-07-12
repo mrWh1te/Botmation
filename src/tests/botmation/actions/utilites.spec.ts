@@ -51,19 +51,19 @@ describe('[Botmation:Action Factory] Utilities', () => {
     await givenThat(conditionResolvingTRUE)(
       click('example selector 1'),
       type('example copy 1')
-    )(mockPage, botOptions)
+    )(mockPage, undefined, botOptions)
 
     // These actions should NOT run
     await givenThat(conditionResolvingFALSE)(
       click('example selector 2'),
       type('example copy 2')
-    )(mockPage, botOptions)
+    )(mockPage, undefined, botOptions)
 
     // These actions should NOT run
     await givenThat(conditionReject)(
       click('example selector 2'),
       type('example copy 2')
-    )(mockPage, botOptions)
+    )(mockPage, undefined, botOptions)
 
     expect(mockPage.click).toHaveBeenNthCalledWith(1, 'example selector 1')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, 'example copy 1')
@@ -84,7 +84,7 @@ describe('[Botmation:Action Factory] Utilities', () => {
       (webPage) => ([
         goTo('http://localhost:8080/' + webPage)
       ])
-    )(mockPage, botOptions)
+    )(mockPage, undefined, botOptions)
 
     // Note given the mock, these url's don't have to be real
     expect(mockPage.url).toHaveBeenNthCalledWith(3) // called 3 times
@@ -106,7 +106,7 @@ describe('[Botmation:Action Factory] Utilities', () => {
         click(elementSelector),
         type(copyToType)
       ])
-    )(mockPage, botOptions)
+    )(mockPage, undefined, botOptions)
 
     expect(mockPage.click).toHaveBeenNthCalledWith(1, 'form input[name="username"]')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, 'example username')
@@ -142,7 +142,7 @@ describe('[Botmation:Action Factory] Utilities', () => {
     await doWhile(conditionResolvesTrueUntil3rdResolveAsFalse)(
       click('1'),
       type('1')
-    )(mockPage, botOptions)
+    )(mockPage, undefined, botOptions)
 
     expect(mockPage.click).toHaveBeenNthCalledWith(1, '1')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, '1')
@@ -160,7 +160,7 @@ describe('[Botmation:Action Factory] Utilities', () => {
     await doWhile(conditionResolvingFALSE)(
       click('2'),
       type('2')
-    )(mockPage, botOptions)
+    )(mockPage, undefined, botOptions)
 
     expect(mockPage.click).toHaveBeenNthCalledWith(4, '2')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(4, '2')
@@ -172,7 +172,7 @@ describe('[Botmation:Action Factory] Utilities', () => {
     await doWhile(conditionReject)(
       click('3'),
       type('3')
-    )(mockPage, botOptions)
+    )(mockPage, undefined, botOptions)
 
     expect(mockPage.click).toHaveBeenNthCalledWith(5, '3')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(5, '3')
@@ -207,7 +207,7 @@ describe('[Botmation:Action Factory] Utilities', () => {
     await forAsLong(conditionResolvesTrueUntil3rdResolveAsFalse)(
       click('1'),
       type('1')
-    )(mockPage, botOptions)
+    )(mockPage, undefined, botOptions)
 
     expect(mockPage.click).toHaveBeenNthCalledWith(1, '1')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, '1')
@@ -222,7 +222,7 @@ describe('[Botmation:Action Factory] Utilities', () => {
     await forAsLong(conditionResolvingFALSE)(
       click('2'),
       type('2')
-    )(mockPage, botOptions)
+    )(mockPage, undefined, botOptions)
 
     expect(mockPage.click).not.toHaveBeenNthCalledWith(3, '2')
     expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(3, '2')
@@ -231,7 +231,7 @@ describe('[Botmation:Action Factory] Utilities', () => {
     await forAsLong(conditionReject)(
       click('3'),
       type('3')
-    )(mockPage, botOptions)
+    )(mockPage, undefined, botOptions)
 
     expect(mockPage.click).not.toHaveBeenNthCalledWith(3, '3')
     expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(3, '3')

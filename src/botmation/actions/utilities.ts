@@ -1,8 +1,6 @@
 /**
  * @description   These higher higher order bot actions are meant to help devs build more complex bot action chains with more ease
  */
-import { Page } from 'puppeteer'
-
 import { sleep } from '../helpers/utilities'
 
 import { applyBotActionOrActions } from '../helpers/actions'
@@ -22,8 +20,8 @@ import { BotOptions } from '../interfaces/bot-options.interfaces'
  */
 export const givenThat = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction<void>[]): BotAction<void> => 
-      async(page: Page, options, ...injects) => {
+    (...actions: BotAction[]): BotAction => 
+      async(page, piped, options, ...injects) => {
         try {
           if (await condition(page, options, ...injects)) {
             await BotActionsChainFactory(page, options, ...injects)(...actions)
@@ -70,8 +68,8 @@ export interface Dictionary {
 }
 export const forAll =
   (collection: any[] | Dictionary) =>
-    (botActionOrActionsFactory: (...args: any[]) => BotAction<void>[] | BotAction<void>): BotAction<void> =>
-      async(page: Page, options: BotOptions, ...injects: any[]) => {
+    (botActionOrActionsFactory: (...args: any[]) => BotAction[] | BotAction): BotAction =>
+      async(page, piped, options: BotOptions, ...injects: any[]) => {
         if (Array.isArray(collection)) {
           // Array
           for(let i = 0; i < collection.length; i++) {
@@ -94,8 +92,8 @@ export const forAll =
  */
 export const doWhile = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction<void>[]): BotAction<void> => 
-      async(page: Page, options, ...injects) => {
+    (...actions: BotAction[]): BotAction => 
+      async(page, piped, options, ...injects) => {
         try {
           let resolvedCondition = true // doWhile -> run the code, then check the condition on whether or not we should run the code again
           while (resolvedCondition) {
@@ -121,8 +119,8 @@ export const doWhile =
  */
 export const forAsLong = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction<void>[]): BotAction<void> => 
-      async(page: Page, options, ...injects) => {
+    (...actions: BotAction[]): BotAction => 
+      async(page, piped, options, ...injects) => {
         try {
           let resolvedCondition = await(condition(page, options, ...injects))
           while (resolvedCondition) {
@@ -138,5 +136,13 @@ export const forAsLong =
  * @description   Pauses the bot for the provided milliseconds before letting it execute the next Action
  * @param milliseconds 
  */
-export const wait = (milliseconds: number): BotAction<void> => async() => 
+export const wait = (milliseconds: number): BotAction => async() => 
   await sleep(milliseconds)
+
+/**
+ * @description    Mapper function for Mapping Piped Values to whatever you want through a function
+ *                 Won't work in Chain! Action Pipes only
+ * @param mapFunction pure function to change piped value to something else
+ */
+export const map = (mapFunction: (piped: any) => any): BotAction => async (page, piped) => 
+  mapFunction(piped)

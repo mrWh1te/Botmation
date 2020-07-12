@@ -11,19 +11,19 @@ import { getDefaultBotOptions } from '../helpers/bot-options'
  */
 export const BotActionsFactory = 
   (page: Page, overloadOptions: Partial<BotOptions> = {}, ...injects: any[]) => 
-    async (...actions: BotAction<any>[]): Promise<any|void> => {
-      let previousActionResolvedValue
+    async (...actions: BotAction<any, any>[]): Promise<any|void> => {
+      let previousActionResolvedValue // valued to be piped
 
       for(const action of actions) {
-        let nextActionInjects
+        // let nextActionInjects
 
-        if (previousActionResolvedValue) {
-          nextActionInjects = [previousActionResolvedValue, ...injects]
-        } else {
-          nextActionInjects = [...injects]
-        }
+        // if (previousActionResolvedValue) {
+        //   nextActionInjects = [previousActionResolvedValue, ...injects]
+        // } else {
+        //   nextActionInjects = [...injects]
+        // }
 
-        previousActionResolvedValue = await action(page, getDefaultBotOptions(overloadOptions), ...nextActionInjects)
+        previousActionResolvedValue = await action(page, previousActionResolvedValue, getDefaultBotOptions(overloadOptions), ...injects)
       }
 
       if (previousActionResolvedValue) {

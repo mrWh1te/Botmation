@@ -8,6 +8,7 @@ import { BotOptions } from "../interfaces/bot-options.interfaces"
  */
 export const getDefaultBotOptions = (options: Partial<BotOptions> = {}): BotOptions => ({
   screenshots_directory: '',
+  pdfs_directory: '',
   cookies_directory: '',
   ...options
 })

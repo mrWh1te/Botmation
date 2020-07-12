@@ -6,9 +6,10 @@ import chalk from 'chalk'
  */
 
 // Chalk Themes
-const logTheme = chalk.bgGreen;
+const logTheme = chalk.bgGreen
 const warningTheme = chalk.bgYellow
 const errorTheme = chalk.bgRed
+const pipedTheme = chalk.bgBlue
 
 /**
  * @description  Reusable form of these functions that are not factory methods, to be reused in other parts of the code, outside actions(), for same logging format
@@ -26,6 +27,18 @@ export const logError = (error: string) =>
   console.log(
     errorTheme(appendGutter(' Error:', 3)) + prependGutter(error, 1)
   )
+export const logPiped = (piped: any) => {
+  if (typeof piped === 'object') {
+    console.log(
+      pipedTheme(appendGutter(' Piped:', 3)) + prependGutter(JSON.stringify(piped), 1)
+    )
+  }
+  if (typeof piped === 'number' || typeof piped === 'string') {
+    console.log(
+      pipedTheme(appendGutter(' Piped:', 3)) + prependGutter(piped + '', 1)
+    )
+  }
+}
 
 /**
  * @description   Keep the actual console message right-aligned with other logged messages

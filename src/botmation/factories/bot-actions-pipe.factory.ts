@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { BotAction } from '../interfaces/bot-action.interfaces'
+import { BotAction, piped } from '../interfaces/bot-action.interfaces'
 import { BotOptions } from '../interfaces/bot-options.interfaces'
 import { getDefaultBotOptions } from '../helpers/bot-options'
 
@@ -14,21 +14,22 @@ import { getDefaultBotOptions } from '../helpers/bot-options'
  * @param page    Puppeteer.Page
  */
 export const BotActionsPipeFactory = 
-  <T>(page: Page, overloadOptions: Partial<BotOptions> = {}, ...injects: any[]) => 
-    async (...actions: BotAction<any>[]): Promise<T> => {
-      let previousActionResolvedValue
+  <R = undefined, P = undefined>(page: Page, piped?: piped<P>, overloadOptions: Partial<BotOptions> = {}, ...injects: any[]) => 
+    async (...actions: BotAction<any, any>[]): Promise<R> => {
+      let piped = undefined
 
       for(const action of actions) {
-        let nextActionInjects
+        // if (previousActionResolvedValue) {
+        //   nextActionInjects = [...injects, previousActionResolvedValue]
+        // } else {
+        //   nextActionInjects = [...injects]
+        // }
+        // await (async(piped: any) => {
+        //   await action(page, getDefaultBotOptions(overloadOptions), ...injects, piped)
+        // })(previousActionResolvedValue)
 
-        if (previousActionResolvedValue) {
-          nextActionInjects = [...injects, previousActionResolvedValue]
-        } else {
-          nextActionInjects = [...injects]
-        }
-
-        previousActionResolvedValue = await action(page, getDefaultBotOptions(overloadOptions), ...nextActionInjects)
+        piped = await action(page, piped, getDefaultBotOptions(overloadOptions), ...injects)
       }
 
-      return previousActionResolvedValue
+      return piped
     }

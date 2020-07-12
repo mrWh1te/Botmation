@@ -1,6 +1,6 @@
 import { PDFOptions } from 'puppeteer'
 
-import { BotAction, BotAction3, BotFilesAction, createBotActionFactory } from "../interfaces/bot-actions.interfaces"
+import { BotAction, BotAction3, BotFilesAction, createBotActionFactory, createBotAction } from "../interfaces/bot-actions.interfaces"
 
 import { forAll } from './utilities'
 import { goTo } from './navigation'
@@ -20,12 +20,27 @@ export const screenshot = (fileName: string): BotFilesAction => async(page, pipe
 
 // Working example of carrying factory argument types into usage (IDE auto-completes suggests fileName when using screenshot5())
 export const screenshot5 = createBotActionFactory(
-  (fileName: string): BotFilesAction => async(page, piped, options) => {
+  (fileName: string) => createBotAction<void, BotFilesAction>(
+    async(page, piped, options) => {
+      const fileUrl = getFileUrl(options.screenshots_directory, options, fileName) + '.png'
+    
+      await page.screenshot({path: fileUrl})
+    },
+    true,
+    'files'
+  )
+)
+export const screenshot5_Backup = createBotActionFactory(
+  (fileName: string): BotFilesAction => async (page, piped, options) => {
     const fileUrl = getFileUrl(options.screenshots_directory, options, fileName) + '.png'
   
     await page.screenshot({path: fileUrl})
   }
 )
+
+// same typing, but more work... may revert back
+// screenshot5('file')()            // (page: Page, piped?: undefined, injects_0: BotFilesConfig, ...injects_1: any[]): Promise<void>
+// screenshot5_Backup('filename')() // (page: Page, piped?: undefined, injects_0: BotFilesConfig, ...injects_1: any[]): Promise<void>
 
 // screenshot5('file')(page, ) // IDE auto-completes all params :)
 

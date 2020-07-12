@@ -83,8 +83,12 @@ export interface BotPipeAction<R = undefined, P = undefined> extends Function {
   (page: Page, ...injects: BotPipeInjects<P>) : Promise<R>
 }
 
+// type BotActionArgs = [Page, ...any[]]
+
 
 export type AnyBotAction = BotAction5|BotPipeAction|BotFilesAction
+export type AdvancedBotActionTypes = 'files'|'indexeddb' // omitting this typed value, would mean 'default' aka chain-link BotAction
+                                                       // each of these have their own respective injects strongly typed once mapped to their respective BotAction interfaces ie BotFilesAction
 
 export interface BotActionFactory5<A extends Array<any> = any[], R = void, B = BotAction5<R>> extends Function {
   // Higher-Order Function (Factory) to Produce an Async Function (Returns Promise to be awaited)
@@ -93,8 +97,9 @@ export interface BotActionFactory5<A extends Array<any> = any[], R = void, B = B
 }
 export interface BotAction5<R = void> extends Function {
   (page: Page, ...injects: any[]) : Promise<R>,
-  pipeable?: boolean
-}
+  pipeable?: boolean, // are we inticipating a piped value in the `injects` ?
+  type?: AdvancedBotActionTypes // these effectively distinguish injects typing for like a special chain of IndexedDB actions where this special pipe has strongly typed injects for dbName, Version, etc for stuff we don't want to have to pass in over and over again, but do so once in a higher order BotAction
+} // default is a regular (no custom type) chain-link, non-returning, non-piping, BotAction
 
 
 /**
@@ -111,8 +116,15 @@ export const createBotActionFactory =
  * @param botAction 
  * @param pipeable 
  */
-export const createBotAction = <R = void>(botAction: BotAction5<R>, pipeable: boolean = false): BotAction5<R> => {
-    botAction.pipeable = pipeable
+export const createBotAction = <R = void, B extends BotAction5<R> = BotAction5<R>>(botAction: B, pipeable: boolean = false, type?: AdvancedBotActionTypes): B => {
+    if (pipeable) {
+      botAction.pipeable = true
+    }
+
+    if (type) {
+      botAction.type = type
+    }
+
     return botAction
   }
     

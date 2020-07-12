@@ -29,7 +29,10 @@ export const screenshot5 = createBotActionFactory(
     true,
     'files'
   )
-)
+) // concept is you could have an Injects() botaction that would use a map of `type` to each injects, but seems like a lot of effort to make work..
+  // instead going to have Injects()() as higher order botaction for wrapping a chain/pipe of actions that can set the injects for all those actions
+  //    then have an ability to create custom Injects()() like IndexedDB()() for setting dbName, version, storename? etc
+
 export const screenshot5_Backup = createBotActionFactory(
   (fileName: string): BotFilesAction => async (page, piped, options) => {
     const fileUrl = getFileUrl(options.screenshots_directory, options, fileName) + '.png'
@@ -39,6 +42,7 @@ export const screenshot5_Backup = createBotActionFactory(
 )
 
 // same typing, but more work... may revert back
+// remove 'type', for instead an injects() BotAction
 // screenshot5('file')()            // (page: Page, piped?: undefined, injects_0: BotFilesConfig, ...injects_1: any[]): Promise<void>
 // screenshot5_Backup('filename')() // (page: Page, piped?: undefined, injects_0: BotFilesConfig, ...injects_1: any[]): Promise<void>
 

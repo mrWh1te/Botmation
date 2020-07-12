@@ -1,6 +1,6 @@
 import { PDFOptions } from 'puppeteer'
 
-import { BotAction, BotAction3, BotFilesAction } from "../interfaces/bot-actions.interfaces"
+import { BotAction, BotAction3, BotFilesAction, createBotActionFactory } from "../interfaces/bot-actions.interfaces"
 
 import { forAll } from './utilities'
 import { goTo } from './navigation'
@@ -17,6 +17,17 @@ export const screenshot = (fileName: string): BotFilesAction => async(page, pipe
 
   await page.screenshot({path: fileUrl})
 }
+
+// Working example of carrying factory argument types into usage (IDE auto-completes suggests fileName when using screenshot5())
+export const screenshot5 = createBotActionFactory(
+  (fileName: string): BotFilesAction => async(page, piped, options) => {
+    const fileUrl = getFileUrl(options.screenshots_directory, options, fileName) + '.png'
+  
+    await page.screenshot({path: fileUrl})
+  }
+)
+
+// screenshot5('file')(page, ) // IDE auto-completes all params :)
 
 /**
  * @description    given a list of websites, the bot will visit each, wait for them to load, then take a screenshot to save in the escreenshot directory

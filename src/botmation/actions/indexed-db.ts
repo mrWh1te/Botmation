@@ -1,6 +1,6 @@
 import { openDB } from 'idb'
 
-import { BotAction } from '../interfaces/bot-actions.interfaces'
+import { BotAction, createBotActionFactory } from '../interfaces/bot-actions.interfaces'
 import { logMessage } from 'botmation/helpers/console'
 import { BotActionsPipeFactory } from 'botmation/factories/bot-actions-pipe.factory'
 
@@ -115,6 +115,12 @@ export const getIndexedDBStorenames = (databaseName: string, databaseVersion: nu
  * @param key 
  * @param value 
  */
+export const setIDBKeyValue = createBotActionFactory(
+  (databaseName: string, databaseVersion: number, storeName: string, key: string, value: any) => async(page) => {
+    await page.evaluate(setIndexedDBStoreValue, databaseName, databaseVersion, storeName, key, value)
+  }
+)
+
 export const setIndexDBStoreDataKeyValue = (databaseName: string, databaseVersion: number, storeName: string, key: string, value: any): BotAction => async(page) => {
   await page.evaluate(setIndexedDBStoreValue, databaseName, databaseVersion, storeName, key, value)
 }

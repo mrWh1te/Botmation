@@ -62,20 +62,57 @@ export interface BotFilesAction<R = void, P = undefined> {
 }
 
 
-
-
-
-
-export interface BotAction5<R = void, P = undefined> extends Function {
-  (page: Page, ...injects: any[]) : Promise<R>
-}
-
+//
+// new gen idea
+//
 /**
  * @description   now piped is completely optional from typing, and can be skipped for BotFilesActions ! who uses not piped values, but injects for files config
  */
 export type BotPipeInjects<P> = [Piped<P>, ...any[]]
-type BotIndexedDBInjects<P> = [Piped<P>, string, number, string, string]
+
+// IndexedDB typing concept
+// type IndexedDBDatabaseName = string
+// type IndexedDBDatabaseVersion = number
+// type IndexedDBStoreName = string
+// type IndexedDBStoreNameKey = string
+// type IndexedDBStoreNameKeyValue = any
+// does this work, even with the spreading of BotPipeInjects<P> 2nd part ...any[] ? does that confused the IndexedDBDatabaseName placement in array?
+// type BotIndexedDBInjects<P> = [...BotPipeInjects<P>, IndexedDBDatabaseName, IndexedDBDatabaseVersion, IndexedDBStoreName, IndexedDBStoreNameKey, IndexedDBStoreNameKeyValue]
 
 export interface BotPipeAction<R = undefined, P = undefined> extends Function {
   (page: Page, ...injects: BotPipeInjects<P>) : Promise<R>
 }
+
+
+export type AnyBotAction = BotAction5|BotPipeAction|BotFilesAction
+
+export interface BotActionFactory5<A extends Array<any> = any[], R = void, B = BotAction5<R>> extends Function {
+  // Higher-Order Function (Factory) to Produce an Async Function (Returns Promise to be awaited)
+  (...args: A) : B,
+  pipeable?: boolean
+}
+export interface BotAction5<R = void> extends Function {
+  (page: Page, ...injects: any[]) : Promise<R>,
+  pipeable?: boolean
+}
+
+
+/**
+ * higher order function returns higher order function that will return a BotAction function
+ */
+export const createBotActionFactory = 
+  <A extends Array<any> = any[], R = void, B = BotAction5<R>> (botActionFactory: BotActionFactory5<A, R, B>, pipeable: boolean = false): BotActionFactory5<A, R, B> => {
+    botActionFactory.pipeable = pipeable
+    return (...args: A) => botActionFactory(...args)
+  }
+
+/**
+ * 
+ * @param botAction 
+ * @param pipeable 
+ */
+export const createBotAction = <R = void>(botAction: BotAction5<R>, pipeable: boolean = false): BotAction5<R> => {
+    botAction.pipeable = pipeable
+    return botAction
+  }
+    

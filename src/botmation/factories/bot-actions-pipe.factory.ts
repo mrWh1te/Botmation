@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { BotAction } from '../interfaces/bot-actions.interfaces'
+import { BotPipeAction, BotAction5 } from '../interfaces/bot-actions.interfaces'
 import { BotOptions } from '../interfaces/bot-options.interfaces'
 import { Piped } from '../types/piped'
 import { getDefaultBotOptions } from '../helpers/bot-options'
@@ -16,11 +16,29 @@ import { getDefaultBotOptions } from '../helpers/bot-options'
  */
 export const BotActionsPipeFactory = 
   <R = undefined, P = undefined>(page: Page, piped?: Piped<P>, overloadOptions: Partial<BotOptions> = {}, ...injects: any[]) => 
-    async (...actions: BotAction<any, any>[]): Promise<R> => {
+    async (...actions: BotPipeAction<any, any>[]): Promise<R> => {
       let piped = undefined
 
       for(const action of actions) {
         piped = await action(page, piped, getDefaultBotOptions(overloadOptions), ...injects)
+      }
+
+      return piped
+    }
+
+//
+// new gen
+export const BotActionsPipeFactory5 = 
+  <R = undefined, P = undefined>(page: Page, piped?: Piped<P>, overloadOptions: Partial<BotOptions> = {}, ...injects: any[]) => 
+    async (...actions: BotAction5<any>[]): Promise<R> => {
+      let piped = undefined
+
+      for(const action of actions) {
+        if (action.pipeable) {
+          piped = await action(page, piped, getDefaultBotOptions(overloadOptions), ...injects)
+        } else {
+          piped = await action(page, getDefaultBotOptions(overloadOptions), ...injects)
+        }
       }
 
       return piped

@@ -2,6 +2,7 @@ import { openDB } from 'idb'
 
 import { BotAction } from '../interfaces/bot-action.interfaces'
 import { logMessage } from 'botmation/helpers/console'
+import { BotActionsPipeFactory } from 'botmation/factories/bot-actions-pipe.factory'
 
 // ideas
 
@@ -11,6 +12,13 @@ import { logMessage } from 'botmation/helpers/console'
 //   // works like a pipe, so can mix BotAction's here, but with also those supplied injects (optional 3rd)
 // )
 
+// export const indexedDB = 
+//   (databaseName: string, databaseVersion: number, storeName?: string) =>
+//     (...actions: BotAction[]): BotAction => 
+//       async(page, piped, options, ...injects) => 
+//         await BotActionsPipeFactory(page, piped, options, ...injects)(...actions)
+      
+
 // consider dev use-cases:
 //  1. Getting data to check if we are authenticated
 
@@ -18,6 +26,8 @@ export interface IndexedDBInfo {
   name: string
   version: number
 }
+
+export type IndexedDBInjects = [number, string, string] // DataBaseVersion, DataBaseName, StoreName
 
 /**
  * @description   Pipe-able BotAction (subsequent BotAction has the resolved data injected)
@@ -109,6 +119,21 @@ export const setIndexDBStoreDataKeyValue = (databaseName: string, databaseVersio
   await page.evaluate(setIndexedDBStoreValue, databaseName, databaseVersion, storeName, key, value)
 }
 
+export const setIndexDBStoreDataKeyValue2 = 
+  (key: string, value: any, storeName?: string, databaseName?: string, databaseVersion?: number): BotAction => 
+    async(page, piped, options, ...injects) => {
+      const [injectDataBaseVersion, injectDataBaseName, injectStoreName] = injects
+
+      await page.evaluate(
+        setIndexedDBStoreValue,
+        databaseName ? databaseName : injectDataBaseName || '',
+        databaseVersion ? databaseVersion : injectDataBaseVersion || 1,
+        storeName ? storeName : injectStoreName || '', 
+        key,
+        value
+      )
+    }
+
 /**
  * 
  * @param databaseName 
@@ -118,6 +143,20 @@ export const setIndexDBStoreDataKeyValue = (databaseName: string, databaseVersio
  */
 export const getIndexDBStoreDataKeyValue = <T>(databaseName: string, databaseVersion: number, storeName: string, key: string): BotAction<T> => async(page) =>
   await page.evaluate(getIndexedDBStoreValue, databaseName, databaseVersion, storeName, key) as T
+
+export const getIndexDBStoreDataKeyValue2 = 
+  <T>(key: string, storeName?: string, databaseName?: string, databaseVersion?: number): BotAction<T> => 
+    async(page, piped, options, ...injects) => {
+      const [injectDataBaseVersion, injectDataBaseName, injectStoreName] = injects
+      
+      return await page.evaluate(
+        getIndexedDBStoreValue,
+        databaseName ? databaseName : injectDataBaseName || '',
+        databaseVersion ? databaseVersion : injectDataBaseVersion || 1,
+        storeName ? storeName : injectStoreName || '', 
+        key
+      ) as T
+    }
 
 
 /**

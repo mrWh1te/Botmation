@@ -19,15 +19,6 @@ export const BotActionsPipeFactory =
       let piped = undefined
 
       for(const action of actions) {
-        // if (previousActionResolvedValue) {
-        //   nextActionInjects = [...injects, previousActionResolvedValue]
-        // } else {
-        //   nextActionInjects = [...injects]
-        // }
-        // await (async(piped: any) => {
-        //   await action(page, getDefaultBotOptions(overloadOptions), ...injects, piped)
-        // })(previousActionResolvedValue)
-
         piped = await action(page, piped, getDefaultBotOptions(overloadOptions), ...injects)
       }
 

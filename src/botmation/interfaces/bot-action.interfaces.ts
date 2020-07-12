@@ -24,6 +24,12 @@ export interface BotAction<R = void, P = undefined> extends Function {
   (page: Page, piped: piped<P>, options: BotOptions, ...injects: injects) : Promise<R>
 }
 
+// hmmm......
+export type injects2 = [BotOptions, ...any[]]
+export interface BotAction3<R = void, P = undefined> extends Function {
+  (page: Page, piped?: piped<P>, ...injects: injects2) : Promise<R>
+}
+
 // TODO test injecting an instance of a class that is used by actions to set/get data, then log
 // determine if the `injects` concept is worth keeping
 

@@ -100,10 +100,21 @@ export interface BotActionFactory5<A extends Array<any> = any[], R = void, B = B
   pipeable?: boolean
 }
 export interface BotAction5<R = void> extends Function {
-  (page: Page, ...injects: any[]) : Promise<R>,
-  pipeable?: boolean // are we inticipating a piped value, as the first `inject` in `injects`?
+  (page: Page, ...injects: any[]) : Promise<R>
 } // default is a regular (no custom type) chain-link, non-returning, non-piping, BotAction
 
+// idea.... 
+// curious how this will play out in IndexedDB(dbName, dbVersion, storeName?)(...botActions) // for injecting those 3 values into those bot actions
+export interface BotInjects {
+  [index: number] : any
+  piped? : any
+}
+let injectsTest: BotInjects = []
+injectsTest.piped = 5
+export interface BotAction6<R = void> extends Function {
+  (page: Page, ...injects: BotInjects[]) : Promise<R>
+}
+const testAction6: BotAction6 = async(page, injectsTest) => {}
 
 /**
  * higher order function returns higher order function that will return a BotAction function
@@ -134,9 +145,9 @@ export const createBotPipeAction = <R = void, P = undefined>(botAction: BotActio
   return botAction as BotPipeAction<R, P>
 }
 
-// idea going forward
-// get rid of BotPipeAction, get rid of `pipeable` because pipes will always pipe and actionsBase (conditional) may and thats okay Because
-//    piped is going to the end of the injects ie type injects = [...any, Piped]
+// idea going forward, BotAction5 to become BotAction
+// get rid of all Bot"Pipe"Action(s), get rid of `pipeable` because pipes will always pipe and actionsBase (conditional) may and thats okay Because
+//    piped is going to the end of the injects ie type injects = [...any, Piped])
 //    so building a BotAction without the intent of using piped values will NOT break its code in a pipe
 //      therefore no action branding, but can support advanced action interfaces for stronger typing of injects like BotFilesAction, BotIndexedDBAction, etc
 //    May or may not use some kind of createBotActionFactory() / createBotAction() helper methods, since in Factory it does give helpful inference of typing for auto-completion

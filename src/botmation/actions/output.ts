@@ -33,14 +33,12 @@ export const screenshot5 = createBotActionFactory(
   const action: BotAction5<string> = async(page, piped) => {
     return name
   }
-export const pipeTest = createBotActionFactory<[string],string,BotPipeAction<string>>(
-  (fileName: string) => createBotPipeAction(
-    async() => fileName
+export const pipeTest = createBotActionFactory(
+  () => createBotPipeAction<string, string>(
+    async(page, piped) => piped
   )
-  ,
-  true
 )
-pipeTest('name')()
+// pipeTest()()
 
 export const screenshot5_Backup = createBotActionFactory(
   (fileName: string): BotFilesAction => async (page, options) => {

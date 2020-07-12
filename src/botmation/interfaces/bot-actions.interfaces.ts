@@ -96,8 +96,7 @@ export type AnyBotAction = BotAction5|BotPipeAction|BotFilesAction
 
 export interface BotActionFactory5<A extends Array<any> = any[], R = void, B = BotAction5<R>> extends Function {
   // Higher-Order Function (Factory) to Produce an Async Function (Returns Promise to be awaited)
-  (...args: A) : B,
-  pipeable?: boolean
+  (...args: A) : B
 }
 export interface BotAction5<R = void> extends Function {
   (page: Page, ...injects: any[]) : Promise<R>
@@ -105,16 +104,22 @@ export interface BotAction5<R = void> extends Function {
 
 // idea.... 
 // curious how this will play out in IndexedDB(dbName, dbVersion, storeName?)(...botActions) // for injecting those 3 values into those bot actions
-export interface BotInjects {
-  [index: number] : any
+export type BotInjects = {
+  [index: number] : any,
+  [Symbol.iterator] : () => any,
   piped? : any
 }
-let injectsTest: BotInjects = []
+let injectsTest: BotInjects = ['test']
 injectsTest.piped = 5
 export interface BotAction6<R = void> extends Function {
-  (page: Page, ...injects: BotInjects[]) : Promise<R>
+  (page: Page, injects: BotInjects) : Promise<R>
 }
-const testAction6: BotAction6 = async(page, injectsTest) => {}
+const testAction6: BotAction6 = async(page, injectsTest) => {
+  const [dbName] = injectsTest
+  console.log(dbName)
+  const piped = injectsTest.piped
+
+}
 
 /**
  * higher order function returns higher order function that will return a BotAction function

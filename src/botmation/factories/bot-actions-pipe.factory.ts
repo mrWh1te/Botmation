@@ -34,11 +34,12 @@ export const BotActionsPipeFactory5 =
       let piped = undefined
 
       for(const action of actions) {
-        if (action.pipeable) {
-          piped = await action(page, piped, getDefaultBotOptions(overloadOptions), ...injects)
-        } else {
-          piped = await action(page, getDefaultBotOptions(overloadOptions), ...injects)
-        }
+        // if (action.pipeable) {
+        //   piped = await action(page, piped, getDefaultBotOptions(overloadOptions), ...injects)
+        // } else {
+        //   piped = await action(page, getDefaultBotOptions(overloadOptions), ...injects)
+        // }
+        piped = await action(page, getDefaultBotOptions(overloadOptions), ...injects, piped)
       }
 
       return piped

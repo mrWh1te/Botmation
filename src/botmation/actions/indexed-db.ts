@@ -134,6 +134,7 @@ export const setIDBKeyValue = createBotActionFactory(
 export const setIKeyVal3 = 
   (key?: string, value?: any, storeName?: string, databaseName?: string, databaseVersion?: number): BotAction10<void, BotIndexedDBInjects<any>> => 
     async(page, ...injects: BotIndexedDBInjects<any>) => {
+      // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
       const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = injects
 
       if (!value) {
@@ -155,6 +156,8 @@ export const setIKeyVal3 =
         value ? value : 'missing-value'
       )
     }
+
+setIKeyVal3('key', 'value')(page, 'dbName', 1, 'storeName', undefined)
 
 
 export const setIndexDBStoreDataKeyValue = (databaseName: string, databaseVersion: number, storeName: string, key: string, value: any): BotAction => async(page) => {

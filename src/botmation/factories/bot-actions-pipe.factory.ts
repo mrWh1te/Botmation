@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { BotPipeAction, BotAction5 } from '../interfaces/bot-actions.interfaces'
+import { BotAction5, BotAction } from '../interfaces/bot-actions.interfaces'
 import { BotOptions } from '../interfaces/bot-options.interfaces'
 import { Piped } from '../types/piped'
 import { getDefaultBotOptions } from '../helpers/bot-options'
@@ -16,7 +16,7 @@ import { getDefaultBotOptions } from '../helpers/bot-options'
  */
 export const BotActionsPipeFactory = 
   <R = undefined, P = undefined>(page: Page, piped?: Piped<P>, overloadOptions: Partial<BotOptions> = {}, ...injects: any[]) => 
-    async (...actions: BotPipeAction<any, any>[]): Promise<R> => {
+    async (...actions: BotAction<any>[]): Promise<R> => {
       let piped = undefined
 
       for(const action of actions) {
@@ -28,10 +28,12 @@ export const BotActionsPipeFactory =
 
 //
 // new gen
+//   should a pipe be a self-enclosed chain-link? Nothing goes in, nothing is returned?
+//   we can create special botActions for plugging in data like tap() // which pipes whatever it's given to the next bot action
 export const BotActionsPipeFactory5 = 
-  <R = undefined, P = undefined>(page: Page, piped?: Piped<P>, overloadOptions: Partial<BotOptions> = {}, ...injects: any[]) => 
-    async (...actions: BotAction5<any>[]): Promise<R> => {
-      let piped = undefined
+  <R = undefined, P = undefined>(page: Page, ...injects: any[]) => // overloadOptions: Partial<BotOptions> = {}
+    async (...actions: BotAction5<any>[]): Promise<void> => {
+      let piped // pipe's are closed chain-links, so nothing pipeable comes in, so data is grabbed in a pipe and shared down stream a pipe, and returns
 
       for(const action of actions) {
         // if (action.pipeable) {
@@ -39,8 +41,8 @@ export const BotActionsPipeFactory5 =
         // } else {
         //   piped = await action(page, getDefaultBotOptions(overloadOptions), ...injects)
         // }
-        piped = await action(page, getDefaultBotOptions(overloadOptions), ...injects, piped)
+        piped = await action(page, ...injects, piped) // getDefaultBotOptions(overloadOptions), ..., piped
       }
 
-      return piped
+      // return piped
     }

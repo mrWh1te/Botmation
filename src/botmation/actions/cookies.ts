@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs'
 
-import { BotAction } from '../interfaces/bot-action.interfaces'
+import { BotAction } from '../interfaces/bot-actions.interfaces'
 import { getFileUrl } from '../helpers/assets'
 import { logError } from '../helpers/console'
 

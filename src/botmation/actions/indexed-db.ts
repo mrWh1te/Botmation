@@ -1,6 +1,6 @@
 import { openDB } from 'idb'
 
-import { BotAction } from '../interfaces/bot-action.interfaces'
+import { BotAction } from '../interfaces/bot-actions.interfaces'
 import { logMessage } from 'botmation/helpers/console'
 import { BotActionsPipeFactory } from 'botmation/factories/bot-actions-pipe.factory'
 

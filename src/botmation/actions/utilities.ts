@@ -4,7 +4,7 @@
 import { sleep } from '../helpers/utilities'
 
 import { applyBotActionOrActions } from '../helpers/actions'
-import { BotAction, ConditionalBotAction } from '../interfaces/bot-action.interfaces'
+import { BotAction, ConditionalBotAction } from '../interfaces/bot-actions.interfaces'
 import { BotActionsChainFactory } from '../factories/bot-actions-chain.factory'
 import { BotOptions } from '../interfaces/bot-options.interfaces'
 

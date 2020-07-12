@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { BotAction } from '../interfaces/bot-action.interfaces'
+import { BotAction } from '../interfaces/bot-actions.interfaces'
 import { BotOptions } from '../interfaces/bot-options.interfaces'
 import { getDefaultBotOptions } from '../helpers/bot-options'
 

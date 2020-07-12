@@ -1,4 +1,4 @@
-import { BotAction } from '../interfaces/bot-action.interfaces'
+import { BotAction } from '../interfaces/bot-actions.interfaces'
 import { logMessage, logWarning, logError, logPiped } from '../helpers/console'
 
 /**

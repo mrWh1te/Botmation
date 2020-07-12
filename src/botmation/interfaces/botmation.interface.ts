@@ -1,5 +1,5 @@
 import { Page } from 'puppeteer'
-import { BotAction } from './bot-action.interfaces'
+import { BotAction } from './bot-actions.interfaces'
 import { BotOptions } from './bot-options.interfaces'
 
 /**

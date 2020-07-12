@@ -1,6 +1,6 @@
 import { PDFOptions } from 'puppeteer'
 
-import { BotAction } from "../interfaces/bot-action.interfaces"
+import { BotAction, BotAction3, BotFilesAction } from "../interfaces/bot-actions.interfaces"
 
 import { forAll } from './utilities'
 import { goTo } from './navigation'
@@ -11,7 +11,8 @@ import { getFileUrl } from '../helpers/assets'
  *                It relies on `options`, BotOptions, to determine the URL to save the asset in
  * @param fileName name of the file to save the PNG as
  */
-export const screenshot = (fileName: string): BotAction => async(page, piped, options) => {
+
+export const screenshot = (fileName: string): BotFilesAction => async(page, piped, options) => {
   const fileUrl = getFileUrl(options.screenshots_directory, options, fileName) + '.png'
 
   await page.screenshot({path: fileUrl})
@@ -23,7 +24,7 @@ export const screenshot = (fileName: string): BotAction => async(page, piped, op
  * @example   screenshotAll('https://google.com', 'https://twitter.com')
  * @request   add ability like via a closure, to customize the filename for easier reuse in a cycle (like ability to timestamp the file etc)
  */
-export const screenshotAll = (...urls: string[]): BotAction => async(page, piped, options) =>
+export const screenshotAll = (...urls: string[]): BotFilesAction => async(page, piped, options) =>
   await forAll(urls)(
     (url) => ([
       goTo(url),
@@ -37,7 +38,7 @@ export const screenshotAll = (...urls: string[]): BotAction => async(page, piped
  * @alpha
  * @TODO verify working & add testing
  */
-export const savePDF = (fileName: string, pdfOptions: PDFOptions = {}): BotAction => async(page, piped, options) => {
+export const savePDF = (fileName: string, pdfOptions: PDFOptions = {}): BotFilesAction => async(page, piped, options) => {
   pdfOptions.path = getFileUrl(options.pdfs_directory, options, fileName) + '.pdf'
 
   await page.pdf(pdfOptions)

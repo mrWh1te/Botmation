@@ -1,4 +1,4 @@
-import { BotOptions } from "botmation/interfaces/bot-options.interfaces"
+import { BotFilesConfig } from "botmation/interfaces/bot-options.interfaces"
 
 /**
  * @description   See unit tests for edge-case examples
@@ -12,20 +12,20 @@ export const createFolderURL = (...folderNames: string[]): string =>
 
 /**
  * @description   See unit tests for edge-case examples
- *                When it comes to storing newly created assets, we depend on the values of BotOptions in knowing where to store the assets
+ *                When it comes to storing newly created assets, we depend on the values of BotFileOptions in knowing where to store the assets
  * @param fileDirectory what are we creating? screenshots, cookies, etc
- * @param botOptions pass this in so we can create the URL
+ * @param botFileOptions pass this in so we can create the URL
  * @param fileName 
  */
-export const getFileUrl = (fileDirectory: string, botOptions: BotOptions, fileName: string = ''): string => {
+export const getFileUrl = (fileDirectory: string, filesConfig: BotFilesConfig, fileName: string = ''): string => {
   const fileNameWithPrefix = fileName === '' ? '' : '/' + fileName // prefix with folder (optional)
 
-  if (botOptions?.parent_output_directory) {
+  if (filesConfig?.parent_output_directory) {
     if (fileDirectory) {
-      return createFolderURL(botOptions.parent_output_directory, fileDirectory) + fileNameWithPrefix
+      return createFolderURL(filesConfig.parent_output_directory, fileDirectory) + fileNameWithPrefix
     }
 
-    return createFolderURL(botOptions.parent_output_directory) + fileNameWithPrefix
+    return createFolderURL(filesConfig.parent_output_directory) + fileNameWithPrefix
   }
 
   if (fileDirectory) {

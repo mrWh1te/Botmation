@@ -1,4 +1,4 @@
-import { BotAction } from '../interfaces/bot-action.interfaces'
+import { BotAction } from '../interfaces/bot-actions.interfaces'
 
 /**
  * @description   Manually left-click an HTML element on the page given the provided HTML selector

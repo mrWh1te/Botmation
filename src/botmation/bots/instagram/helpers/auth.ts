@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 
 import { BotOptions } from '../../../interfaces/bot-options.interfaces'
-import { ConditionalBotAction } from '../../../interfaces/bot-action.interfaces'
+import { ConditionalBotAction } from '../../../interfaces/bot-actions.interfaces'
 
 import { BotActionsPipeFactory } from 'botmation/factories/bot-actions-pipe.factory'
 import { getIndexDBStoreDataKeyValue } from 'botmation/actions/indexed-db'

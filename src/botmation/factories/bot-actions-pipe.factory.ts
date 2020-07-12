@@ -1,7 +1,8 @@
 import { Page } from 'puppeteer'
 
-import { BotAction, piped } from '../interfaces/bot-action.interfaces'
+import { BotAction } from '../interfaces/bot-actions.interfaces'
 import { BotOptions } from '../interfaces/bot-options.interfaces'
+import { Piped } from '../types/piped'
 import { getDefaultBotOptions } from '../helpers/bot-options'
 
 /**
@@ -14,7 +15,7 @@ import { getDefaultBotOptions } from '../helpers/bot-options'
  * @param page    Puppeteer.Page
  */
 export const BotActionsPipeFactory = 
-  <R = undefined, P = undefined>(page: Page, piped?: piped<P>, overloadOptions: Partial<BotOptions> = {}, ...injects: any[]) => 
+  <R = undefined, P = undefined>(page: Page, piped?: Piped<P>, overloadOptions: Partial<BotOptions> = {}, ...injects: any[]) => 
     async (...actions: BotAction<any, any>[]): Promise<R> => {
       let piped = undefined
 

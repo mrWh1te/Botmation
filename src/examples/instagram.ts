@@ -59,7 +59,7 @@ import { pipeTest, setIndexDBStoreDataKeyValue, getIndexDBStoreDataKeyValue } fr
       // only on TRUE, does it run the chain of actions
       givenThat(isGuest) (
         goTo(getInstagramLoginUrl()),
-        login({username: 'account username', password: 'account password'}),
+        login({username: 'lagmahol', password: 'malu.l4ge'}),
         saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies 
         log('Saved Cookies')
       ),
@@ -73,7 +73,7 @@ import { pipeTest, setIndexDBStoreDataKeyValue, getIndexDBStoreDataKeyValue } fr
       // Go to the main homepage/feed
       // goTo(getInstagramBaseUrl()),
       // wait(50000),
-      // screenshot('test4534'),
+      screenshot('test4534'),
       // favoriteAllFrom('user1', 'user2'), // TBI (to be implemented) // TODO: implement
 
       log('Done'),

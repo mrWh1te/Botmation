@@ -1,6 +1,6 @@
 import { openDB } from 'idb'
 
-import { BotAction, createBotActionFactory } from '../interfaces/bot-actions.interfaces'
+import { BotAction, createBotActionFactory, BotAction10, BotIndexedDBInjects } from '../interfaces/bot-actions.interfaces'
 import { logMessage } from 'botmation/helpers/console'
 import { BotActionsPipeFactory } from 'botmation/factories/bot-actions-pipe.factory'
 
@@ -27,7 +27,7 @@ export interface IndexedDBInfo {
   version: number
 }
 
-export type IndexedDBInjects = [number, string, string] // DataBaseVersion, DataBaseName, StoreName
+// export type IndexedDBInjects = [number, string, string] // DataBaseVersion, DataBaseName, StoreName
 
 /**
  * @description   Pipe-able BotAction (subsequent BotAction has the resolved data injected)
@@ -120,6 +120,42 @@ export const setIDBKeyValue = createBotActionFactory(
     await page.evaluate(setIndexedDBStoreValue, databaseName, databaseVersion, storeName, key, value)
   }
 )
+
+/**
+ * new-gen
+ * @description    Supports setting the 'key' and/or 'value' from `pipedValue` 
+ *                 pipedValue can be either the value to set, or an object {key: string, value: any} 
+ * @param key 
+ * @param value 
+ * @param storeName 
+ * @param databaseName 
+ * @param databaseVersion 
+ */
+export const setIKeyVal3 = 
+  (key?: string, value?: any, storeName?: string, databaseName?: string, databaseVersion?: number): BotAction10<void, BotIndexedDBInjects<any>> => 
+    async(page, ...injects: BotIndexedDBInjects<any>) => {
+      const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = injects
+
+      if (!value) {
+        if (pipedValue) {
+          if (pipedValue.value) {
+            value = pipedValue.value
+          } else {
+            value = pipedValue
+          }
+        }
+      }
+
+      await page.evaluate(
+        setIndexedDBStoreValue,
+        databaseName ? databaseName : injectDatabaseName || 'missing-db-name',
+        databaseVersion ? databaseVersion : injectDatabaseVersion || 1,
+        storeName ? storeName : injectStoreName || 'missing-store', 
+        key ? key : pipedValue.key || 'missing-key',
+        value ? value : 'missing-value'
+      )
+    }
+
 
 export const setIndexDBStoreDataKeyValue = (databaseName: string, databaseVersion: number, storeName: string, key: string, value: any): BotAction => async(page) => {
   await page.evaluate(setIndexedDBStoreValue, databaseName, databaseVersion, storeName, key, value)

@@ -57,8 +57,11 @@ export interface ConditionalBotAction extends Function {
  * @description    BotAction working with local files, use the same inject, therefore we strongly type the `injects` with that inject type
  *                 with a slightly more specific BotFilesAction interface (which fulfills the requirements of BotAction, but with greater specificity in the `injects`)
  */
-export interface BotFilesAction<R = void, P = undefined> {
-  (page: Page, piped?: Piped<P>, ...injects: BotFilesInjects) : Promise<R>
+export interface BotFilesAction<R = void> {
+  (page: Page, ...injects: BotFilesInjects) : Promise<R>
+}
+export interface BotFilesPipedAction<R = void, P = undefined> {
+  (page: Page, piped: Piped<P>, ...injects: BotFilesInjects) : Promise<R>
 }
 
 
@@ -80,15 +83,16 @@ export type BotPipeInjects<P> = [Piped<P>, ...any[]]
 // type BotIndexedDBInjects<P> = [...BotPipeInjects<P>, IndexedDBDatabaseName, IndexedDBDatabaseVersion, IndexedDBStoreName, IndexedDBStoreNameKey, IndexedDBStoreNameKeyValue]
 
 export interface BotPipeAction<R = undefined, P = undefined> extends Function {
-  (page: Page, ...injects: BotPipeInjects<P>) : Promise<R>
+  (page: Page, ...injects: BotPipeInjects<P>) : Promise<R>,
+  pipeable: boolean // true
 }
+
+// (page: Page, injects_0: string | undefined, ...injects_1: any[]): Promise<string>
 
 // type BotActionArgs = [Page, ...any[]]
 
 
 export type AnyBotAction = BotAction5|BotPipeAction|BotFilesAction
-export type AdvancedBotActionTypes = 'files'|'indexeddb' // omitting this typed value, would mean 'default' aka chain-link BotAction
-                                                       // each of these have their own respective injects strongly typed once mapped to their respective BotAction interfaces ie BotFilesAction
 
 export interface BotActionFactory5<A extends Array<any> = any[], R = void, B = BotAction5<R>> extends Function {
   // Higher-Order Function (Factory) to Produce an Async Function (Returns Promise to be awaited)
@@ -97,8 +101,7 @@ export interface BotActionFactory5<A extends Array<any> = any[], R = void, B = B
 }
 export interface BotAction5<R = void> extends Function {
   (page: Page, ...injects: any[]) : Promise<R>,
-  pipeable?: boolean, // are we inticipating a piped value in the `injects` ?
-  type?: AdvancedBotActionTypes // these effectively distinguish injects typing for like a special chain of IndexedDB actions where this special pipe has strongly typed injects for dbName, Version, etc for stuff we don't want to have to pass in over and over again, but do so once in a higher order BotAction
+  pipeable?: boolean // are we inticipating a piped value, as the first `inject` in `injects`?
 } // default is a regular (no custom type) chain-link, non-returning, non-piping, BotAction
 
 
@@ -116,15 +119,24 @@ export const createBotActionFactory =
  * @param botAction 
  * @param pipeable 
  */
-export const createBotAction = <R = void, B extends BotAction5<R> = BotAction5<R>>(botAction: B, pipeable: boolean = false, type?: AdvancedBotActionTypes): B => {
+export const createBotAction = <R = void, B extends BotAction5<R> = BotAction5<R>>(botAction: BotAction5<R>, pipeable: boolean = false): B => {
+    
+
     if (pipeable) {
       botAction.pipeable = true
     }
 
-    if (type) {
-      botAction.type = type
-    }
-
     return botAction
   }
-    
+
+export const createBotPipeAction = <R = void, P = undefined>(botAction: BotAction5<R>): BotPipeAction<R, P> => {
+  botAction.pipeable = true
+  return botAction as BotPipeAction<R, P>
+}
+
+// idea going forward
+// get rid of BotPipeAction, get rid of `pipeable` because pipes will always pipe and actionsBase (conditional) may and thats okay Because
+//    piped is going to the end of the injects ie type injects = [...any, Piped]
+//    so building a BotAction without the intent of using piped values will NOT break its code in a pipe
+//      therefore no action branding, but can support advanced action interfaces for stronger typing of injects like BotFilesAction, BotIndexedDBAction, etc
+//    May or may not use some kind of createBotActionFactory() / createBotAction() helper methods, since in Factory it does give helpful inference of typing for auto-completion

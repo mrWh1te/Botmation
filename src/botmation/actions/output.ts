@@ -1,6 +1,6 @@
 import { PDFOptions } from 'puppeteer'
 
-import { BotAction, BotAction3, BotFilesAction, createBotActionFactory, createBotAction } from "../interfaces/bot-actions.interfaces"
+import { BotAction, BotAction3, BotFilesAction, createBotActionFactory, createBotAction, BotPipeAction, BotAction5, createBotPipeAction } from "../interfaces/bot-actions.interfaces"
 
 import { forAll } from './utilities'
 import { goTo } from './navigation'
@@ -12,7 +12,7 @@ import { getFileUrl } from '../helpers/assets'
  * @param fileName name of the file to save the PNG as
  */
 
-export const screenshot = (fileName: string): BotFilesAction => async(page, piped, options) => {
+export const screenshot = (fileName: string): BotFilesAction => async(page, options) => {
   const fileUrl = getFileUrl(options.screenshots_directory, options, fileName) + '.png'
 
   await page.screenshot({path: fileUrl})
@@ -20,21 +20,30 @@ export const screenshot = (fileName: string): BotFilesAction => async(page, pipe
 
 // Working example of carrying factory argument types into usage (IDE auto-completes suggests fileName when using screenshot5())
 export const screenshot5 = createBotActionFactory(
-  (fileName: string) => createBotAction<void, BotFilesAction>(
-    async(page, piped, options) => {
+  (fileName: string) => createBotAction<void, BotFilesAction<void>>(
+    async(page, options) => {
       const fileUrl = getFileUrl(options.screenshots_directory, options, fileName) + '.png'
     
       await page.screenshot({path: fileUrl})
-    },
-    true,
-    'files'
+    }
   )
 ) // concept is you could have an Injects() botaction that would use a map of `type` to each injects, but seems like a lot of effort to make work..
   // instead going to have Injects()() as higher order botaction for wrapping a chain/pipe of actions that can set the injects for all those actions
   //    then have an ability to create custom Injects()() like IndexedDB()() for setting dbName, version, storename? etc
+  const action: BotAction5<string> = async(page, piped) => {
+    return name
+  }
+export const pipeTest = createBotActionFactory<[string],string,BotPipeAction<string>>(
+  (fileName: string) => createBotPipeAction(
+    async() => fileName
+  )
+  ,
+  true
+)
+pipeTest('name')()
 
 export const screenshot5_Backup = createBotActionFactory(
-  (fileName: string): BotFilesAction => async (page, piped, options) => {
+  (fileName: string): BotFilesAction => async (page, options) => {
     const fileUrl = getFileUrl(options.screenshots_directory, options, fileName) + '.png'
   
     await page.screenshot({path: fileUrl})

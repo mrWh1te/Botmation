@@ -30,6 +30,10 @@ export const BotActionsPipeFactory =
 // new gen
 //   should a pipe be a self-enclosed chain-link? Nothing goes in, nothing is returned?
 //   we can create special botActions for plugging in data like tap() // which pipes whatever it's given to the next bot action
+//
+// if a pipe can return something and pass in stuff, then pipes can be "piped" in sequence..... is that good/bad?
+//    could it create inner pipe depedencies in terms of sequence, etc ?
+//
 export const BotActionsPipeFactory5 = 
   <R = undefined, P = undefined>(page: Page, ...injects: any[]) => // overloadOptions: Partial<BotOptions> = {}
     async (...actions: BotAction5<any>[]): Promise<void> => {

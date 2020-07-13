@@ -79,7 +79,8 @@ export interface BotIndexedDBAction<R = void, P = undefined> {
 }
 
 /**
- * @description   Typable way to have advanced bot actions
+ * concept
+ * @description   Typable way to have advanced bot actions w/ custom injects
  */
 export interface BotAction10<R = void, I extends BotInjects = BotInjects> {
   (page: Page, ...injects: I) : Promise<R>
@@ -134,15 +135,11 @@ export const createBotActionFactory =
  * @param botAction 
  * @param pipeable 
  */
-export const createBotAction = <R = void, B extends BotAction5<R> = BotAction5<R>>(botAction: BotAction5<R>, pipeable: boolean = false): B => {
+// export const createBotAction = <R = void, B extends BotAction5<R> = BotAction5<R>>(botAction: BotAction5<R>, pipeable: boolean = false): B => {
     
 
-    if (pipeable) {
-      botAction.pipeable = true
-    }
-
-    return botAction
-  }
+//     return botAction
+//   }
 
 
 

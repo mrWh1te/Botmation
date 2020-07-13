@@ -1,8 +1,8 @@
 import { openDB } from 'idb'
 
-import { BotAction, createBotActionFactory, BotAction10, BotIndexedDBInjects } from '../interfaces/bot-actions.interfaces'
-import { logMessage } from 'botmation/helpers/console'
-import { BotActionsPipeFactory } from 'botmation/factories/bot-actions-pipe.factory'
+import { BotAction, createBotActionFactory, BotAction10, BotAction5, BotIndexedDBInjects } from '../interfaces/bot-actions.interfaces'
+import { logMessage, logError } from 'botmation/helpers/console'
+import { BotActionsPipeFactory5 } from 'botmation/factories/bot-actions-pipe.factory'
 
 // ideas
 
@@ -122,6 +122,37 @@ export const setIDBKeyValue = createBotActionFactory(
 )
 
 /**
+ * @description    It's a utility BotAction that injects before the primary injects, IndexedDB important data
+ *                 Database name & version, and Store name, so the set of BotAction's ran inside, have all 3 injected first
+ * @param databaseName 
+ * @param databaseVersion 
+ * @param storeName 
+ */
+export const indexedDBStore = (databaseName: string, databaseVersion: number, storeName: string) =>
+  (...actions: BotAction5[]): BotAction5<any> =>
+    async(page, ...injects: any[]) => {
+      try {
+        const value = await BotActionsPipeFactory5<any>(page, databaseName, databaseVersion, storeName, ...injects)(...actions)
+        return value
+      } catch (error) {
+        logError(error)
+      }
+    }
+
+    // export const givenThat = 
+    //   (condition: ConditionalBotAction) => 
+    //     (...actions: BotAction[]): BotAction => 
+    //       async(page, piped, options, ...injects) => {
+    //         try {
+    //           if (await condition(page, options, ...injects)) {
+    //             await BotActionsChainFactory(page, options, ...injects)(...actions)
+    //           }
+    //         } catch (error) {
+    //           // logError(error)
+    //         }
+    //       }
+
+/**
  * new-gen
  * @description    Supports setting the 'key' and/or 'value' from `pipedValue` 
  *                 pipedValue can be either the value to set, or an object {key: string, value: any} 
@@ -146,38 +177,70 @@ export const setIKeyVal3 =
           }
         }
       }
+      if (!key) {
+        if (pipedValue) {
+          if (pipedValue.key) {
+            key = pipedValue.key
+          }
+        }
+      }
 
       await page.evaluate(
         setIndexedDBStoreValue,
-        databaseName ? databaseName : injectDatabaseName || 'missing-db-name',
-        databaseVersion ? databaseVersion : injectDatabaseVersion || 1,
-        storeName ? storeName : injectStoreName || 'missing-store', 
-        key ? key : pipedValue.key || 'missing-key',
+        databaseName ? databaseName : injectDatabaseName ? injectDatabaseName : 'missing-db-name',
+        databaseVersion ? databaseVersion : injectDatabaseVersion ? injectDatabaseVersion : 1,
+        storeName ? storeName : injectStoreName ? injectStoreName : 'missing-store', 
+        key ? key : 'missing-key',
         value ? value : 'missing-value'
       )
     }
 
-setIKeyVal3('key', 'value')(page, 'dbName', 1, 'storeName', undefined)
+export const getIKeyVal3 = 
+  <R>(key?: string, storeName?: string, databaseName?: string, databaseVersion?: number): BotAction5<R> => 
+    async(page, ...injects: BotIndexedDBInjects<any>): Promise<R> => {
+      // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
+      const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = injects
+
+      if (!key) {
+        if (pipedValue) {
+          if (pipedValue.key) {
+            key = pipedValue.key
+          } else {
+            key = pipedValue
+          }
+        }
+      }
+
+      return await page.evaluate(
+        getIndexedDBStoreValue,
+        databaseName ? databaseName : injectDatabaseName ? injectDatabaseName : 'missing-db-name',
+        databaseVersion ? databaseVersion : injectDatabaseVersion ? injectDatabaseVersion : 1,
+        storeName ? storeName : injectStoreName ? injectStoreName : 'missing-store',
+        key ? key : 'missing-key'
+      ) as R
+    }
+
+// setIKeyVal3('key', 'value')(page, 'dbName', 1, 'storeName', undefined)
 
 
 export const setIndexDBStoreDataKeyValue = (databaseName: string, databaseVersion: number, storeName: string, key: string, value: any): BotAction => async(page) => {
   await page.evaluate(setIndexedDBStoreValue, databaseName, databaseVersion, storeName, key, value)
 }
 
-export const setIndexDBStoreDataKeyValue2 = 
-  (key: string, value: any, storeName?: string, databaseName?: string, databaseVersion?: number): BotAction => 
-    async(page, piped, options, ...injects) => {
-      const [injectDataBaseVersion, injectDataBaseName, injectStoreName] = injects
+// export const setIndexDBStoreDataKeyValue2 = 
+//   (key: string, value: any, storeName?: string, databaseName?: string, databaseVersion?: number): BotAction => 
+//     async(page, piped, options, ...injects) => {
+//       const [injectDataBaseVersion, injectDataBaseName, injectStoreName] = injects
 
-      await page.evaluate(
-        setIndexedDBStoreValue,
-        databaseName ? databaseName : injectDataBaseName || '',
-        databaseVersion ? databaseVersion : injectDataBaseVersion || 1,
-        storeName ? storeName : injectStoreName || '', 
-        key,
-        value
-      )
-    }
+//       await page.evaluate(
+//         setIndexedDBStoreValue,
+//         databaseName ? databaseName : injectDataBaseName || '',
+//         databaseVersion ? databaseVersion : injectDataBaseVersion || 1,
+//         storeName ? storeName : injectStoreName || '', 
+//         key,
+//         value
+//       )
+//     }
 
 /**
  * 
@@ -189,19 +252,19 @@ export const setIndexDBStoreDataKeyValue2 =
 export const getIndexDBStoreDataKeyValue = <T>(databaseName: string, databaseVersion: number, storeName: string, key: string): BotAction<T> => async(page) =>
   await page.evaluate(getIndexedDBStoreValue, databaseName, databaseVersion, storeName, key) as T
 
-export const getIndexDBStoreDataKeyValue2 = 
-  <T>(key: string, storeName?: string, databaseName?: string, databaseVersion?: number): BotAction<T> => 
-    async(page, piped, options, ...injects) => {
-      const [injectDataBaseVersion, injectDataBaseName, injectStoreName] = injects
+// export const getIndexDBStoreDataKeyValue2 = 
+//   <T>(key: string, storeName?: string, databaseName?: string, databaseVersion?: number): BotAction<T> => 
+//     async(page, piped, options, ...injects) => {
+//       const [injectDataBaseVersion, injectDataBaseName, injectStoreName] = injects
       
-      return await page.evaluate(
-        getIndexedDBStoreValue,
-        databaseName ? databaseName : injectDataBaseName || '',
-        databaseVersion ? databaseVersion : injectDataBaseVersion || 1,
-        storeName ? storeName : injectStoreName || '', 
-        key
-      ) as T
-    }
+//       return await page.evaluate(
+//         getIndexedDBStoreValue,
+//         databaseName ? databaseName : injectDataBaseName || '',
+//         databaseVersion ? databaseVersion : injectDataBaseVersion || 1,
+//         storeName ? storeName : injectStoreName || '', 
+//         key
+//       ) as T
+//     }
 
 
 /**

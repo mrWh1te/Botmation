@@ -22,8 +22,8 @@ import { isTurnOnNotificationsModalActive } from 'botmation/bots/instagram/helpe
 import { logError } from 'botmation/helpers/console'
 
 // Expiremental Pipe
-import { BotActionsPipeFactory as Bot } from 'botmation/factories/bot-actions-pipe.factory'
-import { pipeTest, setIndexDBStoreDataKeyValue, getIndexDBStoreDataKeyValue } from 'botmation/actions/indexed-db'
+import { BotActionsPipeFactory5 as Bot } from 'botmation/factories/bot-actions-pipe.factory'
+import { pipeTest, setIndexDBStoreDataKeyValue, getIndexDBStoreDataKeyValue, indexedDBStore, setIKeyVal3, getIKeyVal3 } from 'botmation/actions/indexed-db'
 
 // Main Script
 (async () => {
@@ -45,10 +45,25 @@ import { pipeTest, setIndexDBStoreDataKeyValue, getIndexDBStoreDataKeyValue } fr
       // end test
 
       log('Test #2 Commence'),
-      setIndexDBStoreDataKeyValue('testDB5', 1, 'testStore5', 'testKey5', 'It WORKS!'),
-      getIndexDBStoreDataKeyValue('testDB5', 1, 'testStore5', 'testKey5'),
+      setIndexDBStoreDataKeyValue('testDB5', 1, 'testStore2', 'testKey2', 'It WORKS!'), // works
+      getIndexDBStoreDataKeyValue('testDB5', 1, 'testStore2', 'testKey2'), // works
       log('Test #2 Results, include piped value?'),
       // end 2nd test
+
+      // test 3
+      log('Test #3 start'),
+      setIKeyVal3('key-3test', 'value-3test', 'zzzStore3', 'redux', 1), // broken
+      getIKeyVal3('key-3test', 'zzzStore3', 'redux', 1),
+      log('Test #3 results piped:'),
+
+      // test 5, higher order func
+      log('Starting Test #5 indexedDBStore()()'),
+      indexedDBStore('redux', 1, 'zzzStore5')(
+        log('going to set, get, then log a value from IndexedDB'),
+        setIKeyVal3('some-key-test5', 'some-value-test5'),
+        getIKeyVal3('some-key-test5'),
+        log('Results of Test #5 are piped:')
+      ),
 
 
       // Takes the name of the file to load cookies from

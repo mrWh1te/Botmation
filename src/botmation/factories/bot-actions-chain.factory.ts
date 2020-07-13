@@ -13,7 +13,7 @@ import { getDefaultBotOptions } from '../helpers/bot-options'
  */
 export const BotActionsChainFactory = 
   (page: Page, overloadOptions: Partial<BotOptions> = {}, ...injects: any[]) => 
-    async (...actions: BotAction<void, undefined>[]): Promise<void> =>
+    async (...actions: BotAction[]): Promise<void> =>
       actions.reduce(
         async(chain, action) => {
           // Resolve the last returned promise, making a chain of resolved promises

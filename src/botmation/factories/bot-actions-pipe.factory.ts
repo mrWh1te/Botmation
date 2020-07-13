@@ -36,7 +36,7 @@ export const BotActionsPipeFactory =
 //
 export const BotActionsPipeFactory5 = 
   <R = undefined, P = undefined>(page: Page, ...injects: any[]) => // overloadOptions: Partial<BotOptions> = {}
-    async (...actions: BotAction5<any>[]): Promise<void> => {
+    async (...actions: BotAction5<any>[]): Promise<any> => {
       let piped // pipe's are closed chain-links, so nothing pipeable comes in, so data is grabbed in a pipe and shared down stream a pipe, and returns
 
       for(const action of actions) {
@@ -48,5 +48,5 @@ export const BotActionsPipeFactory5 =
         piped = await action(page, ...injects, piped) // getDefaultBotOptions(overloadOptions), ..., piped
       }
 
-      // return piped
+      return piped // necessary for isGuest... (instagram helper auth func)
     }

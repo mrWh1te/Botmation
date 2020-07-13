@@ -24,7 +24,7 @@ import { logError } from 'botmation/helpers/console'
     await bot.actions(
       log('Bot running'),
       goTo('https://google.com'),
-      screenshot('google-homepage'),
+      // screenshot('google-homepage'), // WIP @TODO complete this -- different botAction params
       log('Screenshot (Google) taken')
     )
     
@@ -39,7 +39,7 @@ import { logError } from 'botmation/helpers/console'
     await bot2.actions(
       log('Bot2 running'),
       goTo('https://apple.com'),
-      screenshot('apple-homepage'),
+      // screenshot('apple-homepage'), // WIP @TODO complete this -- different botAction params
       log('Screenshot (Apple) taken')
     )
 

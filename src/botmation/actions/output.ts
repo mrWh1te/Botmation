@@ -1,6 +1,6 @@
 import { PDFOptions } from 'puppeteer'
 
-import { BotAction, BotAction3, BotFilesAction, createBotActionFactory, createBotAction, BotPipeAction, BotAction5, createBotPipeAction } from "../interfaces/bot-actions.interfaces"
+import { BotAction, BotFilesAction, createBotActionFactory, BotAction5 } from "../interfaces/bot-actions.interfaces"
 
 import { forAll } from './utilities'
 import { goTo } from './navigation'
@@ -12,36 +12,37 @@ import { getFileUrl } from '../helpers/assets'
  * @param fileName name of the file to save the PNG as
  */
 
-export const screenshot = (fileName: string): BotFilesAction => async(page, options) => {
-  const fileUrl = getFileUrl(options.screenshots_directory, options, fileName) + '.png'
+// export const screenshot_OG = (fileName: string): BotFilesAction => async(page, options) => {
+//   const fileUrl = getFileUrl(options.screenshots_directory, options, fileName) + '.png'
 
-  await page.screenshot({path: fileUrl})
-}
+//   await page.screenshot({path: fileUrl})
+// }
 
 // Working example of carrying factory argument types into usage (IDE auto-completes suggests fileName when using screenshot5())
-export const screenshot5 = createBotActionFactory(
-  (fileName: string) => createBotAction<void, BotFilesAction<void>>(
-    async(page, options) => {
-      const fileUrl = getFileUrl(options.screenshots_directory, options, fileName) + '.png'
+// export const screenshot5 = createBotActionFactory(
+//   (fileName: string) => createBotAction<void, BotFilesAction<void>>(
+//     async(page, options) => {
+//       const fileUrl = getFileUrl(options.screenshots_directory, options, fileName) + '.png'
     
-      await page.screenshot({path: fileUrl})
-    }
-  )
-) // concept is you could have an Injects() botaction that would use a map of `type` to each injects, but seems like a lot of effort to make work..
+//       await page.screenshot({path: fileUrl})
+//     }
+//   )
+// ) 
+// concept is you could have an Injects() botaction that would use a map of `type` to each injects, but seems like a lot of effort to make work..
   // instead going to have Injects()() as higher order botaction for wrapping a chain/pipe of actions that can set the injects for all those actions
   //    then have an ability to create custom Injects()() like IndexedDB()() for setting dbName, version, storename? etc
-  const action: BotAction5<string> = async(page, piped) => {
-    return name
-  }
-export const pipeTest = createBotActionFactory(
-  () => createBotPipeAction<string, string>(
-    async(page, piped) => piped
-  )
-)
+  // const action: BotAction5<string> = async(page, piped) => {
+  //   return name
+  // }
+// export const pipeTest = createBotActionFactory(
+//   () => createBotPipeAction<string, string>(
+//     async(page, piped) => piped
+//   )
+// )
 // pipeTest()()
 
-export const screenshot5_Backup = createBotActionFactory(
-  (fileName: string): BotFilesAction => async (page, options) => {
+export const screenshot = createBotActionFactory(
+  (fileName: string): BotFilesAction<void> => async (page, options) => {
     const fileUrl = getFileUrl(options.screenshots_directory, options, fileName) + '.png'
   
     await page.screenshot({path: fileUrl})
@@ -61,13 +62,13 @@ export const screenshot5_Backup = createBotActionFactory(
  * @example   screenshotAll('https://google.com', 'https://twitter.com')
  * @request   add ability like via a closure, to customize the filename for easier reuse in a cycle (like ability to timestamp the file etc)
  */
-export const screenshotAll = (...urls: string[]): BotFilesAction => async(page, piped, options) =>
-  await forAll(urls)(
-    (url) => ([
-      goTo(url),
-      screenshot(url.replace(/[^a-zA-Z]/g, '_')) // filenames are created from urls by replacing nonsafe characters with underscores
-    ])
-  )(page, piped, options)
+// export const screenshotAll = (...urls: string[]): BotFilesAction => async(page, piped, options) =>
+//   await forAll(urls)(
+//     (url) => ([
+//       goTo(url),
+//       screenshot(url.replace(/[^a-zA-Z]/g, '_')) // filenames are created from urls by replacing nonsafe characters with underscores
+//     ])
+//   )(page, piped, options)
 
 /**
  * @description    save webpage as PDF
@@ -75,8 +76,8 @@ export const screenshotAll = (...urls: string[]): BotFilesAction => async(page, 
  * @alpha
  * @TODO verify working & add testing
  */
-export const savePDF = (fileName: string, pdfOptions: PDFOptions = {}): BotFilesAction => async(page, piped, options) => {
-  pdfOptions.path = getFileUrl(options.pdfs_directory, options, fileName) + '.pdf'
+// export const savePDF = (fileName: string, pdfOptions: PDFOptions = {}): BotFilesAction => async(page, piped, options) => {
+//   pdfOptions.path = getFileUrl(options.pdfs_directory, options, fileName) + '.pdf'
 
-  await page.pdf(pdfOptions)
-}
+//   await page.pdf(pdfOptions)
+// }

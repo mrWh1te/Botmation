@@ -130,14 +130,16 @@ export const setIDBKeyValue = createBotActionFactory(
  */
 export const indexedDBStore = (databaseName: string, databaseVersion: number, storeName: string) =>
   (...actions: BotAction5[]): BotAction5<any> =>
-    async(page, ...injects: any[]) => {
+    async(page, ...injects: any[]) => { // no way for indexedDBStore()() to take a piped value to pass in.... unless all piped values are branded wrapped objects.... testable, then it's at the start of all injects, possibly.... but must be tested, how does that effect typing the injects of the array after it???, maybe instead put it at the end, leave injects mostly any[] except for advanced botactions then test the last inject with inject.brand === 'pipedValue' && typeof inject.value !== undefined (otherwise empty pipe)
       try {
-        const value = await BotActionsPipeFactory5<any>(page, databaseName, databaseVersion, storeName, ...injects)(...actions)
+        const value = await BotActionsPipeFactory5<any>(page, undefined, databaseName, databaseVersion, storeName, ...injects)(...actions)
         return value
       } catch (error) {
         logError(error)
       }
     }
+
+    // problem is no way to tell when there is a piped value in injects, in higher order bot action calls like above.....
 
     // export const givenThat = 
     //   (condition: ConditionalBotAction) => 

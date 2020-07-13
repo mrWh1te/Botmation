@@ -35,9 +35,13 @@ export const BotActionsPipeFactory =
 //    could it create inner pipe depedencies in terms of sequence, etc ?
 //
 export const BotActionsPipeFactory5 = 
-  <R = undefined, P = undefined>(page: Page, ...injects: any[]) => // overloadOptions: Partial<BotOptions> = {}
+  <R = undefined, P = undefined>(page: Page, piped: any = undefined, ...injects: any[]) => // overloadOptions: Partial<BotOptions> = {}
     async (...actions: BotAction5<any>[]): Promise<any> => {
-      let piped // pipe's are closed chain-links, so nothing pipeable comes in, so data is grabbed in a pipe and shared down stream a pipe, and returns
+
+      // @TODO: !!!!!
+      // HOW? do we distinguish between piped and injects in a factory call? Should we separate the two in this method signature? a more unique BotAction, but an async method, never the less
+
+      // let piped // pipe's are closed chain-links, so nothing pipeable comes in, so data is grabbed in a pipe and shared down stream a pipe, and returns
 
       for(const action of actions) {
         // if (action.pipeable) {
@@ -50,3 +54,5 @@ export const BotActionsPipeFactory5 =
 
       return piped // necessary for isGuest... (instagram helper auth func)
     }
+
+    // maybe in actions factories, we flip the order of where the `piped` param is passed ? always assume it, with default undefined

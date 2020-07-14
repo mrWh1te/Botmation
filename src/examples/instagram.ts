@@ -62,13 +62,13 @@ import { files } from 'botmation/actions/files'
       clearPipe,
 
       // test 5, higher order func
-      log('Starting Test #5 indexedDBStore()()'),
-      indexedDBStore('testDB5', 3, 'zzzStore5')( // accessing a store in a database we did not create, causes error?
-        log('going to set, get, then log a value from IndexedDB'),
-        setIKeyVal3('some-key-test5', 'some-value-test5'),
-        getIKeyVal3('some-key-test5'),
-        log('Results of Test #5 are piped:')
-      ),
+      // log('Starting Test #5 indexedDBStore()()'),
+      // indexedDBStore('testDB5', 3, 'zzzStore5')( // accessing a store in a database we did not create, causes error?
+      //   log('going to set, get, then log a value from IndexedDB'),
+      //   setIKeyVal3('some-key-test5', 'some-value-test5'),
+      //   getIKeyVal3('some-key-test5'),
+      //   log('Results of Test #5 are piped:')
+      // ),
 
 
       // Takes the name of the file to load cookies from

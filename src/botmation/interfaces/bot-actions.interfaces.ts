@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 
 import { BotFileOptions } from './bot-options.interfaces'
-import { Piped } from '../types/piped'
+import { PipedValue } from '../types/piped'
 import { BotFilesInjects } from '../types/bot-files-injects'
 
 /**
@@ -28,7 +28,7 @@ export interface BotActionFactory<R> extends Function {
  *  Defaults set it to a link in the chain (not pipeable botaction, so no `piped` and no return value to resolve)
  */
 export interface BotAction<R = void, P = undefined> extends Function {
-  (page: Page, piped: Piped<P>, options: BotFileOptions, ...injects: BotInjects) : Promise<R>
+  (page: Page, piped: PipedValue<P>, options: BotFileOptions, ...injects: BotInjects) : Promise<R>
 }
 
 // hmmm......
@@ -69,7 +69,7 @@ export type IndexedDBStoreNameKeyValue = any
 /**
  * @description   [databaseName, databaseVersion, storeName, and Piped value]
  */
-export type BotIndexedDBInjects<P> = [IndexedDBDatabaseName, IndexedDBDatabaseVersion, IndexedDBStoreName, Piped<P>]
+export type BotIndexedDBInjects<P> = [IndexedDBDatabaseName, IndexedDBDatabaseVersion, IndexedDBStoreName, PipedValue<P>]
 
 /**
  * 

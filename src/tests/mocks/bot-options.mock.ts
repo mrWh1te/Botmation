@@ -1,6 +1,6 @@
-import { BotOptions } from "../../botmation/interfaces/bot-options.interfaces"
+import { BotFileOptions } from "../../botmation/interfaces/bot-options.interfaces"
 
-export const botOptions: BotOptions = {
+export const botOptions: BotFileOptions = {
   screenshots_directory: 'screenshots',
   pdfs_directory: 'pdfs',
   cookies_directory: 'cookies',

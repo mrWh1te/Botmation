@@ -24,6 +24,7 @@ import { logError } from 'botmation/helpers/console'
 // Expiremental Pipe
 import { BotActionsPipeFactory5 as Bot } from 'botmation/factories/bot-actions-pipe.factory'
 import { setIndexDBStoreDataKeyValue, getIndexDBStoreDataKeyValue, indexedDBStore, setIKeyVal3, getIKeyVal3 } from 'botmation/actions/indexed-db'
+import { files } from 'botmation/actions/files'
 
 // Main Script
 (async () => {
@@ -72,19 +73,23 @@ import { setIndexDBStoreDataKeyValue, getIndexDBStoreDataKeyValue, indexedDBStor
 
       // Takes the name of the file to load cookies from
       // Match this value with the same used in saveCookies()
-      loadCookies('instagram'),
+      files({cookies_directory: 'cookie-dirct-5'})(
+        loadCookies('instagram'),
+      ),
 
-      // inline
-      async(page) => {
-
-      },
+      // inline, hackish
+      // async(page) => {
+      //
+      // },
       
       // Special action that resolves a Promise for TRUE
       // only on TRUE, does it run the chain of actions
       givenThat(isGuest) (
         goTo(getInstagramLoginUrl()),
         login({username: 'lagmahol', password: 'malu.l4ge'}),
-        saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies 
+        files({cookies_directory: 'cookie-dirct-5'})(
+          saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies 
+        ),
         log('Saved Cookies')
       ),
 

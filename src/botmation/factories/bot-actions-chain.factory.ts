@@ -1,8 +1,8 @@
 import { Page } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-actions.interfaces'
-import { BotOptions } from '../interfaces/bot-options.interfaces'
-import { getDefaultBotOptions } from '../helpers/bot-options'
+import { BotFileOptions } from '../interfaces/bot-options.interfaces'
+import { getDefaultBotFileOptions } from '../helpers/file-options'
 
 /**
  * @description   Botmation.actions() method comes from this Factory
@@ -12,7 +12,7 @@ import { getDefaultBotOptions } from '../helpers/bot-options'
  * @param page 
  */
 export const BotActionsChainFactory = 
-  (page: Page, overloadOptions: Partial<BotOptions> = {}, ...injects: any[]) => 
+  (page: Page, overloadOptions: Partial<BotFileOptions> = {}, ...injects: any[]) => 
     async (...actions: BotAction[]): Promise<void> =>
       actions.reduce(
         async(chain, action) => {
@@ -20,7 +20,7 @@ export const BotActionsChainFactory =
           await chain
           
           // Inject the Puppeteer page into the BotAction, and options (with safe defaults in case none provided), and injects for further needs
-          return action(page, undefined, getDefaultBotOptions(overloadOptions), ...injects)
+          return action(page, undefined, getDefaultBotFileOptions(overloadOptions), ...injects)
         }, 
         Promise.resolve()
       )

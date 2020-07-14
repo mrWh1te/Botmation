@@ -1,8 +1,8 @@
 import { Page } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-actions.interfaces'
-import { BotOptions } from '../interfaces/bot-options.interfaces'
-import { getDefaultBotOptions } from '../helpers/bot-options'
+import { BotFileOptions } from '../interfaces/bot-options.interfaces'
+import { getDefaultBotFileOptions } from '../helpers/file-options'
 
 /**
  * @description   Pipeable Botactions, where the existance of a resolved value is passed in to the next BotAction as an inject, the first in the `injects` queue of the called nextAction()
@@ -10,7 +10,7 @@ import { getDefaultBotOptions } from '../helpers/bot-options'
  * @param page    Puppeteer.Page
  */
 export const BotActionsFactory = 
-  (page: Page, overloadOptions: Partial<BotOptions> = {}, ...injects: any[]) => 
+  (page: Page, overloadOptions: Partial<BotFileOptions> = {}, ...injects: any[]) => 
     async (...actions: BotAction<any, any>[]): Promise<any|void> => {
       let previousActionResolvedValue // valued to be piped
 
@@ -23,7 +23,7 @@ export const BotActionsFactory =
         //   nextActionInjects = [...injects]
         // }
 
-        previousActionResolvedValue = await action(page, previousActionResolvedValue, getDefaultBotOptions(overloadOptions), ...injects)
+        previousActionResolvedValue = await action(page, previousActionResolvedValue, getDefaultBotFileOptions(overloadOptions), ...injects)
       }
 
       if (previousActionResolvedValue) {

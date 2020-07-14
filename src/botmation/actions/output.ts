@@ -5,6 +5,7 @@ import { BotAction, BotFilesAction, createBotActionFactory, BotAction5 } from ".
 import { forAll } from './utilities'
 import { goTo } from './navigation'
 import { getFileUrl } from '../helpers/assets'
+import { getDefaultBotFileOptions } from 'botmation/helpers/file-options'
 
 /**
  * @description   Take a PNG screenshot of the current page
@@ -43,6 +44,7 @@ import { getFileUrl } from '../helpers/assets'
 
 export const screenshot = createBotActionFactory(
   (fileName: string): BotFilesAction<void> => async (page, options) => {
+    options = getDefaultBotFileOptions(options)
     const fileUrl = getFileUrl(options.screenshots_directory, options, fileName) + '.png'
   
     await page.screenshot({path: fileUrl})

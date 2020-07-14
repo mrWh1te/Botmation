@@ -2,7 +2,7 @@
  * @deprecated
  * @description   Centralized way to configure all options
  */
-export interface BotOptions {
+export interface BotFileOptions {
   /**
    * @description   Directory name for saving screenshots in
    */

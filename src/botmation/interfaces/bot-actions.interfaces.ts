@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { BotOptions } from './bot-options.interfaces'
+import { BotFileOptions } from './bot-options.interfaces'
 import { Piped } from '../types/piped'
 import { BotFilesInjects } from '../types/bot-files-injects'
 
@@ -28,7 +28,7 @@ export interface BotActionFactory<R> extends Function {
  *  Defaults set it to a link in the chain (not pipeable botaction, so no `piped` and no return value to resolve)
  */
 export interface BotAction<R = void, P = undefined> extends Function {
-  (page: Page, piped: Piped<P>, options: BotOptions, ...injects: BotInjects) : Promise<R>
+  (page: Page, piped: Piped<P>, options: BotFileOptions, ...injects: BotInjects) : Promise<R>
 }
 
 // hmmm......
@@ -48,7 +48,7 @@ export interface BotAction<R = void, P = undefined> extends Function {
  *                Please don't use ConditionalBotAction's directly in sequence, they are to help higher order bot actions
  */
 export interface ConditionalBotAction extends Function {
-  (page: Page, options: BotOptions, ...injects: any[]) : Promise<boolean>
+  (page: Page, options: BotFileOptions, ...injects: any[]) : Promise<boolean>
 }
 
 /**
@@ -112,7 +112,7 @@ export interface BotActionFactory5<A extends Array<any> = any[], R = void, B = B
   // Higher-Order Function (Factory) to Produce an Async Function (Returns Promise to be awaited)
   (...args: A) : B
 }
-export interface BotAction5<R = void> extends Function {
+export interface BotAction5<R = any> extends Function {
   (page: Page, ...injects: any[]) : Promise<R>
 } // default is a regular (no custom type) chain-link, non-returning, non-piping, BotAction
 

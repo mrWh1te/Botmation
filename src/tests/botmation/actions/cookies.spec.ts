@@ -3,7 +3,7 @@ import { Page } from 'puppeteer'
 import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
 import { fileExist, deleteFile } from 'botmation/helpers/files'
 import { saveCookies, loadCookies } from 'botmation/actions/cookies'
-import { BotOptions } from 'botmation/interfaces/bot-options.interfaces'
+import { BotFileOptions } from 'botmation/interfaces/bot-options.interfaces'
 import { getFileUrl } from 'botmation/helpers/assets'
 
 import { BASE_URL } from 'tests/urls'
@@ -19,7 +19,7 @@ describe('[Botmation:Action Factory] Cookies', () => {
   const BOT_OPTIONS = {
     parent_output_directory: 'assets',
     cookies_directory: 'cookies'
-  } as any as BotOptions
+  } as any as BotFileOptions
 
   const COOKIES_FILENAME = 'test-cookies-1'
   const COOKIES_JSON = [

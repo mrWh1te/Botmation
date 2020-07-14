@@ -4,7 +4,7 @@
 
 import { Page, Browser } from 'puppeteer'
 
-import { BotOptions } from './interfaces/bot-options.interfaces'
+import { BotFileOptions } from './interfaces/bot-options.interfaces'
 import { BotAction } from './interfaces/bot-actions.interfaces'
 import { BotActionsChainFactory } from './factories/bot-actions-chain.factory'
 import { BotmationInterface } from './interfaces/botmation.interface'
@@ -23,7 +23,7 @@ export class Botmation implements BotmationInterface {
    * @description   Botmation configuration options (optional with safe defaults)
    *                Configures assets like screenshots, cookies
    */
-  private options: Partial<BotOptions>
+  private options: Partial<BotFileOptions>
 
   /**
    * @description   Injectables for your custom BotAction's, optional
@@ -34,7 +34,7 @@ export class Botmation implements BotmationInterface {
    * @description   Constructor for building a Botmation instance with a specific Browser page and optional other params
    * @param  options   to overload any of the safe defaults
    */
-  constructor(page: Page, options: Partial<BotOptions> = {}, ...injects: any[]) {
+  constructor(page: Page, options: Partial<BotFileOptions> = {}, ...injects: any[]) {
     this.page = page
     this.options = options
     this.injects = injects
@@ -44,7 +44,7 @@ export class Botmation implements BotmationInterface {
    * @description    static async constructor method that will get a page from the browser to operate in
    * @param  options   optional to override any safe defaults
    */
-  public static async asyncConstructor(browser: Browser, options: Partial<BotOptions> = {}, ...injects: any[]): Promise<Botmation> {
+  public static async asyncConstructor(browser: Browser, options: Partial<BotFileOptions> = {}, ...injects: any[]): Promise<Botmation> {
     // Grab the first open page from the browser, otherwise make a new one
     const pages = await browser.pages()
     const page = pages.length === 0 ? await browser.newPage() : pages[0]
@@ -94,7 +94,7 @@ export class Botmation implements BotmationInterface {
    * @description    Public method to update the Options if needed
    * @param options 
    */
-  public updateOptions(options: Partial<BotOptions>) {
+  public updateOptions(options: Partial<BotFileOptions>) {
     this.options = {
       ...this.options,
       ...options
@@ -105,7 +105,7 @@ export class Botmation implements BotmationInterface {
    *                 Missing options are provided default values
    * @param options 
    */
-  public setOptions(options: Partial<BotOptions>) {
+  public setOptions(options: Partial<BotFileOptions>) {
     this.options = options
   }
 

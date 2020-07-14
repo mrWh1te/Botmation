@@ -6,7 +6,7 @@ import { sleep } from '../helpers/utilities'
 import { applyBotActionOrActions } from '../helpers/actions'
 import { BotAction, ConditionalBotAction, BotAction5 } from '../interfaces/bot-actions.interfaces'
 import { BotActionsChainFactory } from '../factories/bot-actions-chain.factory'
-import { BotOptions } from '../interfaces/bot-options.interfaces'
+import { BotFileOptions } from '../interfaces/bot-options.interfaces'
 
 /**
  * @description givenThat(condition returns a promise that resolves to TRUE)(run these actions in a chain)
@@ -69,7 +69,7 @@ export interface Dictionary {
 export const forAll =
   (collection: any[] | Dictionary) =>
     (botActionOrActionsFactory: (...args: any[]) => BotAction[] | BotAction): BotAction =>
-      async(page, piped, options: BotOptions, ...injects: any[]) => {
+      async(page, piped, options: BotFileOptions, ...injects: any[]) => {
         if (Array.isArray(collection)) {
           // Array
           for(let i = 0; i < collection.length; i++) {

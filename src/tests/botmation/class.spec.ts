@@ -7,8 +7,8 @@ import { Botmation } from 'botmation/class'
 
 import { BASE_URL, EXAMPLE_URL } from '../urls'
 import { FORM_TEXT_INPUT_SELECTOR, FORM_SUBMIT_BUTTON_SELECTOR } from '../selectors'
-import { BotOptions } from 'botmation/interfaces'
-import { getDefaultBotOptions } from 'botmation/helpers/bot-options'
+import { BotFileOptions } from 'botmation/interfaces'
+import { getDefaultBotFileOptions } from 'botmation/helpers/file-options'
 
 /**
  * @description   Test the Botmation class methods specific to the Class
@@ -104,7 +104,7 @@ describe('[Botmation] Class', () => {
     } as any as Page
     const bot = new Botmation(mockPage) // has default options
 
-    const botOptionsOverload: Partial<BotOptions> = {
+    const botOptionsOverload: Partial<BotFileOptions> = {
         cookies_directory: 'cookies_test_directory',
         screenshots_directory: 'screenshots_test_directory',
         parent_output_directory: 'parent_test_directory'
@@ -114,13 +114,13 @@ describe('[Botmation] Class', () => {
     bot.setOptions(botOptionsOverload) 
 
     // Let's double-check the default values of bot options
-    let botOptions = getDefaultBotOptions()
+    let botOptions = getDefaultBotFileOptions()
     expect(botOptions.parent_output_directory).toEqual(undefined)
     expect(botOptions.cookies_directory).toEqual('')
     expect(botOptions.screenshots_directory).toEqual('')
 
     await bot.actions(
-        (page: Page, piped: any, options: BotOptions) => new Promise<void>(resolve => {
+        (page: Page, piped: any, options: BotFileOptions) => new Promise<void>(resolve => {
             botOptions = options
             return resolve()
         })
@@ -141,7 +141,7 @@ describe('[Botmation] Class', () => {
     } as any as Page
     const bot = new Botmation(mockPage) // has default options
 
-    const botOptionsOverload: Partial<BotOptions> = {
+    const botOptionsOverload: Partial<BotFileOptions> = {
         parent_output_directory: 'parent_test_directory'
     }
 
@@ -150,7 +150,7 @@ describe('[Botmation] Class', () => {
     let newParentOutputDirectoryValue = undefined
 
     await bot.actions(
-        (page: Page, piped: any, options: BotOptions) => new Promise<void>(resolve => {
+        (page: Page, piped: any, options: BotFileOptions) => new Promise<void>(resolve => {
             newParentOutputDirectoryValue = options.parent_output_directory
             return resolve()
         })
@@ -172,7 +172,7 @@ describe('[Botmation] Class', () => {
     expect(inject1).toHaveBeenCalled()
 
     await bot.actions(
-        (page: Page, piped: any, options: BotOptions, ...injects: any[]) => new Promise<void>(resolve => {
+        (page: Page, piped: any, options: BotFileOptions, ...injects: any[]) => new Promise<void>(resolve => {
             injects[0]()
             return resolve()
         })

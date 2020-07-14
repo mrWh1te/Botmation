@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { BotOptions } from '../../../interfaces/bot-options.interfaces'
+import { BotFileOptions } from '../../../interfaces/bot-options.interfaces'
 import { ConditionalBotAction } from '../../../interfaces/bot-actions.interfaces'
 
 import { BotActionsPipeFactory } from 'botmation/factories/bot-actions-pipe.factory'
@@ -13,7 +13,7 @@ import { map } from 'botmation/actions/utilities'
  * @param page 
  * @param options 
  */
-export const isGuest: ConditionalBotAction = async(page: Page, options: BotOptions, ...injects: any[]): Promise<boolean> =>
+export const isGuest: ConditionalBotAction = async(page: Page, options: BotFileOptions, ...injects: any[]): Promise<boolean> =>
   await BotActionsPipeFactory<boolean>(page, undefined, options, ...injects)(
     getIndexDBStoreDataKeyValue('redux', 1, 'paths', 'users.viewerId'),
     map(viewerId => viewerId ? false : true), // viewerId is a string representing auth user id, else undefined

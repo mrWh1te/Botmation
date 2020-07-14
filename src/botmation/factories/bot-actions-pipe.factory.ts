@@ -1,9 +1,10 @@
 import { Page } from 'puppeteer'
 
 import { BotAction5, BotAction } from '../interfaces/bot-actions.interfaces'
-import { BotOptions } from '../interfaces/bot-options.interfaces'
+import { BotFileOptions } from '../interfaces/bot-options.interfaces'
 import { Piped } from '../types/piped'
-import { getDefaultBotOptions } from '../helpers/bot-options'
+import { getDefaultBotFileOptions } from '../helpers/file-options'
+import { logError } from 'botmation/helpers/console'
 
 /**
  * @description   Similar to BotActionsChainFactory except the output of BotAction's are provided as input for subsequent BotAction's
@@ -15,12 +16,12 @@ import { getDefaultBotOptions } from '../helpers/bot-options'
  * @param page    Puppeteer.Page
  */
 export const BotActionsPipeFactory = 
-  <R = undefined, P = undefined>(page: Page, piped?: Piped<P>, overloadOptions: Partial<BotOptions> = {}, ...injects: any[]) => 
+  <R = undefined, P = undefined>(page: Page, piped?: Piped<P>, overloadOptions: Partial<BotFileOptions> = {}, ...injects: any[]) => 
     async (...actions: BotAction<any>[]): Promise<R> => {
       let piped = undefined
 
       for(const action of actions) {
-        piped = await action(page, piped, getDefaultBotOptions(overloadOptions), ...injects)
+        piped = await action(page, piped, getDefaultBotFileOptions(overloadOptions), ...injects)
       }
 
       return piped
@@ -42,14 +43,19 @@ export const BotActionsPipeFactory5 =
       // HOW? do we distinguish between piped and injects in a factory call? Should we separate the two in this method signature? a more unique BotAction, but an async method, never the less
 
       // let piped // pipe's are closed chain-links, so nothing pipeable comes in, so data is grabbed in a pipe and shared down stream a pipe, and returns
+      try {
 
-      for(const action of actions) {
-        // if (action.pipeable) {
-        //   piped = await action(page, piped, getDefaultBotOptions(overloadOptions), ...injects)
-        // } else {
-        //   piped = await action(page, getDefaultBotOptions(overloadOptions), ...injects)
-        // }
-        piped = await action(page, ...injects, piped) // getDefaultBotOptions(overloadOptions), ..., piped
+        for(const action of actions) {
+          // if (action.pipeable) {
+          //   piped = await action(page, piped, getDefaultBotOptions(overloadOptions), ...injects)
+          // } else {
+          //   piped = await action(page, getDefaultBotOptions(overloadOptions), ...injects)
+          // }
+          piped = await action(page, ...injects, piped) // getDefaultBotOptions(overloadOptions), ..., piped
+        }
+      } catch(error) {
+        logError('PipeCaughtError:')
+        logError(error)
       }
 
       return piped // necessary for isGuest... (instagram helper auth func)

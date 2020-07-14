@@ -49,8 +49,6 @@ export const getIndexedDBStoreNamesOf = (databaseName: string, databaseVersion: 
   await page.evaluate(async() => 
     [...(await openDB(databaseName, databaseVersion)).objectStoreNames]
   )
-
-export const pipeTest = (numberToPipeThrough: any): BotAction<number> => async() => numberToPipeThrough
     
 export const getIndexedDBStorenames = (databaseName: string, databaseVersion: number): BotAction<string[]> => async(page) => {
 
@@ -141,19 +139,6 @@ export const indexedDBStore = (databaseName: string, databaseVersion: number, st
 
     // problem is no way to tell when there is a piped value in injects, in higher order bot action calls like above.....
 
-    // export const givenThat = 
-    //   (condition: ConditionalBotAction) => 
-    //     (...actions: BotAction[]): BotAction => 
-    //       async(page, piped, options, ...injects) => {
-    //         try {
-    //           if (await condition(page, options, ...injects)) {
-    //             await BotActionsChainFactory(page, options, ...injects)(...actions)
-    //           }
-    //         } catch (error) {
-    //           // logError(error)
-    //         }
-    //       }
-
 /**
  * new-gen
  * @description    Supports setting the 'key' and/or 'value' from `pipedValue` 
@@ -165,10 +150,13 @@ export const indexedDBStore = (databaseName: string, databaseVersion: number, st
  * @param databaseVersion 
  */
 export const setIKeyVal3 = 
-  (key?: string, value?: any, storeName?: string, databaseName?: string, databaseVersion?: number): BotAction10<void, BotIndexedDBInjects<any>> => 
+  (key?: string, value?: any, storeName?: string, databaseName?: string, databaseVersion?: number): BotAction5 => 
     async(page, ...injects: BotIndexedDBInjects<any>) => {
       // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
       const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = injects
+
+      console.log({key,value,storeName,databaseName,databaseVersion})
+      console.log({injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue})
 
       if (!value) {
         if (pipedValue) {
@@ -186,6 +174,19 @@ export const setIKeyVal3 =
           }
         }
       }
+
+      console.log('key = ' + key)
+      console.log('value = ' + value)
+
+      console.log(
+        [
+          databaseName ? databaseName : injectDatabaseName ? injectDatabaseName : 'missing-db-name',
+          databaseVersion ? databaseVersion : injectDatabaseVersion ? injectDatabaseVersion : 1,
+          storeName ? storeName : injectStoreName ? injectStoreName : 'missing-store', 
+          key ? key : 'missing-key',
+          value ? value : 'missing-value'
+        ]
+      )
 
       await page.evaluate(
         setIndexedDBStoreValue,
@@ -278,31 +279,48 @@ export const getIndexDBStoreDataKeyValue = <T>(databaseName: string, databaseVer
  * @param value 
  */
 function setIndexedDBStoreValue(databaseName: string, databaseVersion: number, storeName: string, key: string, value: any) {
+  console.log('setIndexedDBStoreValue()')
   return new Promise((resolve, reject) => {
+
+    console.log({databaseName, databaseVersion, storeName, key, value})
+
     const openRequest = indexedDB.open(databaseName, databaseVersion)
 
     openRequest.onerror = function(this: IDBRequest<IDBDatabase>, ev: Event) { 
+      console.log('open request error = ', this.error)
       reject(this.error) 
     }
     openRequest.onupgradeneeded = function(this: IDBOpenDBRequest, ev: IDBVersionChangeEvent): any { 
-      this.result.createObjectStore(storeName)
+      if (!this.result.objectStoreNames.contains(storeName)) {
+        console.log('creating store: ' + storeName)
+        let store = this.result.createObjectStore(storeName)
+        store.put
+      }
     }
 
     openRequest.onsuccess = function(this: IDBRequest<IDBDatabase>, ev: Event) {
       const db = this.result
 
-      db.onerror = () => { 
-        db.close()
-        reject(this.error)
-      }
-
-      db.transaction(storeName, 'readwrite')
-        .objectStore(storeName)
-        .put(value, key)
-        .onsuccess = () => { 
+      if (!db.objectStoreNames.contains(storeName)) {
+        console.log('creating store: ' + storeName)
+        let store = db.createObjectStore(storeName)
+        store.put(value, key)
+      } else {
+        db.onerror = () => { 
+          console.log('set idb val error = ', this.error)
           db.close()
-          resolve() 
+          return reject(this.error)
         }
+  
+        db.transaction(storeName, 'readwrite')
+          .objectStore(storeName)
+          .put(value, key)
+          .onsuccess = () => { 
+            console.log('set idb val success, closing')
+            db.close()
+            return resolve() 
+          }
+      }
     }
   })
 }
@@ -319,6 +337,7 @@ function getIndexedDBStoreValue(databaseName: string, databaseVersion: number, s
     const openRequest = indexedDB.open(databaseName, databaseVersion)
 
     openRequest.onerror = function(this: IDBRequest<IDBDatabase>, ev: Event) { 
+      console.log('[get] error = ', this.error)
       reject(this.error) 
     }
     openRequest.onupgradeneeded = function(this: IDBOpenDBRequest, ev: IDBVersionChangeEvent): any { 
@@ -329,17 +348,19 @@ function getIndexedDBStoreValue(databaseName: string, databaseVersion: number, s
       const db = this.result
 
       db.onerror = (err) => { 
+        console.log('[get] onsuccess error = ', this.error)
         db.close()
-        reject(this.error) 
+        return reject(this.error) 
       }
 
       db.transaction(storeName, 'readonly')
         .objectStore(storeName)
         .get(key)
         .onsuccess = function(this: IDBRequest<any>, ev: Event) {
-          const result = this.result // If key isn't found, the result returned is undefined !
+          console.log('[get] success result = ' + this.result)
+          const result = this.result // If key isn't found, the result returned is undefined
           db.close()
-          resolve(result)
+          return resolve(result)
         }
     }
   })

@@ -5,7 +5,7 @@ import puppeteer from 'puppeteer'
 
 // General BotAction's
 import { log } from 'botmation/actions/console'
-import { givenThat, wait } from 'botmation/actions/utilities'
+import { givenThat, wait, clearPipe, pipe } from 'botmation/actions/utilities'
 import { loadCookies, saveCookies } from 'botmation/actions/cookies'
 import { goTo } from 'botmation/actions/navigation'
 import { screenshot } from 'botmation/actions/output'
@@ -23,7 +23,7 @@ import { logError } from 'botmation/helpers/console'
 
 // Expiremental Pipe
 import { BotActionsPipeFactory5 as Bot } from 'botmation/factories/bot-actions-pipe.factory'
-import { pipeTest, setIndexDBStoreDataKeyValue, getIndexDBStoreDataKeyValue, indexedDBStore, setIKeyVal3, getIKeyVal3 } from 'botmation/actions/indexed-db'
+import { setIndexDBStoreDataKeyValue, getIndexDBStoreDataKeyValue, indexedDBStore, setIKeyVal3, getIKeyVal3 } from 'botmation/actions/indexed-db'
 
 // Main Script
 (async () => {
@@ -39,9 +39,9 @@ import { pipeTest, setIndexDBStoreDataKeyValue, getIndexDBStoreDataKeyValue, ind
       goTo(getInstagramBaseUrl()),
 
       // test
-      pipeTest({id: 5, name: 'Michael'}),
-      log(),
+      pipe({id: 5, name: 'Michael'}),
       log('Test #1 Complete'),
+      clearPipe,
       // end test
 
       log('Test #2 Commence'),
@@ -50,15 +50,19 @@ import { pipeTest, setIndexDBStoreDataKeyValue, getIndexDBStoreDataKeyValue, ind
       log('Test #2 Results, include piped value?'),
       // end 2nd test
 
+      clearPipe,
+
       // test 3
       log('Test #3 start'),
-      setIKeyVal3('key-3test', 'value-3test', 'zzzStore3', 'redux', 1), // broken
-      getIKeyVal3('key-3test', 'zzzStore3', 'redux', 1),
+      setIKeyVal3('key-3test', 'value-3test', 'zzzStore2', 'testDB5', 2), // broken, only different store names..... is it 1 store per app? o.O
+      getIKeyVal3('key-3test', 'zzzStore2', 'testDB5', 2),
       log('Test #3 results piped:'),
+
+      clearPipe,
 
       // test 5, higher order func
       log('Starting Test #5 indexedDBStore()()'),
-      indexedDBStore('redux', 1, 'zzzStore5')(
+      indexedDBStore('testDB5', 3, 'zzzStore5')( // accessing a store in a database we did not create, causes error?
         log('going to set, get, then log a value from IndexedDB'),
         setIKeyVal3('some-key-test5', 'some-value-test5'),
         getIKeyVal3('some-key-test5'),
@@ -69,6 +73,11 @@ import { pipeTest, setIndexDBStoreDataKeyValue, getIndexDBStoreDataKeyValue, ind
       // Takes the name of the file to load cookies from
       // Match this value with the same used in saveCookies()
       loadCookies('instagram'),
+
+      // inline
+      async(page) => {
+
+      },
       
       // Special action that resolves a Promise for TRUE
       // only on TRUE, does it run the chain of actions

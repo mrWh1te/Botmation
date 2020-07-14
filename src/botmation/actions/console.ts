@@ -15,6 +15,13 @@ export const log = (message?: string): BotAction => async (page, piped) => {
 
   if (piped) {
     logPiped(piped)
+  }
+
+  // To put margin between this logged message in console and the next
+  //  Warnings/Errors do not, to try and distinguish them with most recent logged message
+  console.log('\n')
+
+  if (piped) {
     return piped
   }
 }

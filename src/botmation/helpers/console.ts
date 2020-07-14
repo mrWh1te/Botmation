@@ -30,12 +30,12 @@ export const logError = (error: string) =>
 export const logPiped = (piped: any) => {
   if (typeof piped === 'object') {
     console.log(
-      pipedTheme(appendGutter(' Piped:', 3)) + prependGutter(JSON.stringify(piped), 1)
+      pipedTheme(appendGutter(' - pipe:', 2)) + prependGutter(JSON.stringify(piped), 1)
     )
   }
   if (typeof piped === 'number' || typeof piped === 'string') {
     console.log(
-      pipedTheme(appendGutter(' Piped:', 3)) + prependGutter(piped + '', 1)
+      pipedTheme(appendGutter(' - pipe:', 2)) + prependGutter(piped + '', 1)
     )
   }
 }

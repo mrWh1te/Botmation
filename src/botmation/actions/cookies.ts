@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs'
 
-import { BotAction } from '../interfaces/bot-actions.interfaces'
+import { BotAction, BotAction5 } from '../interfaces/bot-actions.interfaces'
 import { getFileUrl } from '../helpers/assets'
 import { logError } from '../helpers/console'
 
@@ -10,7 +10,7 @@ import { logError } from '../helpers/console'
  * @param fileName 
  * @example saveCookies('cookies') -> creates `cookies.json`
  */
-export const saveCookies = (fileName: string): BotAction => async(page, piped, options) => {
+export const saveCookies = (fileName: string): BotAction5 => async(page, options) => {
   try {
     const cookies = await page.cookies()
     await fs.writeFile(getFileUrl(options.cookies_directory, options, fileName) + '.json', JSON.stringify(cookies, null, 2))
@@ -25,7 +25,7 @@ export const saveCookies = (fileName: string): BotAction => async(page, piped, o
  * @param fileName 
  * @example loadCookies('cookies')
  */
-export const loadCookies = (fileName: string): BotAction => async(page, piped, options) => {
+export const loadCookies = (fileName: string): BotAction5 => async(page, options) => {
   try {
     const file = await fs.readFile(getFileUrl(options.cookies_directory, options, fileName) + '.json')
     const cookies = JSON.parse(file.toString())

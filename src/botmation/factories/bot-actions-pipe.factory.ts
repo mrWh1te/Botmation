@@ -36,7 +36,7 @@ export const BotActionsPipeFactory =
 //    could it create inner pipe depedencies in terms of sequence, etc ?
 //
 export const BotActionsPipeFactory5 = 
-  <R = undefined, P = undefined>(page: Page, ...injects: any[]) => // overloadOptions: Partial<BotOptions> = {}
+  <R = undefined, P = undefined>(page: Page, ...injects: any[]) =>
     async (...actions: BotAction5[]): Promise<void|Piped<R>> => {
       // Possible for last inject to be the piped value
       let piped = injectsPipedValueOrUndefined<P>(injects) // unwraps the piped value from the piped branded box

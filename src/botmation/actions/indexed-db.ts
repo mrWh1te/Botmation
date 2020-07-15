@@ -209,13 +209,17 @@ export const getIKeyVal3 =
         }
       }
 
-      return await page.evaluate(
+      const evaluatedValue = await page.evaluate(
         getIndexedDBStoreValue,
         databaseName ? databaseName : injectDatabaseName ? injectDatabaseName : 'missing-db-name',
         databaseVersion ? databaseVersion : injectDatabaseVersion ? injectDatabaseVersion : 1,
         storeName ? storeName : injectStoreName ? injectStoreName : 'missing-store',
         key ? key : 'missing-key'
       ) as R
+
+      console.log('evaluated value = ', evaluatedValue)
+
+      return evaluatedValue
     }
 
 // setIKeyVal3('key', 'value')(page, 'dbName', 1, 'storeName', undefined)

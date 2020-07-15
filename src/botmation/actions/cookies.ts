@@ -15,8 +15,8 @@ import { getDefaultBotFileOptions } from 'botmation/helpers/file-options'
 //        so add a fallback in here to enrich options, in case missing
 export const saveCookies = (fileName: string): BotAction5 => async(page, options) => {
   try {
-    console.log('[save cookies] options = ', options)
     options = getDefaultBotFileOptions(options)
+    
     const cookies = await page.cookies()
     await fs.writeFile(getFileUrl(options.cookies_directory, options, fileName) + '.json', JSON.stringify(cookies, null, 2))
   } catch(error) {
@@ -32,8 +32,8 @@ export const saveCookies = (fileName: string): BotAction5 => async(page, options
  */
 export const loadCookies = (fileName: string): BotAction5 => async(page, options) => {
   try {
-    console.log('[load cookies] options = ', options)
     options = getDefaultBotFileOptions(options)
+
     const file = await fs.readFile(getFileUrl(options.cookies_directory, options, fileName) + '.json')
     const cookies = JSON.parse(file.toString())
 

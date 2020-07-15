@@ -78,37 +78,12 @@ export interface BotIndexedDBAction<R = void, P = undefined> {
   (page: Page, injects: BotIndexedDBInjects<P>) : Promise<R>
 }
 
-/**
- * concept
- * @description   Typable way to have advanced bot actions w/ custom injects
- */
-export interface BotAction10<R = void, I extends BotInjects = BotInjects> {
-  (page: Page, ...injects: I) : Promise<R>
-}
-
-//
-// new gen idea
-//
-/**
- * @description   now piped is completely optional from typing, and can be skipped for BotFilesActions ! who uses not piped values, but injects for files config
- */
-// export type BotPipeInjects<P> = [Piped<P>, ...any[]] // doing a piped inject at end, not to break custom BotActions written to work without it
-
-// IndexedDB typing concept
-
-
-
-// type BotActionArgs = [Page, ...any[]]
-
-
-
-
 
 //
 // new-gen
 export type AnyBotAction = BotAction5|BotFilesAction
 
-export interface BotActionFactory5<A extends Array<any> = any[], R = void, B = BotAction5<R>> extends Function {
+export interface BotActionFactory5<A extends Array<any> = any[], B = BotAction5> extends Function {
   // Higher-Order Function (Factory) to Produce an Async Function (Returns Promise to be awaited)
   (...args: A) : B
 }
@@ -126,7 +101,7 @@ export interface BotAction5<R = any> extends Function {
  * higher order function returns higher order function that will return a BotAction function
  */
 export const createBotActionFactory = 
-  <A extends Array<any> = any[], R = void, B = BotAction5<R>> (botActionFactory: BotActionFactory5<A, R, B>, pipeable: boolean = false): BotActionFactory5<A, R, B> => 
+  <A extends Array<any> = any[], B = BotAction5> (botActionFactory: BotActionFactory5<A, B>, pipeable: boolean = false): BotActionFactory5<A, B> => 
     (...args: A) => botActionFactory(...args)
   
 

@@ -25,6 +25,7 @@ export const log = (message?: string): BotAction => async (page, ...injects: any
   // idea, maybe the ability to maintain the piped value should not be handled by the botactions, since we have clearPipe, we don't need the ability to not return a value = clears the pipe
   //    so maybe the pipe carries the piped value when the value returned is undefined (botaction:void)
   // probably will have to do this: const [test, {value}] = injects, when you want to use a piped value, when relying on it in a BotAction
+  // problem is, how does a User set "undefined" conditionally via a botaction without using pipe()
   if (injects.length > 0) {
     return injects[injects.length - 1]
   }

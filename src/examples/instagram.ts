@@ -31,7 +31,7 @@ import { files } from 'botmation/actions/files'
   let browser: puppeteer.Browser
 
   try {
-    browser = await puppeteer.launch({headless: false})
+    browser = await puppeteer.launch({headless: true})
     const pages = await browser.pages()
     const page = pages.length === 0 ? await browser.newPage() : pages[0]
 
@@ -45,10 +45,10 @@ import { files } from 'botmation/actions/files'
       clearPipe,
       // end test
 
-      log('Test #2 Commence'),
-      setIndexDBStoreDataKeyValue('testDB5', 1, 'testStore2', 'testKey2', 'It WORKS!'), // works
-      getIndexDBStoreDataKeyValue('testDB5', 1, 'testStore2', 'testKey2'), // works
-      log('Test #2 Results, include piped value?'),
+      // log('Test #2 Commence'),
+      // setIndexDBStoreDataKeyValue('testDB5', 1, 'testStore2', 'testKey2', 'It WORKS!'), // works
+      // getIndexDBStoreDataKeyValue('testDB5', 1, 'testStore2', 'testKey2'), // works
+      // log('Test #2 Results, include piped value?'),
       // end 2nd test
 
       clearPipe,
@@ -88,7 +88,7 @@ import { files } from 'botmation/actions/files'
       // only on TRUE, does it run the chain of actions
       givenThat(isGuest) (
         goTo(getInstagramLoginUrl()),
-        login({username: 'lagmahol', password: 'malu.l4ge'}),
+        login({username: 'account', password: 'password'}),
         files()(
           saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies 
         ),

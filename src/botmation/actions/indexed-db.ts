@@ -1,8 +1,9 @@
 import { openDB } from 'idb'
 
-import { BotAction, createBotActionFactory, BotAction10, BotAction5, BotIndexedDBInjects } from '../interfaces/bot-actions.interfaces'
+import { BotAction, createBotActionFactory, BotAction5, BotIndexedDBInjects } from '../interfaces/bot-actions.interfaces'
 import { logMessage, logError } from 'botmation/helpers/console'
 import { BotActionsPipeFactory5 } from 'botmation/factories/bot-actions-pipe.factory'
+import { getInjectsPipedValue } from 'botmation/types/piped'
 
 // ideas
 
@@ -128,7 +129,7 @@ export const setIDBKeyValue = createBotActionFactory(
  */
 export const indexedDBStore = (databaseName: string, databaseVersion: number, storeName: string) =>
   (...actions: BotAction5[]): BotAction5 =>
-    async(page, ...injects: any[]) => // no way for indexedDBStore()() to take a piped value to pass in.... unless all piped values are branded wrapped objects.... testable, then it's at the start of all injects, possibly.... but must be tested, how does that effect typing the injects of the array after it???, maybe instead put it at the end, leave injects mostly any[] except for advanced botactions then test the last inject with inject.brand === 'pipedValue' && typeof inject.value !== undefined (otherwise empty pipe)
+    async(page, ...injects: any[]) => 
       await BotActionsPipeFactory5<any>(page, databaseName, databaseVersion, storeName, ...injects)(...actions)
       
 
@@ -148,13 +149,14 @@ export const setIKeyVal3 =
   (key?: string, value?: any, storeName?: string, databaseName?: string, databaseVersion?: number): BotAction5 => 
     async(page, ...injects: BotIndexedDBInjects<any>) => {
       // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
-      const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = injects
+      const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = openInjectsPipe(injects)
 
       console.log({key,value,storeName,databaseName,databaseVersion})
-      console.log({injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue})
+      console.log({injectDatabaseName, injectDatabaseVersion, injectStoreName, piped: pipedValue})
 
       if (!value) {
         if (pipedValue) {
+          // idea here is that the piped value is anothe object with keys {key: '', value: ''} -> to map as what we are setting in the DB
           if (pipedValue.value) {
             value = pipedValue.value
           } else {
@@ -163,10 +165,8 @@ export const setIKeyVal3 =
         }
       }
       if (!key) {
-        if (pipedValue) {
-          if (pipedValue.key) {
-            key = pipedValue.key
-          }
+        if (pipedValue && pipedValue.key) {
+          key = pipedValue.key
         }
       }
 
@@ -182,6 +182,7 @@ export const setIKeyVal3 =
           value ? value : 'missing-value'
         ]
       )
+      console.log('evaluating set')
 
       await page.evaluate(
         setIndexedDBStoreValue,
@@ -193,11 +194,25 @@ export const setIKeyVal3 =
       )
     }
 
+/**
+ * @description    Returns an array of all the injects with the piped value unpiped (removed from branded wrapping)
+ *    Can't remap `value` with restructuring when it's undefined
+ * @param injectsPiped 
+ */
+export const openInjectsPipe = (injectsPiped: any[]): any[] => {
+  let injectsWithoutPipe = injectsPiped.slice(0, injectsPiped.length - 1)
+
+  // if the branded pipe has a value, return that, otherwise return undefined
+  return [...injectsWithoutPipe, getInjectsPipedValue(injectsPiped)]
+}
+
 export const getIKeyVal3 = 
   <R>(key?: string, storeName?: string, databaseName?: string, databaseVersion?: number): BotAction5<R> => 
     async(page, ...injects: BotIndexedDBInjects<any>): Promise<R> => {
+      console.log('[getttttingggg]')
+      console.log('injects = ' + JSON.stringify(injects))
       // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
-      const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = injects
+      const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = openInjectsPipe(injects)
 
       if (!key) {
         if (pipedValue) {

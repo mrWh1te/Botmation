@@ -87,8 +87,8 @@ export interface BotActionFactory5<A extends Array<any> = any[], B = BotAction5>
   // Higher-Order Function (Factory) to Produce an Async Function (Returns Promise to be awaited)
   (...args: A) : B
 }
-export interface BotAction5<R = any> extends Function {
-  (page: Page, ...injects: any[]) : Promise<R>
+export interface BotAction5<R = any, I extends Array<any> = any[]> extends Function {
+  (page: Page, ...injects: I) : Promise<R>
 } // default is a regular (no custom type) chain-link, non-returning, non-piping, BotAction
 
 

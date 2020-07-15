@@ -32,12 +32,15 @@ import { pipe, clearPipe } from 'botmation/actions/pipe'
   let browser: puppeteer.Browser
 
   try {
-    browser = await puppeteer.launch({headless: true})
+    browser = await puppeteer.launch({headless: false})
     const pages = await browser.pages()
     const page = pages.length === 0 ? await browser.newPage() : pages[0]
 
     await Bot(page)(
       log('Botmation running'),
+      // Takes the name of the file to load cookies from
+      // Match this value with the same used in saveCookies()
+      loadCookies('instagram'),
       goTo(getInstagramBaseUrl()),
 
       // test
@@ -66,11 +69,7 @@ import { pipe, clearPipe } from 'botmation/actions/pipe'
       clearPipe,
 
 
-      // Takes the name of the file to load cookies from
-      // Match this value with the same used in saveCookies()
-      files()(
-        loadCookies('instagram'),
-      ),
+      
 
       // inline, hackish but do-able
       // async(page) => {
@@ -80,8 +79,9 @@ import { pipe, clearPipe } from 'botmation/actions/pipe'
       // Special action that resolves a Promise for TRUE
       // only on TRUE, does it run the chain of actions
       givenThat(isGuest) (
+        log('is guest so logging in'),
         goTo(getInstagramLoginUrl()),
-        login({username: 'account', password: 'password'}),
+        login({username: 'lagmahol', password: 'M1CHAE1.l2'}),
         files()(
           saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies 
         ),

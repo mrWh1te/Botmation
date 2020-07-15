@@ -11,7 +11,7 @@ import { BotAction5 } from "botmation/interfaces"
  * pipeMap ?
  */
 export const map = (mapFunction: (pipedValue: any) => any): BotAction5 => async (page, ...injects: any[]) => 
-  injects.length > 0 ? mapFunction(injects[injects.length - 1].value) : mapFunction(undefined)
+injects.length > 0 ? mapFunction(injects[injects.length - 1].value) : mapFunction(undefined)
 
 /**
  * @description   Overwrite the piped value

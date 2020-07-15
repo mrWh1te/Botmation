@@ -7,6 +7,7 @@ import { applyBotActionOrActions } from '../helpers/actions'
 import { BotAction, ConditionalBotAction, BotAction5 } from '../interfaces/bot-actions.interfaces'
 import { BotActionsChainFactory } from '../factories/bot-actions-chain.factory'
 import { BotFileOptions } from '../interfaces/bot-file-options.interfaces'
+import { BotActionsPipeFactory5 } from 'botmation/factories/bot-actions-pipe.factory'
 
 /**
  * @description givenThat(condition returns a promise that resolves to TRUE)(run these actions in a chain)
@@ -17,17 +18,18 @@ import { BotFileOptions } from '../interfaces/bot-file-options.interfaces'
  * @example     givenThat(isGuest)(login(...), closeSomePostLoginModal(),... more BotAction's)
  *              The condition function is async and provided the Puppeteer page instance so you can use it to determine TRUE/FALSE
  * @param condition 
+ * upgraded
  */
 export const givenThat = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction[]): BotAction => 
-      async(page, piped, options, ...injects) => {
+    (...actions: BotAction5[]): BotAction5 => 
+      async(page, ...injects) => {
         try {
-          if (await condition(page, options, ...injects)) {
-            await BotActionsChainFactory(page, options, ...injects)(...actions)
+          if (await condition(page, ...injects)) {
+            await BotActionsPipeFactory5(page, ...injects)(...actions)
           }
-        } catch (error) {
-          // logError(error)
+        } catch(error) {
+          // catch here in case the condition rejects, needed for unit-test
         }
       }
 

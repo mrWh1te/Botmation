@@ -50,7 +50,7 @@ export interface BotAction<R = void, P = undefined> extends Function {
  *                Please don't use ConditionalBotAction's directly in sequence, they are to help higher order bot actions
  */
 export interface ConditionalBotAction extends Function {
-  (page: Page, options: BotFileOptions, ...injects: any[]) : Promise<boolean>
+  (page: Page, ...injects: any[]) : Promise<boolean>
 }
 
 /**

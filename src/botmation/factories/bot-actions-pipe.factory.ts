@@ -29,15 +29,17 @@ export const BotActionsPipeFactory =
     }
 
 //
-// Plan
+// Standards
 //  1) Pipes always inject a pipeable value at the end
 //  2) A piped value is always wrapped with branding, in case the number of injects is unknown
 //  3) A Bot action that does not return a value, in a pipe, effectively clears the piped value
 //  4) A cleared pipe is a piped value as undefined (so you get a piped branded object, with its `value` property = undefined)
+//  5) Pipes expect piped values to come in to their pipe, but have safe defaults
+//  7) Piped always return their piped values in the end (so if empty pipe, undefined, otherwise whatever the value, unbranded is)
 //
 export const BotActionsPipeFactory5 = 
   <R = any, P = any>(page: Page, ...injects: any[]) =>
-    async (...actions: BotAction5[]): Promise<void|Piped<R>> => {
+    async (...actions: BotAction5[]): Promise<void|R> => {
       // Possible for last inject to be the piped value
       let pipe = injectsPipeOrEmptyPipe<P>(injects) // unwraps the piped value from the piped branded box
 
@@ -55,7 +57,7 @@ export const BotActionsPipeFactory5 =
 
       // Return of an ActionsPipe is `void` unless the last action returns something
       // if it returns something, it's the last piped value returned from the last botaction, wrapped for type gaurding:
-      return pipe as any as Piped<R>
+      return pipe.value as any as R
     }
 
 

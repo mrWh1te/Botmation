@@ -1,4 +1,5 @@
 import chalk from 'chalk'
+import { type } from 'os'
 
 /**
  * @description   We use the package 'chalk' to add color to the messages logged in console
@@ -28,7 +29,7 @@ export const logError = (error: string) =>
     errorTheme(appendGutter(' Error:', 3)) + prependGutter(error, 1)
   )
 export const logPiped = (piped: any) => {
-  if (typeof piped === 'object') {
+  if (typeof piped === 'object' || typeof piped === 'boolean') {
     console.log(
       pipedTheme(appendGutter(' - pipe:', 2)) + prependGutter(JSON.stringify(piped), 1)
     )

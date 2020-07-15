@@ -1,6 +1,6 @@
 import { BotAction5 } from '../interfaces/bot-actions.interfaces'
 import { logMessage, logWarning, logError, logPiped } from '../helpers/console'
-import { injectsArePiped, getInjectsPipedValue } from 'botmation/types/piped'
+import { injectsArePiped, getInjectsPipedValue } from 'botmation/helpers/pipe'
 
 /**
  * @description   The following Actions are specific to the NodeJS Console, for the Developer

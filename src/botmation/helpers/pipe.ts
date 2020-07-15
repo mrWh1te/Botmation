@@ -2,7 +2,7 @@
  * Functions that help with the Pipe
  */
 
-import { getInjectsPipedValue, isPiped, Piped } from "botmation/types/piped"
+import { isPiped, Piped } from "botmation/types/piped"
 
 /**
  * @description    Returns an array of all the injects with the piped value unpiped (removed from branded wrapping)
@@ -32,3 +32,28 @@ export const wrapValueInPipe = <P = any>(value: P): Piped<P> =>  ({
   brand: 'piped',
   value
 })
+
+/**
+ * @description    Injects are piped when the last inject is actually the piped value
+ *                 Checks injects to see if the last inject is a piped value
+ * @param injects 
+ */
+export const injectsArePiped = (injects: any[]): boolean => {
+  if (injects.length === 0) {
+    return false
+  }
+
+  return isPiped(injects[injects.length - 1])
+}
+
+/**
+ * 
+ * @param injects 
+ */
+export const getInjectsPipedValue = (injects: any[]): any => {
+  if (injectsArePiped(injects)) {
+    return injects[injects.length - 1].value
+  }
+
+  throw new Error('Piped value missing from Injects') // TODO confirm the utility of this code
+}

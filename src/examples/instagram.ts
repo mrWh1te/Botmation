@@ -67,10 +67,7 @@ import { pipe, clearPipe } from 'botmation/actions/pipe'
       ),
 
       clearPipe,
-
-
       
-
       // inline, hackish but do-able
       // async(page) => {
       //

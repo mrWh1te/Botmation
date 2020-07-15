@@ -44,10 +44,7 @@ export interface BotAction<R = void, P = undefined> extends Function {
 
 /**
  * @description   Like a BotAction, but it's not mean't to be used within a chain of Bot Action's
- *                Instead this is for higher order bot actions that require a condition ie givenThat, forAll
- *                It's like a BotAction, given the method signature, but the return type of the Promise is different!
- * 
- *                Please don't use ConditionalBotAction's directly in sequence, they are to help higher order bot actions
+ *                Instead this is for higher order bot actions or pipes as these return boolean values
  */
 export interface ConditionalBotAction extends Function {
   (page: Page, ...injects: any[]) : Promise<boolean>

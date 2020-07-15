@@ -1,4 +1,4 @@
-import { BotFilesConfig } from "botmation/interfaces/bot-options.interfaces"
+import { BotFileOptions } from "botmation/interfaces/bot-file-options.interfaces"
 
 /**
  * @description   See unit tests for edge-case examples
@@ -17,7 +17,7 @@ export const createFolderURL = (...folderNames: string[]): string =>
  * @param botFileOptions pass this in so we can create the URL
  * @param fileName 
  */
-export const getFileUrl = (fileDirectory: string, filesConfig: BotFilesConfig, fileName: string = ''): string => {
+export const getFileUrl = (fileDirectory: string, filesConfig: BotFileOptions, fileName: string = ''): string => {
   const fileNameWithPrefix = fileName === '' ? '' : '/' + fileName // prefix with folder (optional)
 
   if (filesConfig?.parent_output_directory) {

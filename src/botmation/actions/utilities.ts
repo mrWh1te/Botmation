@@ -6,7 +6,7 @@ import { sleep } from '../helpers/utilities'
 import { applyBotActionOrActions } from '../helpers/actions'
 import { BotAction, ConditionalBotAction, BotAction5 } from '../interfaces/bot-actions.interfaces'
 import { BotActionsChainFactory } from '../factories/bot-actions-chain.factory'
-import { BotFileOptions } from '../interfaces/bot-options.interfaces'
+import { BotFileOptions } from '../interfaces/bot-file-options.interfaces'
 
 /**
  * @description givenThat(condition returns a promise that resolves to TRUE)(run these actions in a chain)
@@ -138,28 +138,3 @@ export const forAsLong =
  */
 export const wait = (milliseconds: number): BotAction => async() => 
   await sleep(milliseconds)
-
-
-//
-// Pipe Utilties
-//
-
-/**
- * @description    Mapper function for Mapping Piped Values to whatever you want through a function
- *                 Won't work in Chain! Action Pipes only
- * @param mapFunction pure function to change piped value to something else
- * pipeMap ?
- */
-export const map = (mapFunction: (pipedValue: any) => any): BotAction5 => async (page, ...injects: any[]) => 
-  injects.length > 0 ? mapFunction(injects[injects.length - 1].value) : mapFunction(undefined)
-
-/**
- * @description   Overwrite the piped value
- * @param valueToPipe 
- */
-export const pipe = (valueToPipe: any): BotAction5 => async () => valueToPipe
-
-/**
- * @description   Clear the piped value (sets piped value to undefined, @TODO once piped interface set, update as necessary or remove message)
- */
-export const clearPipe: BotAction5 = async () => undefined

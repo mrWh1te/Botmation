@@ -1,10 +1,11 @@
 import { Page } from 'puppeteer'
 
 import { BotAction5, BotAction } from '../interfaces/bot-actions.interfaces'
-import { BotFileOptions } from '../interfaces/bot-options.interfaces'
-import { PipedValue, isPiped, Piped } from '../types/piped'
+import { BotFileOptions } from '../interfaces/bot-file-options.interfaces'
+import { PipedValue, Piped } from '../types/piped'
 import { getDefaultBotFileOptions } from '../helpers/file-options'
-import { logError, logMessage } from 'botmation/helpers/console'
+import { logError } from 'botmation/helpers/console'
+import { injectsPipeOrEmptyPipe, wrapValueInPipe } from 'botmation/helpers/pipe'
 
 /**
  * @description   Similar to BotActionsChainFactory except the output of BotAction's are provided as input for subsequent BotAction's
@@ -60,12 +61,3 @@ export const BotActionsPipeFactory5 =
 
 //
 // @todo move to helpers for pipe functionality
-// @description     Returns a Piped Value, if found in the Injects array, otherwise returns the representation of an empty pipe
-const injectsPipeOrEmptyPipe = <P = any>(injects: any[]): Piped<P> =>
-  injects.length > 0 && isPiped(injects[injects.length - 1]) ? injects[injects.length - 1] : wrapValueInPipe(undefined) // empty pipe
-
-//
-const wrapValueInPipe = <P = any>(value: P): Piped<P> =>  ({
-  brand: 'piped',
-  value
-})

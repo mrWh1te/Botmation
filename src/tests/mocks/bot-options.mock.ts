@@ -1,4 +1,4 @@
-import { BotFileOptions } from "../../botmation/interfaces/bot-options.interfaces"
+import { BotFileOptions } from "../../botmation/interfaces/bot-file-options.interfaces"
 
 export const botOptions: BotFileOptions = {
   screenshots_directory: 'screenshots',

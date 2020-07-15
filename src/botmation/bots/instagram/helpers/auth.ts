@@ -1,11 +1,11 @@
 import { Page } from 'puppeteer'
 
-import { BotFileOptions } from '../../../interfaces/bot-options.interfaces'
+import { BotFileOptions } from '../../../interfaces/bot-file-options.interfaces'
 import { ConditionalBotAction } from '../../../interfaces/bot-actions.interfaces'
 
 import { BotActionsPipeFactory } from 'botmation/factories/bot-actions-pipe.factory'
-import { getIndexDBStoreDataKeyValue } from 'botmation/actions/indexed-db'
-import { map } from 'botmation/actions/utilities'
+import { getIndexedDBValue } from 'botmation/actions/indexed-db'
+import { map } from 'botmation/actions/pipe'
 
 /**
  * @description    async condition function that resolves TRUE/FALSE depending on user auth
@@ -15,7 +15,7 @@ import { map } from 'botmation/actions/utilities'
  */
 export const isGuest: ConditionalBotAction = async(page: Page, options: BotFileOptions, ...injects: any[]): Promise<boolean> =>
   await BotActionsPipeFactory<boolean>(page, undefined, options, ...injects)(
-    getIndexDBStoreDataKeyValue('redux', 1, 'paths', 'users.viewerId'),
+    getIndexedDBValue('users.viewerId', 'paths', 'redux', 1),
     map(viewerId => viewerId ? false : true), // viewerId is a string representing auth user id, else undefined
   )
 

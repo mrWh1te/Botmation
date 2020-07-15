@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 import { BotAction } from './bot-actions.interfaces'
-import { BotFileOptions } from './bot-options.interfaces'
+import { BotFileOptions } from './bot-file-options.interfaces'
 
 /**
  * @description   Base public interface for a Botmation instance

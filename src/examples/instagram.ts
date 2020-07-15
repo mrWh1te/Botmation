@@ -5,7 +5,7 @@ import puppeteer from 'puppeteer'
 
 // General BotAction's
 import { log } from 'botmation/actions/console'
-import { givenThat, wait, clearPipe, pipe } from 'botmation/actions/utilities'
+import { givenThat } from 'botmation/actions/utilities'
 import { loadCookies, saveCookies } from 'botmation/actions/cookies'
 import { goTo } from 'botmation/actions/navigation'
 import { screenshot } from 'botmation/actions/output'
@@ -23,8 +23,9 @@ import { logError } from 'botmation/helpers/console'
 
 // Expiremental Pipe
 import { BotActionsPipeFactory5 as Bot } from 'botmation/factories/bot-actions-pipe.factory'
-import { setIndexDBStoreDataKeyValue, getIndexDBStoreDataKeyValue, indexedDBStore, setIKeyVal3, getIKeyVal3 } from 'botmation/actions/indexed-db'
+import { indexedDBStore, setIndexedDBValue, getIndexedDBValue } from 'botmation/actions/indexed-db'
 import { files } from 'botmation/actions/files'
+import { pipe, clearPipe } from 'botmation/actions/pipe'
 
 // Main Script
 (async () => {
@@ -45,18 +46,10 @@ import { files } from 'botmation/actions/files'
       clearPipe,
       // end test
 
-      // log('Test #2 Commence'),
-      // setIndexDBStoreDataKeyValue('testDB5', 1, 'testStore2', 'testKey2', 'It WORKS!'), // works
-      // getIndexDBStoreDataKeyValue('testDB5', 1, 'testStore2', 'testKey2'), // works
-      // log('Test #2 Results, include piped value?'),
-      // end 2nd test
-
-      clearPipe,
-
       // test 3
       log('Test #3 start'),
-      setIKeyVal3('key-3test', 'value-3test', 'zzzStore2', 'testDB5', 2), // broken, only different store names..... is it 1 store per app? o.O
-      getIKeyVal3('key-3test', 'zzzStore2', 'testDB5', 2),
+      setIndexedDBValue('key-3test', 'value-3test', 'zzzStore2', 'testDB5', 2), // broken, only different store names..... is it 1 store per app? o.O
+      getIndexedDBValue('key-3test', 'zzzStore2', 'testDB5', 2),
       log('Test #3 results piped:'),
 
       clearPipe,
@@ -65,8 +58,8 @@ import { files } from 'botmation/actions/files'
       log('Starting Test #5 indexedDBStore()()'),
       indexedDBStore('testDB5', 3, 'zzzStore5')( // accessing a store in a database we did not create, causes error?
         log('going to set, get, then log a value from IndexedDB'),
-        setIKeyVal3('some-key-test5', 'some-value-test5'),
-        getIKeyVal3('some-key-test5'),
+        setIndexedDBValue('some-key-test5', 'some-value-test5'),
+        getIndexedDBValue('some-key-test5'),
         log('Results of Test #5 are piped:')
       ),
 

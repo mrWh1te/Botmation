@@ -1,4 +1,4 @@
-import { BotFileOptions } from "../interfaces/bot-options.interfaces"
+import { BotFileOptions } from "../interfaces/bot-file-options.interfaces"
 
 /**
  * @description   Options in configuring the bot actions

@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs'
 
-import { BotAction, BotAction5 } from '../interfaces/bot-actions.interfaces'
+import { BotFilesAction } from '../interfaces/bot-actions.interfaces'
 import { getFileUrl } from '../helpers/assets'
 import { logError } from '../helpers/console'
 import { getDefaultBotFileOptions } from 'botmation/helpers/file-options'
@@ -11,16 +11,15 @@ import { getDefaultBotFileOptions } from 'botmation/helpers/file-options'
  * @param fileName 
  * @example saveCookies('cookies') -> creates `cookies.json`
  */
-// @TODO strongly type options, maybe partial? maybe the dev doesn't use the higher order files()()
-//        so add a fallback in here to enrich options, in case missing
-export const saveCookies = (fileName: string): BotAction5 => async(page, options) => {
+export const saveCookies = (fileName: string): BotFilesAction => async(page, options) => {
   try {
-    options = getDefaultBotFileOptions(options)
+    const hydratedOptions = getDefaultBotFileOptions(options)
     
     const cookies = await page.cookies()
-    await fs.writeFile(getFileUrl(options.cookies_directory, options, fileName) + '.json', JSON.stringify(cookies, null, 2))
+    await fs.writeFile(getFileUrl(hydratedOptions.cookies_directory, hydratedOptions, fileName) + '.json', JSON.stringify(cookies, null, 2))
   } catch(error) {
-    logError('[BotAction:saveCookies] ' + error)
+    logError('[BotAction:saveCookies]')
+    logError(error)
   }
 }
 
@@ -30,17 +29,18 @@ export const saveCookies = (fileName: string): BotAction5 => async(page, options
  * @param fileName 
  * @example loadCookies('cookies')
  */
-export const loadCookies = (fileName: string): BotAction5 => async(page, options) => {
+export const loadCookies = (fileName: string): BotFilesAction => async(page, options) => {
   try {
-    options = getDefaultBotFileOptions(options)
+    const hydratedOptions = getDefaultBotFileOptions(options)
 
-    const file = await fs.readFile(getFileUrl(options.cookies_directory, options, fileName) + '.json')
+    const file = await fs.readFile(getFileUrl(hydratedOptions.cookies_directory, hydratedOptions, fileName) + '.json')
     const cookies = JSON.parse(file.toString())
 
     for (const cookie of cookies) {
       await page.setCookie(cookie)
     }
   } catch(error) {
-    logError('[BotAction:loadCookies] ' + error)
+    logError('[BotAction:loadCookies]')
+    logError(error)
   }
 }

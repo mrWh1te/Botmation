@@ -3,7 +3,7 @@ import { Page } from 'puppeteer'
 import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
 import { fileExist, deleteFile } from 'botmation/helpers/files'
 import { saveCookies, loadCookies } from 'botmation/actions/cookies'
-import { BotFileOptions } from 'botmation/interfaces/bot-options.interfaces'
+import { BotFileOptions } from 'botmation/interfaces/bot-file-options.interfaces'
 import { getFileUrl } from 'botmation/helpers/assets'
 
 import { BASE_URL } from 'tests/urls'
@@ -48,7 +48,7 @@ describe('[Botmation:Action Factory] Cookies', () => {
   //
   // saveCookies() Unit/Integration Test
   it('should call puppeteer\'s page cookies() method then create a JSON file of that data in the Cookies directory', async() => {
-    await saveCookies(COOKIES_FILENAME)(mockPage, undefined, BOT_OPTIONS)
+    await saveCookies(COOKIES_FILENAME)(mockPage, BOT_OPTIONS, undefined)
 
     expect(mockPage.cookies).toBeCalled()
     await expect(fileExist(getFileUrl(BOT_OPTIONS.cookies_directory, BOT_OPTIONS) + '/test-cookies-1.json')).resolves.toEqual(true)
@@ -57,7 +57,7 @@ describe('[Botmation:Action Factory] Cookies', () => {
   //
   // loadCookies() Unit/Integration Test
   it('should loadCookies() from filename provided by injecting that data from the file into the Puppeteer Page', async() => {
-    await loadCookies(COOKIES_FILENAME)(mockPage, undefined, BOT_OPTIONS)
+    await loadCookies(COOKIES_FILENAME)(mockPage, BOT_OPTIONS, undefined)
 
     expect(mockPage.setCookie).toHaveBeenNthCalledWith(1, {
       "name": "sessionid",

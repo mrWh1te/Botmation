@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-actions.interfaces'
-import { BotFileOptions } from '../interfaces/bot-options.interfaces'
+import { BotFileOptions } from '../interfaces/bot-file-options.interfaces'
 import { getDefaultBotFileOptions } from '../helpers/file-options'
 
 /**

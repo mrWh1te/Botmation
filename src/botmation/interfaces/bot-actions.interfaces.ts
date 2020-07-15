@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { BotFileOptions } from './bot-options.interfaces'
+import { BotFileOptions } from './bot-file-options.interfaces'
 import { PipedValue } from '../types/piped'
 import { BotFilesInjects } from '../types/bot-files-injects'
 
@@ -16,6 +16,7 @@ export type BotInjects = any[]
 
 /**
  * @description   Base Interface for the Higher-Order Action implementations to enable IDE assistance, strong type checking, etc
+ * @deprecated
  */
 export interface BotActionFactory<R> extends Function {
   // Higher-Order Function (Factory) to Produce an Async Function (Returns Promise to be awaited)
@@ -26,6 +27,7 @@ export interface BotActionFactory<R> extends Function {
  * R = return (default is void)
  * P = piped (default is undefined)
  *  Defaults set it to a link in the chain (not pipeable botaction, so no `piped` and no return value to resolve)
+ * @deprecated
  */
 export interface BotAction<R = void, P = undefined> extends Function {
   (page: Page, piped: PipedValue<P>, options: BotFileOptions, ...injects: BotInjects) : Promise<R>
@@ -80,7 +82,7 @@ export interface BotIndexedDBAction<R = void, P = undefined> {
 
 
 //
-// new-gen
+// now-gen
 export type AnyBotAction = BotAction5|BotFilesAction
 
 export interface BotActionFactory5<A extends Array<any> = any[], B = BotAction5> extends Function {
@@ -89,38 +91,4 @@ export interface BotActionFactory5<A extends Array<any> = any[], B = BotAction5>
 }
 export interface BotAction5<R = any, I extends Array<any> = any[]> extends Function {
   (page: Page, ...injects: I) : Promise<R>
-} // default is a regular (no custom type) chain-link, non-returning, non-piping, BotAction
-
-
-
-
-// curious how this will play out in IndexedDB(dbName, dbVersion, storeName?)(...botActions) // for injecting those 3 values into those bot actions
-
-
-/**
- * higher order function returns higher order function that will return a BotAction function
- */
-export const createBotActionFactory = 
-  <A extends Array<any> = any[], B = BotAction5> (botActionFactory: BotActionFactory5<A, B>, pipeable: boolean = false): BotActionFactory5<A, B> => 
-    (...args: A) => botActionFactory(...args)
-  
-
-/**
- * 
- * @param botAction 
- * @param pipeable 
- */
-// export const createBotAction = <R = void, B extends BotAction5<R> = BotAction5<R>>(botAction: BotAction5<R>, pipeable: boolean = false): B => {
-    
-
-//     return botAction
-//   }
-
-
-
-// idea going forward, BotAction5 to become BotAction
-// get rid of all Bot"Pipe"Action(s), get rid of `pipeable` because pipes will always pipe and actionsBase (conditional) may and thats okay Because
-//    piped is going to the end of the injects ie type injects = [...any, Piped])
-//    so building a BotAction without the intent of using piped values will NOT break its code in a pipe
-//      therefore no action branding, but can support advanced action interfaces for stronger typing of injects like BotFilesAction, BotIndexedDBAction, etc
-//    May or may not use some kind of createBotActionFactory() / createBotAction() helper methods, since in Factory it does give helpful inference of typing for auto-completion
+}

@@ -2,7 +2,7 @@ import { Page } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-actions.interfaces'
 import { BotActionsChainFactory } from '../factories/bot-actions-chain.factory'
-import { BotFileOptions } from '../interfaces/bot-options.interfaces'
+import { BotFileOptions } from '../interfaces/bot-file-options.interfaces'
 
 /**
  * 

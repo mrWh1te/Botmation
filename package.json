@@ -40,7 +40,6 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^4.0.0",
-    "idb": "^5.0.4",
     "puppeteer": "^3.0.0",
     "puppeteer-cluster": "^0.21.0"
   },

@@ -2,17 +2,16 @@ import { Page } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-actions.interfaces'
 import { BotActionsChainFactory } from '../factories/bot-actions-chain.factory'
-import { BotFileOptions } from '../interfaces/bot-file-options.interfaces'
 
 /**
  * 
  * @param page 
  * @param actions 
  */
-export const applyBotActionOrActions = async(page: Page, options: BotFileOptions, actions: BotAction<any|void>[] | BotAction<any|void>, ...injects: any[]) => {
+export const applyBotActionOrActions = async(page: Page, actions: BotAction<any|void>[] | BotAction<any|void>, ...injects: any[]) => {
   if (Array.isArray(actions)) {
-    await BotActionsChainFactory(page, options, ...injects)(...actions)
+    await BotActionsChainFactory(page, ...injects)(...actions)
   } else {
-    await BotActionsChainFactory(page, options, ...injects)(actions)
+    await BotActionsChainFactory(page, ...injects)(actions)
   }
 }

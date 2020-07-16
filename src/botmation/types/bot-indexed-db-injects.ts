@@ -12,4 +12,4 @@ export type IndexedDBStoreNameKeyValue = any
 /**
  * @description   [databaseName, databaseVersion, storeName, and Piped value]
  */
-export type BotIndexedDBInjects<P> = [IndexedDBDatabaseName, IndexedDBDatabaseVersion, IndexedDBStoreName, PipeValue<P>]
+export type BotIndexedDBInjects<P = undefined> = [IndexedDBDatabaseName, IndexedDBDatabaseVersion, IndexedDBStoreName, PipeValue<P>]

@@ -34,7 +34,7 @@ export const logPipeValue = (value: any) => {
       pipedTheme(appendGutter(' - pipe:', 2)) + prependGutter('Empty', 1)
     )
   }
-  if (typeof value === 'object' || typeof value === 'boolean') {
+  if (typeof value === 'object' || typeof value === 'boolean' || typeof value === "function") {
     console.log(
       pipedTheme(appendGutter(' - pipe:', 2)) + prependGutter(JSON.stringify(value), 1)
     )

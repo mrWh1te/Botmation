@@ -1,5 +1,11 @@
 import { BotAction } from '../interfaces/bot-actions.interfaces'
 
+//
+// @TODO Somethign to TEST!
+//      does return Promise<void> play nicely in pipes?
+//      do these functions play nicely in pipe? Do they clear the pipe as expected?
+//
+
 /**
  * @description   Manually left-click an HTML element on the page given the provided HTML selector
  * @param selector 
@@ -9,9 +15,7 @@ export const click = (selector: string): BotAction => async(page) =>
 
 /**
  * @description   Focus an HTML element
- * @param selector 
- * @alpha 
- * @TODO Test this
+ * @param selector
  */
 export const focus = (selector: string): BotAction => async(page) =>
   await page.focus(selector)

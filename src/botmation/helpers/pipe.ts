@@ -5,13 +5,21 @@
 import { isPipe, Pipe } from "botmation/types/pipe"
 
 /**
- * @description    Returns an array of all the injects with the piped value unpiped (removed from branded wrapping)
+ * @description    Safe way to extract injects that may or may not have a pipe
+ *                  If no pipe, it acts as if it was an empty pipe, so adds "undefined" so you can safely assume the last extracted value was a pipe value
+ *                 Returns an array of all the injects with the piped value unpiped (removed from branded wrapping)
  *                 If there is no pipe, then undefined will be injected as if there was (safe default, empty pipe)
- * @param injectsMaybePipe 
- * @todo move to a pipe helper
+ * @param injectsMaybePipe array of injects thay may or may not have a pipe at the end
+ * @return an array of injects with a value at the end, whatever was in the pipe, if no pipe then undefined (empty pipe value)
  */
-export const openInjectsPipe = (injectsMaybePipe: any[]): any[] => {
-  let injectsWithoutPipe = injectsMaybePipe.slice(0, injectsMaybePipe.length - 1)
+export const unpipeInjects = (injectsMaybePipe: any[]): any[] => {
+  let injectsWithoutPipe 
+  
+  if (injectsHavePipe(injectsMaybePipe)) {
+    injectsWithoutPipe = injectsMaybePipe.slice(0, injectsMaybePipe.length - 1)
+  } else {
+    injectsWithoutPipe = [...injectsMaybePipe]
+  }
 
   // if the branded pipe has a value, return that, otherwise return undefined
   return [...injectsWithoutPipe, getInjectsPipeValue(injectsMaybePipe)]

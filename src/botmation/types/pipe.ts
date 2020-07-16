@@ -32,3 +32,10 @@ export const isPipe = <P = any>(value: Pipe<P> | any): value is Pipe<P> => {
 
   return false
 }
+
+/**
+ * @description    Programmatic expression of what an Empty Pipe looks like
+ */
+export interface EmptyPipe extends Pipe {
+  value: undefined
+}

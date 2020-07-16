@@ -1,6 +1,6 @@
 
 import { BotAction, BotIndexedDBAction } from '../interfaces/bot-actions.interfaces'
-import { openInjectsPipe } from 'botmation/helpers/pipe'
+import { unpipeInjects } from 'botmation/helpers/pipe'
 import { getIndexedDBStoreValue, setIndexedDBStoreValue } from 'botmation/helpers/indexed-db'
 import { injects } from './injects'
 import { PipeValue } from 'botmation/types/pipe'
@@ -30,7 +30,7 @@ export const setIndexedDBValue =
   (key?: string, value?: any, storeName?: string, databaseName?: string, databaseVersion?: number): BotIndexedDBAction<void> => 
     async(page, ...injects) => {
       // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
-      const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = openInjectsPipe(injects)
+      const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = unpipeInjects(injects)
 
       if (!value) {
         if (pipedValue) {
@@ -69,7 +69,7 @@ export const getIndexedDBValue =
   (key?: string, storeName?: string, databaseName?: string, databaseVersion?: number): BotIndexedDBAction<PipeValue> => 
     async(page, ...injects) => {
       // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
-      const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = openInjectsPipe(injects)
+      const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = unpipeInjects(injects)
 
       if (!key) {
         if (pipedValue) {

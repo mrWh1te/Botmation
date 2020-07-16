@@ -6,12 +6,12 @@ import { BotActionsChain } from '../factories/bot-actions-chain'
 /**
  * 
  * @param page 
- * @param actions 
+ * @param actionOrActions 
  */
-export const applyBotActionOrActions = async(page: Page, actions: BotAction[] | BotAction, ...injects: any[]) => {
-  if (Array.isArray(actions)) {
-    await BotActionsChain(page, ...injects)(...actions)
+export const applyBotActionOrActions = async(page: Page, actionOrActions: BotAction[] | BotAction, ...injects: any[]) => {
+  if (Array.isArray(actionOrActions)) {
+    await BotActionsChain(page, ...injects)(...actionOrActions)
   } else {
-    await BotActionsChain(page, ...injects)(actions)
+    await BotActionsChain(page, ...injects)(actionOrActions)
   }
 }

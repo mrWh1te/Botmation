@@ -26,8 +26,19 @@ export function setIndexedDBStoreValue(databaseName: string, databaseVersion: nu
       const db = this.result
 
       if (!db.objectStoreNames.contains(storeName)) {
+        // this was added for a special case of adding a store
+        // to a pre-existing db, but the code was faulty
+        // this if block may not be necessary after-all
+        // @todo determine if this is needed:
         let store = db.createObjectStore(storeName)
-        store.put(value, key)
+        const storeRequest = store.put(value, key)
+
+        storeRequest.onerror = () => {
+          return reject()
+        }
+        storeRequest.onsuccess = () => {
+          return resolve()
+        }
       } else {
         db.onerror = () => { 
           db.close()

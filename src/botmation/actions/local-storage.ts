@@ -1,5 +1,5 @@
 import { BotAction } from "botmation/interfaces"
-import { getInjectsPipedValue } from "botmation/helpers/pipe"
+import { getInjectsPipeValue } from "botmation/helpers/pipe"
 
 import { 
   getLocalStorageKeyValue,
@@ -27,7 +27,7 @@ export const removeLocalStorageKey =
   (key?: string): BotAction =>
     async(page, ...injects) => {
       // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
-      let pipedValue = getInjectsPipedValue(injects)
+      let pipedValue = getInjectsPipeValue(injects)
 
       if (!key) {
         if (pipedValue) {
@@ -54,7 +54,7 @@ export const setLocalStorageValue =
   (key?: string, value?: string): BotAction => 
     async(page, ...injects) => {
       // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
-      let pipedValue = getInjectsPipedValue(injects)
+      let pipedValue = getInjectsPipeValue(injects)
 
       if (!value) {
         if (pipedValue) {
@@ -87,7 +87,7 @@ export const getLocalStorageValue =
   (key?: string): BotAction => 
     async(page, ...injects) => {
       // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
-      let pipedValue = getInjectsPipedValue(injects)
+      let pipedValue = getInjectsPipeValue(injects)
 
       if (!key) {
         if (pipedValue) {

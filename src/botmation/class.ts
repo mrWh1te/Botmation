@@ -1,5 +1,5 @@
 /**
- * @description    Main OOP class wrapper to encapsulate the page, options, and any injects, a dev may choose to use
+ * @description    Example OOP class wrapper to encapsulate the page, and any injects, a dev may choose to use
  */
 
 import { Page, Browser } from 'puppeteer'
@@ -25,7 +25,6 @@ export class Botmation implements BotmationInterface {
 
   /**
    * @description   Constructor for building a Botmation instance with a specific Browser page and optional other params
-   * @param  options   to overload any of the safe defaults
    */
   constructor(page: Page, ...injects: any[]) {
     this.page = page

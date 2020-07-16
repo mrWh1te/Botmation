@@ -12,7 +12,7 @@ import { enrichBotFileOptionsWithDefaults } from 'botmation/helpers/file-options
  *                It relies on `options`, BotOptions, to determine the URL to save the asset in
  * @param fileName name of the file to save the PNG as
  */
-export const screenshot = (fileName: string): BotFilesAction<void> => 
+export const screenshot = (fileName: string): BotFilesAction => 
   async (page, options) => {
     const hydratedOptions = enrichBotFileOptionsWithDefaults(options)
 

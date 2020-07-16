@@ -1,6 +1,6 @@
 import { BotAction } from '../interfaces/bot-actions.interfaces'
-import { logMessage, logWarning, logError, logPiped } from '../helpers/console'
-import { injectsArePiped, getInjectsPipedValue } from 'botmation/helpers/pipe'
+import { logMessage, logWarning, logError, logPipeValue } from '../helpers/console'
+import { injectsHavePipe, getInjectsPipeValue } from 'botmation/helpers/pipe'
 
 /**
  * @description   The following Actions are specific to the NodeJS Console, for the Developer
@@ -17,9 +17,9 @@ export const log = (message?: string): BotAction => async (page, ...injects) => 
     logMessage(message)
   }
 
-  if (injectsArePiped(injects)) {
-    let pipedValue = getInjectsPipedValue(injects)
-    logPiped(pipedValue)
+  if (injectsHavePipe(injects)) {
+    let pipedValue = getInjectsPipeValue(injects)
+    logPipeValue(pipedValue)
     console.log('\n')
     return pipedValue
 
@@ -35,10 +35,10 @@ export const warning = (warning?: string): BotAction => async (page, ...injects)
     logWarning(warning)
   }
 
-  if (injectsArePiped(injects)) {
-    let pipedValue = getInjectsPipedValue(injects)
+  if (injectsHavePipe(injects)) {
+    let pipedValue = getInjectsPipeValue(injects)
 
-    logPiped(pipedValue)
+    logPipeValue(pipedValue)
     return pipedValue
   }
 }
@@ -48,10 +48,10 @@ export const error = (error?: string): BotAction => async (page, ...injects) => 
     logError(error)
   }
 
-  if (injectsArePiped(injects)) {
-    let pipedValue = getInjectsPipedValue(injects)
+  if (injectsHavePipe(injects)) {
+    let pipedValue = getInjectsPipeValue(injects)
 
-    logPiped(pipedValue)
+    logPipeValue(pipedValue)
     return pipedValue
   }
 }

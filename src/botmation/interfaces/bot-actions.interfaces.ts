@@ -2,6 +2,7 @@ import { Page } from 'puppeteer'
 
 import { BotFilesInjects } from '../types/bot-files-injects'
 import { BotIndexedDBInjects } from 'botmation/types/bot-indexed-db-injects'
+import { Pipe } from 'botmation/types/pipe'
 
 /**
  * @description    All BotAction Interfaces (original chain link/pipeable, to more specific)
@@ -23,11 +24,12 @@ export interface BotAction<R = any, I extends Array<any> = any[]> extends Functi
 }
 
 /**
- * @description   Like a BotAction, but it's not mean't to be used within a chain of Bot Action's
+ * @description   Is a BotAction that relies on Piping to return a boolean value
+ *                    The boolean value is wrapped in a pipe, following the Pipe flow
  *                Instead this is for higher order bot actions or pipes as these return boolean values
  */
 export interface ConditionalBotAction extends Function {
-  (page: Page, ...injects: any[]) : Promise<boolean>
+  (page: Page, ...injects: any[]) : Promise<boolean|Pipe<boolean>> // "|Pipe" supports using a pipe internally
 }
 
 /**

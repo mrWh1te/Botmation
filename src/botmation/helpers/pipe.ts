@@ -2,33 +2,33 @@
  * Functions that help with the Pipe
  */
 
-import { isPiped, Piped } from "botmation/types/piped"
+import { isPipe, Pipe } from "botmation/types/pipe"
 
 /**
  * @description    Returns an array of all the injects with the piped value unpiped (removed from branded wrapping)
- *    Can't remap `value` with restructuring when it's undefined
- * @param injectsPiped 
+ *                 If there is no pipe, then undefined will be injected as if there was (safe default, empty pipe)
+ * @param injectsMaybePipe 
  * @todo move to a pipe helper
  */
-export const openInjectsPipe = (injectsPiped: any[]): any[] => {
-  let injectsWithoutPipe = injectsPiped.slice(0, injectsPiped.length - 1)
+export const openInjectsPipe = (injectsMaybePipe: any[]): any[] => {
+  let injectsWithoutPipe = injectsMaybePipe.slice(0, injectsMaybePipe.length - 1)
 
   // if the branded pipe has a value, return that, otherwise return undefined
-  return [...injectsWithoutPipe, getInjectsPipedValue(injectsPiped)]
+  return [...injectsWithoutPipe, getInjectsPipeValue(injectsMaybePipe)]
 }
 
 /**
  * @description     Returns a Piped Value, if found in the Injects array, otherwise returns the representation of an empty pipe
  * @param injects 
  */
-export const injectsPipeOrEmptyPipe = <P = any>(injects: any[]): Piped<P> =>
-  injects.length > 0 && isPiped(injects[injects.length - 1]) ? injects[injects.length - 1] : wrapValueInPipe(undefined) // empty pipe
+export const injectsPipeOrEmptyPipe = <P = any>(injects: any[]): Pipe<P> =>
+  injects.length > 0 && isPipe(injects[injects.length - 1]) ? injects[injects.length - 1] : wrapValueInPipe(undefined) // empty pipe
 
 /**
  * @description   Default return is a empty pipe (missing `value` key from Piped object)
  * @param value 
  */
-export const wrapValueInPipe = <P = any>(value: P): Piped<P> =>  ({
+export const wrapValueInPipe = <P = any>(value: P): Pipe<P> =>  ({
   brand: 'piped',
   value
 })
@@ -38,24 +38,37 @@ export const wrapValueInPipe = <P = any>(value: P): Piped<P> =>  ({
  *                 Checks injects to see if the last inject is a piped value
  * @param injects 
  */
-export const injectsArePiped = (injects: any[]): boolean => {
+export const injectsHavePipe = (injects: any[]): boolean => {
   if (injects.length === 0) {
     return false
   }
 
-  return isPiped(injects[injects.length - 1])
+  return isPipe(injects[injects.length - 1])
 }
 
 /**
- * 
+ * @description    For when your not sure if the value is in a pipe or not, but you need it
+ *                 If not pipe, returns the param value
+ * @param pipeOrValue 
+ */
+export const getPipeValue = <R = any>(pipeOrValue: Pipe<R>|R): R => {
+  if (isPipe(pipeOrValue)) {
+    // piped value
+    return pipeOrValue.value
+  }
+
+  // value
+  return pipeOrValue
+}
+
+/**
+ * @description    Gets the pipe value from an `injects` array, but if the array is missing the pipe, it returns undefined (like an empty pipe value would be)
  * @param injects 
  */
-export const getInjectsPipedValue = (injects: any[]): any => {
-  if (injectsArePiped(injects)) {
+export const getInjectsPipeValue = (injects: any[]): any => {
+  if (injectsHavePipe(injects)) {
     return injects[injects.length - 1].value
   }
 
-  // there's an expectation that this function is ONLY used in pipe's
-  // where the last thing in the injects array, is a piped value
-  throw new Error('[getInjectsPipedValue] Piped value missing from Injects -> Maybe this ran inside a chain and not a pipe?') 
+  return undefined
 }

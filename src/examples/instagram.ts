@@ -22,7 +22,8 @@ import { isTurnOnNotificationsModalActive } from 'botmation/bots/instagram/helpe
 import { logError } from 'botmation/helpers/console'
 
 // Expiremental Pipe
-import { BotActionsPipe as Bot } from 'botmation/factories/bot-actions-pipe'
+// import { BotActionsPipe as Bot } from 'botmation/factories/bot-actions-pipe' // what if rename to PipeActionsBot?
+import { BotActionsChain as Bot } from 'botmation/factories/bot-actions-chain' // what if rename to ChainActionsBot?
 import { indexedDBStore, setIndexedDBValue, getIndexedDBValue } from 'botmation/actions/indexed-db'
 import { files } from 'botmation/actions/files'
 import { pipe, emptyPipe } from 'botmation/actions/pipe'
@@ -47,18 +48,18 @@ import { pipe, emptyPipe } from 'botmation/actions/pipe'
       goTo(getInstagramBaseUrl()),
 
       // test
-      pipe({id: 5, name: 'Michael'}),
-      log('Test #1 Complete'),
-      emptyPipe,
+      pipe({id: 10, newPipeTest: 'success'})(
+        log('Test #1 Complete')
+      ),
       // end test
 
       // test 3
       log('Test #3 start'),
-      setIndexedDBValue('key-3test', 'value-3test', 'zzzStore2', 'testDB5', 2), // broken, only different store names..... is it 1 store per app? o.O
-      getIndexedDBValue('key-3test', 'zzzStore2', 'testDB5', 2),
-      log('Test #3 results piped:'),
-
-      emptyPipe,
+      setIndexedDBValue('key-3test', 'value-3test', 'zzzStore2', 'testDB5', 2),
+      pipe()(
+        getIndexedDBValue('key-3test', 'zzzStore2', 'testDB5', 2),
+        log('Test #3 results piped:'),
+      ),
 
       // test 5, higher order func
       log('Starting Test #5 indexedDBStore()()'),
@@ -68,8 +69,6 @@ import { pipe, emptyPipe } from 'botmation/actions/pipe'
         getIndexedDBValue('some-key-test5'),
         log('Results of Test #5 are piped:')
       ),
-
-      emptyPipe,
       
       // inline, hackish but do-able
       // async(page) => {

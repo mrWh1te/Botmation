@@ -28,15 +28,20 @@ export const logError = (error: string) =>
   console.log(
     errorTheme(appendGutter(' Error:', 3)) + prependGutter(error, 1)
   )
-export const logPiped = (piped: any) => {
-  if (typeof piped === 'object' || typeof piped === 'boolean') {
+export const logPipeValue = (value: any) => {
+  if (value === undefined) {
     console.log(
-      pipedTheme(appendGutter(' - pipe:', 2)) + prependGutter(JSON.stringify(piped), 1)
+      pipedTheme(appendGutter(' - pipe:', 2)) + prependGutter('Empty', 1)
     )
   }
-  if (typeof piped === 'number' || typeof piped === 'string') {
+  if (typeof value === 'object' || typeof value === 'boolean') {
     console.log(
-      pipedTheme(appendGutter(' - pipe:', 2)) + prependGutter(piped + '', 1)
+      pipedTheme(appendGutter(' - pipe:', 2)) + prependGutter(JSON.stringify(value), 1)
+    )
+  }
+  if (typeof value === 'number' || typeof value === 'string') {
+    console.log(
+      pipedTheme(appendGutter(' - pipe:', 2)) + prependGutter(value + '', 1)
     )
   }
 }

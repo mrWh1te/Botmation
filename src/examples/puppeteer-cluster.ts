@@ -10,7 +10,7 @@ import { log } from 'botmation/actions/console'
 import { Botmation } from 'botmation'
 
 // Purely functional approach
-import { BotActionsChainFactory as Bot } from 'botmation/factories/bot-actions-chain.factory'
+import { BotActionsChain as Bot } from 'botmation/factories/bot-actions-chain'
 import { logError } from 'botmation/helpers/console'
 
 (async () => {

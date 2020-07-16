@@ -5,7 +5,7 @@
 import { Page, Browser } from 'puppeteer'
 
 import { BotAction } from './interfaces/bot-actions.interfaces'
-import { BotActionsChainFactory } from './factories/bot-actions-chain.factory'
+import { BotActionsChain } from './factories/bot-actions-chain'
 import { BotmationInterface } from './interfaces/botmation.interface'
 
 /**
@@ -65,7 +65,7 @@ export class Botmation implements BotmationInterface {
    * @param actions  
    */
   public async actions(...actions: BotAction[]): Promise<void> {
-    return BotActionsChainFactory(this.page, ...this.injects)(...actions)
+    return BotActionsChain(this.page, ...this.injects)(...actions)
   }
 
   /**

@@ -3,7 +3,7 @@ import { Page } from 'puppeteer'
 import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
 import { click, type } from 'botmation/actions/input'
 import { goTo } from 'botmation/actions/navigation'
-import { BotActionsChainFactory } from 'botmation/factories/bot-actions-chain.factory'
+import { BotActionsChain } from 'botmation/factories/bot-actions-chain'
 
 import { BASE_URL, EXAMPLE_URL } from '../../urls'
 import { FORM_TEXT_INPUT_SELECTOR, FORM_SUBMIT_BUTTON_SELECTOR } from '../../selectors'
@@ -21,7 +21,7 @@ describe('[Botmation] BotActionsChainFactory', () => {
   //
   // Functional using BotActionsChainFactory
   it('should run the declared actions in sequence on the page provided', async() => {
-    await BotActionsChainFactory(page)(
+    await BotActionsChain(page)(
       goTo(EXAMPLE_URL),
       click(FORM_TEXT_INPUT_SELECTOR),
       type('functional'),
@@ -43,8 +43,8 @@ describe('[Botmation] BotActionsChainFactory', () => {
       }
     } as any as Page
 
-    await BotActionsChainFactory(mockPage)(
-      (mockPage) => BotActionsChainFactory(mockPage)(
+    await BotActionsChain(mockPage)(
+      (mockPage) => BotActionsChain(mockPage)(
         goTo('1st example url'),
         click('1st example selector'),
         type('1st example type'),

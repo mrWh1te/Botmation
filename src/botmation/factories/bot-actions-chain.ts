@@ -9,7 +9,7 @@ import { BotAction } from '../interfaces/bot-actions.interfaces'
  * @example       see `login()` under `./src/bots/instagram/actions/auth.ts`
  * @param page 
  */
-export const BotActionsChainFactory = 
+export const BotActionsChain = 
   (page: Page, ...injects: any[]) => 
     async (...actions: BotAction[]): Promise<void> =>
       actions.reduce(

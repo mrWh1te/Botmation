@@ -1,5 +1,5 @@
 import { BotFileOptions, BotAction } from "botmation/interfaces"
-import { BotActionsPipeFactory } from "botmation/factories/bot-actions-pipe.factory"
+import { BotActionsPipe } from "botmation/factories/bot-actions-pipe"
 import { getDefaultBotFileOptions } from "botmation/helpers/file-options"
 
 /**
@@ -8,4 +8,4 @@ import { getDefaultBotFileOptions } from "botmation/helpers/file-options"
 export const files = (fileOptions?: Partial<BotFileOptions>) =>
   (...actions: BotAction[]): BotAction =>
     async(page, ...injects: any[]) =>
-      await BotActionsPipeFactory<any>(page, getDefaultBotFileOptions(fileOptions), ...injects)(...actions)
+      await BotActionsPipe<any>(page, getDefaultBotFileOptions(fileOptions), ...injects)(...actions)

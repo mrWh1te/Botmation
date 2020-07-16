@@ -5,7 +5,7 @@ import { sleep } from '../helpers/utilities'
 
 import { applyBotActionOrActions } from '../helpers/actions'
 import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions.interfaces'
-import { BotActionsPipeFactory } from 'botmation/factories/bot-actions-pipe.factory'
+import { BotActionsPipe } from 'botmation/factories/bot-actions-pipe'
 
 /**
  * @description givenThat(condition returns a promise that resolves to TRUE)(run these actions in a chain)
@@ -24,7 +24,7 @@ export const givenThat =
       async(page, ...injects) => {
         try {
           if (await condition(page, ...injects)) {
-            await BotActionsPipeFactory(page, ...injects)(...actions)
+            await BotActionsPipe(page, ...injects)(...actions)
           }
         } catch(error) {
           // catch here in case the condition rejects, needed for unit-test
@@ -97,7 +97,7 @@ export const doWhile =
         try {
           let resolvedCondition = true // doWhile -> run the code, then check the condition on whether or not we should run the code again
           while (resolvedCondition) {
-            await BotActionsPipeFactory(page, ...injects)(...actions)
+            await BotActionsPipe(page, ...injects)(...actions)
             resolvedCondition = await condition(page, ...injects)
           }
         } catch (error) {
@@ -124,7 +124,7 @@ export const forAsLong =
         try {
           let resolvedCondition = await(condition(page, ...injects))
           while (resolvedCondition) {
-            await BotActionsPipeFactory(page, ...injects)(...actions)
+            await BotActionsPipe(page, ...injects)(...actions)
             resolvedCondition = await condition(page, ...injects)
           }
         } catch (error) {

@@ -2,7 +2,7 @@
  * @description  Simple Example Script
  */
 import puppeteer from 'puppeteer'
-import { BotActionsChainFactory as Bot } from 'botmation'
+import { BotActionsChain as Bot } from 'botmation'
 
 // General BotAction's
 import { log } from 'botmation/actions/console'

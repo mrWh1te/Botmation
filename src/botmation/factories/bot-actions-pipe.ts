@@ -13,7 +13,7 @@ import { injectsPipeOrEmptyPipe, wrapValueInPipe } from 'botmation/helpers/pipe'
 //  5) Pipes expect piped values to come in to their pipe, but have safe defaults
 //  7) Piped always return their piped values in the end (so if empty pipe, undefined, otherwise whatever the value, unbranded is)
 //
-export const BotActionsPipeFactory = 
+export const BotActionsPipe = 
   <R = any, P = any>(page: Page, ...injects: any[]) =>
     async (...actions: BotAction[]): Promise<R> => {
       // Possible for last inject to be the piped value

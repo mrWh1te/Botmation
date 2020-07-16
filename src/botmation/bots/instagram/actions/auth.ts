@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 
 import { BotAction } from '../../../interfaces/bot-actions.interfaces'
-import { BotActionsChainFactory } from '../../../factories/bot-actions-chain.factory'
+import { BotActionsChain } from '../../../factories/bot-actions-chain'
 
 import { goTo, waitForNavigation } from '../../../actions/navigation'
 import { log } from '../../../actions/console'
@@ -23,7 +23,7 @@ import { click, type } from '../../../actions/input'
  */
 export const login = ({username, password}: {username: string, password: string}): BotAction => async(page: Page, ...injects) =>
   // This is how a single BotAction can run its own sequence of BotAction's prior to the next call of the original bot.actions() sequence
-  BotActionsChainFactory(page, ...injects)(
+  BotActionsChain(page, ...injects)(
     goTo(getInstagramLoginUrl()),
     click(FORM_AUTH_USERNAME_INPUT_SELECTOR),
     type(username),

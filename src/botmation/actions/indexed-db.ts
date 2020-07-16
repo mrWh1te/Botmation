@@ -1,6 +1,6 @@
 
 import { BotAction, BotIndexedDBAction } from '../interfaces/bot-actions.interfaces'
-import { BotActionsPipeFactory } from 'botmation/factories/bot-actions-pipe.factory'
+import { BotActionsPipe } from 'botmation/factories/bot-actions-pipe'
 import { openInjectsPipe } from 'botmation/helpers/pipe'
 import { getIndexedDBStoreValue, setIndexedDBStoreValue } from 'botmation/helpers/indexed-db'
 
@@ -14,7 +14,7 @@ import { getIndexedDBStoreValue, setIndexedDBStoreValue } from 'botmation/helper
 export const indexedDBStore = (databaseName: string, databaseVersion: number, storeName: string) =>
   (...actions: BotAction[]): BotAction =>
     async(page, ...injects: any[]) => 
-      await BotActionsPipeFactory<any>(page, databaseName, databaseVersion, storeName, ...injects)(...actions)
+      await BotActionsPipe<any>(page, databaseName, databaseVersion, storeName, ...injects)(...actions)
       
 
 /**

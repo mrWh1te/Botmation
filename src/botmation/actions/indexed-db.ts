@@ -3,6 +3,7 @@ import { BotAction, BotIndexedDBAction } from '../interfaces/bot-actions.interfa
 import { BotActionsPipe } from 'botmation/factories/bot-actions-pipe'
 import { openInjectsPipe } from 'botmation/helpers/pipe'
 import { getIndexedDBStoreValue, setIndexedDBStoreValue } from 'botmation/helpers/indexed-db'
+import { injects } from './injects'
 
 /**
  * @description    It's a utility higher-order BotAction that sets injects before the parent chain/pipe's injects, IndexedDB store data
@@ -13,8 +14,7 @@ import { getIndexedDBStoreValue, setIndexedDBStoreValue } from 'botmation/helper
  */
 export const indexedDBStore = (databaseName: string, databaseVersion: number, storeName: string) =>
   (...actions: BotAction[]): BotAction =>
-    async(page, ...injects: any[]) => 
-      await BotActionsPipe<any>(page, databaseName, databaseVersion, storeName, ...injects)(...actions)
+    injects(databaseName, databaseVersion, storeName)(...actions)
       
 
 /**

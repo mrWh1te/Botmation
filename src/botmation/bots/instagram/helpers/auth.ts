@@ -14,3 +14,14 @@ export const isGuest: ConditionalBotAction = async(page, ...injects) =>
     getIndexedDBValue('users.viewerId'),
     map(viewerId => viewerId ? false : true)
   )(page, ...injects)
+
+/**
+ * 
+ * @param page 
+ * @param injects 
+ */
+export const isLoggedIn: ConditionalBotAction = async(page, ...injects) =>
+  await indexedDBStore('redux', 1, 'paths')(
+    getIndexedDBValue('users.viewerId'),
+    map(viewerId => viewerId ? true : false)
+  )(page, ...injects)

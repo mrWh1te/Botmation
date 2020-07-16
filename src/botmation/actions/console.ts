@@ -6,7 +6,10 @@ import { injectsArePiped, getInjectsPipedValue } from 'botmation/helpers/pipe'
  * @description   The following Actions are specific to the NodeJS Console, for the Developer
  *                It's only about logging strings into the Console, with identifying coloring and spacing
  * 
- *                They will log piped values to the console AND carry piped values to the next BotAction (if passed)
+ *                If used in a Pipe, it will 
+ *                  1) print to the console the piped value
+ *                  2) automatically return it
+ *                      ^this maintains it in the pipe, unlike regular pipable bot actions, which usually don't return the piped value received (carrying it forward)
  */
 
 export const log = (message?: string): BotAction => async (page, ...injects) => {

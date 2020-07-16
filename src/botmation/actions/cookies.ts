@@ -3,7 +3,7 @@ import { promises as fs } from 'fs'
 import { BotFilesAction } from '../interfaces/bot-actions.interfaces'
 import { getFileUrl } from '../helpers/assets'
 import { logError } from '../helpers/console'
-import { getDefaultBotFileOptions } from 'botmation/helpers/file-options'
+import { enrichBotFileOptionsWithDefaults } from 'botmation/helpers/file-options'
 
 /**
  * @description   Parse page's cookies to save as JSON in local file
@@ -13,7 +13,7 @@ import { getDefaultBotFileOptions } from 'botmation/helpers/file-options'
  */
 export const saveCookies = (fileName: string): BotFilesAction => async(page, options) => {
   try {
-    const hydratedOptions = getDefaultBotFileOptions(options)
+    const hydratedOptions = enrichBotFileOptionsWithDefaults(options)
     
     const cookies = await page.cookies()
     await fs.writeFile(getFileUrl(hydratedOptions.cookies_directory, hydratedOptions, fileName) + '.json', JSON.stringify(cookies, null, 2))
@@ -31,7 +31,7 @@ export const saveCookies = (fileName: string): BotFilesAction => async(page, opt
  */
 export const loadCookies = (fileName: string): BotFilesAction => async(page, options) => {
   try {
-    const hydratedOptions = getDefaultBotFileOptions(options)
+    const hydratedOptions = enrichBotFileOptionsWithDefaults(options)
 
     const file = await fs.readFile(getFileUrl(hydratedOptions.cookies_directory, hydratedOptions, fileName) + '.json')
     const cookies = JSON.parse(file.toString())

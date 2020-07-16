@@ -5,7 +5,7 @@ import { BotFilesAction } from "../interfaces/bot-actions.interfaces"
 import { forAll } from './utilities'
 import { goTo } from './navigation'
 import { getFileUrl } from '../helpers/assets'
-import { getDefaultBotFileOptions } from 'botmation/helpers/file-options'
+import { enrichBotFileOptionsWithDefaults } from 'botmation/helpers/file-options'
 
 /**
  * @description   Take a PNG screenshot of the current page
@@ -14,7 +14,7 @@ import { getDefaultBotFileOptions } from 'botmation/helpers/file-options'
  */
 export const screenshot = (fileName: string): BotFilesAction<void> => 
   async (page, options) => {
-    const hydratedOptions = getDefaultBotFileOptions(options)
+    const hydratedOptions = enrichBotFileOptionsWithDefaults(options)
 
     const fileUrl = getFileUrl(hydratedOptions.screenshots_directory, hydratedOptions, fileName) + '.png'
   

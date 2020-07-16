@@ -17,7 +17,7 @@ import { closeTurnOnNotificationsModal } from 'botmation/bots/instagram/actions/
 
 // Instagram helpers
 import { getInstagramBaseUrl, getInstagramLoginUrl } from 'botmation/bots/instagram/helpers/urls'
-import { isGuest } from 'botmation/bots/instagram/helpers/auth'
+import { isGuest, isLoggedIn } from 'botmation/bots/instagram/helpers/auth'
 import { isTurnOnNotificationsModalActive } from 'botmation/bots/instagram/helpers/modals'
 import { logError } from 'botmation/helpers/console'
 
@@ -40,7 +40,10 @@ import { pipe, emptyPipe } from 'botmation/actions/pipe'
       log('Botmation running'),
       // Takes the name of the file to load cookies from
       // Match this value with the same used in saveCookies()
-      loadCookies('instagram'),
+      files({cookies_directory: 'simple'})(
+        loadCookies('instagram'),
+      ),
+
       goTo(getInstagramBaseUrl()),
 
       // test
@@ -73,29 +76,33 @@ import { pipe, emptyPipe } from 'botmation/actions/pipe'
       //
       // },
       
-      // Special action that resolves a Promise for TRUE
-      // only on TRUE, does it run the chain of actions
+      // lets log in, if we are a guest
       givenThat(isGuest) (
         log('is guest so logging in'),
         goTo(getInstagramLoginUrl()),
         login({username: 'account', password: 'password'}),
-        files()(
+        files({cookies_directory: 'simple'})(
           saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies 
         ),
         log('Saved Cookies')
       ),
 
-      // After initial load, Instagram sometimes prompts the User with a modal...
-      // Deal with the "Turn On Notifications" Modal, if it shows up
-      givenThat(isTurnOnNotificationsModalActive)(
-        closeTurnOnNotificationsModal
+      // in case that log in failed, lets check before we operate
+      givenThat(isLoggedIn)(
+        log('is logged in'),
+        // After initial load, Instagram sometimes prompts the User with a modal...
+        // Deal with the "Turn On Notifications" Modal, if it shows up
+        givenThat(isTurnOnNotificationsModalActive)(
+          closeTurnOnNotificationsModal
+        ),
+  
+        // Go to the main homepage/feed
+        // goTo(getInstagramBaseUrl()),
+        // wait(50000),
+        screenshot('test4534'),
+        // favoriteAllFrom('user1', 'user2'), // TBI (to be implemented) // TODO: implement
       ),
 
-      // Go to the main homepage/feed
-      // goTo(getInstagramBaseUrl()),
-      // wait(50000),
-      screenshot('test4534'),
-      // favoriteAllFrom('user1', 'user2'), // TBI (to be implemented) // TODO: implement
 
       log('Done'),
       //   viewAllStoriesFrom('user1', 'user2') // TODO: implement

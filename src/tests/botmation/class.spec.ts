@@ -8,7 +8,7 @@ import { Botmation } from 'botmation/class'
 import { BASE_URL, EXAMPLE_URL } from '../urls'
 import { FORM_TEXT_INPUT_SELECTOR, FORM_SUBMIT_BUTTON_SELECTOR } from '../selectors'
 import { BotFileOptions } from 'botmation/interfaces'
-import { getDefaultBotFileOptions } from 'botmation/helpers/file-options'
+import { enrichBotFileOptionsWithDefaults } from 'botmation/helpers/file-options'
 
 /**
  * @description   Test the Botmation class methods specific to the Class

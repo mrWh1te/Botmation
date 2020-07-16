@@ -55,5 +55,7 @@ export const getInjectsPipedValue = (injects: any[]): any => {
     return injects[injects.length - 1].value
   }
 
-  throw new Error('Piped value missing from Injects') // TODO confirm the utility of this code
+  // there's an expectation that this function is ONLY used in pipe's
+  // where the last thing in the injects array, is a piped value
+  throw new Error('[getInjectsPipedValue] Piped value missing from Injects -> Maybe this ran inside a chain and not a pipe?') 
 }

@@ -1,11 +1,11 @@
 import { BotFileOptions, BotAction } from "botmation/interfaces"
 import { BotActionsPipe } from "botmation/factories/bot-actions-pipe"
-import { getDefaultBotFileOptions } from "botmation/helpers/file-options"
+import { enrichBotFileOptionsWithDefaults } from "botmation/helpers/file-options"
+import { injects } from "./injects"
 
 /**
- * @description    Higher-order to inject "BotOptions" being updated into an Options/Config object for local file management
+ * @description    Higher-order to inject "BotFileOptions"
  */
 export const files = (fileOptions?: Partial<BotFileOptions>) =>
   (...actions: BotAction[]): BotAction =>
-    async(page, ...injects: any[]) =>
-      await BotActionsPipe<any>(page, getDefaultBotFileOptions(fileOptions), ...injects)(...actions)
+    injects(enrichBotFileOptionsWithDefaults(fileOptions))(...actions)

@@ -1,12 +1,12 @@
 
-import { BotAction5, BotIndexedDBInjects } from '../interfaces/bot-actions.interfaces'
+import { BotAction5, BotIndexedDBAction } from '../interfaces/bot-actions.interfaces'
 import { BotActionsPipeFactory5 } from 'botmation/factories/bot-actions-pipe.factory'
 import { openInjectsPipe } from 'botmation/helpers/pipe'
 import { getIndexedDBStoreValue, setIndexedDBStoreValue } from 'botmation/helpers/indexed-db'
 
 /**
- * @description    It's a utility BotAction that injects before the primary injects, IndexedDB important data
- *                 Database name & version, and Store name, so the set of BotAction's ran inside, have all 3 injected first
+ * @description    It's a utility higher-order BotAction that sets injects before the parent chain/pipe's injects, IndexedDB store data
+ *                 Database name & version, and Store name are accepted then injected into all provided actions
  * @param databaseName 
  * @param databaseVersion 
  * @param storeName 
@@ -27,8 +27,8 @@ export const indexedDBStore = (databaseName: string, databaseVersion: number, st
  * @param databaseVersion 
  */
 export const setIndexedDBValue = 
-  (key?: string, value?: any, storeName?: string, databaseName?: string, databaseVersion?: number): BotAction5 => 
-    async(page, ...injects: BotIndexedDBInjects<any>) => {
+  (key?: string, value?: any, storeName?: string, databaseName?: string, databaseVersion?: number): BotIndexedDBAction => 
+    async(page, ...injects) => {
       // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
       const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = openInjectsPipe(injects)
 
@@ -66,8 +66,8 @@ export const setIndexedDBValue =
  * @param databaseVersion 
  */
 export const getIndexedDBValue = 
-  <R>(key?: string, storeName?: string, databaseName?: string, databaseVersion?: number): BotAction5<R> => 
-    async(page, ...injects: BotIndexedDBInjects<any>): Promise<R> => {
+  <R>(key?: string, storeName?: string, databaseName?: string, databaseVersion?: number): BotIndexedDBAction => 
+    async(page, ...injects): Promise<R> => {
       // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
       const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = openInjectsPipe(injects)
 

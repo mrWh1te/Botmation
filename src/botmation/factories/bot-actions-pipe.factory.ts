@@ -39,7 +39,7 @@ export const BotActionsPipeFactory =
 //
 export const BotActionsPipeFactory5 = 
   <R = any, P = any>(page: Page, ...injects: any[]) =>
-    async (...actions: BotAction5[]): Promise<void|R> => {
+    async (...actions: BotAction5[]): Promise<R> => {
       // Possible for last inject to be the piped value
       let pipe = injectsPipeOrEmptyPipe<P>(injects) // unwraps the piped value from the piped branded box
 
@@ -55,11 +55,5 @@ export const BotActionsPipeFactory5 =
         logError(error)
       }
 
-      // Return of an ActionsPipe is `void` unless the last action returns something
-      // if it returns something, it's the last piped value returned from the last botaction, wrapped for type gaurding:
       return pipe.value as any as R
     }
-
-
-//
-// @todo move to helpers for pipe functionality

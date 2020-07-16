@@ -25,7 +25,7 @@ import { logError } from 'botmation/helpers/console'
 import { BotActionsPipeFactory5 as Bot } from 'botmation/factories/bot-actions-pipe.factory'
 import { indexedDBStore, setIndexedDBValue, getIndexedDBValue } from 'botmation/actions/indexed-db'
 import { files } from 'botmation/actions/files'
-import { pipe, clearPipe } from 'botmation/actions/pipe'
+import { pipe, emptyPipe } from 'botmation/actions/pipe'
 
 // Main Script
 (async () => {
@@ -46,7 +46,7 @@ import { pipe, clearPipe } from 'botmation/actions/pipe'
       // test
       pipe({id: 5, name: 'Michael'}),
       log('Test #1 Complete'),
-      clearPipe,
+      emptyPipe,
       // end test
 
       // test 3
@@ -55,7 +55,7 @@ import { pipe, clearPipe } from 'botmation/actions/pipe'
       getIndexedDBValue('key-3test', 'zzzStore2', 'testDB5', 2),
       log('Test #3 results piped:'),
 
-      clearPipe,
+      emptyPipe,
 
       // test 5, higher order func
       log('Starting Test #5 indexedDBStore()()'),
@@ -66,7 +66,7 @@ import { pipe, clearPipe } from 'botmation/actions/pipe'
         log('Results of Test #5 are piped:')
       ),
 
-      clearPipe,
+      emptyPipe,
       
       // inline, hackish but do-able
       // async(page) => {

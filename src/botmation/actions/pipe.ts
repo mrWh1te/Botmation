@@ -11,7 +11,7 @@ import { BotAction5 } from "botmation/interfaces"
  * pipeMap ?
  */
 export const map = (mapFunction: (pipedValue: any) => any): BotAction5 => async (page, ...injects: any[]) => 
-injects.length > 0 ? mapFunction(injects[injects.length - 1].value) : mapFunction(undefined)
+  injects.length > 0 ? mapFunction(injects[injects.length - 1].value) : mapFunction(undefined)
 
 /**
  * @description   Overwrite the piped value
@@ -20,6 +20,6 @@ injects.length > 0 ? mapFunction(injects[injects.length - 1].value) : mapFunctio
 export const pipe = (valueToPipe: any): BotAction5 => async () => valueToPipe
 
 /**
- * @description   Clear the piped value (sets piped value to undefined, @TODO once piped interface set, update as necessary or remove message)
+ * @description   Empty the pipe = clear the pipe's value = sets piped value to undefined
  */
-export const clearPipe: BotAction5 = async () => undefined
+export const emptyPipe: BotAction5 = async () => undefined

@@ -99,7 +99,7 @@ export const getLocalStorageValue =
         }
       }
 
-      await page.evaluate(
+      return await page.evaluate(
         getLocalStorageKeyValue,
         key ? key : 'missing-key'
       )

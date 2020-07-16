@@ -1,6 +1,5 @@
 import { Page } from 'puppeteer'
-import { BotAction } from './bot-actions.interfaces'
-import { BotFileOptions } from './bot-file-options.interfaces'
+import { BotAction5 } from './bot-actions.interfaces'
 
 /**
  * @description   Base public interface for a Botmation instance
@@ -9,13 +8,10 @@ import { BotFileOptions } from './bot-file-options.interfaces'
  */
 export interface BotmationInterface {
   // Main
-  actions(...actions: BotAction<any|void>[]): Promise<void>
+  actions(...actions: BotAction5[]): Promise<void>
   // Page
   setPage(page: Page): void
   getPage(): Page
-  // Options
-  setOptions(options: Partial<BotFileOptions>): void
-  updateOptions(options: Partial<BotFileOptions>): void
-  // Injects are optional class code
-  // closePage is optional TODO: add a closePage() bot action
+  // Injects
+  setInjects(...injects: any[]): void
 }

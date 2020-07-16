@@ -1,32 +1,8 @@
 import { Page } from 'puppeteer'
 
-import { BotAction5, BotAction } from '../interfaces/bot-actions.interfaces'
-import { BotFileOptions } from '../interfaces/bot-file-options.interfaces'
-import { PipedValue, Piped } from '../types/piped'
-import { getDefaultBotFileOptions } from '../helpers/file-options'
+import { BotAction5 } from '../interfaces/bot-actions.interfaces'
 import { logError } from 'botmation/helpers/console'
 import { injectsPipeOrEmptyPipe, wrapValueInPipe } from 'botmation/helpers/pipe'
-
-/**
- * @description   Similar to BotActionsChainFactory except the output of BotAction's are provided as input for subsequent BotAction's
- *                This can be used within a regular BotActionsChain like forAsLong(reading feed)(pipe the feed data through these special actions)
- * 
- *                Returned data of one botaction is appended to the end of the `injects` in the subsequent action
- *                Therefore, if a custom BotAction strongly types the injects, that isn't lost when used after another BotAction that returns a value
- * 
- * @param page    Puppeteer.Page
- */
-export const BotActionsPipeFactory = 
-  <R = undefined, P = undefined>(page: Page, piped?: PipedValue<P>, overloadOptions: Partial<BotFileOptions> = {}, ...injects: any[]) => 
-    async (...actions: BotAction<any>[]): Promise<R> => {
-      let piped = undefined
-
-      for(const action of actions) {
-        piped = await action(page, piped, getDefaultBotFileOptions(overloadOptions), ...injects)
-      }
-
-      return piped
-    }
 
 //
 // Standards

@@ -1,6 +1,5 @@
 import { Page } from 'puppeteer'
 
-import { BotAction } from '../../../interfaces/bot-actions.interfaces'
 import { forAsLong } from '../../../actions/utilities'
 
 /**

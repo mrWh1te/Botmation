@@ -25,7 +25,7 @@ import { logError } from 'botmation/helpers/console'
     await Bot(page)(
       log('Bot running'),
       goTo('https://google.com'),
-      // screenshot('google-homepage-fn'), // WIP @TODO complete this -- different botAction params
+      screenshot('google-homepage-fn'),
       log('Screenshot taken')
     )
     

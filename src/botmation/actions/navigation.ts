@@ -1,6 +1,6 @@
 import { DirectNavigationOptions, NavigationOptions } from 'puppeteer'
 
-import { BotAction } from '../interfaces/bot-actions.interfaces'
+import { BotAction5 } from '../interfaces/bot-actions.interfaces'
 import { getDefaultGoToPageOptions } from '../helpers/navigation'
 import { logWarning } from '../helpers/console'
 
@@ -9,7 +9,7 @@ import { logWarning } from '../helpers/console'
  *                If the URL given to navigate too is the same as the existing one, it will skip navigation and log a warning
  * @param url
  */
-export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAction => async(page) => {
+export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAction5 => async(page) => {
   if (!goToOptions) {
     goToOptions = getDefaultGoToPageOptions()
   }
@@ -29,7 +29,7 @@ export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAct
  * @alpha 
  * @TODO Test this
  */
-export const goBack = (options?: NavigationOptions): BotAction => async(page) => {
+export const goBack = (options?: NavigationOptions): BotAction5 => async(page) => {
   await page.goBack(options)  
 }
 
@@ -39,7 +39,7 @@ export const goBack = (options?: NavigationOptions): BotAction => async(page) =>
  * @alpha 
  * @TODO Test this
  */
-export const goForward = (options?: NavigationOptions): BotAction => async(page) => {
+export const goForward = (options?: NavigationOptions): BotAction5 => async(page) => {
   await page.goForward(options)  
 }
 
@@ -49,13 +49,13 @@ export const goForward = (options?: NavigationOptions): BotAction => async(page)
  * @alpha 
  * @TODO Test this
  */
-export const reload = (options?: NavigationOptions): BotAction => async(page) => {
+export const reload = (options?: NavigationOptions): BotAction5 => async(page) => {
   await page.reload(options)
 }
 
 /**
  * @description   Wait for navigation to complete. Helpful after submitting a form that causes change pages to occur, ie logging in
  */
-export const waitForNavigation: BotAction = async(page) => {
+export const waitForNavigation: BotAction5 = async(page) => {
   await page.waitForNavigation()
 }

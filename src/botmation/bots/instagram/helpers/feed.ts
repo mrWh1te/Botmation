@@ -7,7 +7,7 @@ import { ConditionalBotAction } from "../../../interfaces"
  *                The "bottom" is recognized as the end of "unread" content. Therefore, a good signal to stop consuming the feed,
  *                otherwise, risk processing previously processed content.
  */
-export const feedIsntAtBottom: ConditionalBotAction = async(page: Page): Promise<boolean> => {
+export const feedIsntAtBottom: ConditionalBotAction = async(page) => {
 
 
   return true

@@ -1,10 +1,10 @@
-import { BotAction } from '../interfaces/bot-actions.interfaces'
+import { BotAction5 } from '../interfaces/bot-actions.interfaces'
 
 /**
  * @description   Manually left-click an HTML element on the page given the provided HTML selector
  * @param selector 
  */
-export const click = (selector: string): BotAction => async(page) =>
+export const click = (selector: string): BotAction5 => async(page) =>
   await page.click(selector)
 
 /**
@@ -13,7 +13,7 @@ export const click = (selector: string): BotAction => async(page) =>
  * @alpha 
  * @TODO Test this
  */
-export const focus = (selector: string): BotAction => async(page) =>
+export const focus = (selector: string): BotAction5 => async(page) =>
   await page.focus(selector)
 
 /**
@@ -21,5 +21,5 @@ export const focus = (selector: string): BotAction => async(page) =>
  *                Recommended you click a form input or something that can have keyboard typing by a user
  * @param copy 
  */
-export const type = (copy: string): BotAction => async(page) =>
+export const type = (copy: string): BotAction5 => async(page) =>
   await page.keyboard.type(copy)

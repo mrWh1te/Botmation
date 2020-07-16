@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { BotAction } from '../interfaces/bot-actions.interfaces'
+import { BotAction5 } from '../interfaces/bot-actions.interfaces'
 import { BotFileOptions } from '../interfaces/bot-file-options.interfaces'
 import { getDefaultBotFileOptions } from '../helpers/file-options'
 
@@ -11,7 +11,7 @@ import { getDefaultBotFileOptions } from '../helpers/file-options'
  */
 export const BotActionsFactory = 
   (page: Page, overloadOptions: Partial<BotFileOptions> = {}, ...injects: any[]) => 
-    async (...actions: BotAction<any, any>[]): Promise<any|void> => {
+    async (...actions: BotAction5<any, any>[]): Promise<any|void> => {
       let previousActionResolvedValue // valued to be piped
 
       for(const action of actions) {

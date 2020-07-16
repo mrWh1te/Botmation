@@ -8,7 +8,7 @@ import { ConditionalBotAction } from 'botmation/interfaces'
  * @description   Returns a promise that resolves TRUE, if the "Turn on Notifications" modal is in view
  * @param page 
  */
-export const isTurnOnNotificationsModalActive: ConditionalBotAction = async(page): Promise<boolean> => {
+export const isTurnOnNotificationsModalActive: ConditionalBotAction = async(page) => {
   const modalHeader = await page.$(MAIN_MODAL_HEADER_SELECTOR)
   const modalHeaderText = await page.evaluate(el => el === null || el.textContent === null ? '' : el.textContent, modalHeader)
 

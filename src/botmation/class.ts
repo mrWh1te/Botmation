@@ -5,7 +5,7 @@
 import { Page, Browser } from 'puppeteer'
 
 import { BotFileOptions } from './interfaces/bot-file-options.interfaces'
-import { BotAction } from './interfaces/bot-actions.interfaces'
+import { BotAction5 } from './interfaces/bot-actions.interfaces'
 import { BotActionsChainFactory } from './factories/bot-actions-chain.factory'
 import { BotmationInterface } from './interfaces/botmation.interface'
 
@@ -20,12 +20,6 @@ export class Botmation implements BotmationInterface {
   private page: Page
 
   /**
-   * @description   Botmation configuration options (optional with safe defaults)
-   *                Configures assets like screenshots, cookies
-   */
-  private options: Partial<BotFileOptions>
-
-  /**
    * @description   Injectables for your custom BotAction's, optional
    */
   private injects: any[]
@@ -34,9 +28,8 @@ export class Botmation implements BotmationInterface {
    * @description   Constructor for building a Botmation instance with a specific Browser page and optional other params
    * @param  options   to overload any of the safe defaults
    */
-  constructor(page: Page, options: Partial<BotFileOptions> = {}, ...injects: any[]) {
+  constructor(page: Page, ...injects: any[]) {
     this.page = page
-    this.options = options
     this.injects = injects
   }
   
@@ -44,13 +37,13 @@ export class Botmation implements BotmationInterface {
    * @description    static async constructor method that will get a page from the browser to operate in
    * @param  options   optional to override any safe defaults
    */
-  public static async asyncConstructor(browser: Browser, options: Partial<BotFileOptions> = {}, ...injects: any[]): Promise<Botmation> {
+  public static async asyncConstructor(browser: Browser, ...injects: any[]): Promise<Botmation> {
     // Grab the first open page from the browser, otherwise make a new one
     const pages = await browser.pages()
     const page = pages.length === 0 ? await browser.newPage() : pages[0]
 
     // Then return a normal instance
-    return new Botmation(page, options, injects)
+    return new Botmation(page, injects)
   }
 
   /**
@@ -72,8 +65,8 @@ export class Botmation implements BotmationInterface {
    *                  )
    * @param actions  
    */
-  public async actions(...actions: BotAction<any|void>[]): Promise<any|void> { // TODO verify that this function can return the last returned BotAction value in the chain
-    return BotActionsChainFactory(this.page, this.options, ...this.injects)(...actions) // TODO replace with BotActionsFactory() 
+  public async actions(...actions: BotAction5[]): Promise<any|void> { // TODO verify that this function can return the last returned BotAction value in the chain
+    return BotActionsChainFactory(this.page, ...this.injects)(...actions) // TODO replace with BotActionsFactory() 
                                                                               // TODO maintain tests for the BotActionsFactory, and add tests to cover this
   }
 
@@ -88,25 +81,6 @@ export class Botmation implements BotmationInterface {
    */
   getPage(): Page {
     return this.page
-  }
-
-  /**
-   * @description    Public method to update the Options if needed
-   * @param options 
-   */
-  public updateOptions(options: Partial<BotFileOptions>) {
-    this.options = {
-      ...this.options,
-      ...options
-    }
-  }
-  /**
-   * @description    Override whatever overloading partial of options we have with what's given
-   *                 Missing options are provided default values
-   * @param options 
-   */
-  public setOptions(options: Partial<BotFileOptions>) {
-    this.options = options
   }
 
   /**

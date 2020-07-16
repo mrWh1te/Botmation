@@ -44,7 +44,7 @@ import { logError } from 'botmation/helpers/console'
       // use the screenshot() BotAction to specify the filename
       // but you must navigate to where you want to snapshot first
       goTo('http://google.com'),
-      // screenshot('google-homepage-yea-its-an-example'), // WIP @TODO complete this -- different botAction params
+      screenshot('google-homepage-yea-its-an-example'),
 
       // using a forAll() to take many screenshots while 
       // specifying the screenshot filename
@@ -53,7 +53,7 @@ import { logError } from 'botmation/helpers/console'
           // 1) The bot visits the site
           goTo('https://' + siteName, getDefaultGoToPageOptions({waitUntil: 'domcontentloaded'})), // these sites sometimes have lingering network calls, could be ads, could be a service down
           // 2) The bot snaps a screenshot then saves it as:
-          // screenshot('news-' + siteName)  // WIP @TODO complete this -- different botAction params
+          screenshot('news-' + siteName)
         ])
       ),
     

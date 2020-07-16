@@ -32,7 +32,7 @@ import { logError } from 'botmation/helpers/console'
     
             await bot.actions(
                 goTo(url),
-                // screenshot(url.replace(/[^a-zA-Z]/g, '_')), // WIP @TODO complete this -- different botAction params
+                screenshot(url.replace(/[^a-zA-Z]/g, '_')),
                 log('screenshot of ' + url + ' saved')
             )
         }
@@ -41,7 +41,7 @@ import { logError } from 'botmation/helpers/console'
             // Imperative OO approach, on 1 line
             await (new Botmation(page)).actions( // if you're not doing the above functional way, you could rename Botmation to Bot in the import using 'as'
                 goTo(url),
-                // screenshot(url.replace(/[^a-zA-Z]/g, '_')), // WIP @TODO complete this -- different botAction params
+                screenshot(url.replace(/[^a-zA-Z]/g, '_')),
                 log('screenshot of ' + url + ' saved')
             )
     
@@ -49,7 +49,7 @@ import { logError } from 'botmation/helpers/console'
             // Functional approach
             await Bot(page)(
                 goTo(url),
-                // screenshot(url.replace(/[^a-zA-Z]/g, '_')), // WIP @TODO complete this -- different botAction params
+                screenshot(url.replace(/[^a-zA-Z]/g, '_')),
                 log('screenshot of ' + url + ' saved')
             )
 

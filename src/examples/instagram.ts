@@ -76,6 +76,7 @@ import { pipe } from 'botmation/actions/pipe'
       // },
       
       // lets log in, if we are a guest
+      log('checking is guest status'),
       givenThat(isGuest) (
         log('is guest so logging in'),
         goTo(getInstagramLoginUrl()),

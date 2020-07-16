@@ -6,7 +6,8 @@ import { sleep } from '../helpers/utilities'
 import { applyBotActionOrActions } from '../helpers/actions'
 import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions.interfaces'
 import { BotActionsPipe } from 'botmation/factories/bot-actions-pipe'
-import { getPipeValue } from 'botmation/helpers/pipe'
+import { getPipeValue, injectsHavePipe, wrapValueInPipe } from 'botmation/helpers/pipe'
+import { logMessage } from 'botmation/helpers/console'
 
 /**
  * @description givenThat(condition returns a promise that resolves to TRUE)(run these actions in a chain)
@@ -24,8 +25,16 @@ export const givenThat =
     (...actions: BotAction[]): BotAction => 
       async(page, ...injects) => {
         try {
+          let conditionResolved
+
           // ConditionResolved's value may be in a pipe
-          const conditionResolved = getPipeValue(await condition(page, ...injects))
+          if (injectsHavePipe(injects)) {
+            conditionResolved = getPipeValue(await condition(page, ...injects))
+          } else {
+            conditionResolved = getPipeValue(await condition(page, ...injects, wrapValueInPipe()))
+          }
+
+          logMessage('[givenThat] conditionResolved = ' + JSON.stringify(conditionResolved))
 
           if (conditionResolved) {
             await BotActionsPipe(page, ...injects)(...actions)
@@ -103,7 +112,13 @@ export const doWhile =
           let resolvedCondition = true // doWhile -> run the code, then check the condition on whether or not we should run the code again
           while (resolvedCondition) {
             await BotActionsPipe(page, ...injects)(...actions)
-            resolvedCondition = getPipeValue(await condition(page, ...injects))
+
+            // ConditionResolved's value may be in a pipe
+            if (injectsHavePipe(injects)) {
+              resolvedCondition = getPipeValue(await condition(page, ...injects))
+            } else {
+              resolvedCondition = getPipeValue(await condition(page, ...injects, wrapValueInPipe()))
+            }
           }
         } catch (error) {
           // logError(error)
@@ -127,11 +142,24 @@ export const forAsLong =
     (...actions: BotAction[]): BotAction => 
       async(page, ...injects) => {
         try {
-          let resolvedCondition = getPipeValue(await(condition(page, ...injects)))
+          let resolvedCondition
+
+          // resolvedCondition's value may be in a pipe
+          if (injectsHavePipe(injects)) {
+            resolvedCondition = getPipeValue(await condition(page, ...injects))
+          } else {
+            resolvedCondition = getPipeValue(await condition(page, ...injects, wrapValueInPipe())) // simulate pipe for condition action running in case it runs pipe dependent code that might check what parent action is running in
+          }
 
           while (resolvedCondition) {
             await BotActionsPipe(page, ...injects)(...actions)
-            resolvedCondition = getPipeValue(await condition(page, ...injects))
+
+            // simulate pipe, may be needed
+            if (injectsHavePipe(injects)) {
+              resolvedCondition = getPipeValue(await condition(page, ...injects))
+            } else {
+              resolvedCondition = getPipeValue(await condition(page, ...injects, wrapValueInPipe())) // simulate pipe for condition action running in case it runs pipe dependent code that might check what parent action is running in
+            }
           }
         } catch (error) {
           // logError(error)

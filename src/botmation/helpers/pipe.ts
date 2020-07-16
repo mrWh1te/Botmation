@@ -2,7 +2,7 @@
  * Functions that help with the Pipe
  */
 
-import { isPipe, Pipe } from "botmation/types/pipe"
+import { isPipe, Pipe, PipeValue } from "botmation/types/pipe"
 
 /**
  * @description    Safe way to extract injects that may or may not have a pipe
@@ -34,9 +34,9 @@ export const injectsPipeOrEmptyPipe = <P = any>(injects: any[]): Pipe<P> =>
 
 /**
  * @description   Default return is a empty pipe (missing `value` key from Piped object)
- * @param value 
+ * @param value if you don't provide a value, it will return an empty pipe (pipe with value: undefined)
  */
-export const wrapValueInPipe = <P = any>(value: P): Pipe<P> =>  ({
+export const wrapValueInPipe = <P = any>(value?: P): Pipe<P> =>  ({
   brand: 'piped',
   value
 })
@@ -59,10 +59,10 @@ export const injectsHavePipe = (injects: any[]): boolean => {
  *                 If not pipe, returns the param value
  * @param pipeOrValue 
  */
-export const getPipeValue = <R = any>(pipeOrValue: Pipe<R>|R): R => {
+export const getPipeValue = <R = PipeValue>(pipeOrValue: Pipe<R>|R): R => {
   if (isPipe(pipeOrValue)) {
     // piped value
-    return pipeOrValue.value
+    return pipeOrValue.value as R
   }
 
   // value

@@ -11,16 +11,16 @@ import { wrapValueInPipe, injectsHavePipe } from "botmation/helpers/pipe"
  * @param valueToPipe 
  */
 export const pipe = 
-    (valueToPipe?: any) => 
-      (...actions: BotAction[]): BotAction<void|any> => 
+    (valueToPipe?: any, ...newInjects: any[]) => 
+      (...actions: BotAction[]): BotAction<any> => 
         async(page, ...injects) => {
           if (injectsHavePipe(injects)) {
             // injects only have a pipe when its ran inside a pipe, so lets return our value to flow with the pipe mechanics
-            return await BotActionsPipe(page, ...injects, wrapValueInPipe(valueToPipe))(...actions)
+            return await BotActionsPipe(page, ...newInjects, ...injects, wrapValueInPipe(valueToPipe))(...actions)
           }
 
           // otherwise, we are not in a pipe, therefore we are in a chain and do no want to return the value, because chain links are isolated, no piping
-          await BotActionsPipe(page, ...injects, wrapValueInPipe(valueToPipe))(...actions)
+          await BotActionsPipe(page, ...newInjects, ...injects, wrapValueInPipe(valueToPipe))(...actions)
         }
 
 /**

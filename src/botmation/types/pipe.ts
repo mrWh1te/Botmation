@@ -10,9 +10,9 @@ export type PipeValue<V = boolean|number|string|object|undefined|Function|Array<
  * @description    Wrapping piped values with a property `brand` to give us a way to test it with a gaurd against other injects
  * @todo move to another file
  */
-export interface Pipe<P = any> {
+export interface Pipe<P = PipeValue> {
   brand: 'piped',
-  value: P
+  value?: P
 }
 
 /**

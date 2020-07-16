@@ -33,7 +33,7 @@ import { pipe } from 'botmation/actions/pipe'
   let browser: puppeteer.Browser
 
   try {
-    browser = await puppeteer.launch({headless: false})
+    browser = await puppeteer.launch({headless: true})
     const pages = await browser.pages()
     const page = pages.length === 0 ? await browser.newPage() : pages[0]
 
@@ -47,28 +47,28 @@ import { pipe } from 'botmation/actions/pipe'
 
       goTo(getInstagramBaseUrl()),
 
-      // test
-      pipe({id: 10, newPipeTest: 'success'})(
-        log('Test #1 Complete')
-      ),
-      // end test
+      // // test
+      // pipe({id: 10, newPipeTest: 'success'})(
+      //   log('Test #1 Complete')
+      // ),
+      // // end test
 
-      // test 3
-      log('Test #3 start'),
-      setIndexedDBValue('key-3test', 'value-3test', 'zzzStore2', 'testDB5', 2),
-      pipe()(
-        getIndexedDBValue('key-3test', 'zzzStore2', 'testDB5', 2),
-        log('Test #3 results piped:'),
-      ),
+      // // test 3
+      // log('Test #3 start'),
+      // setIndexedDBValue('key-3test', 'value-3test', 'zzzStore2', 'testDB5', 2),
+      // pipe()(
+      //   getIndexedDBValue('key-3test', 'zzzStore2', 'testDB5', 2),
+      //   log('Test #3 results piped:'),
+      // ),
 
-      // test 5, higher order func
-      log('Starting Test #5 indexedDBStore()()'),
-      indexedDBStore('testDB5', 3, 'zzzStore5')( // accessing a store in a database we did not create, causes error?
-        log('going to set, get, then log a value from IndexedDB'),
-        setIndexedDBValue('some-key-test5', 'some-value-test5'),
-        getIndexedDBValue('some-key-test5'),
-        log('Results of Test #5 are piped:')
-      ),
+      // // test 5, higher order func
+      // log('Starting Test #5 indexedDBStore()()'),
+      // indexedDBStore('testDB5', 3, 'zzzStore5')( // accessing a store in a database we did not create, causes error?
+      //   log('going to set, get, then log a value from IndexedDB'),
+      //   setIndexedDBValue('some-key-test5', 'some-value-test5'),
+      //   getIndexedDBValue('some-key-test5'),
+      //   log('Results of Test #5 are piped:')
+      // ),
       
       // inline, hackish but do-able
       // async(page) => {
@@ -80,7 +80,7 @@ import { pipe } from 'botmation/actions/pipe'
       givenThat(isGuest) (
         log('is guest so logging in'),
         goTo(getInstagramLoginUrl()),
-        login({username: 'accoubnt', password: 'password'}),
+        login({username: 'account', password: 'password'}),
         files({cookies_directory: 'simple'})(
           saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies 
         ),

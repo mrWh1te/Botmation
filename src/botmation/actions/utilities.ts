@@ -6,8 +6,9 @@ import { sleep } from '../helpers/utilities'
 import { applyBotActionOrActions } from '../helpers/actions'
 import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions.interfaces'
 import { BotActionsPipe } from 'botmation/factories/bot-actions-pipe'
-import { getPipeValue, injectsHavePipe, wrapValueInPipe } from 'botmation/helpers/pipe'
+import { getPipeValue, injectsHavePipe, wrapValueInPipe, simulatePipeInjects } from 'botmation/helpers/pipe'
 import { logMessage } from 'botmation/helpers/console'
+import { pipe } from './pipe'
 
 /**
  * @description givenThat(condition returns a promise that resolves to TRUE)(run these actions in a chain)
@@ -25,19 +26,28 @@ export const givenThat =
     (...actions: BotAction[]): BotAction => 
       async(page, ...injects) => {
         try {
-          let conditionResolved
+          // let conditionResolved
 
           // ConditionResolved's value may be in a pipe
-          if (injectsHavePipe(injects)) {
-            conditionResolved = getPipeValue(await condition(page, ...injects))
-          } else {
-            conditionResolved = getPipeValue(await condition(page, ...injects, wrapValueInPipe()))
-          }
+          // if (injectsHavePipe(injects)) {
+          //   conditionResolved = getPipeValue(await condition(page, ...injects))
+          // } else {
+          //   conditionResolved = getPipeValue(await condition(page, ...injects, wrapValueInPipe()))
+          // }
 
-          logMessage('[givenThat] conditionResolved = ' + JSON.stringify(conditionResolved))
+          // if (conditionResolved) {
+          //   await BotActionsPipe(page, ...injects)(...actions)
+          // }
+
+          let pipeConditionResolved = await pipe()(condition)(page, ...simulatePipeInjects(injects))
+
+          let conditionResolved = pipeConditionResolved.value
+
+          console.log('pipeConditionResolved = ', pipeConditionResolved)
+          console.log('[givenThat] pipeConditionResolved.value = conditionResolved = ', conditionResolved)
 
           if (conditionResolved) {
-            await BotActionsPipe(page, ...injects)(...actions)
+            await pipe()(...actions)(page, ...injects)
           }
 
         } catch(error) {

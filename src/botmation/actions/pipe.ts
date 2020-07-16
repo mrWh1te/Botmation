@@ -17,10 +17,15 @@ export const pipe =
         async(page, ...injects) => {
           if (injectsHavePipe(injects)) {
             // injects only have a pipe when its ran inside a pipe, so lets return our value to flow with the pipe mechanics
-            return await BotActionsPipe(page, ...newInjects, ...injects, wrapValueInPipe(valueToPipe || getInjectsPipeValue(injects)))(...actions)
+            if (valueToPipe) {
+              return await BotActionsPipe(page, ...newInjects, ...injects.splice(0,injects.length - 1), wrapValueInPipe(valueToPipe))(...actions)
+            } else {
+              return await BotActionsPipe(page, ...newInjects, ...injects)(...actions)
+            }
           }
 
           // otherwise, we are not in a pipe, therefore we are in a chain and do no want to return the value, because chain links are isolated, no piping
+          // also in a chain, we dont have a pipe as the last inject, so we don't need to splice our injects when overridding pipe values
           await BotActionsPipe(page, ...newInjects, ...injects, wrapValueInPipe(valueToPipe || getInjectsPipeValue(injects)))(...actions)
         }
 

@@ -30,7 +30,7 @@ export const unpipeInjects = (injectsMaybePipe: any[]): any[] => {
  * @param injects 
  */
 export const injectsPipeOrEmptyPipe = <P = any>(injects: any[]): Pipe<P> =>
-  injects.length > 0 && isPipe(injects[injects.length - 1]) ? injects[injects.length - 1] : wrapValueInPipe(undefined) // empty pipe
+  injects.length > 0 && isPipe(injects[injects.length - 1]) ? injects[injects.length - 1] : wrapValueInPipe()
 
 /**
  * @description   Default return is a empty pipe (missing `value` key from Piped object)
@@ -79,4 +79,17 @@ export const getInjectsPipeValue = (injects: any[]): any => {
   }
 
   return undefined
+}
+
+/**
+ * @description    If the provided injects don't have a pipe at the end, this will add one to "simulate" being injected from a pipe, not a chain
+ *                 Helpful for utility functions running pipes inside chains like givenThat(condition)
+ * @param injects 
+ */
+export const simulatePipeInjects = (injects: any[]): any[] => {
+  if (injectsHavePipe(injects)) {
+    return injects
+  }
+
+  return [...injects, wrapValueInPipe()]
 }

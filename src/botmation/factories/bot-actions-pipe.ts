@@ -2,8 +2,8 @@ import { Page } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-actions.interfaces'
 import { logError } from 'botmation/helpers/console'
-import { injectsPipeOrEmptyPipe, wrapValueInPipe } from 'botmation/helpers/pipe'
-import { Pipe } from 'botmation/types/pipe'
+import { injectsPipeOrEmptyPipe, wrapValueInPipe, injectsHavePipe } from 'botmation/helpers/pipe'
+import { Pipe, isPipe } from 'botmation/types/pipe'
 
 //
 // Standards
@@ -25,19 +25,34 @@ export const BotActionsPipe =
   <R = any, P = any>(page: Page, ...injects: any[]) =>
     async (...actions: BotAction[]): Promise<Pipe<R>> => {
       // Possible for last inject to be the piped value
-      let pipe = injectsPipeOrEmptyPipe<P>(injects) // unwraps the piped value from the piped branded box
+      let pipe = undefined
+
+      // in case we are used in a chain, injects won't have a pipe at the end
+      if (injectsHavePipe(injects)) {
+        pipe = injectsPipeOrEmptyPipe<P>(injects) // unwraps the piped value from the piped branded box
+        injects = injects.slice(0, injects.length - 1)
+      }
 
       // let piped // pipe's are closed chain-links, so nothing pipeable comes in, so data is grabbed in a pipe and shared down stream a pipe, and returns
       try {
         for(const action of actions) {
-          const nextPipedValue = await action(page, ...injects, pipe) // if action doesn't return anything, is this value === undefined !?!?!?! TODO test this
-
-          pipe = wrapValueInPipe(nextPipedValue)
+          // it's possible for a bot action to be a pipe using the pipe()() botaction, so if that is the case, it's actually returning a Pipe, not a value like a regular botaction
+          const nextPipedValue: Pipe|any = await action(page, ...injects, pipe) // if action doesn't return anything, is this value === undefined !?!?!?! TODO test this
+          
+          // so if it's a pipe
+          if (isPipe(nextPipedValue)) {
+            pipe = nextPipedValue
+          } else {
+            // if it's not a pipe, then wrap the value in a pipe
+            pipe = wrapValueInPipe(nextPipedValue)
+          }
         }
       } catch(error) {
         logError('PipeCaughtError:')
         logError(error)
       }
 
+      console.log('[BotActionsPipe] returning this pipe = ', pipe)
+      
       return pipe as any as Pipe<R>
     }

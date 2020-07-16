@@ -80,7 +80,7 @@ import { pipe } from 'botmation/actions/pipe'
       givenThat(isGuest) (
         log('is guest so logging in'),
         goTo(getInstagramLoginUrl()),
-        login({username: 'account', password: 'password'}),
+        login({username: 'accoubnt', password: 'password'}),
         files({cookies_directory: 'simple'})(
           saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies 
         ),

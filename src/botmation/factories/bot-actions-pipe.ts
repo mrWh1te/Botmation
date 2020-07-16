@@ -2,7 +2,7 @@ import { Page } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-actions.interfaces'
 import { logError } from 'botmation/helpers/console'
-import { injectsPipeOrEmptyPipe, wrapValueInPipe, injectsHavePipe } from 'botmation/helpers/pipe'
+import { injectsPipeOrEmptyPipe, wrapValueInPipe, injectsHavePipe, getPipeValue } from 'botmation/helpers/pipe'
 import { Pipe, isPipe } from 'botmation/types/pipe'
 
 //
@@ -25,7 +25,7 @@ export const BotActionsPipe =
   <R = any, P = any>(page: Page, ...injects: any[]) =>
     async (...actions: BotAction[]): Promise<Pipe<R>> => {
       // Possible for last inject to be the piped value
-      let pipe = undefined
+      let pipe = wrapValueInPipe()
 
       // in case we are used in a chain, injects won't have a pipe at the end
       if (injectsHavePipe(injects)) {

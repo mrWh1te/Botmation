@@ -41,7 +41,7 @@ export class Botmation implements BotmationInterface {
     const page = pages.length === 0 ? await browser.newPage() : pages[0]
 
     // Then return a normal instance
-    return new Botmation(page, injects)
+    return new Botmation(page, ...injects)
   }
 
   /**

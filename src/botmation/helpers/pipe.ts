@@ -26,7 +26,7 @@ export const unpipeInjects = (injectsMaybePipe: any[]): any[] => {
 }
 
 /**
- * @description     Returns a Piped Value, if found in the Injects array, otherwise returns the representation of an empty pipe
+ * @description     Returns a Pipe if found in the Injects array, otherwise returns the representation of an empty pipe
  * @param injects 
  */
 export const injectsPipeOrEmptyPipe = <P = any>(injects: any[]): Pipe<P> =>

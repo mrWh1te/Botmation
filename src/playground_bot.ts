@@ -28,9 +28,6 @@ import { logError } from 'botmation/helpers/console'
       log('Botmation running'),
       warning('Starting Test'),
 
-      // TODO: doWhile()()
-      // TODO: localstorage, indexedDB
-
       wait(1000),
       log('Test Complete'),
     )

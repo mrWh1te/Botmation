@@ -3,9 +3,9 @@
 </h1>
 
 [![npm](https://img.shields.io/npm/v/botmation)](https://www.npmjs.com/package/botmation)
-[![Build Status](https://travis-ci.com/mrWh1te/Botmation.svg?branch=master)](https://travis-ci.com/mrWh1te/Botmation) 
+[![Build Status](https://travis-ci.com/mrWh1te/Botmation.svg?branch=master)](https://travis-ci.com/mrWh1te/Botmation)
 [![codecov](https://img.shields.io/codecov/c/github/mrWh1te/Botmation/master?label=codecov)](https://codecov.io/gh/mrWh1te/Botmation)
-[![dependencies Status](https://david-dm.org/mrWh1te/Botmation/status.svg)](https://david-dm.org/mrWh1te/Botmation) [![Greenkeeper badge](https://badges.greenkeeper.io/mrWh1te/Botmation.svg)](https://greenkeeper.io/) 
+[![dependencies Status](https://david-dm.org/mrWh1te/Botmation/status.svg)](https://david-dm.org/mrWh1te/Botmation)
 ![GitHub](https://img.shields.io/github/license/mrWh1te/Botmation)
 
 <img src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/banner/1556x379v2.png" alt="Botmation Crew" width="474">

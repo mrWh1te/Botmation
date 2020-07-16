@@ -1,5 +1,3 @@
-import { Page } from 'puppeteer'
-
 import { ConditionalBotAction } from '../../../interfaces/bot-actions.interfaces'
 
 import { getIndexedDBValue, indexedDBStore } from 'botmation/actions/indexed-db'
@@ -11,7 +9,7 @@ import { map } from 'botmation/actions/pipe'
  * @param page 
  * @param options 
  */
-export const isGuest: ConditionalBotAction = async(page: Page, ...injects: any[]): Promise<boolean> =>
+export const isGuest: ConditionalBotAction = async(page, ...injects) =>
   await indexedDBStore('redux', 1, 'paths')(
     getIndexedDBValue('users.viewerId'),
     map(viewerId => viewerId ? false : true)

@@ -22,7 +22,7 @@ import { isTurnOnNotificationsModalActive } from 'botmation/bots/instagram/helpe
 import { logError } from 'botmation/helpers/console'
 
 // Expiremental Pipe
-import { BotActionsPipeFactory5 as Bot } from 'botmation/factories/bot-actions-pipe.factory'
+import { BotActionsPipeFactory as Bot } from 'botmation/factories/bot-actions-pipe.factory'
 import { indexedDBStore, setIndexedDBValue, getIndexedDBValue } from 'botmation/actions/indexed-db'
 import { files } from 'botmation/actions/files'
 import { pipe, emptyPipe } from 'botmation/actions/pipe'

@@ -1,6 +1,6 @@
 import { PDFOptions } from 'puppeteer'
 
-import { BotAction, BotFilesAction, BotAction5 } from "../interfaces/bot-actions.interfaces"
+import { BotFilesAction } from "../interfaces/bot-actions.interfaces"
 
 import { forAll } from './utilities'
 import { goTo } from './navigation'

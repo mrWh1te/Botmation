@@ -1,5 +1,5 @@
 import { Page } from 'puppeteer'
-import { BotAction5 } from './bot-actions.interfaces'
+import { BotAction } from './bot-actions.interfaces'
 
 /**
  * @description   Base public interface for a Botmation instance
@@ -8,7 +8,7 @@ import { BotAction5 } from './bot-actions.interfaces'
  */
 export interface BotmationInterface {
   // Main
-  actions(...actions: BotAction5[]): Promise<void>
+  actions(...actions: BotAction[]): Promise<void>
   // Page
   setPage(page: Page): void
   getPage(): Page

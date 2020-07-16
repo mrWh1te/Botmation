@@ -1,10 +1,10 @@
-import { BotAction5 } from "botmation/interfaces"
-import { BotActionsPipeFactory5 } from "botmation/factories/bot-actions-pipe.factory"
+import { BotAction } from "botmation/interfaces"
+import { BotActionsPipeFactory } from "botmation/factories/bot-actions-pipe.factory"
 
 /**
  * @description    Higher-order to set first set of injects for provided BotAction's
  */
 export const injects = (...newInjects: any[]) =>
-  (...actions: BotAction5[]): BotAction5 =>
+  (...actions: BotAction[]): BotAction =>
     async(page, ...injects: any[]) =>
-      await BotActionsPipeFactory5(page, ...newInjects, ...injects)(...actions)
+      await BotActionsPipeFactory(page, ...newInjects, ...injects)(...actions)

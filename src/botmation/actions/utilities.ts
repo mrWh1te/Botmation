@@ -4,8 +4,8 @@
 import { sleep } from '../helpers/utilities'
 
 import { applyBotActionOrActions } from '../helpers/actions'
-import { ConditionalBotAction, BotAction5 } from '../interfaces/bot-actions.interfaces'
-import { BotActionsPipeFactory5 } from 'botmation/factories/bot-actions-pipe.factory'
+import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions.interfaces'
+import { BotActionsPipeFactory } from 'botmation/factories/bot-actions-pipe.factory'
 
 /**
  * @description givenThat(condition returns a promise that resolves to TRUE)(run these actions in a chain)
@@ -20,11 +20,11 @@ import { BotActionsPipeFactory5 } from 'botmation/factories/bot-actions-pipe.fac
  */
 export const givenThat = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction5[]): BotAction5 => 
+    (...actions: BotAction[]): BotAction => 
       async(page, ...injects) => {
         try {
           if (await condition(page, ...injects)) {
-            await BotActionsPipeFactory5(page, ...injects)(...actions)
+            await BotActionsPipeFactory(page, ...injects)(...actions)
           }
         } catch(error) {
           // catch here in case the condition rejects, needed for unit-test
@@ -68,7 +68,7 @@ export interface Dictionary {
 }
 export const forAll =
   (collection: any[] | Dictionary) =>
-    (botActionOrActionsFactory: (...args: any[]) => BotAction5[] | BotAction5): BotAction5 =>
+    (botActionOrActionsFactory: (...args: any[]) => BotAction[] | BotAction): BotAction =>
       async(page, ...injects: any[]) => {
         if (Array.isArray(collection)) {
           // Array
@@ -92,12 +92,12 @@ export const forAll =
  */
 export const doWhile = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction5[]): BotAction5 => 
+    (...actions: BotAction[]): BotAction => 
       async(page, ...injects) => {
         try {
           let resolvedCondition = true // doWhile -> run the code, then check the condition on whether or not we should run the code again
           while (resolvedCondition) {
-            await BotActionsPipeFactory5(page, ...injects)(...actions)
+            await BotActionsPipeFactory(page, ...injects)(...actions)
             resolvedCondition = await condition(page, ...injects)
           }
         } catch (error) {
@@ -119,12 +119,12 @@ export const doWhile =
  */
 export const forAsLong = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction5[]): BotAction5 => 
+    (...actions: BotAction[]): BotAction => 
       async(page, ...injects) => {
         try {
           let resolvedCondition = await(condition(page, ...injects))
           while (resolvedCondition) {
-            await BotActionsPipeFactory5(page, ...injects)(...actions)
+            await BotActionsPipeFactory(page, ...injects)(...actions)
             resolvedCondition = await condition(page, ...injects)
           }
         } catch (error) {
@@ -136,5 +136,5 @@ export const forAsLong =
  * @description   Pauses the bot for the provided milliseconds before letting it execute the next Action
  * @param milliseconds 
  */
-export const wait = (milliseconds: number): BotAction5 => async() => 
+export const wait = (milliseconds: number): BotAction => async() => 
   await sleep(milliseconds)

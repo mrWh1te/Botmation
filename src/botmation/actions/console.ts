@@ -1,4 +1,4 @@
-import { BotAction5 } from '../interfaces/bot-actions.interfaces'
+import { BotAction } from '../interfaces/bot-actions.interfaces'
 import { logMessage, logWarning, logError, logPiped } from '../helpers/console'
 import { injectsArePiped, getInjectsPipedValue } from 'botmation/helpers/pipe'
 
@@ -9,7 +9,7 @@ import { injectsArePiped, getInjectsPipedValue } from 'botmation/helpers/pipe'
  *                They will log piped values to the console AND carry piped values to the next BotAction (if passed)
  */
 
-export const log = (message?: string): BotAction5 => async (page, ...injects) => {
+export const log = (message?: string): BotAction => async (page, ...injects) => {
   if (message) {
     logMessage(message)
   }
@@ -27,7 +27,7 @@ export const log = (message?: string): BotAction5 => async (page, ...injects) =>
   }
 }
 
-export const warning = (warning?: string): BotAction5 => async (page, ...injects) => {
+export const warning = (warning?: string): BotAction => async (page, ...injects) => {
   if (warning) {
     logWarning(warning)
   }
@@ -40,7 +40,7 @@ export const warning = (warning?: string): BotAction5 => async (page, ...injects
   }
 }
 
-export const error = (error?: string): BotAction5 => async (page, ...injects) => {
+export const error = (error?: string): BotAction => async (page, ...injects) => {
   if (error) {
     logError(error)
   }

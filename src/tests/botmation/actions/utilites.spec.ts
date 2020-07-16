@@ -6,7 +6,7 @@ import { click, type } from 'botmation/actions/input'
 import { goTo } from 'botmation/actions/navigation'
 
 import { BASE_URL } from 'tests/urls'
-import { BotAction5 } from 'botmation/interfaces'
+import { BotAction } from 'botmation/interfaces'
 
 /**
  * @description   Utilities Action Factory
@@ -43,9 +43,9 @@ describe('[Botmation:Action Factory] Utilities', () => {
   //
   // givenThat() Unit Test
   it('should resolve the condition and ONLY run the chain of actions if the resolved condition equals TRUE', async() => {
-    const conditionResolvingTRUE:BotAction5 = async(page) => new Promise<boolean>(resolve => resolve(true))
-    const conditionResolvingFALSE:BotAction5 = async(page) => new Promise<boolean>(resolve => resolve(false))
-    const conditionReject:BotAction5 = async(page) => new Promise<boolean>((resolve, reject) => reject(new Error('test')))
+    const conditionResolvingTRUE:BotAction = async(page) => new Promise<boolean>(resolve => resolve(true))
+    const conditionResolvingFALSE:BotAction = async(page) => new Promise<boolean>(resolve => resolve(false))
+    const conditionReject:BotAction = async(page) => new Promise<boolean>((resolve, reject) => reject(new Error('test')))
 
     // These actions should run
     await givenThat(conditionResolvingTRUE)(

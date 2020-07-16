@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { BotAction5 } from '../interfaces/bot-actions.interfaces'
+import { BotAction } from '../interfaces/bot-actions.interfaces'
 
 /**
  * @description   Botmation.actions() method comes from this Factory
@@ -11,7 +11,7 @@ import { BotAction5 } from '../interfaces/bot-actions.interfaces'
  */
 export const BotActionsChainFactory = 
   (page: Page, ...injects: any[]) => 
-    async (...actions: BotAction5[]): Promise<void> =>
+    async (...actions: BotAction[]): Promise<void> =>
       actions.reduce(
         async(chain, action) => {
           // Resolve the last returned promise, making a chain of resolved promises

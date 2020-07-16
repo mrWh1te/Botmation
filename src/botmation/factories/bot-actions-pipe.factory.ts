@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { BotAction5 } from '../interfaces/bot-actions.interfaces'
+import { BotAction } from '../interfaces/bot-actions.interfaces'
 import { logError } from 'botmation/helpers/console'
 import { injectsPipeOrEmptyPipe, wrapValueInPipe } from 'botmation/helpers/pipe'
 
@@ -13,9 +13,9 @@ import { injectsPipeOrEmptyPipe, wrapValueInPipe } from 'botmation/helpers/pipe'
 //  5) Pipes expect piped values to come in to their pipe, but have safe defaults
 //  7) Piped always return their piped values in the end (so if empty pipe, undefined, otherwise whatever the value, unbranded is)
 //
-export const BotActionsPipeFactory5 = 
+export const BotActionsPipeFactory = 
   <R = any, P = any>(page: Page, ...injects: any[]) =>
-    async (...actions: BotAction5[]): Promise<R> => {
+    async (...actions: BotAction[]): Promise<R> => {
       // Possible for last inject to be the piped value
       let pipe = injectsPipeOrEmptyPipe<P>(injects) // unwraps the piped value from the piped branded box
 

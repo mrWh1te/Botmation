@@ -1,5 +1,3 @@
-import { Page } from "puppeteer"
-
 import { ConditionalBotAction } from "../../../interfaces"
 
 /**

@@ -1,9 +1,9 @@
 
 import { BotAction, BotIndexedDBAction } from '../interfaces/bot-actions.interfaces'
-import { BotActionsPipe } from 'botmation/factories/bot-actions-pipe'
 import { openInjectsPipe } from 'botmation/helpers/pipe'
 import { getIndexedDBStoreValue, setIndexedDBStoreValue } from 'botmation/helpers/indexed-db'
 import { injects } from './injects'
+import { PipeValue } from 'botmation/types/pipe'
 
 /**
  * @description    It's a utility higher-order BotAction that sets injects before the parent chain/pipe's injects, IndexedDB store data
@@ -27,7 +27,7 @@ export const indexedDBStore = (databaseName: string, databaseVersion: number, st
  * @param databaseVersion 
  */
 export const setIndexedDBValue = 
-  (key?: string, value?: any, storeName?: string, databaseName?: string, databaseVersion?: number): BotIndexedDBAction => 
+  (key?: string, value?: any, storeName?: string, databaseName?: string, databaseVersion?: number): BotIndexedDBAction<void> => 
     async(page, ...injects) => {
       // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
       const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = openInjectsPipe(injects)
@@ -57,7 +57,7 @@ export const setIndexedDBValue =
         value ? value : 'missing-value'
       )
     }
-
+    
 /**
  * 
  * @param key 
@@ -66,8 +66,8 @@ export const setIndexedDBValue =
  * @param databaseVersion 
  */
 export const getIndexedDBValue = 
-  <R>(key?: string, storeName?: string, databaseName?: string, databaseVersion?: number): BotIndexedDBAction => 
-    async(page, ...injects): Promise<R> => {
+  (key?: string, storeName?: string, databaseName?: string, databaseVersion?: number): BotIndexedDBAction<PipeValue> => 
+    async(page, ...injects) => {
       // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
       const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = openInjectsPipe(injects)
 
@@ -87,7 +87,7 @@ export const getIndexedDBValue =
         databaseVersion ? databaseVersion : injectDatabaseVersion ? injectDatabaseVersion : 1,
         storeName ? storeName : injectStoreName ? injectStoreName : 'missing-store',
         key ? key : 'missing-key'
-      ) as R
+      ) as PipeValue
     }
 
 

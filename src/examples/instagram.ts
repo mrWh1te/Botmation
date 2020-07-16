@@ -26,7 +26,7 @@ import { logError } from 'botmation/helpers/console'
 import { BotActionsChain as Bot } from 'botmation/factories/bot-actions-chain' // what if rename to ChainActionsBot?
 import { indexedDBStore, setIndexedDBValue, getIndexedDBValue } from 'botmation/actions/indexed-db'
 import { files } from 'botmation/actions/files'
-import { pipe, emptyPipe } from 'botmation/actions/pipe'
+import { pipe } from 'botmation/actions/pipe'
 
 // Main Script
 (async () => {

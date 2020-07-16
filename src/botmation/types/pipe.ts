@@ -1,8 +1,10 @@
 /**
- * @description     Type of the value being piped in a pipeable BotAction
+ * @description     Type of the value being piped in a pipeable BotAction, basically anything but void
+ *                  This allows us to more strongly type check the bot actions provided in a chain, so
+ *                  Dev's are notified of errors, which basically mean put this action(s) in a pipe()()
  * @deprecated
  */
-export type PipeValue<V = any> = V
+export type PipeValue<V = boolean|number|string|object|undefined|Function|Array<any>|null> = V
 
 /**
  * @description    Wrapping piped values with a property `brand` to give us a way to test it with a gaurd against other injects

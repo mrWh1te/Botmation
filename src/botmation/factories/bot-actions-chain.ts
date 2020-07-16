@@ -1,6 +1,7 @@
 import { Page } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-actions.interfaces'
+import { logError } from 'botmation/helpers/console'
 
 /**
  * @description   Botmation.actions() method comes from this Factory
@@ -11,16 +12,14 @@ import { BotAction } from '../interfaces/bot-actions.interfaces'
  */
 export const BotActionsChain = 
   (page: Page, ...injects: any[]) => 
-    async (...actions: BotAction<void>[]): Promise<void> =>
-      actions.reduce(
-        async(chain, action) => {
-          // Resolve the last returned promise, making a chain of resolved promises
-          await chain
-          
-          // Provide the Puppeteer page into the BotAction, and any injects for further needs
-          return action(page, ...injects)
-        }, 
-        Promise.resolve()
-      )
-
-      // todo will this return a value if the last action resolves to a value ? <- test
+    async (...actions: BotAction<void>[]): Promise<void> => {
+      // let piped // pipe's are closed chain-links, so nothing pipeable comes in, so data is grabbed in a pipe and shared down stream a pipe, and returns
+      try {
+        for(const action of actions) {
+          await action(page, ...injects) // if action doesn't return anything, is this value === undefined !?!?!?! TODO test this
+        }
+      } catch(error) {
+        logError('ChainCaughtError:')
+        logError(error)
+      }
+    }

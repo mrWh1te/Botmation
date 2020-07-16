@@ -22,3 +22,5 @@ export const BotActionsChainFactory =
         }, 
         Promise.resolve()
       )
+
+      // todo will this return a value if the last action resolves to a value ?

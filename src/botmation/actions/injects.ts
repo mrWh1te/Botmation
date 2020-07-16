@@ -1,6 +1,7 @@
 import { BotAction } from "botmation/interfaces"
 import { BotActionsPipe } from "botmation/factories/bot-actions-pipe"
 import { pipe } from "./pipe"
+import { getInjectsPipeValue } from "botmation/helpers/pipe"
 
 /**
  * @description    Higher-order to set first set of injects for provided BotAction's
@@ -14,5 +15,5 @@ export const injects_working = (...newInjects: any[]) =>
 // new-gen
 export const injects = (...newInjects: any[]) =>
   (...actions: BotAction[]): BotAction =>
-    async(page, ...injects) => 
-      pipe(undefined, ...newInjects)(...actions)(page, ...injects)
+    async(page, ...injects) =>
+      pipe(getInjectsPipeValue(injects), ...newInjects)(...actions)(page, ...injects)

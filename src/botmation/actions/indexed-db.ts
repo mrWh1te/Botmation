@@ -14,7 +14,7 @@ import { PipeValue } from 'botmation/types/pipe'
  */
 export const indexedDBStore = (databaseName: string, databaseVersion: number, storeName: string) =>
   (...actions: BotAction[]): BotAction =>
-    injects(databaseName, databaseVersion, storeName)(...actions) // is this not returning the correct value piped?
+    injects(databaseName, databaseVersion, storeName)(...actions)
       
 
 /**

@@ -18,7 +18,7 @@ export const pipe =
           if (injectsHavePipe(injects)) {
             // injects only have a pipe when its ran inside a pipe, so lets return our value to flow with the pipe mechanics
             if (valueToPipe) {
-              return await BotActionsPipe(page, ...newInjects, ...injects.splice(0,injects.length - 1), wrapValueInPipe(valueToPipe))(...actions)
+              return await BotActionsPipe(page, ...newInjects, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe))(...actions)
             } else {
               return await BotActionsPipe(page, ...newInjects, ...injects)(...actions)
             }

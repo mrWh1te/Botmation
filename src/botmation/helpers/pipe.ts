@@ -83,10 +83,10 @@ export const getInjectsPipeValue = (injects: any[]): any => {
 
 /**
  * @description    If the provided injects don't have a pipe at the end, this will add one to "simulate" being injected from a pipe, not a chain
- *                 Helpful for utility functions running pipes inside chains like givenThat(condition)
+ *                 Helpful for utility functions running pipes inside chains like givenThat(condition), otherwise pipes ran inside will not return values (in case of conditionalbotaction, that is a boolean)
  * @param injects 
  */
-export const simulatePipeInjects = (injects: any[]): any[] => {
+export const pipeInjects = (injects: any[]): any[] => {
   if (injectsHavePipe(injects)) {
     return injects
   }

@@ -25,6 +25,8 @@ export class Botmation implements BotmationInterface {
 
   /**
    * @description   Constructor for building a Botmation instance with a specific Browser page and optional other params
+   * @param page 
+   * @param injects 
    */
   constructor(page: Page, ...injects: any[]) {
     this.page = page
@@ -33,7 +35,8 @@ export class Botmation implements BotmationInterface {
   
   /**
    * @description    static async constructor method that will get a page from the browser to operate in
-   * @param  options   optional to override any safe defaults
+   * @param browser 
+   * @param injects 
    */
   public static async asyncConstructor(browser: Browser, ...injects: any[]): Promise<Botmation> {
     // Grab the first open page from the browser, otherwise make a new one
@@ -82,8 +85,7 @@ export class Botmation implements BotmationInterface {
 
   /**
    * @description    Public method to set the Injects if needed
-   * @param injects 
-   * @experimental   Injects are new
+   * @param injects spreaded array
    */
   public setInjects(...injects: any[]) {
     this.injects = injects

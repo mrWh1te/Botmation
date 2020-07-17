@@ -2,7 +2,6 @@ import { ConditionalBotAction } from '../../../interfaces/bot-actions.interfaces
 
 import { getIndexedDBValue, indexedDBStore } from 'botmation/actions/indexed-db'
 import { map } from 'botmation/actions/pipe'
-import { log } from 'botmation/actions/console'
 
 /**
  * @description    async condition function that resolves TRUE/FALSE depending on user auth
@@ -13,9 +12,7 @@ import { log } from 'botmation/actions/console'
 export const isGuest: ConditionalBotAction = async(page, ...injects) =>
   await indexedDBStore('redux', 1, 'paths')(
     getIndexedDBValue('users.viewerId'),
-    log('viewerId='),
     map(viewerId => viewerId ? false : true),
-    log('mapped too=') // working
   )(page, ...injects)
 
 /**

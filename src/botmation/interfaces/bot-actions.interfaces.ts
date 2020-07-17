@@ -17,9 +17,9 @@ export interface BotActionFactory<A extends Array<any> = any[], B = BotAction> e
 }
 
 /**
- * @description    Base BotAction Interface
+ * @description    BotAction Interface -> defaults to a chain (no resolved return value from the returned Promise<R>)
  */
-export interface BotAction<R = any, I extends Array<any> = any[]> extends Function {
+export interface BotAction<R = void, I extends Array<any> = any[]> extends Function {
   (page: Page, ...injects: I) : Promise<R>
 }
 

@@ -12,7 +12,7 @@ import { injectsHavePipe, getInjectsPipeValue } from 'botmation/helpers/pipe'
  *                      ^this maintains it in the pipe, unlike regular pipable bot actions, which usually don't return the piped value received (carrying it forward)
  */
 
-export const log = (message?: string): BotAction => async (page, ...injects) => {
+export const log = (message?: string): BotAction<any> => async (page, ...injects) => {
   if (message) {
     logMessage(message)
   }
@@ -30,7 +30,7 @@ export const log = (message?: string): BotAction => async (page, ...injects) => 
   }
 }
 
-export const warning = (warning?: string): BotAction => async (page, ...injects) => {
+export const warning = (warning?: string): BotAction<any> => async (page, ...injects) => {
   if (warning) {
     logWarning(warning)
   }
@@ -43,7 +43,7 @@ export const warning = (warning?: string): BotAction => async (page, ...injects)
   }
 }
 
-export const error = (error?: string): BotAction => async (page, ...injects) => {
+export const error = (error?: string): BotAction<any> => async (page, ...injects) => {
   if (error) {
     logError(error)
   }

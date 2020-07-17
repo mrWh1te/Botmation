@@ -7,7 +7,6 @@ import { applyBotActionOrActions } from '../helpers/actions'
 import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions.interfaces'
 import { BotActionsPipe } from 'botmation/factories/bot-actions-pipe'
 import { getPipeValue, injectsHavePipe, wrapValueInPipe, pipeInjects } from 'botmation/helpers/pipe'
-import { logMessage } from 'botmation/helpers/console'
 import { pipe } from './pipe'
 
 /**
@@ -23,7 +22,7 @@ import { pipe } from './pipe'
  */
 export const givenThat = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction[]): BotAction => 
+    (...actions: BotAction<any>[]): BotAction => 
       async(page, ...injects) => {
         try {
           const pipeConditionResolved = await pipe()(condition)(page, ...pipeInjects(injects))
@@ -75,8 +74,8 @@ export interface Dictionary {
 }
 export const forAll =
   (collection: any[] | Dictionary) =>
-    (botActionOrActionsFactory: (...args: any[]) => BotAction[] | BotAction): BotAction =>
-      async(page, ...injects: any[]) => {
+    (botActionOrActionsFactory: (...args: any[]) => BotAction<any>[] | BotAction<any>): BotAction =>
+      async(page, ...injects) => {
         if (Array.isArray(collection)) {
           // Array
           for(let i = 0; i < collection.length; i++) {
@@ -99,7 +98,7 @@ export const forAll =
  */
 export const doWhile = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction[]): BotAction => 
+    (...actions: BotAction<any>[]): BotAction => 
       async(page, ...injects) => {
         try {
           let resolvedCondition = true // doWhile -> run the code, then check the condition on whether or not we should run the code again

@@ -2,7 +2,7 @@
  * Functions that help with the Pipe
  */
 
-import { isPipe, Pipe, PipeValue } from "botmation/types/pipe"
+import { isPipe, Pipe, PipeValue, AllPipeValues } from "botmation/types/pipe"
 
 /**
  * @description    Safe way to extract injects that may or may not have a pipe
@@ -55,18 +55,18 @@ export const injectsHavePipe = (injects: any[]): boolean => {
 }
 
 /**
- * @description    For when your not sure if the value is in a pipe or not, but you need it
+ * @description    For when your not sure if the value is in a pipe or not, but you need a value
  *                 If not pipe, returns the param value
  * @param pipeOrValue 
  */
-export const getPipeValue = <R = PipeValue>(pipeOrValue: Pipe<R>|R): R => {
+export const getPipeValue = <V = PipeValue>(pipeOrValue: Pipe|PipeValue): V => {
   if (isPipe(pipeOrValue)) {
-    // piped value
-    return pipeOrValue.value as R
+    return pipeOrValue.value as any as V
   }
 
   // value
-  return pipeOrValue
+  return pipeOrValue as any as V
+
 }
 
 /**

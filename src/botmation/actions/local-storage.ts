@@ -84,7 +84,7 @@ export const setLocalStorageValue =
  * @param key 
  */
 export const getLocalStorageValue = 
-  (key?: string): BotAction => 
+  (key?: string): BotAction<string|null> => 
     async(page, ...injects) => {
       // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
       let pipedValue = getInjectsPipeValue(injects)

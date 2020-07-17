@@ -13,7 +13,7 @@ import { PipeValue } from 'botmation/types/pipe'
  * @param storeName 
  */
 export const indexedDBStore = (databaseName: string, databaseVersion: number, storeName: string) =>
-  (...actions: BotAction[]): BotAction =>
+  (...actions: BotAction<PipeValue|void>[]): BotAction<any> =>
     injects(databaseName, databaseVersion, storeName)(...actions)
       
 

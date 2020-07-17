@@ -5,6 +5,7 @@
 import { BotAction } from "botmation/interfaces"
 import { BotActionsPipe } from "botmation/factories/bot-actions-pipe"
 import { wrapValueInPipe, injectsHavePipe, getInjectsPipeValue } from "botmation/helpers/pipe"
+import { PipeValue } from "botmation/types/pipe"
 
 /**
  * @description    Higher Order BotAction for running a chain link as a pipe
@@ -13,7 +14,7 @@ import { wrapValueInPipe, injectsHavePipe, getInjectsPipeValue } from "botmation
  */
 export const pipe = 
     (valueToPipe?: any, ...newInjects: any[]) => 
-      (...actions: BotAction[]): BotAction<any> => 
+      (...actions: BotAction<PipeValue|void>[]): BotAction<any> => 
         async(page, ...injects) => {
           if (injectsHavePipe(injects)) {
             // injects only have a pipe when its ran inside a pipe, so lets return our value to flow with the pipe mechanics

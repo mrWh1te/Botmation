@@ -43,9 +43,9 @@ describe('[Botmation:Action Factory] Utilities', () => {
   //
   // givenThat() Unit Test
   it('should resolve the condition and ONLY run the chain of actions if the resolved condition equals TRUE', async() => {
-    const conditionResolvingTRUE:BotAction = async(page) => new Promise<boolean>(resolve => resolve(true))
-    const conditionResolvingFALSE:BotAction = async(page) => new Promise<boolean>(resolve => resolve(false))
-    const conditionReject:BotAction = async(page) => new Promise<boolean>((resolve, reject) => reject(new Error('test')))
+    const conditionResolvingTRUE:BotAction<boolean> = async() => new Promise(resolve => resolve(true))
+    const conditionResolvingFALSE:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
+    const conditionReject:BotAction<boolean> = async() => new Promise((resolve, reject) => reject(new Error('test')))
 
     // These actions should run
     await givenThat(conditionResolvingTRUE)(
@@ -118,12 +118,12 @@ describe('[Botmation:Action Factory] Utilities', () => {
   //
   // doWhile() Unit Test
   it('should run the actions then check the condition to run the actions in a loop until the condition rejects or resolves FALSE', async() => {
-    const conditionResolvingFALSE = async(page: Page) => new Promise<boolean>(resolve => resolve(false))
-    const conditionReject = async(page: Page) => new Promise<boolean>((resolve, reject) => reject(new Error('test')))
+    const conditionResolvingFALSE:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
+    const conditionReject:BotAction<boolean> = async() => new Promise((resolve, reject) => reject(new Error('test')))
 
     // Main test
     let conditionResolvingCount = 0;
-    const conditionResolvesTrueUntil3rdResolveAsFalse = async(page: Page) =>
+    const conditionResolvesTrueUntil3rdResolveAsFalse = async() =>
       new Promise<boolean>(resolve => {
         // let it resolve True twice, then resolve False
         if (conditionResolvingCount > 1) {
@@ -184,12 +184,12 @@ describe('[Botmation:Action Factory] Utilities', () => {
   //
   // forAsLong() Unit Test
   it('should check the condition before running the actions in a loop until the condition rejects or resolves FALSE', async() => {
-    const conditionResolvingFALSE = async(page: Page) => new Promise<boolean>(resolve => resolve(false))
-    const conditionReject = async(page: Page) => new Promise<boolean>((resolve, reject) => reject(new Error('test')))
+    const conditionResolvingFALSE:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
+    const conditionReject:BotAction<boolean> = async() => new Promise((resolve, reject) => reject(new Error('test')))
 
     // Main test
     let conditionResolvingCount = 0;
-    const conditionResolvesTrueUntil3rdResolveAsFalse = async(page: Page) =>
+    const conditionResolvesTrueUntil3rdResolveAsFalse = async() =>
       new Promise<boolean>(resolve => {
         // let it resolve True twice, then resolve False
         if (conditionResolvingCount > 1) {

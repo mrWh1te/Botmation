@@ -22,7 +22,7 @@ import { Pipe, isPipe, PipeValue } from 'botmation/types/pipe'
  * @param injects 
  */
 export const BotActionsPipe = 
-  <R = any, P = any>(page: Page, ...injects: any[]) =>
+  <R extends PipeValue = PipeValue, P = any>(page: Page, ...injects: any[]) =>
     async (...actions: BotAction<PipeValue|void>[]): Promise<Pipe<R>> => {
       // Possible for last inject to be the piped value
       let pipe = wrapValueInPipe()

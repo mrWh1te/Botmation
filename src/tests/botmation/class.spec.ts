@@ -7,8 +7,6 @@ import { Botmation } from 'botmation/class'
 
 import { BASE_URL, EXAMPLE_URL } from '../urls'
 import { FORM_TEXT_INPUT_SELECTOR, FORM_SUBMIT_BUTTON_SELECTOR } from '../selectors'
-import { BotFileOptions } from 'botmation/interfaces'
-import { enrichBotFileOptionsWithDefaults } from 'botmation/helpers/file-options'
 
 /**
  * @description   Test the Botmation class methods specific to the Class
@@ -17,21 +15,6 @@ describe('[Botmation] Class', () => {
 
   beforeEach(async() => {
     await page.goto(BASE_URL, getDefaultGoToPageOptions())
-  })
-
-  //
-  // Regular Class Instance
-  it('should create a Botmation instance then run the actions', async() => {
-    const bot = new Botmation(page)
-
-    await bot.actions(
-      goTo(EXAMPLE_URL),
-      click(FORM_TEXT_INPUT_SELECTOR),
-      type('loremlipsum'),
-      click(FORM_SUBMIT_BUTTON_SELECTOR)
-    )
-
-    expect(page.url()).toEqual('http://localhost:8080/success.html?answer=loremlipsum')
   })
 
   //
@@ -70,6 +53,21 @@ describe('[Botmation] Class', () => {
     expect(mockBrowser.pages).toHaveBeenCalled()
     expect(mockBrowser.newPage).toHaveBeenCalled()
     expect(mockPage.click).toHaveBeenCalledWith('example html selector')
+  })
+
+  //
+  // Regular Class Instance
+  it('should create a Botmation instance then run the actions', async() => {
+    const bot = new Botmation(page)
+
+    await bot.actions(
+      goTo(EXAMPLE_URL),
+      click(FORM_TEXT_INPUT_SELECTOR),
+      type('loremlipsum'),
+      click(FORM_SUBMIT_BUTTON_SELECTOR)
+    )
+
+    expect(page.url()).toEqual('http://localhost:8080/success.html?answer=loremlipsum')
   })
 
   //

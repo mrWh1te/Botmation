@@ -5,8 +5,7 @@ import { sleep } from '../helpers/utilities'
 
 import { applyBotActionOrActions } from '../helpers/actions'
 import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions.interfaces'
-import { BotActionsPipe } from 'botmation/factories/bot-actions-pipe'
-import { getPipeValue, injectsHavePipe, wrapValueInPipe, pipeInjects } from 'botmation/helpers/pipe'
+import { injectsHavePipe, wrapValueInPipe, pipeInjects } from 'botmation/helpers/pipe'
 import { pipe } from './pipe'
 
 /**
@@ -25,12 +24,9 @@ export const givenThat =
     (...actions: BotAction<any>[]): BotAction => 
       async(page, ...injects) => {
         try {
-          const conditionResolved = await pipe()(condition)(page, ...pipeInjects(injects)) // pipe()() does not return a `pipe` object, but the pipe object's value
-
-          if (conditionResolved) {
+          if (await condition(page, ...pipeInjects(injects))) {
             await pipe()(...actions)(page, ...injects)
           }
-
         } catch(error) {
           // catch here in case the condition rejects, needed for unit-test
         }
@@ -102,13 +98,13 @@ export const doWhile =
         try {
           let resolvedCondition = true // doWhile -> run the code, then check the condition on whether or not we should run the code again
           while (resolvedCondition) {
-            await BotActionsPipe(page, ...injects)(...actions)
+            const pipeValue = await pipe()(...actions)(page, ...injects)
 
             // ConditionResolved's value may be in a pipe
             if (injectsHavePipe(injects)) {
-              resolvedCondition = getPipeValue(await condition(page, ...injects))
+              resolvedCondition = await condition(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(pipeValue))
             } else {
-              resolvedCondition = getPipeValue(await condition(page, ...injects, wrapValueInPipe()))
+              resolvedCondition = await condition(page, ...injects, wrapValueInPipe(pipeValue))
             }
           }
         } catch (error) {
@@ -133,23 +129,16 @@ export const forAsLong =
     (...actions: BotAction[]): BotAction => 
       async(page, ...injects) => {
         try {
-          let resolvedCondition
-
-          // resolvedCondition's value may be in a pipe
-          if (injectsHavePipe(injects)) {
-            resolvedCondition = getPipeValue(await condition(page, ...injects))
-          } else {
-            resolvedCondition = getPipeValue(await condition(page, ...injects, wrapValueInPipe())) // simulate pipe for condition action running in case it runs pipe dependent code that might check what parent action is running in
-          }
+          let resolvedCondition = await condition(page, ...pipeInjects(injects))
 
           while (resolvedCondition) {
-            await BotActionsPipe(page, ...injects)(...actions)
+            const pipeValue = await pipe()(...actions)(page, ...pipeInjects(injects))
 
-            // simulate pipe, may be needed
+            // simulate pipe if needed
             if (injectsHavePipe(injects)) {
-              resolvedCondition = getPipeValue(await condition(page, ...injects))
+              resolvedCondition = await condition(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(pipeValue))
             } else {
-              resolvedCondition = getPipeValue(await condition(page, ...injects, wrapValueInPipe())) // simulate pipe for condition action running in case it runs pipe dependent code that might check what parent action is running in
+              resolvedCondition = await condition(page, ...injects, wrapValueInPipe(pipeValue))
             }
           }
         } catch (error) {

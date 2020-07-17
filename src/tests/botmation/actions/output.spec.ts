@@ -8,6 +8,7 @@ import { botOptions } from 'tests/mocks/bot-options.mock'
 import { screenshot } from 'botmation/actions/output'
 import { fileExist, deleteFile } from 'botmation/helpers/files'
 import { getFileUrl } from 'botmation/helpers/assets'
+import { wrapValueInPipe } from 'botmation/helpers/pipe'
 
 /**
  * @description   Output Action Factory
@@ -35,7 +36,7 @@ describe('[Botmation:Action Factory] Output', () => {
   //
   // screenshot() Integration Test
   it('should call puppeteer\'s page screenshot() method with the provided options', async() => {
-    await screenshot(SCREENSHOT_FILENAME)(mockPage, botOptions, undefined)
+    await screenshot(SCREENSHOT_FILENAME)(mockPage, botOptions, wrapValueInPipe())
 
     expect(mockPage.screenshot).toBeCalledWith({path: getFileUrl(botOptions.screenshots_directory, botOptions) + '/test-screenshot-1.png'})
   })
@@ -43,7 +44,7 @@ describe('[Botmation:Action Factory] Output', () => {
   //
   // screenshot() Unit Test
   it('should create a PNG file in the screenshots directory with the provided filename', async() => {
-    await screenshot(SCREENSHOT_FILENAME)(page, botOptions, undefined)
+    await screenshot(SCREENSHOT_FILENAME)(page, botOptions, wrapValueInPipe())
 
     await expect(fileExist(getFileUrl(botOptions.screenshots_directory, botOptions) + '/test-screenshot-1.png')).resolves.toEqual(true)
   })
@@ -51,7 +52,7 @@ describe('[Botmation:Action Factory] Output', () => {
   //
   // screenshotAll() Integration test
   // it('should screenshotAll(...) sites by calling goTo then screenshot, on each one', async() => {
-  //   await screenshotAll('https://google.com', 'https://twitter.com')(mockPage, undefined, botOptions)
+  //   await screenshotAll('https://google.com', 'https://twitter.com')(mockPage, botOptions, wrapValueInPipe())
 
   //   expect(mockPage.goto).toHaveBeenNthCalledWith(1, 'https://google.com', getDefaultGoToPageOptions())
   //   expect(mockPage.screenshot).toHaveBeenNthCalledWith(1, {path: getFileUrl(botOptions.screenshots_directory, botOptions, 'https___google_com.png')})

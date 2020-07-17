@@ -4,8 +4,8 @@
  * 
  *                  This provides stronger typing for BotAction's that return a PipeValue versus those that don't (therefore work in a chain)
  */
-export type AllPipeValues = boolean|number|string|object|Function|Array<any>|null|undefined
-export type PipeValue<V = AllPipeValues> = V
+export type AllPossiblePipeValues = boolean|number|string|object|Function|Array<any>|null
+export type PipeValue<V extends AllPossiblePipeValues = AllPossiblePipeValues> = V
 
 /**
  * @description    Wrapping piped values with a property `brand` to give us a way to test it with a gaurd against other injects

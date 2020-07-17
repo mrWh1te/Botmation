@@ -25,8 +25,7 @@ export const givenThat =
     (...actions: BotAction<any>[]): BotAction => 
       async(page, ...injects) => {
         try {
-          const pipeConditionResolved = await pipe()(condition)(page, ...pipeInjects(injects))
-          let conditionResolved = pipeConditionResolved.value
+          const conditionResolved = await pipe()(condition)(page, ...pipeInjects(injects)) // pipe()() does not return a `pipe` object, but the pipe object's value
 
           if (conditionResolved) {
             await pipe()(...actions)(page, ...injects)

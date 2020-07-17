@@ -36,23 +36,15 @@ export const BotActionsPipe =
       // let piped // pipe's are closed chain-links, so nothing pipeable comes in, so data is grabbed in a pipe and shared down stream a pipe, and returns
       try {
         for(const action of actions) {
-          // it's possible for a bot action to be a pipe using the pipe()() botaction, so if that is the case, it's actually resolving a Pipe, not a value like a regular botaction
-          const nextPipeOrPipeValue: Pipe|any = await action(page, ...injects, pipe) // if action doesn't return anything, is this value === undefined !?!?!?! TODO test this
+          const nextPipeValueOrVoid: PipeValue|any = await action(page, ...injects, pipe)
           
-          // so if it's a pipe
-          if (isPipe(nextPipeOrPipeValue)) {
-            pipe = nextPipeOrPipeValue
-          } else {
-            // if it's not a pipe, then wrap the value in a pipe
-            pipe = wrapValueInPipe(nextPipeOrPipeValue)
-          }
+          // Bot Actions return the value removed from the pipe, and BotActionsPipe wraps it for injecting
+          pipe = wrapValueInPipe(nextPipeValueOrVoid)
         }
       } catch(error) {
-        logError('PipeCaughtError:')
+        logError(' -- PipeCaughtError -- ')
         logError(error)
       }
 
-      console.log('[BotActionsPipe] returning this pipe = ', pipe)
-      
       return pipe as any as Pipe<R>
     }

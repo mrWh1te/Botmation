@@ -1,6 +1,6 @@
 //
 
-import { PipeValue } from "./pipe"
+import { Pipe } from "./pipe"
 
 // IndexedDB
 export type IndexedDBDatabaseName = string
@@ -12,4 +12,4 @@ export type IndexedDBStoreNameKeyValue = any
 /**
  * @description   [databaseName, databaseVersion, storeName, and Piped value]
  */
-export type BotIndexedDBInjects<P = undefined> = [IndexedDBDatabaseName, IndexedDBDatabaseVersion, IndexedDBStoreName, PipeValue<P>]
+export type BotIndexedDBInjects<V = undefined> = [IndexedDBDatabaseName, IndexedDBDatabaseVersion, IndexedDBStoreName, Pipe<V>]

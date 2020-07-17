@@ -40,12 +40,12 @@ export const map = (mapFunction: (pipedValue: any) => any): BotAction => async (
   injects.length > 0 ? mapFunction(injects[injects.length - 1].value) : mapFunction(undefined)
 
 /**
- * @description   Overwrite the piped value
+ * @description   Overwrite the pipe value
  * @param valueToPipe 
  */
 export const pipeValue = (valueToPipe: any): BotAction => async () => valueToPipe
 
 /**
- * @description   Empty the pipe = clear the pipe's value = sets piped value to undefined
+ * @description   Empty the pipe = clear the pipe's value = sets pipe value to undefined
  */
 export const emptyPipe: BotAction = async () => undefined

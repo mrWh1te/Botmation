@@ -19,7 +19,7 @@ export const BotActionsChain =
           await action(page, ...injects) // if action doesn't return anything, is this value === undefined !?!?!?! TODO test this
         }
       } catch(error) {
-        logError('ChainCaughtError:')
+        logError(' -- ChainCaughtError -- ')
         logError(error)
       }
     }

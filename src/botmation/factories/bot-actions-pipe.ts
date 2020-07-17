@@ -2,11 +2,8 @@ import { Page } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-actions.interfaces'
 import { logError } from 'botmation/helpers/console'
-import { injectsPipeOrEmptyPipe, wrapValueInPipe, injectsHavePipe, getPipeValue } from 'botmation/helpers/pipe'
-import { Pipe, isPipe, PipeValue } from 'botmation/types/pipe'
-
-//
-// Standards
+import { injectsPipeOrEmptyPipe, wrapValueInPipe, injectsHavePipe } from 'botmation/helpers/pipe'
+import { Pipe, PipeValue } from 'botmation/types/pipe'
  
 //
 /**

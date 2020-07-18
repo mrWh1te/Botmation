@@ -2,7 +2,6 @@ import { promises as fs } from 'fs'
 
 import { BotFilesAction } from '../interfaces/bot-actions.interfaces'
 import { getFileUrl } from '../helpers/assets'
-import { logError } from '../helpers/console'
 import { enrichBotFileOptionsWithDefaults } from 'botmation/helpers/file-options'
 
 /**
@@ -12,15 +11,10 @@ import { enrichBotFileOptionsWithDefaults } from 'botmation/helpers/file-options
  * @example saveCookies('cookies') -> creates `cookies.json`
  */
 export const saveCookies = (fileName: string): BotFilesAction => async(page, options) => {
-  try {
-    const hydratedOptions = enrichBotFileOptionsWithDefaults(options)
-    
-    const cookies = await page.cookies()
-    await fs.writeFile(getFileUrl(hydratedOptions.cookies_directory, hydratedOptions, fileName) + '.json', JSON.stringify(cookies, null, 2))
-  } catch(error) {
-    logError('[BotAction:saveCookies]')
-    logError(error)
-  }
+  const hydratedOptions = enrichBotFileOptionsWithDefaults(options)
+  
+  const cookies = await page.cookies()
+  await fs.writeFile(getFileUrl(hydratedOptions.cookies_directory, hydratedOptions, fileName) + '.json', JSON.stringify(cookies, null, 2))
 }
 
 /**
@@ -30,17 +24,12 @@ export const saveCookies = (fileName: string): BotFilesAction => async(page, opt
  * @example loadCookies('cookies')
  */
 export const loadCookies = (fileName: string): BotFilesAction => async(page, options) => {
-  try {
-    const hydratedOptions = enrichBotFileOptionsWithDefaults(options)
+  const hydratedOptions = enrichBotFileOptionsWithDefaults(options)
 
-    const file = await fs.readFile(getFileUrl(hydratedOptions.cookies_directory, hydratedOptions, fileName) + '.json')
-    const cookies = JSON.parse(file.toString())
+  const file = await fs.readFile(getFileUrl(hydratedOptions.cookies_directory, hydratedOptions, fileName) + '.json')
+  const cookies = JSON.parse(file.toString())
 
-    for (const cookie of cookies) {
-      await page.setCookie(cookie)
-    }
-  } catch(error) {
-    logError('[BotAction:loadCookies]')
-    logError(error)
+  for (const cookie of cookies) {
+    await page.setCookie(cookie)
   }
 }

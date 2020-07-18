@@ -66,7 +66,7 @@ import { pipe } from 'botmation/actions/pipe'
       // test 5, higher order func
       log('Starting Test #5 indexedDBStore()()'),
       // Sets up the injects for BotIndexedDBAction's (optional)
-      indexedDBStore('testDB5', 3, 'zzzStore5')( // accessing a store in a database we did not create, causes error?
+      indexedDBStore('testDB10', 1, 'zzzStore5')(
         log('going to set, get, then log a value from IndexedDB'),
         setIndexedDBValue('some-key-test5', 'some-value-test5'),
         getIndexedDBValue('some-key-test5'),

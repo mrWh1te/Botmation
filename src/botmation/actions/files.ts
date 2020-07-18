@@ -1,5 +1,4 @@
 import { BotFileOptions, BotAction } from "botmation/interfaces"
-import { BotActionsPipe } from "botmation/factories/bot-actions-pipe"
 import { enrichBotFileOptionsWithDefaults } from "botmation/helpers/file-options"
 import { injects } from "./injects"
 

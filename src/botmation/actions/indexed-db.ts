@@ -1,9 +1,9 @@
 
 import { BotAction, BotIndexedDBAction } from '../interfaces/bot-actions.interfaces'
-import { unpipeInjects } from 'botmation/helpers/pipe'
-import { getIndexedDBStoreValue, setIndexedDBStoreValue } from 'botmation/helpers/indexed-db'
+import { unpipeInjects } from '../helpers/pipe'
+import { getIndexedDBStoreValue, setIndexedDBStoreValue } from '../helpers/indexed-db'
 import { injects } from './injects'
-import { PipeValue } from 'botmation/types/pipe'
+import { PipeValue } from '../types/pipe'
 
 /**
  * @description    It's a utility higher-order BotAction that sets injects before the parent chain/pipe's injects, IndexedDB store data

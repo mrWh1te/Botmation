@@ -13,13 +13,15 @@ import { logError } from 'botmation/helpers/console'
 export const BotActionsChain = 
   (page: Page, ...injects: any[]) => 
     async (...actions: BotAction<void>[]): Promise<void> => {
-      // let piped // pipe's are closed chain-links, so nothing pipeable comes in, so data is grabbed in a pipe and shared down stream a pipe, and returns
+      let actionCount = 1 // keep track of the action that ran for debugging errors
+
       try {
         for(const action of actions) {
-          await action(page, ...injects) // if action doesn't return anything, is this value === undefined !?!?!?! TODO test this
+          await action(page, ...injects)
+          actionCount++
         }
       } catch(error) {
-        logError(' -- ChainCaughtError -- ')
+        logError(' -- ChainCaughtError in BotAction #' + actionCount + ' -- ')
         logError(error)
       }
     }

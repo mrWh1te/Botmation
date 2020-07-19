@@ -11,4 +11,5 @@ export const files = (fileOptions?: Partial<BotFileOptions>) =>
     errors('files()()')(
       injects(
         enrichBotFileOptionsWithDefaults(fileOptions)
-      )(...actions))
+      )(...actions)
+    )

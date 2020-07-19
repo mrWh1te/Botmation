@@ -4,6 +4,7 @@ import { unpipeInjects } from '../helpers/pipe'
 import { getIndexedDBStoreValue, setIndexedDBStoreValue } from '../helpers/indexed-db'
 import { injects } from './injects'
 import { PipeValue } from '../types/pipe'
+import { errors } from './errors'
 
 /**
  * @description    It's a utility higher-order BotAction that sets injects before the parent chain/pipe's injects, IndexedDB store data
@@ -14,7 +15,11 @@ import { PipeValue } from '../types/pipe'
  */
 export const indexedDBStore = (databaseName: string, databaseVersion: number, storeName: string) =>
   (...actions: BotAction<PipeValue|void>[]): BotAction<any> =>
-    injects(databaseName, databaseVersion, storeName)(...actions)
+    errors('indexedDBStore()()')(
+      injects(
+        databaseName, databaseVersion, storeName
+      )(...actions)
+    )
       
 
 /**

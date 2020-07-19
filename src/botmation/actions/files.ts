@@ -8,7 +8,7 @@ import { errors } from "./errors"
  */
 export const files = (fileOptions?: Partial<BotFileOptions>) =>
   (...actions: BotAction[]): BotAction =>
-    errors('Files')(
+    errors('files()()')(
       injects(
         enrichBotFileOptionsWithDefaults(fileOptions)
       )(...actions))

@@ -23,7 +23,7 @@ export const errors =
           // otherwise, we are not in a pipe, therefore we are in a chain and do no want to return the value, because chain links are isolated, no piping
           await BotActionsPipe(page, ...injects)(...actions)
         } catch(error) {
-          logError('caught in [' + errorBlockName + ']')
+          logError('caught in ' + errorBlockName)
           console.error(error)
           console.log('\n') // space between this message block and the next
 

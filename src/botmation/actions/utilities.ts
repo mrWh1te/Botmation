@@ -96,15 +96,11 @@ export const doWhile =
           const pipeValue = await pipe()(...actions)(page, ...injects)
 
           resolvedCondition = false // in case condition rejects
-          try {
-            // ConditionResolved's value may be in a pipe
-            if (injectsHavePipe(injects)) {
-              resolvedCondition = await condition(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(pipeValue))
-            } else {
-              resolvedCondition = await condition(page, ...injects, wrapValueInPipe(pipeValue))
-            }
-          } catch (error) {
-            // handle case of condition promise reject, not resolving a bool value
+          // ConditionResolved's value may be in a pipe
+          if (injectsHavePipe(injects)) {
+            resolvedCondition = await condition(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(pipeValue))
+          } else {
+            resolvedCondition = await condition(page, ...injects, wrapValueInPipe(pipeValue))
           }
         }
       }
@@ -125,21 +121,17 @@ export const forAsLong =
   (condition: ConditionalBotAction) => 
     (...actions: BotAction[]): BotAction => 
       async(page, ...injects) => {
-        try {
-          let resolvedCondition = await condition(page, ...pipeInjects(injects))
+        let resolvedCondition = await condition(page, ...pipeInjects(injects))
 
-          while (resolvedCondition) {
-            const pipeValue = await pipe()(...actions)(page, ...pipeInjects(injects))
+        while (resolvedCondition) {
+          const pipeValue = await pipe()(...actions)(page, ...pipeInjects(injects))
 
-            // simulate pipe if needed
-            if (injectsHavePipe(injects)) {
-              resolvedCondition = await condition(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(pipeValue))
-            } else {
-              resolvedCondition = await condition(page, ...injects, wrapValueInPipe(pipeValue))
-            }
+          // simulate pipe if needed
+          if (injectsHavePipe(injects)) {
+            resolvedCondition = await condition(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(pipeValue))
+          } else {
+            resolvedCondition = await condition(page, ...injects, wrapValueInPipe(pipeValue))
           }
-        } catch (error) {
-          // logError(error)
         }
       }
 

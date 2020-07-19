@@ -31,18 +31,11 @@ export const BotActionsPipe =
       }
 
       // let piped // pipe's are closed chain-links, so nothing pipeable comes in, so data is grabbed in a pipe and shared down stream a pipe, and returns
-      let actionCount = 1
-      try {
-        for(const action of actions) {
-          const nextPipeValueOrVoid: PipeValue|any = await action(page, ...injects, pipe)
-          actionCount++ // if you know which pipe threw the error, this will help you figure out which action in the pipe did it
+      for(const action of actions) {
+        const nextPipeValueOrVoid: PipeValue|any = await action(page, ...injects, pipe)
 
-          // Bot Actions return the value removed from the pipe, and BotActionsPipe wraps it for injecting
-          pipe = wrapValueInPipe(nextPipeValueOrVoid)
-        }
-      } catch(error) {
-        logError(' -- PipeCaughtError in BotAction #' + actionCount + ' -- ')
-        logError(error)
+        // Bot Actions return the value removed from the pipe, and BotActionsPipe wraps it for injecting
+        pipe = wrapValueInPipe(nextPipeValueOrVoid)
       }
 
       return pipe as any as Pipe<R>

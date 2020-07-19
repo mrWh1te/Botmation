@@ -23,17 +23,7 @@ export const givenThat =
   (condition: ConditionalBotAction) => 
     (...actions: BotAction<any>[]): BotAction => 
       async(page, ...injects) => {
-
-        // @todo wrap condition() in a error()()
-        // it can run without a pipe()() once higher order BotAction's have support through a new helper f(x) that runs action(s) either in a simulated pipe or a real pipe()()
-        let resolvedCondition = false
-        try {
-          resolvedCondition = await condition(page, ...pipeInjects(injects))
-        } catch(error) {
-          // handle case of promise reject from await condition()
-        }
-
-        if (resolvedCondition) {
+        if (await condition(page, ...pipeInjects(injects))) {
           await pipe()(...actions)(page, ...injects)
         }
       }

@@ -45,7 +45,9 @@ describe('[Botmation:Action Factory] Utilities', () => {
   it('should resolve the condition and ONLY run the chain of actions if the resolved condition equals TRUE', async() => {
     const conditionResolvingTRUE:BotAction<boolean> = async() => new Promise(resolve => resolve(true))
     const conditionResolvingFALSE:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
-    const conditionReject:BotAction<boolean> = async() => new Promise((resolve, reject) => reject(new Error('test')))
+    // The support for rejecting a Promise in a BotConditionalAction is being dropped
+    // You must return a boolean value. Reject will not be understood as FALSE. That's an Error that is handled now by errors()()
+    // const conditionReject:BotAction<boolean> = async() => new Promise((resolve, reject) => reject(new Error('test')))
 
     // These actions should run
     await givenThat(conditionResolvingTRUE)(
@@ -60,10 +62,10 @@ describe('[Botmation:Action Factory] Utilities', () => {
     )(mockPage)
 
     // These actions should NOT run
-    await givenThat(conditionReject)(
-      click('example selector 2'),
-      type('example copy 2')
-    )(mockPage)
+    // await givenThat(conditionReject)(
+    //   click('example selector 2'),
+    //   type('example copy 2')
+    // )(mockPage)
 
     expect(mockPage.click).toHaveBeenNthCalledWith(1, 'example selector 1')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, 'example copy 1')
@@ -71,8 +73,8 @@ describe('[Botmation:Action Factory] Utilities', () => {
     expect(mockPage.click).not.toHaveBeenNthCalledWith(2, 'example selector 2')
     expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(2, 'example copy 2')
 
-    expect(mockPage.click).not.toHaveBeenNthCalledWith(3, 'example selector 2')
-    expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(3, 'example copy 2')
+    // expect(mockPage.click).not.toHaveBeenNthCalledWith(3, 'example selector 2')
+    // expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(3, 'example copy 2')
   })
 
   //

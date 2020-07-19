@@ -22,10 +22,11 @@ import { logError } from 'botmation/helpers/console'
 
 // Expiremental Pipe
 // import { BotActionsPipe as Bot } from 'botmation/factories/bot-actions-pipe' // what if rename to PipeActionsBot?
-import { BotActionsChain as Bot } from 'botmation/factories/bot-actions-chain' // what if rename to ChainActionsBot?
+// import { BotActionsChain as Bot } from 'botmation/factories/bot-actions-chain' // what if rename to ChainActionsBot?
 import { indexedDBStore, setIndexedDBValue, getIndexedDBValue } from 'botmation/actions/indexed-db'
 import { files } from 'botmation/actions/files'
 import { pipe } from 'botmation/actions/pipe'
+import { chain } from 'botmation/actions/chain'
 
 // Main Script
 (async () => {
@@ -36,7 +37,7 @@ import { pipe } from 'botmation/actions/pipe'
     const pages = await browser.pages()
     const page = pages.length === 0 ? await browser.newPage() : pages[0]
 
-    await Bot(page)(
+    await chain(
       log('Botmation running'),
       
       // Sets up the injects for BotFileAction's (optional)
@@ -104,7 +105,8 @@ import { pipe } from 'botmation/actions/pipe'
 
 
       log('Done'),
-    )
+    )(page)
+
   } catch (error) {
     logError(error)
     

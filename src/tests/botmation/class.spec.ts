@@ -20,7 +20,8 @@ describe('[Botmation] Class', () => {
   //
   // Async Class Instance
   it('should create a Botmation instance using the static asyncConstructor() then run the actions', async() => {
-    const bot = await Botmation.asyncConstructor(browser)
+    let url = page.url()
+    const bot = await Botmation.asyncConstructor(browser) // <-- finicky test here
 
     await bot.actions(
       goTo(EXAMPLE_URL),
@@ -29,7 +30,8 @@ describe('[Botmation] Class', () => {
       click(FORM_SUBMIT_BUTTON_SELECTOR)
     )
 
-    expect(bot.getPage().url()).toEqual('http://localhost:8080/success.html?answer=loremlipsumloremlipsum')
+    url = bot.getPage().url()
+    expect(url).toEqual('http://localhost:8080/success.html?answer=loremlipsumloremlipsum')
   })
   it('should create a Botmation instance using the static asyncConstructor() and create a new page when the browser has none automatically', async() => {
     /// this mocked use-case is for when the browser provided has no tabs open

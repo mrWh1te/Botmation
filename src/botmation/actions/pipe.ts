@@ -4,7 +4,7 @@ import { wrapValueInPipe, injectsHavePipe, getInjectsPipeValue } from "botmation
 import { PipeValue } from "botmation/types/pipe"
 
 //
-// Pipe Utilties
+// BotAction's Focused on Pipe
 //
 
 /**
@@ -12,7 +12,7 @@ import { PipeValue } from "botmation/types/pipe"
  *                 It will try to inject the valueToPipe as the piped value unless that is undefined, then it will try to pipe the higher pipe's value from its injects otherwise undefined, an empty pipe
  * @param valueToPipe 
  */
-export const pipe = 
+export const pipe = // TODO remove ...newInjects functionality to encourage injects()() wrapping up pipe()() for such functionality use
   (valueToPipe?: any, ...newInjects: any[]) => 
     (...actions: BotAction<PipeValue|void>[]): BotAction<any> => 
       async(page, ...injects) => {

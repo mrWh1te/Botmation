@@ -23,12 +23,18 @@ export const givenThat =
   (condition: ConditionalBotAction) => 
     (...actions: BotAction<any>[]): BotAction => 
       async(page, ...injects) => {
+
+        // @todo wrap condition() in a error()()
+        // it can run without a pipe()() once higher order BotAction's have support through a new helper f(x) that runs action(s) either in a simulated pipe or a real pipe()()
+        let resolvedCondition = false
         try {
-          if (await condition(page, ...pipeInjects(injects))) {
-            await pipe()(...actions)(page, ...injects)
-          }
+          resolvedCondition = await condition(page, ...pipeInjects(injects))
         } catch(error) {
-          // catch here in case the condition rejects, needed for unit-test
+          // handle case of promise reject from await condition()
+        }
+
+        if (resolvedCondition) {
+          await pipe()(...actions)(page, ...injects)
         }
       }
 
@@ -95,20 +101,21 @@ export const doWhile =
   (condition: ConditionalBotAction) => 
     (...actions: BotAction<any>[]): BotAction => 
       async(page, ...injects) => {
-        try {
-          let resolvedCondition = true // doWhile -> run the code, then check the condition on whether or not we should run the code again
-          while (resolvedCondition) {
-            const pipeValue = await pipe()(...actions)(page, ...injects)
+        let resolvedCondition = true // doWhile -> run the code, then check the condition on whether or not we should run the code again
+        while (resolvedCondition) {
+          const pipeValue = await pipe()(...actions)(page, ...injects)
 
+          resolvedCondition = false // in case condition rejects
+          try {
             // ConditionResolved's value may be in a pipe
             if (injectsHavePipe(injects)) {
               resolvedCondition = await condition(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(pipeValue))
             } else {
               resolvedCondition = await condition(page, ...injects, wrapValueInPipe(pipeValue))
             }
+          } catch (error) {
+            // handle case of condition promise reject, not resolving a bool value
           }
-        } catch (error) {
-          // logError(error)
         }
       }
 

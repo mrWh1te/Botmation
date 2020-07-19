@@ -12,7 +12,7 @@ import { logError } from 'botmation/helpers/console'
  */
 export const BotActionsChain = 
   (page: Page, ...injects: any[]) => 
-    async (...actions: BotAction<void>[]): Promise<void> => {
+    async (...actions: BotAction[]): Promise<void> => {
       let actionCount = 1 // keep track of the action that ran for debugging errors
 
       try {

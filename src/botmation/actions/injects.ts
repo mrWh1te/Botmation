@@ -7,10 +7,6 @@ import { BotActionsPipe } from "botmation/factories/bot-actions-pipe"
 /**
  * @description    Higher-order to set first set of injects for provided BotAction's
  */
-// export const injects_working = (...newInjects: any[]) =>
-//   (...actions: BotAction<PipeValue|void>[]): BotAction =>
-//     pipe(undefined, ...newInjects)(...actions)
-
 export const injects =
   (...newInjects: any[]) => 
     (...actions: BotAction<PipeValue|void>[]): BotAction<any> => 

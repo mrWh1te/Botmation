@@ -10,5 +10,5 @@ import { BotActionsChain } from "botmation/factories/bot-actions-chain"
 export const chain =
   (...actions: BotAction[]): BotAction =>
     async(page, ...injects) => {
-      BotActionsChain(page, ...injects)(...actions) // TODO need await ? Type wise, no... but TBD test with subsequent chain()() ? maintain proper order?
+      await BotActionsChain(page, ...injects)(...actions)
     }

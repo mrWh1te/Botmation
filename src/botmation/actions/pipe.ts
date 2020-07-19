@@ -12,22 +12,22 @@ import { PipeValue } from "botmation/types/pipe"
  *                 It will try to inject the valueToPipe as the piped value unless that is undefined, then it will try to pipe the higher pipe's value from its injects otherwise undefined, an empty pipe
  * @param valueToPipe 
  */
-export const pipe = // TODO remove ...newInjects functionality to encourage injects()() wrapping up pipe()() for such functionality use
-  (valueToPipe?: any, ...newInjects: any[]) => 
+export const pipe =
+  (valueToPipe?: any) => 
     (...actions: BotAction<PipeValue|void>[]): BotAction<any> => 
       async(page, ...injects) => {
         if (injectsHavePipe(injects)) {
           // injects only have a pipe when its ran inside a pipe, so lets return our value to flow with the pipe mechanics
           if (valueToPipe) {
-            return (await BotActionsPipe(page, ...newInjects, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe))(...actions)).value
+            return (await BotActionsPipe(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe))(...actions)).value
           } else {
-            return (await BotActionsPipe(page, ...newInjects, ...injects)(...actions)).value
+            return (await BotActionsPipe(page, ...injects)(...actions)).value
           }
         }
 
         // otherwise, we are not in a pipe, therefore we are in a chain and do no want to return the value, because chain links are isolated, no piping
         // also in a chain, we dont have a pipe as the last inject, so we don't need to splice our injects when overridding pipe values
-        await BotActionsPipe(page, ...newInjects, ...injects, wrapValueInPipe(valueToPipe || getInjectsPipeValue(injects)))(...actions)
+        await BotActionsPipe(page, ...injects, wrapValueInPipe(valueToPipe || getInjectsPipeValue(injects)))(...actions)
       }
 
 /**

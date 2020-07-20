@@ -10,5 +10,9 @@ import { BotActionsChain } from "botmation/factories/bot-actions-chain"
 export const chain =
   (...actions: BotAction[]): BotAction =>
     async(page, ...injects) => {
+      // TODO test running chain()() inside a pipe()()
+      //    a) does it get a Pipe value undefined minimum?
+      //    b) does it unwrap that to inject it in first action?
+      //    c) is (b) good/bad?
       await BotActionsChain(page, ...injects)(...actions)
     }

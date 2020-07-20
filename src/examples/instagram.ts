@@ -27,6 +27,7 @@ import { indexedDBStore, setIndexedDBValue, getIndexedDBValue } from 'botmation/
 import { files } from 'botmation/actions/files'
 import { pipe } from 'botmation/actions/pipe'
 import { chain } from 'botmation/actions/chain'
+import { errors } from 'botmation/actions/errors'
 
 // Main Script
 (async () => {
@@ -42,9 +43,11 @@ import { chain } from 'botmation/actions/chain'
       
       // Sets up the injects for BotFileAction's (optional)
       files({cookies_directory: 'simple'})(
-        // Takes the name of the file to load cookies from
-        // Match this value with the same used in saveCookies()
-        loadCookies('instagram'),
+        errors('files()( loadCookes() )')(
+          // Takes the name of the file to load cookies from
+          // Match this value with the same used in saveCookies()
+          loadCookies('instagram'),
+        ),
       ),
 
       goTo(getInstagramBaseUrl()),
@@ -68,10 +71,12 @@ import { chain } from 'botmation/actions/chain'
       log('Starting Test #5 indexedDBStore()()'),
       // Sets up the injects for BotIndexedDBAction's (optional)
       indexedDBStore('testDB10', 1, 'zzzStore5')(
-        log('going to set, get, then log a value from IndexedDB'),
-        setIndexedDBValue('some-key-test5', 'some-value-test5'),
-        getIndexedDBValue('some-key-test5'),
-        log('Results of Test #5 are piped:')
+        errors('indexedDBStore()()')(
+          log('going to set, get, then log a value from IndexedDB'),
+          setIndexedDBValue('some-key-test5', 'some-value-test5'),
+          getIndexedDBValue('some-key-test5'),
+          log('Results of Test #5 are piped:')
+        ),
       ),
       
       // inline, hackish but do-able if your doing something on the fly
@@ -86,7 +91,9 @@ import { chain } from 'botmation/actions/chain'
         log('is guest so logging in'),
         login({username: 'account', password: 'password'}),
         files({cookies_directory: 'simple'})(
-          saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies 
+          errors('files()( saveCookies() )')(
+            saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies 
+          ),
         ),
         log('Saved Cookies')
       ),

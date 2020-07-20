@@ -1,11 +1,9 @@
 import { Page } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-actions.interfaces'
-import { logError } from 'botmation/helpers/console'
 import { injectsPipeOrEmptyPipe, wrapValueInPipe, injectsHavePipe } from 'botmation/helpers/pipe'
 import { Pipe, PipeValue } from 'botmation/types/pipe'
  
-//
 /**
  * @description     A chain-link that acts like a pipe
  *   Rules:
@@ -39,4 +37,4 @@ export const BotActionsPipe =
       }
 
       return pipe as any as Pipe<R>
-    }
+    } 

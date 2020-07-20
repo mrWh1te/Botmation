@@ -10,7 +10,7 @@ import { log } from 'botmation/actions/console'
 import { Botmation } from 'botmation'
 
 // Purely functional approach
-import { chain } from 'botmation/actions/factories'
+import { chain } from 'botmation/actions/assembly-lines'
 import { logError } from 'botmation/helpers/console'
 
 (async () => {

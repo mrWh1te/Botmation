@@ -5,7 +5,7 @@ import { sleep } from '../helpers/utilities'
 
 import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions.interfaces'
 import { injectsHavePipe, wrapValueInPipe, pipeInjects } from 'botmation/helpers/pipe'
-import { pipeActionOrActions, pipe } from './factories'
+import { pipeActionOrActions, pipe } from './assembly-lines'
 
 /**
  * @description givenThat(condition returns a promise that resolves to TRUE)(run these actions in a chain)

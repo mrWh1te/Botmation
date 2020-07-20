@@ -5,7 +5,7 @@
 import { Page, Browser } from 'puppeteer'
 
 import { BotAction } from './interfaces/bot-actions.interfaces'
-import { chain } from './actions/factories'
+import { chain } from './actions/assembly-lines'
 import { BotmationInterface } from './interfaces/botmation.interface'
 import { errors } from './actions/errors'
 

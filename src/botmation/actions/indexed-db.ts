@@ -4,7 +4,7 @@ import { unpipeInjects } from '../helpers/pipe'
 import { getIndexedDBStoreValue, setIndexedDBStoreValue } from '../helpers/indexed-db'
 import { injects } from './injects'
 import { PipeValue } from '../types/pipe'
-import { pipe } from './factories'
+import { pipe } from './assembly-lines'
 
 /**
  * @description    It's a utility higher-order BotAction that sets injects before the parent chain/pipe's injects, IndexedDB store data

@@ -23,7 +23,7 @@ import { logError } from 'botmation/helpers/console'
 // Expiremental Pipe
 import { indexedDBStore, setIndexedDBValue, getIndexedDBValue } from 'botmation/actions/indexed-db'
 import { files } from 'botmation/actions/files'
-import { pipe, chain } from 'botmation/actions/factories'
+import { pipe, chain } from 'botmation/actions/assembly-lines'
 import { errors } from 'botmation/actions/errors'
 
 // Main Script

@@ -111,6 +111,10 @@ export const assemblyLine =
         }
       }
 
+//
+// Avoid using the following BotAction's
+//
+
 /**
  * @description   For a particular utility BotAction that doesn't know whether it's receiving an array of BotActions of just 1 BotAction
  *                Can be helpful for advanced BotAction's that use a callback function as a param to return BotActions to run
@@ -126,10 +130,6 @@ export const pipeActionOrActions =
         await actionOrActions(page, ...pipeInjects(injects)) // simulated pipe
       }
     }
-
-//
-// Avoid using the following BotAction's
-//
 
 /**
  * @description    Runs all actions provided in a chain

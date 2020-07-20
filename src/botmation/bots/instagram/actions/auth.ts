@@ -23,7 +23,7 @@ import { chain } from 'botmation/actions/assembly-line'
  */
 export const login = ({username, password}: {username: string, password: string}): BotAction => async(page: Page, ...injects) =>
   // This is how a single BotAction can run its own sequence of BotAction's prior to the next call of the original bot.actions() sequence
-  await chain(
+  chain(
     goTo(getInstagramLoginUrl()),
     click(FORM_AUTH_USERNAME_INPUT_SELECTOR),
     type(username),

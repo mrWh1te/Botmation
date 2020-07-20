@@ -88,7 +88,7 @@ import { errors } from 'botmation/actions/errors'
       log('checking is guest status'),
       givenThat(isGuest) (
         log('is guest so logging in'),
-        login({username: 'account', password: 'password'}),
+        login({username: 'lagmahol', password: 'M1CHAE1.l2'}),
         files({cookies_directory: 'simple'})(
           errors('files()( saveCookies() )')(
             saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies 

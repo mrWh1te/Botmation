@@ -1,14 +1,16 @@
 import { BotAction } from "botmation/interfaces"
 import { PipeValue } from "../types/pipe"
 import { injectsHavePipe } from "botmation/helpers/pipe"
-import { BotActionsPipe } from "botmation/factories/bot-actions-pipe"
 import { logError } from "botmation/helpers/console"
+import { pipe, chain } from "./assembly-line"
 
 /**
  * @description    Mechanic for error handling
  *                 Higher-order to wrap ran actions in a named try/catch block
  *                 
  *                 Helps with finding thrown errors
+ * 
+ *                 Supports chain()() and pipe()()
  * @param errorBlockName errors caught will be logged with this name
  */
 export const errors =
@@ -17,11 +19,10 @@ export const errors =
       async(page, ...injects) => {
         try {
           if (injectsHavePipe(injects)) {
-            return (await BotActionsPipe(page, ...injects)(...actions)).value
+            return await pipe()(...actions)(page, ...injects)
           }
   
-          // otherwise, we are not in a pipe, therefore we are in a chain and do no want to return the value, because chain links are isolated, no piping
-          await BotActionsPipe(page, ...injects)(...actions)
+          await chain(...(actions as BotAction[]))(page, ...injects)
         } catch(error) {
           logError('caught in ' + errorBlockName)
           console.error(error)

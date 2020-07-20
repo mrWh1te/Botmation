@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-actions.interfaces'
-import { BotActionsChain } from '../factories/bot-actions-chain'
+import { pipe } from 'botmation/actions/assembly-line'
 
 /**
  * 
@@ -10,8 +10,11 @@ import { BotActionsChain } from '../factories/bot-actions-chain'
  */
 export const applyBotActionOrActions = async(page: Page, actionOrActions: BotAction[] | BotAction, ...injects: any[]) => {
   if (Array.isArray(actionOrActions)) {
-    await BotActionsChain(page, ...injects)(...actionOrActions)
+    await pipe()(...actionOrActions)(page, ...injects)
   } else {
-    await BotActionsChain(page, ...injects)(actionOrActions)
+    await pipe()(actionOrActions)(page, ...injects)
   }
 }
+
+// for the time being, utility botaction's like forAll, givenThat don't return values, which makes them fit in chains but they can't either
+// maybe one day that will change, come need

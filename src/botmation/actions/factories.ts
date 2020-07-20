@@ -32,7 +32,7 @@ export const chain =
         else if(actions.length === 1) {
           await actions[0](page, ...injects.splice(0, injects.length - 1))
         } else {
-          await actionsChain(...actions)(page, ...injects.splice(0, injects.length - 1))
+          await chainRunner(...actions)(page, ...injects.splice(0, injects.length - 1))
         }
       } else {
         // run regularly in a chain, no need to remove a pipe (last inject)
@@ -40,7 +40,7 @@ export const chain =
         else if(actions.length === 1) {
           await actions[0](page, ...injects)
         } else {
-          await actionsChain(...actions)(page, ...injects)
+          await chainRunner(...actions)(page, ...injects)
         }
       }
     }
@@ -65,9 +65,9 @@ export const pipe =
           } else {
             // injects only have a pipe when its ran inside a pipe, so lets return our value to flow with the pipe mechanics
             if (valueToPipe) {
-              return (await actionsPipe(...actions)(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe))).value
+              return (await pipeRunner(...actions)(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe))).value
             } else {
-              return (await actionsPipe(...actions)(page, ...injects)).value
+              return (await pipeRunner(...actions)(page, ...injects)).value
             }
           }
         } else {
@@ -76,7 +76,7 @@ export const pipe =
           else if (actions.length === 1) {
             return await actions[0](page, ...injects, wrapValueInPipe(valueToPipe))
           } else {
-            return (await actionsPipe(...actions)(page, ...injects, wrapValueInPipe(valueToPipe))).value
+            return (await pipeRunner(...actions)(page, ...injects, wrapValueInPipe(valueToPipe))).value
           }
         }
 
@@ -136,7 +136,7 @@ export const pipeActionOrActions =
  *                 Does not have checks/safety mechanics, so becareful with using this directly, instead use chain()()
  * @param actions 
  */    
-export const actionsChain =
+export const chainRunner =
   (...actions: BotAction[]): BotAction =>
     async(page, ...injects) => {
       for(const action of actions) {
@@ -149,7 +149,7 @@ export const actionsChain =
  *                 Does not have checks/safety mechanics, so becareful with using this directly, instead use pipe()()
  * @param actions 
  */  
-export const actionsPipe = 
+export const pipeRunner = 
   <R extends PipeValue = PipeValue, P = any>(...actions: BotAction<PipeValue|void>[]): BotAction<Pipe<R>> =>
     async(page, ...injects) => {
       // Possible for last inject to be the piped value

@@ -1,18 +1,14 @@
 import { BotAction } from "botmation/interfaces"
-import { injectsHavePipe, pipeInjects, wrapValueInPipe, getInjectsPipeValue } from "botmation/helpers/pipe"
-import { BotActionsChain } from "botmation/factories/bot-actions-chain"
-import { BotActionsPipe } from "botmation/factories/bot-actions-pipe"
-import { PipeValue } from "botmation/types/pipe"
+import { injectsHavePipe, pipeInjects, wrapValueInPipe, injectsPipeOrEmptyPipe } from "botmation/helpers/pipe"
+import { PipeValue, Pipe } from "botmation/types/pipe"
 
 //
-// These functions actually resolve the actions, like an assembly line 1 action at a time as it flows through
+// These functions resolve the actions, like assembly lines, 1 action at a time in order received
 //
 
 
 /**
- * @description     chain() BotAction for running a chain of BotAction's
- *                  With this, you can skip touching a BotActionFactory directly
- *                  100% BotAction's, if you want..
+ * @description     chain() BotAction for running a chain of BotAction's safely and optimized
  * @param actions 
  */
 export const chain =
@@ -36,7 +32,7 @@ export const chain =
         else if(actions.length === 1) {
           await actions[0](page, ...injects.splice(0, injects.length - 1))
         } else {
-          await BotActionsChain(page, ...injects.splice(0, injects.length - 1))(...actions)
+          await actionsChain(...actions)(page, ...injects.splice(0, injects.length - 1))
         }
       } else {
         // run regularly in a chain, no need to remove a pipe (last inject)
@@ -44,7 +40,7 @@ export const chain =
         else if(actions.length === 1) {
           await actions[0](page, ...injects)
         } else {
-          await BotActionsChain(page, ...injects)(...actions)
+          await actionsChain(...actions)(page, ...injects)
         }
       }
     }
@@ -69,9 +65,9 @@ export const pipe =
           } else {
             // injects only have a pipe when its ran inside a pipe, so lets return our value to flow with the pipe mechanics
             if (valueToPipe) {
-              return (await BotActionsPipe(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe))(...actions)).value
+              return (await actionsPipe(...actions)(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe))).value
             } else {
-              return (await BotActionsPipe(page, ...injects)(...actions)).value
+              return (await actionsPipe(...actions)(page, ...injects)).value
             }
           }
         } else {
@@ -80,7 +76,7 @@ export const pipe =
           else if (actions.length === 1) {
             return await actions[0](page, ...injects, wrapValueInPipe(valueToPipe))
           } else {
-            return (await BotActionsPipe(page, ...injects, wrapValueInPipe(valueToPipe))(...actions)).value
+            return (await actionsPipe(...actions)(page, ...injects, wrapValueInPipe(valueToPipe))).value
           }
         }
 
@@ -130,3 +126,48 @@ export const pipeActionOrActions =
         await actionOrActions(page, ...pipeInjects(injects)) // simulated pipe
       }
     }
+
+//
+// Avoid using the following BotAction's
+//
+
+/**
+ * @description    Runs all actions provided in a chain
+ *                 Does not have checks/safety mechanics, so becareful with using this directly, instead use chain()()
+ * @param actions 
+ */    
+export const actionsChain =
+  (...actions: BotAction[]): BotAction =>
+    async(page, ...injects) => {
+      for(const action of actions) {
+        await action(page, ...injects)
+      }
+    }
+
+/**
+ * @description    Runs all actions provided in a pipe
+ *                 Does not have checks/safety mechanics, so becareful with using this directly, instead use pipe()()
+ * @param actions 
+ */  
+export const actionsPipe = 
+  <R extends PipeValue = PipeValue, P = any>(...actions: BotAction<PipeValue|void>[]): BotAction<Pipe<R>> =>
+    async(page, ...injects) => {
+      // Possible for last inject to be the piped value
+      let pipe = wrapValueInPipe()
+
+      // in case we are used in a chain, injects won't have a pipe at the end
+      if (injectsHavePipe(injects)) {
+        pipe = injectsPipeOrEmptyPipe<P>(injects) // unwraps the piped value from the piped branded box
+        injects = injects.slice(0, injects.length - 1)
+      }
+
+      // let piped // pipe's are closed chain-links, so nothing pipeable comes in, so data is grabbed in a pipe and shared down stream a pipe, and returns
+      for(const action of actions) {
+        const nextPipeValueOrVoid: PipeValue|any = await action(page, ...injects, pipe)
+
+        // Bot Actions return the value removed from the pipe, and BotActionsPipe wraps it for injecting
+        pipe = wrapValueInPipe(nextPipeValueOrVoid)
+      }
+
+      return pipe as any as Pipe<R>
+    }    

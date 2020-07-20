@@ -2,7 +2,7 @@ import { BotAction } from "botmation/interfaces"
 import { PipeValue } from "../types/pipe"
 import { injectsHavePipe } from "botmation/helpers/pipe"
 import { logError } from "botmation/helpers/console"
-import { pipe, chain } from "./assembly-line"
+import { pipe, chain } from "./factories"
 
 /**
  * @description    Mechanic for error handling

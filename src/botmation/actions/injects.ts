@@ -1,6 +1,6 @@
 import { BotAction } from "botmation/interfaces"
 import { PipeValue } from "../types/pipe"
-import { assemblyLine } from "./assembly-line"
+import { assemblyLine } from "./factories"
 
 /**
  * @description    Higher-order to set first set of injects for provided BotAction's

@@ -44,8 +44,7 @@ import { logError } from 'botmation/helpers/console'
     )
 
     // Done
-    await bot2.closePage()
-    await browser.close()
+    await page.close()
   } catch (error) {
     logError(error)
     

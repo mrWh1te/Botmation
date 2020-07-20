@@ -21,11 +21,9 @@ import { isTurnOnNotificationsModalActive } from 'botmation/bots/instagram/helpe
 import { logError } from 'botmation/helpers/console'
 
 // Expiremental Pipe
-// import { BotActionsPipe as Bot } from 'botmation/factories/bot-actions-pipe' // what if rename to PipeActionsBot?
-// import { BotActionsChain as Bot } from 'botmation/factories/bot-actions-chain' // what if rename to ChainActionsBot?
 import { indexedDBStore, setIndexedDBValue, getIndexedDBValue } from 'botmation/actions/indexed-db'
 import { files } from 'botmation/actions/files'
-import { pipe, chain } from 'botmation/actions/assembly-line'
+import { pipe, chain } from 'botmation/actions/factories'
 import { errors } from 'botmation/actions/errors'
 
 // Main Script

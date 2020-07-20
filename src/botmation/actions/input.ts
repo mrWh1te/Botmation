@@ -1,11 +1,5 @@
 import { BotAction } from '../interfaces/bot-actions.interfaces'
 
-//
-// @TODO Somethign to TEST!
-//      does return Promise<void> play nicely in pipes?
-//      do these functions play nicely in pipe? Do they clear the pipe as expected?
-//
-
 /**
  * @description   Manually left-click an HTML element on the page given the provided HTML selector
  * @param selector 

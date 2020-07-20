@@ -10,7 +10,7 @@ import { log } from 'botmation/actions/console'
 import { Botmation } from 'botmation'
 
 // Purely functional approach
-import { BotActionsChain as Bot } from 'botmation/factories/bot-actions-chain'
+import { chain } from 'botmation/actions/factories'
 import { logError } from 'botmation/helpers/console'
 
 (async () => {
@@ -47,11 +47,11 @@ import { logError } from 'botmation/helpers/console'
     
         const nodeJsBot = async ({ page, data: url }: {page: Page, data: any}) => 
             // Functional approach
-            await Bot(page)(
+            await chain(
                 goTo(url),
                 screenshot(url.replace(/[^a-zA-Z]/g, '_')),
                 log('screenshot of ' + url + ' saved')
-            )
+            )(page)
 
         //
         // You can use any approach with any one of these bots

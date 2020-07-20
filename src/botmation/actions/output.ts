@@ -6,18 +6,19 @@ import { forAll } from './utilities'
 import { goTo } from './navigation'
 import { getFileUrl } from '../helpers/assets'
 import { enrichBotFileOptionsWithDefaults } from 'botmation/helpers/file-options'
+import { BotFileOptions } from 'botmation/interfaces'
 
 /**
  * @description   Take a PNG screenshot of the current page
  *                It relies on `options`, BotOptions, to determine the URL to save the asset in
  * @param fileName name of the file to save the PNG as
  */
-export const screenshot = (fileName: string): BotFilesAction => 
+export const screenshot = (fileName: string, botFileOptions?: Partial<BotFileOptions>): BotFilesAction => 
   async (page, options) => {
-    const hydratedOptions = enrichBotFileOptionsWithDefaults(options)
+    // botFileOptions' values overwrite injected ones in `options`
+    const hydratedOptions = enrichBotFileOptionsWithDefaults({...options, ...botFileOptions})
 
     const fileUrl = getFileUrl(hydratedOptions.screenshots_directory, hydratedOptions, fileName) + '.png'
-  
     await page.screenshot({path: fileUrl})
   }
 
@@ -28,13 +29,14 @@ export const screenshot = (fileName: string): BotFilesAction =>
  * @example   screenshotAll('https://google.com', 'https://twitter.com')
  * @request   add ability like via a closure, to customize the filename for easier reuse in a cycle (like ability to timestamp the file etc)
  */
-// export const screenshotAll = (...urls: string[]): BotFilesAction => async(page, options, piped) =>
-//   await forAll(urls)(
-//     (url) => ([
-//       goTo(url),
-//       screenshot(url.replace(/[^a-zA-Z]/g, '_')) // filenames are created from urls by replacing nonsafe characters with underscores
-//     ])
-//   )(page, piped, options)
+// export const screenshotAll = (botFileOptions?: Partial<BotFileOptions>, ...urls: string[]): BotFilesAction => 
+//   async(page, options, piped) =>
+//     await forAll(urls)(
+//       (url) => ([
+//         goTo(url),
+//         screenshot(url.replace(/[^a-zA-Z]/g, '_')) // filenames are created from urls by replacing nonsafe characters with underscores
+//       ])
+//     )(page, piped, options)
 
 /**
  * @description    save webpage as PDF

@@ -12,7 +12,7 @@ export const chain =
     async(page, ...injects) => {
       // TODO test running chain()() inside a pipe()()
       //    a) does it get a Pipe value undefined minimum?
-      //    b) does it unwrap that to inject it in first action?
-      //    c) is (b) good/bad?
+      //    b) does it get injected as a Pipe or PipeValue in first action?
+      //    c) is (b) good/bad? is this a bug (standards considered) that could become a desirable feature?
       await BotActionsChain(page, ...injects)(...actions)
     }

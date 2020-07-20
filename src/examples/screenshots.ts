@@ -9,9 +9,11 @@ import { Botmation } from 'botmation'
 import { log } from 'botmation/actions/console'
 import { forAll } from 'botmation/actions/utilities'
 import { goTo } from 'botmation/actions/navigation'
-import { screenshot } from 'botmation/actions/output'
+import { screenshot, screenshotAll } from 'botmation/actions/output'
 import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
 import { logError } from 'botmation/helpers/console'
+import { files } from 'botmation/actions/files'
+import { errors } from 'botmation/actions/errors'
 
 (async () => {
   let browser: puppeteer.Browser
@@ -39,12 +41,16 @@ import { logError } from 'botmation/helpers/console'
       // Taking screenshots of many sites 
       // filenames are the url's
       // This function does a lot underneath the hood, less customization though
-      // screenshotAll('facebook.com', 'twitter.com'), // WIP @TODO complete this -- different botAction params
+      files({screenshots_directory: 'screens'})(
+        errors('Saving Screenshots in ./screens Directory')( // added in case "/screens" is missing
+          screenshotAll(['http://facebook.com', 'http://twitter.com']),
+        )
+      ),
 
       // use the screenshot() BotAction to specify the filename
       // but you must navigate to where you want to snapshot first
       goTo('http://google.com'),
-      screenshot('google-homepage-yea-its-an-example'),
+      screenshot('google-homepage-example'),
 
       // using a forAll() to take many screenshots while 
       // specifying the screenshot filename
@@ -58,9 +64,9 @@ import { logError } from 'botmation/helpers/console'
       ),
     
       log('Done taking screenshots'),
+
     )
     
-    await bot.closePage()
   } catch (error) {
     logError(error)
     

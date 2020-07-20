@@ -1,5 +1,3 @@
-import { PDFOptions } from 'puppeteer'
-
 import { BotFilesAction } from "../interfaces/bot-actions.interfaces"
 
 import { forAll } from './utilities'
@@ -29,23 +27,31 @@ export const screenshot = (fileName: string, botFileOptions?: Partial<BotFileOpt
  * @example   screenshotAll('https://google.com', 'https://twitter.com')
  * @request   add ability like via a closure, to customize the filename for easier reuse in a cycle (like ability to timestamp the file etc)
  */
-// export const screenshotAll = (botFileOptions?: Partial<BotFileOptions>, ...urls: string[]): BotFilesAction => 
-//   async(page, options, piped) =>
-//     await forAll(urls)(
-//       (url) => ([
-//         goTo(url),
-//         screenshot(url.replace(/[^a-zA-Z]/g, '_')) // filenames are created from urls by replacing nonsafe characters with underscores
-//       ])
-//     )(page, piped, options)
+export const screenshotAll = (urls: string[], botFileOptions?: Partial<BotFileOptions>): BotFilesAction => 
+  async(page, options) => {
+    // botFileOptions' values overwrite injected ones in `options`
+    const hydratedOptions = enrichBotFileOptionsWithDefaults({...options, ...botFileOptions})
+
+    await forAll(urls)(
+      url => ([
+        goTo(url),
+        screenshot(url.replace(/[^a-zA-Z]/g, '_')) // filenames are created from urls by replacing nonsafe characters with underscores
+      ])
+    )(page, hydratedOptions)
+  }
+
 
 /**
  * @description    save webpage as PDF
  * @param fileName 
- * @alpha
- * @TODO verify working & add testing
+ * @alpha  should we add ability to customize options of pdf() ie `format`, `printBackground` see Puppeteer.PDFOptions (typed)
+ * @note          Launching the browser without headless (headless: false) breaks the saving of PDF functionality
+ *                See https://github.com/puppeteer/puppeteer/issues/1829
  */
-// export const savePDF = (fileName: string, pdfOptions: PDFOptions = {}): BotFilesAction => async(page, piped, options) => {
-//   pdfOptions.path = getFileUrl(options.pdfs_directory, options, fileName) + '.pdf'
+export const savePDF = (fileName: string, botFileOptions?: BotFileOptions): BotFilesAction => async(page, options) => {
+  const hydratedOptions = enrichBotFileOptionsWithDefaults({...options, ...botFileOptions})
 
-//   await page.pdf(pdfOptions)
-// }
+  const fileUrl = getFileUrl(hydratedOptions.pdfs_directory, hydratedOptions, fileName) + '.pdf'
+
+  await page.pdf({path: fileUrl})
+}

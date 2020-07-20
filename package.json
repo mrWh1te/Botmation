@@ -19,6 +19,7 @@
     "examples/instagram": "node build/examples/instagram.js",
     "examples/puppeteer-cluster": "node build/examples/puppeteer-cluster.js",
     "examples/screenshots": "node build/examples/screenshots.js",
+    "examples/pdf": "node build/examples/screenshots.js",
     "test": "jest",
     "localtestsite": "http-server src/tests/server",
     "insta": "npm run examples/instagram"

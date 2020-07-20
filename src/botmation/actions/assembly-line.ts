@@ -115,3 +115,18 @@ export const assemblyLine =
         }
       }
 
+/**
+ * @description   For a particular utility BotAction that doesn't know whether it's receiving an array of BotActions of just 1 BotAction
+ *                Can be helpful for advanced BotAction's that use a callback function as a param to return BotActions to run
+ *                For example, see forAll()()
+ * @param actionOrActions Botaction | BotAction[]
+ */
+export const pipeActionOrActions = 
+  (actionOrActions: BotAction | BotAction[]): BotAction =>
+    async(page, ...injects) => {
+      if (Array.isArray(actionOrActions)) {
+        await pipe()(...actionOrActions)(page, ...injects)
+      } else {
+        await actionOrActions(page, ...pipeInjects(injects))
+      }
+    }

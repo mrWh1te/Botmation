@@ -3,10 +3,9 @@
  */
 import { sleep } from '../helpers/utilities'
 
-import { applyBotActionOrActions } from '../helpers/actions'
 import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions.interfaces'
 import { injectsHavePipe, wrapValueInPipe, pipeInjects } from 'botmation/helpers/pipe'
-import { assemblyLine, pipe } from './assembly-line'
+import { pipeActionOrActions, pipe } from './assembly-line'
 
 /**
  * @description givenThat(condition returns a promise that resolves to TRUE)(run these actions in a chain)
@@ -71,12 +70,12 @@ export const forAll =
         if (Array.isArray(collection)) {
           // Array
           for(let i = 0; i < collection.length; i++) {
-            await applyBotActionOrActions(page, botActionOrActionsFactory(collection[i]), ...injects)
+            await pipeActionOrActions(botActionOrActionsFactory(collection[i]))(page, ...injects)
           }
         } else {
           // Dictionary
           for (const [key, value] of Object.entries(collection)) {
-            await applyBotActionOrActions(page, botActionOrActionsFactory(key, value), ...injects)
+            await pipeActionOrActions(botActionOrActionsFactory(key, value))(page, ...injects)
           }
         }
       }

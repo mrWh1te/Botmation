@@ -74,11 +74,16 @@ export const pipe =
               return (await BotActionsPipe(page, ...injects)(...actions)).value
             }
           }
+        } else {
+          // injects don't have a pipe, so add one:
+          if (actions.length === 0) {return undefined}
+          else if (actions.length === 1) {
+            return await actions[0](page, ...injects, wrapValueInPipe(valueToPipe))
+          } else {
+            return (await BotActionsPipe(page, ...injects, wrapValueInPipe(valueToPipe))(...actions)).value
+          }
         }
 
-        // otherwise, we are not in a pipe, therefore we are in a chain and do no want to return the value, because chain links are isolated, no piping
-        // also in a chain, we dont have a pipe as the last inject, so we don't need to splice our injects when overridding pipe values
-        await BotActionsPipe(page, ...injects, wrapValueInPipe(valueToPipe || getInjectsPipeValue(injects)))(...actions)
       }
 
 /**

@@ -24,7 +24,7 @@ export const givenThat =
     (...actions: BotAction<any>[]): BotAction => 
       async(page, ...injects) => {
         if (await condition(page, ...pipeInjects(injects))) {
-          await assemblyLine(true)(...actions)(page, ...injects)
+          await pipe()(...actions)(page, ...injects)
         }
       }
 

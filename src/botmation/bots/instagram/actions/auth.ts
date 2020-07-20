@@ -12,7 +12,7 @@ import {
   FORM_AUTH_SUBMIT_BUTTON_SELECTOR
 } from '../selectors'
 import { click, type } from '../../../actions/input'
-import { chain } from 'botmation/actions/chain'
+import { chain } from 'botmation/actions/assembly-line'
 
 
 

@@ -6,7 +6,7 @@ import { sleep } from '../helpers/utilities'
 import { applyBotActionOrActions } from '../helpers/actions'
 import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions.interfaces'
 import { injectsHavePipe, wrapValueInPipe, pipeInjects } from 'botmation/helpers/pipe'
-import { pipe } from './pipe'
+import { assemblyLine, pipe } from './assembly-line'
 
 /**
  * @description givenThat(condition returns a promise that resolves to TRUE)(run these actions in a chain)
@@ -24,11 +24,12 @@ export const givenThat =
     (...actions: BotAction<any>[]): BotAction => 
       async(page, ...injects) => {
         if (await condition(page, ...pipeInjects(injects))) {
-          await pipe()(...actions)(page, ...injects)
+          await assemblyLine(true)(...actions)(page, ...injects)
         }
       }
 
 /**
+ * @future support piping in `collection` or new BotAction
  * @description   A forEach method to loop a collection of something, to run a chain of actions against with that something locally scoped
  * 
  *                Special BotAction that can take an array of stuff or an object of key value pairs (dictionary)

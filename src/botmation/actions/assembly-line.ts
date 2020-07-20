@@ -127,6 +127,6 @@ export const pipeActionOrActions =
       if (Array.isArray(actionOrActions)) {
         await pipe()(...actionOrActions)(page, ...injects)
       } else {
-        await actionOrActions(page, ...pipeInjects(injects))
+        await actionOrActions(page, ...pipeInjects(injects)) // simulated pipe
       }
     }

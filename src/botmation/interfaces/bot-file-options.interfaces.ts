@@ -29,22 +29,3 @@ export interface BotFileOptions {
    */
   parent_output_directory?: string
 }
-
-/**
- * @description   Type Gaurd for testing if is BotFileOptions
- * @param value 
- */
-export const isBotFileOptions = (value: any): value is BotFileOptions => {
-  if (!value) {
-    return false
-  }
-
-  if (!value.screenshots_directory ||
-      !value.pdfs_directory ||
-      !value.cookies_directory) {
-    return false
-  }
-
-  // we meet minimum requirements to match BotFileOptions interface
-  return true
-}

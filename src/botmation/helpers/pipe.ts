@@ -1,29 +1,24 @@
 /**
- * Functions that help with the Pipe
+ * Functions that help with piping: pipe()() / Pipe
  */
 
 import { PipeValue } from "botmation/types/pipe-value"
 import { isPipe, Pipe } from "botmation/interfaces/pipe"
 
 /**
- * @description    Safe way to extract injects that may or may not have a pipe
- *                  If no pipe, it acts as if it was an empty pipe, so adds "undefined" so you can safely assume the last extracted value was a pipe value
- *                 Returns an array of all the injects with the piped value unpiped (removed from branded wrapping)
- *                 If there is no pipe, then undefined will be injected as if there was (safe default, empty pipe)
- * @param injectsMaybePipe array of injects thay may or may not have a pipe at the end
- * @return an array of injects with a value at the end, whatever was in the pipe, if no pipe then undefined (empty pipe value)
+ * @description    Unpipe the injects by returning the injects but with the value from the Pipe object, instead of the Pipe, with a safe fallback
+ *                 If no Pipe detected, it will return the injects with undefined appended, as if an empty pipe (safe fallback)
+ * @param injectsMaybePiped 
+ * @returns        Unpiped Injects
  */
-export const unpipeInjects = (injectsMaybePipe: any[]): any[] => {
-  let injectsWithoutPipe 
-  
-  if (injectsHavePipe(injectsMaybePipe)) {
-    injectsWithoutPipe = injectsMaybePipe.slice(0, injectsMaybePipe.length - 1)
+export const unpipeInjects = (injectsMaybePiped: any[]): any[] => {
+  if (injectsHavePipe(injectsMaybePiped)) {
+    // return the injects, but unpipe the value by returning the Pipe object's value
+    return [...injectsMaybePiped.slice(0, injectsMaybePiped.length - 1), injectsMaybePiped[injectsMaybePiped.length - 1].value]
   } else {
-    injectsWithoutPipe = [...injectsMaybePipe]
+    // return the injects with an undefined value appended, as if we unpiped an empty pipe (safe fallback)
+    return [...injectsMaybePiped, undefined]
   }
-
-  // if the branded pipe has a value, return that, otherwise return undefined
-  return [...injectsWithoutPipe, getInjectsPipeValue(injectsMaybePipe)]
 }
 
 /**

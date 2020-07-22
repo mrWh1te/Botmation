@@ -139,5 +139,6 @@ export const forAsLong =
  * @description   Pauses the bot for the provided milliseconds before letting it execute the next Action
  * @param milliseconds 
  */
-export const wait = (milliseconds: number): BotAction => async() => 
+export const wait = (milliseconds: number): BotAction => async() => {
   await sleep(milliseconds)
+} 

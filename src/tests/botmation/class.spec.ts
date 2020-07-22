@@ -21,7 +21,7 @@ describe('[Botmation] Class', () => {
   //
   // Async Class Instance
   it('should create a Botmation instance using the static asyncConstructor() then run the actions', async() => {
-    const bot = await Botmation.asyncConstructor(browser) // <-- finicky test here
+    const bot = await Botmation.asyncConstructor(browser) // <-- finicky test here, maybe related: https://github.com/puppeteer/puppeteer/issues/1947
 
     await bot.actions(
       goTo(EXAMPLE_URL),

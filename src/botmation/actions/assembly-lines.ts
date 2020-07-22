@@ -1,15 +1,15 @@
 import { BotAction } from "botmation/interfaces"
 import { injectsHavePipe, pipeInjects, wrapValueInPipe, getInjectsPipeOrEmptyPipe } from "botmation/helpers/pipe"
 import { PipeValue } from "botmation/types/pipe-value"
-import { Pipe } from "botmation/interfaces/pipe"
 
 //
-// These functions resolve the actions, like assembly lines, 1 action at a time in order received
+// These functions resolve the actions (aka run them), in order received, like on an assembly line, 1 action at a time - going down the conveyer belt
 //
 
 
 /**
  * @description     chain() BotAction for running a chain of BotAction's safely and optimized
+ *                  If it receives a Pipe in the injects, it will strip it out. It does not return values.
  * @param actions 
  */
 export const chain =
@@ -17,16 +17,10 @@ export const chain =
     async(page, ...injects) => {
       // TODO test running chain()() inside a pipe()()
       //    a) does it get a Pipe value undefined minimum? it did, until the following code to "remove pipe" was added
-      //    b) does it get injected as a Pipe or PipeValue in first action? yep, did
-      //    c) is (b) good/bad? is this a bug (standards considered) that could become a desirable feature?
 
       // pipe support for running a chain inside a pipe as a real chain
       // otherwise, the injects will naturally carry the pipe through the whole chain of actions in the last inject
-      // like the questions above, could that be desirable? Chain could be a way to run a bunch of functions without effecting the Pipe...
-          // ^if yes, then there is no way (atm) to distinguish pipe and chain
-          // maybe instead, a new kind of Pipe that acts like a chain where the behavior of not returning a value no longer empties the pipe (set value undefined)
-          //   but let's the previous value, get carried over?
-          //   It could even be `pipe()()` with some kind of configuration, new param ie `carryPipeValue: true` when a BotAction does not return a value or returns undefined
+      // but, could that be desirable? A new kind of assembly line, similar to chain but carries a Pipe through (1 case ignoring BotAction returns, the other piping those return values)
       if (injectsHavePipe(injects)) {
         // remove pipe
         if (actions.length === 0) {}
@@ -47,8 +41,8 @@ export const chain =
     }
 
 /**
- * @description    Higher Order BotAction for running a chain link as a pipe
- *                 It will try to inject the valueToPipe as the piped value unless that is undefined, then it will try to pipe the higher pipe's value from its injects otherwise undefined, an empty pipe
+ * @description    Higher Order BotAction for running a sequence of BotAction's with piping
+ *                 valueToPipe overwrites the passed in Pipe value
  * @param valueToPipe 
  */
 export const pipe =
@@ -66,9 +60,9 @@ export const pipe =
           } else {
             // injects only have a pipe when its ran inside a pipe, so lets return our value to flow with the pipe mechanics
             if (valueToPipe) {
-              return (await pipeRunner(...actions)(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe))).value
+              return (await pipeRunner(...actions)(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe)))
             } else {
-              return (await pipeRunner(...actions)(page, ...injects)).value
+              return (await pipeRunner(...actions)(page, ...injects))
             }
           }
         } else {
@@ -77,7 +71,7 @@ export const pipe =
           else if (actions.length === 1) {
             return await actions[0](page, ...injects, wrapValueInPipe(valueToPipe))
           } else {
-            return (await pipeRunner(...actions)(page, ...injects, wrapValueInPipe(valueToPipe))).value
+            return (await pipeRunner(...actions)(page, ...injects, wrapValueInPipe(valueToPipe)))
           }
         }
 
@@ -151,7 +145,7 @@ export const chainRunner =
  * @param actions 
  */  
 export const pipeRunner = 
-  <R extends PipeValue = PipeValue, P = any>(...actions: BotAction<PipeValue|void>[]): BotAction<Pipe<R>> =>
+  <R extends PipeValue = PipeValue, P = any>(...actions: BotAction<PipeValue|void>[]): BotAction<PipeValue<R>> =>
     async(page, ...injects) => {
       // Possible for last inject to be the piped value
       let pipe = wrapValueInPipe()
@@ -170,5 +164,5 @@ export const pipeRunner =
         pipe = wrapValueInPipe(nextPipeValueOrVoid)
       }
 
-      return pipe as any as Pipe<R>
+      return pipe.value as any as PipeValue<R>
     }    

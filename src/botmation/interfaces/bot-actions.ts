@@ -4,11 +4,34 @@ import { BotFilesInjects } from '../types/bot-files-injects'
 import { BotIndexedDBInjects } from 'botmation/types/bot-indexed-db-injects'
 
 /**
- * @description    All BotAction Interfaces (original chain link/pipeable, to more specific)
+ * @description    All BotAction Interfaces
+ *                 This project is centered on async functions called BotAction's
+ * 
+ *                 The base interface for a `BotAction` is below
+ * 
+ *                 There are higher order functions that return `BotAction`'s called `BotActionFactory`'ies
+ * 
+ *                 The default nature of a BotAction (without having specific generics applied) is a function that returns a Promise whose value is void
+ *                    In the case of using async/await, that amounts to these async functions that don't return anything. They are considered links in a chain.
+ *                    They are resolved one at a time, and are each provided, at the very least, one Page from Puppeteer.
+ * 
+ *                    Now it's possible for a BotAction async function to return a value. But, to access that value, in the next BotAction, they must be ran inside a pipe()()
+ *                    Only in a pipe()(), will the returned value of the last BotAction be injected at the end, wrapped in a Pipe object.
+ * 
+ *                 There are advanced BotAction's that support piping data, or have a more specific set of behavior like `injects` or return type.
+ *                 These include ConditionalBotAction, BotFilesAction, and BotIndexedDBAction
  */
 
 /**
- * 
+ * @description    BotAction is an async Function whose default nature is to return a Promise<void>, but can be set to return a value
+ */
+export interface BotAction<R = void, I extends Array<any> = any[]> extends Function {
+  (page: Page, ...injects: I) : Promise<R>
+}
+
+/**
+ * @description    Higher-Order BotAction Functions that return BotAction's
+ *                 Helpful for adding a layer of customization to a BotAction through dynamic scoping
  */
 export interface BotActionFactory<A extends Array<any> = any[], B = BotAction> extends Function {
   // Higher-Order Function (Factory) to Produce an Async Function (Returns Promise to be awaited)
@@ -16,31 +39,23 @@ export interface BotActionFactory<A extends Array<any> = any[], B = BotAction> e
 }
 
 /**
- * @description    BotAction Interface -> defaults to a chain (no resolved return value from the returned Promise<R>)
- */
-export interface BotAction<R = void, I extends Array<any> = any[]> extends Function {
-  (page: Page, ...injects: I) : Promise<R>
-}
-
-/**
- * @description   Is a BotAction that relies on Piping to return a boolean value
- *                    The boolean value is wrapped in a pipe, following the Pipe flow
- *                Instead this is for higher order bot actions or pipes as these return boolean values
+ * @description   Is an advanced BotAction that returns a boolean value
  */
 export interface ConditionalBotAction extends Function {
   (page: Page, ...injects: any[]) : Promise<boolean>
 }
 
 /**
- * @description    BotAction working with local files, use the same injects, therefore we strongly type the `injects` with that inject type
- *                 with a slightly more specific BotFilesAction interface (which fulfills the requirements of BotAction, but with greater specificity in the `injects`)
+ * @description    Specifies BotFilesInjects as its injects
+ *                 BotFilesInjects are safely injected by the higher order files()() BotAction
  */
 export interface BotFilesAction<R = void, P = undefined> {
   (page: Page, ...injects: BotFilesInjects<P>) : Promise<R>
 }
 
 /**
- * 
+ * @description    Specifies BotIndexedDBInjects as its injects
+ *                 BotIndexedDBInjects are safely injected by the higher order indexedDBStore()() BotAction
  */
 export interface BotIndexedDBAction<R = any, P = any> {
   (page: Page, ...injects: BotIndexedDBInjects<P>) : Promise<R>

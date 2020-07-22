@@ -1,6 +1,19 @@
 import { BotFileOptions } from "botmation/interfaces/bot-file-options"
 
 /**
+ * @description   Options in configuring the bot actions
+ *                This value, options, is provided to every bot action that needs it
+ *                ie screenshot(), saveCookies() rely on BotOptions for determining URL 
+ * @param options 
+ */
+export const enrichBotFileOptionsWithDefaults = (options: Partial<BotFileOptions> = {}): BotFileOptions => ({
+  screenshots_directory: '',
+  pdfs_directory: '',
+  cookies_directory: '',
+  ...options
+})
+
+/**
  * @description   See unit tests for edge-case examples
  * @param folderNames list of folders to parse into a URL by prepending a backslash to each directory
  *                Given the prepending strategy, you can use this to create a full URL to a file, if you could the file name as a folder name

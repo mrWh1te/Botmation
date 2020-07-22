@@ -2,7 +2,7 @@ import { BotFilesAction } from "../interfaces/bot-actions"
 
 import { forAll } from './utilities'
 import { goTo } from './navigation'
-import { enrichBotFileOptionsWithDefaults } from 'botmation/helpers/file-options'
+import { enrichBotFileOptionsWithDefaults } from 'botmation/helpers/files'
 import { BotFileOptions } from 'botmation/interfaces'
 import { getFileUrl } from "botmation/helpers/files"
 

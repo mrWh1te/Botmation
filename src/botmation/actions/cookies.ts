@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs'
 
 import { BotFilesAction } from '../interfaces/bot-actions'
-import { enrichBotFileOptionsWithDefaults } from 'botmation/helpers/file-options'
+import { enrichBotFileOptionsWithDefaults } from 'botmation/helpers/files'
 import { BotFileOptions } from 'botmation/interfaces'
 import { getFileUrl } from 'botmation/helpers/files'
 

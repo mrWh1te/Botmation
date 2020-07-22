@@ -1,5 +1,5 @@
 import { BotAction } from "botmation/interfaces"
-import { injectsHavePipe, pipeInjects, wrapValueInPipe, injectsPipeOrEmptyPipe } from "botmation/helpers/pipe"
+import { injectsHavePipe, pipeInjects, wrapValueInPipe, getInjectsPipeOrEmptyPipe } from "botmation/helpers/pipe"
 import { PipeValue } from "botmation/types/pipe-value"
 import { Pipe } from "botmation/interfaces/pipe"
 
@@ -158,7 +158,7 @@ export const pipeRunner =
 
       // in case we are used in a chain, injects won't have a pipe at the end
       if (injectsHavePipe(injects)) {
-        pipe = injectsPipeOrEmptyPipe<P>(injects) // unwraps the piped value from the piped branded box
+        pipe = getInjectsPipeOrEmptyPipe<P>(injects) // unwraps the piped value from the piped branded box
         injects = injects.slice(0, injects.length - 1)
       }
 

@@ -1,6 +1,7 @@
 import { BotAction } from "botmation/interfaces"
 import { injectsHavePipe, pipeInjects, wrapValueInPipe, injectsPipeOrEmptyPipe } from "botmation/helpers/pipe"
-import { PipeValue, Pipe } from "botmation/types/pipe"
+import { PipeValue } from "botmation/types/pipe-value"
+import { Pipe } from "botmation/interfaces/pipe"
 
 //
 // These functions resolve the actions, like assembly lines, 1 action at a time in order received

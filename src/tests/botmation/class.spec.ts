@@ -1,3 +1,4 @@
+import 'expect-puppeteer'
 import { Page, Browser } from 'puppeteer'
 
 import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'

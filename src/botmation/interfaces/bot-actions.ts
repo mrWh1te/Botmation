@@ -40,6 +40,7 @@ export interface BotActionFactory<A extends Array<any> = any[], B = BotAction> e
 
 /**
  * @description   Is an advanced BotAction that returns a boolean value
+ *                Useful in the higher order BotAction `givenThat()()` in providing a BotAction test as to whether or not run the following actions
  */
 export interface ConditionalBotAction extends Function {
   (page: Page, ...injects: any[]) : Promise<boolean>
@@ -49,14 +50,14 @@ export interface ConditionalBotAction extends Function {
  * @description    Specifies BotFilesInjects as its injects
  *                 BotFilesInjects are safely injected by the higher order files()() BotAction
  */
-export interface BotFilesAction<R = void, P = undefined> {
-  (page: Page, ...injects: BotFilesInjects<P>) : Promise<R>
+export interface BotFilesAction<R = void> {
+  (page: Page, ...injects: BotFilesInjects) : Promise<R>
 }
 
 /**
  * @description    Specifies BotIndexedDBInjects as its injects
  *                 BotIndexedDBInjects are safely injected by the higher order indexedDBStore()() BotAction
  */
-export interface BotIndexedDBAction<R = any, P = any> {
-  (page: Page, ...injects: BotIndexedDBInjects<P>) : Promise<R>
+export interface BotIndexedDBAction<R = any> {
+  (page: Page, ...injects: BotIndexedDBInjects) : Promise<R>
 }

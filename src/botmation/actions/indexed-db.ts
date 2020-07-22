@@ -3,7 +3,7 @@ import { BotAction, BotIndexedDBAction } from '../interfaces/bot-actions'
 import { unpipeInjects } from '../helpers/pipe'
 import { getIndexedDBStoreValue, setIndexedDBStoreValue } from '../helpers/indexed-db'
 import { injects } from './injects'
-import { PipeValue } from '../types/pipe'
+import { PipeValue } from '../types/pipe-value'
 import { pipe } from './assembly-lines'
 
 /**

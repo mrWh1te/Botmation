@@ -2,7 +2,8 @@
  * Functions that help with the Pipe
  */
 
-import { isPipe, Pipe, PipeValue, AllPossiblePipeValues } from "botmation/types/pipe"
+import { PipeValue } from "botmation/types/pipe-value"
+import { isPipe, Pipe } from "botmation/interfaces/pipe"
 
 /**
  * @description    Safe way to extract injects that may or may not have a pipe

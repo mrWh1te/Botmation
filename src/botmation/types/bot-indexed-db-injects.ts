@@ -1,15 +1,9 @@
-//
-
-import { Pipe } from "./pipe"
-
 // IndexedDB
 export type IndexedDBDatabaseName = string
 export type IndexedDBDatabaseVersion = number
 export type IndexedDBStoreName = string
-export type IndexedDBStoreNameKey = string
-export type IndexedDBStoreNameKeyValue = any
 
 /**
- * @description   [databaseName, databaseVersion, storeName, and Piped value]
+ * @description   indexedDBStore()() injects the following databaseName, databaseVersion, storeName at the start of the injects array and Pipe at the end (in case of past injects from higher order)
  */
-export type BotIndexedDBInjects<V = undefined> = [IndexedDBDatabaseName, IndexedDBDatabaseVersion, IndexedDBStoreName, Pipe<V>]
+export type BotIndexedDBInjects = [IndexedDBDatabaseName, IndexedDBDatabaseVersion, IndexedDBStoreName, ...any[]]

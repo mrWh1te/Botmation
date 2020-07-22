@@ -1,5 +1,5 @@
 import { BotAction } from "botmation/interfaces"
-import { PipeValue } from "../types/pipe"
+import { PipeValue } from "../types/pipe-value"
 import { injectsHavePipe } from "botmation/helpers/pipe"
 import { logError } from "botmation/helpers/console"
 import { pipe, chain } from "./assembly-lines"

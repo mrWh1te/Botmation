@@ -1,5 +1,5 @@
-import { BotAction } from "botmation/interfaces"
-import { injectsHavePipe, pipeInjects, wrapValueInPipe, getInjectsPipeOrEmptyPipe } from "botmation/helpers/pipe"
+import { BotAction, Pipe } from "botmation/interfaces"
+import { injectsHavePipe, pipeInjects, wrapValueInPipe, getInjectsPipeOrEmptyPipe, emptyPipe } from "botmation/helpers/pipe"
 import { PipeValue } from "botmation/types/pipe-value"
 
 //
@@ -74,13 +74,12 @@ export const pipe =
             return (await pipeRunner(...actions)(page, ...injects, wrapValueInPipe(valueToPipe)))
           }
         }
-
       }
 
 /**
- * @description   Efficiently run actions in a pipe or a chain
- *                Checks if injects provided are piped, and then runs it as a chain or pipe based on that
- *                Can override that behavior to run in a pipe anyway by setting `forceInPipe` to true
+ * @description   Efficiently run actions in a pipe or a chain by detecting the higher order assembly line runner
+ *                Detects by checking if injects provided are piped. If piped, runs it in a pipe()() else runs it in a chain()
+ *                Can override that behavior, to force running in a pipe, by setting `forceInPipe` to true
  * @param forceInPipe boolean default is FALSE
  */
 export const assemblyLine = 
@@ -106,29 +105,29 @@ export const assemblyLine =
         }
       }
 
-//
-// Avoid using the following BotAction's
-//
-
 /**
- * @description   For a particular utility BotAction that doesn't know whether it's receiving an array of BotActions of just 1 BotAction
- *                Can be helpful for advanced BotAction's that use a callback function as a param to return BotActions to run
- *                For example, see forAll()()
- * @param actionOrActions Botaction | BotAction[]
+ * @description   For a particular utility BotAction that doesn't know whether it's receiving an array (not spread!) of BotActions or just 1 BotAction
+ *                Can be helpful for advanced BotAction's that use a callback function as a param to return BotAction(s) for running in some new context
+ * @example       See forAll()()
+ * @param actionOrActions Botaction<PipeValue> | BotAction<PipeValue>[]
  */
 export const pipeActionOrActions = 
-  (actionOrActions: BotAction | BotAction[]): BotAction =>
+  (actionOrActions: BotAction<PipeValue> | BotAction<PipeValue>[]): BotAction<PipeValue|undefined> =>
     async(page, ...injects) => {
       if (Array.isArray(actionOrActions)) {
-        await pipe()(...actionOrActions)(page, ...injects)
+        return await pipe()(...actionOrActions)(page, ...injects)
       } else {
-        await actionOrActions(page, ...pipeInjects(injects)) // simulated pipe
+        return await actionOrActions(page, ...pipeInjects(injects)) // simulated pipe
       }
     }
 
+//
+// Avoid using the following BotAction's, unless you know what you're doing
+//
+
 /**
  * @description    Runs all actions provided in a chain
- *                 Does not have checks/safety mechanics, so becareful with using this directly, instead use chain()()
+ *                 Does not have checks/safety fall backs/optimizations, etc, so please be careful with using this. Instead consider chain()()
  * @param actions 
  */    
 export const chainRunner =
@@ -141,27 +140,28 @@ export const chainRunner =
 
 /**
  * @description    Runs all actions provided in a pipe
- *                 Does not have checks/safety mechanics, so becareful with using this directly, instead use pipe()()
+ *                 Does not have checks/safety fall backs/optimizations, etc, so please be careful with using this. Instead consider pipe()()
  * @param actions 
  */  
 export const pipeRunner = 
-  <R extends PipeValue = PipeValue, P = any>(...actions: BotAction<PipeValue|void>[]): BotAction<PipeValue<R>> =>
+  <R extends PipeValue = PipeValue, P extends PipeValue = PipeValue>
+  (...actions: BotAction<PipeValue|void>[]): BotAction<PipeValue<R>> =>
     async(page, ...injects) => {
       // Possible for last inject to be the piped value
-      let pipe = wrapValueInPipe()
+      let pipe: Pipe = emptyPipe()
 
       // in case we are used in a chain, injects won't have a pipe at the end
       if (injectsHavePipe(injects)) {
-        pipe = getInjectsPipeOrEmptyPipe<P>(injects) // unwraps the piped value from the piped branded box
+        pipe = getInjectsPipeOrEmptyPipe<P>(injects)
         injects = injects.slice(0, injects.length - 1)
       }
 
       // let piped // pipe's are closed chain-links, so nothing pipeable comes in, so data is grabbed in a pipe and shared down stream a pipe, and returns
       for(const action of actions) {
-        const nextPipeValueOrVoid: PipeValue|any = await action(page, ...injects, pipe)
+        const nextPipeValueOrUndefined: PipeValue|void = await action(page, ...injects, pipe) // typing.. botaction's async return can be void, but given how promises must resolve(), the value is actually undefined
 
         // Bot Actions return the value removed from the pipe, and BotActionsPipe wraps it for injecting
-        pipe = wrapValueInPipe(nextPipeValueOrVoid)
+        pipe = wrapValueInPipe(nextPipeValueOrUndefined as PipeValue|undefined)
       }
 
       return pipe.value as any as PipeValue<R>

@@ -1,9 +1,9 @@
 //
-// The following 4 functions are evaluated in the page's browser context
+// The following functions are evaluated in a Puppeteer Page instance's browser context
 //
 
 /**
- * 
+ * @description    Set a key/value pair in Local Storage
  * @param key 
  * @param value 
  */
@@ -12,16 +12,16 @@ export const setLocalStorageKeyValue = (key: string, value: string) => {
 }
 
 /**
- * @description    
- * @note: Following Storage.getItem() return signature: string|null
- *        Also, we're NOT mapping, in any way, simple as possible for greatest choice
+ * @description    Get value by key in Local Storage
+ * @note           Following Storage.getItem() return signature: string|null
+ *                 Therefore, NOT mapping the return value
  * @param key 
  */
 export const getLocalStorageKeyValue = (key: string): string|null => 
   localStorage.getItem(key)
 
 /**
- * 
+ * @description    Delete key/value pair in Local Storage
  * @param key 
  */
 export const removeLocalStorageItem = (key: string) => {
@@ -29,7 +29,7 @@ export const removeLocalStorageItem = (key: string) => {
 }
 
 /**
- * @description    Care! Deletes all key/value pairs in Local Storage
+ * @description    Care! Delete all key/value pairs in Local Storage
  */
 export const clearLocalStorage = () => {
   localStorage.clear()

@@ -1,13 +1,12 @@
 import { Page } from 'puppeteer'
 
-import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
+import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 
 import { BASE_URL } from 'tests/urls'
 import { botOptions } from 'tests/mocks/bot-options.mock'
 
 import { screenshot } from 'botmation/actions/output'
-import { fileExist, deleteFile } from 'botmation/helpers/files'
-import { getFileUrl } from 'botmation/helpers/assets'
+import { fileExist, deleteFile, getFileUrl } from 'botmation/helpers/files'
 import { wrapValueInPipe } from 'botmation/helpers/pipe'
 
 /**
@@ -22,7 +21,7 @@ describe('[Botmation:Action Factory] Output', () => {
   let mockPage: Page
 
   beforeAll(async() => {
-    await page.goto(BASE_URL, getDefaultGoToPageOptions())
+    await page.goto(BASE_URL, enrichGoToPageOptions())
   })
 
   beforeEach(() => {

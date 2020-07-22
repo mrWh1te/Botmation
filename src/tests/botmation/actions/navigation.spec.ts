@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 
 import { goTo, waitForNavigation } from 'botmation/actions/navigation'
-import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
+import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 import { click } from 'botmation/actions/input'
 
 import { BASE_URL, EXAMPLE_URL } from 'tests/urls'
@@ -21,7 +21,7 @@ describe('[Botmation:Action Factory] Navigation', () => {
   } as any as Page
 
   beforeAll(async() => {
-    await page.goto(BASE_URL, getDefaultGoToPageOptions())
+    await page.goto(BASE_URL, enrichGoToPageOptions())
   })
 
   //
@@ -30,7 +30,7 @@ describe('[Botmation:Action Factory] Navigation', () => {
     await goTo(EXAMPLE_URL)(mockPage, undefined, botOptions)
 
     expect(mockPage.url).toBeCalled() // are we checking the URL before requesting to go to it to prevent unnecessary requests?
-    expect(mockPage.goto).toBeCalledWith('http://localhost:8080/example.html', getDefaultGoToPageOptions()) // are we providing default options, is the action relaying the correct url
+    expect(mockPage.goto).toBeCalledWith('http://localhost:8080/example.html', enrichGoToPageOptions()) // are we providing default options, is the action relaying the correct url
   })
 
   it('should call puppeteer\'s waitForNavigation method', async() => {    

@@ -1,7 +1,11 @@
-// TODO thoroughly test playing with db's, confirm onupgradeneeded and onsuccess when/order
+//
+// The following functions are evaluated in a Puppeteer Page instance's browser context
+//
+
+// TODO thoroughly test playing with idb's, confirm onupgradeneeded and onsuccess when/order, functionality
 
 /**
- * 
+ * @description      Async function to set an IndexedDB Store value by key
  * @param databaseName 
  * @param databaseVersion 
  * @param storeName 
@@ -58,7 +62,7 @@ export function setIndexedDBStoreValue(databaseName: string, databaseVersion: nu
 }
 
 /**
- * 
+ * @description      Async function to get an IndexedDB Store value by key
  * @param databaseName 
  * @param databaseVersion 
  * @param storeName 
@@ -87,7 +91,7 @@ export function getIndexedDBStoreValue(databaseName: string, databaseVersion: nu
         .objectStore(storeName)
         .get(key)
         .onsuccess = function(this: IDBRequest<any>, ev: Event) {
-          const result = this.result // If key isn't found, the result returned is undefined
+          const result = this.result // If key isn't found, the result resolved will be undefined
           db.close()
           return resolve(result)
         }

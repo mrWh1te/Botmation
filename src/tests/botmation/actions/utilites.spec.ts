@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
+import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 import { givenThat, forAll, doWhile, forAsLong } from 'botmation/actions/utilities'
 import { click, type } from 'botmation/actions/input'
 import { goTo } from 'botmation/actions/navigation'
@@ -17,7 +17,7 @@ describe('[Botmation:Action Factory] Utilities', () => {
   let mockPage: Page
 
   beforeAll(async() => {
-    await page.goto(BASE_URL, getDefaultGoToPageOptions())
+    await page.goto(BASE_URL, enrichGoToPageOptions())
   })
 
   beforeEach(() => {
@@ -90,9 +90,9 @@ describe('[Botmation:Action Factory] Utilities', () => {
 
     // Note given the mock, these url's don't have to be real
     expect(mockPage.url).toHaveBeenNthCalledWith(3) // called 3 times
-    expect(mockPage.goto).toHaveBeenNthCalledWith(1, 'http://localhost:8080/example.html', getDefaultGoToPageOptions())
-    expect(mockPage.goto).toHaveBeenNthCalledWith(2, 'http://localhost:8080/example2.html', getDefaultGoToPageOptions())
-    expect(mockPage.goto).toHaveBeenNthCalledWith(3, 'http://localhost:8080/success.html', getDefaultGoToPageOptions())
+    expect(mockPage.goto).toHaveBeenNthCalledWith(1, 'http://localhost:8080/example.html', enrichGoToPageOptions())
+    expect(mockPage.goto).toHaveBeenNthCalledWith(2, 'http://localhost:8080/example2.html', enrichGoToPageOptions())
+    expect(mockPage.goto).toHaveBeenNthCalledWith(3, 'http://localhost:8080/success.html', enrichGoToPageOptions())
   })
   it('should call the list of Actions for each key->value pair in the object provided', async() => {
     const keyValuePairs = {

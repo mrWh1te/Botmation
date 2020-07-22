@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
+import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 import { click, type } from 'botmation/actions/input'
 import { goTo } from 'botmation/actions/navigation'
 import { BotActionsChain } from 'botmation/factories/bot-actions-chain'
@@ -15,7 +15,7 @@ import { FORM_TEXT_INPUT_SELECTOR, FORM_SUBMIT_BUTTON_SELECTOR } from '../../sel
 describe('[Botmation] BotActionsChainFactory', () => {
 
   beforeEach(async() => {
-    await page.goto(BASE_URL, getDefaultGoToPageOptions())
+    await page.goto(BASE_URL, enrichGoToPageOptions())
   })
 
   //
@@ -57,13 +57,13 @@ describe('[Botmation] BotActionsChainFactory', () => {
     )
 
     // Nested chain in original chain (first link in original chain)
-    expect(mockPage.goto).toHaveBeenNthCalledWith(1, '1st example url', getDefaultGoToPageOptions())
+    expect(mockPage.goto).toHaveBeenNthCalledWith(1, '1st example url', enrichGoToPageOptions())
     expect(mockPage.click).toHaveBeenNthCalledWith(1, '1st example selector')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, '1st example type')
     expect(mockPage.click).toHaveBeenNthCalledWith(2, '2nd example selector')
 
     // the original chain, continuing
-    expect(mockPage.goto).toHaveBeenNthCalledWith(2, '2nd example url', getDefaultGoToPageOptions())
+    expect(mockPage.goto).toHaveBeenNthCalledWith(2, '2nd example url', enrichGoToPageOptions())
     expect(mockPage.click).toHaveBeenNthCalledWith(3, '3rd example selector')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(2, '2nd example type')
     expect(mockPage.click).toHaveBeenNthCalledWith(4, '4th example selector')

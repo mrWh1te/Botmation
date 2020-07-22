@@ -1,10 +1,9 @@
 import { Page } from 'puppeteer'
 
-import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
-import { fileExist, deleteFile } from 'botmation/helpers/files'
+import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
+import { fileExist, deleteFile, getFileUrl } from 'botmation/helpers/files'
 import { saveCookies, loadCookies } from 'botmation/actions/cookies'
 import { BotFileOptions } from 'botmation/interfaces/bot-file-options'
-import { getFileUrl } from 'botmation/helpers/assets'
 
 import { BASE_URL } from 'tests/urls'
 import { wrapValueInPipe } from 'botmation/helpers/pipe'
@@ -43,7 +42,7 @@ describe('[Botmation:Action Factory] Cookies', () => {
   } as any as Page
 
   beforeAll(async() => {
-    await page.goto(BASE_URL, getDefaultGoToPageOptions())
+    await page.goto(BASE_URL, enrichGoToPageOptions())
   })
 
   //

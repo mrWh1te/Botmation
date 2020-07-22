@@ -10,7 +10,7 @@ import { log } from 'botmation/actions/console'
 import { forAll } from 'botmation/actions/utilities'
 import { goTo } from 'botmation/actions/navigation'
 import { screenshot, screenshotAll } from 'botmation/actions/output'
-import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
+import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 import { logError } from 'botmation/helpers/console'
 import { files } from 'botmation/actions/files'
 import { errors } from 'botmation/actions/errors'
@@ -57,7 +57,7 @@ import { errors } from 'botmation/actions/errors'
       forAll(newsSites)(
         (siteName) => ([
           // 1) The bot visits the site
-          goTo('https://' + siteName, getDefaultGoToPageOptions({waitUntil: 'domcontentloaded'})), // these sites sometimes have lingering network calls, could be ads, could be a service down
+          goTo('https://' + siteName, enrichGoToPageOptions({waitUntil: 'domcontentloaded'})), // these sites sometimes have lingering network calls, could be ads, could be a service down
           // 2) The bot snaps a screenshot then saves it as:
           screenshot('news-' + siteName)
         ])

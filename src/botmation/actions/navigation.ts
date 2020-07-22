@@ -1,7 +1,7 @@
 import { DirectNavigationOptions, NavigationOptions } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-actions'
-import { getDefaultGoToPageOptions } from '../helpers/navigation'
+import { enrichGoToPageOptions } from '../helpers/navigation'
 import { logWarning } from '../helpers/console'
 
 /**
@@ -11,7 +11,7 @@ import { logWarning } from '../helpers/console'
  */
 export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAction => async(page) => {
   if (!goToOptions) {
-    goToOptions = getDefaultGoToPageOptions()
+    goToOptions = enrichGoToPageOptions()
   }
 
   // same url check

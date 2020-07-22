@@ -2,9 +2,9 @@ import { BotFilesAction } from "../interfaces/bot-actions"
 
 import { forAll } from './utilities'
 import { goTo } from './navigation'
-import { getFileUrl } from '../helpers/assets'
 import { enrichBotFileOptionsWithDefaults } from 'botmation/helpers/file-options'
 import { BotFileOptions } from 'botmation/interfaces'
+import { getFileUrl } from "botmation/helpers/files"
 
 /**
  * @description   Take a PNG screenshot of the current page

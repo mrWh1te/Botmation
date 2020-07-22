@@ -1,4 +1,4 @@
-import { BotAction } from '../interfaces/bot-actions.interfaces'
+import { BotAction } from '../interfaces/bot-actions'
 import { logMessage, logWarning, logError, logPipeValue } from '../helpers/console'
 import { injectsHavePipe, getInjectsPipeValue } from 'botmation/helpers/pipe'
 

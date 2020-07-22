@@ -1,5 +1,5 @@
 import { Page } from 'puppeteer'
-import { BotAction } from './bot-actions.interfaces'
+import { BotAction } from './bot-actions'
 
 /**
  * @description   Base public interface for a Botmation instance

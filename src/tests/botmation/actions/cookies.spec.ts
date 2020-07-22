@@ -3,7 +3,7 @@ import { Page } from 'puppeteer'
 import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
 import { fileExist, deleteFile } from 'botmation/helpers/files'
 import { saveCookies, loadCookies } from 'botmation/actions/cookies'
-import { BotFileOptions } from 'botmation/interfaces/bot-file-options.interfaces'
+import { BotFileOptions } from 'botmation/interfaces/bot-file-options'
 import { getFileUrl } from 'botmation/helpers/assets'
 
 import { BASE_URL } from 'tests/urls'

@@ -3,7 +3,7 @@
  */
 import { sleep } from '../helpers/utilities'
 
-import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions.interfaces'
+import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions'
 import { injectsHavePipe, wrapValueInPipe, pipeInjects } from 'botmation/helpers/pipe'
 import { pipeActionOrActions, pipe } from './assembly-lines'
 

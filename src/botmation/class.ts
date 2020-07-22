@@ -4,9 +4,9 @@
 
 import { Page, Browser } from 'puppeteer'
 
-import { BotAction } from './interfaces/bot-actions.interfaces'
+import { BotAction } from './interfaces/bot-actions'
 import { chain } from './actions/assembly-lines'
-import { BotmationInterface } from './interfaces/botmation.interface'
+import { BotmationInterface } from './interfaces/botmation'
 import { errors } from './actions/errors'
 
 /**

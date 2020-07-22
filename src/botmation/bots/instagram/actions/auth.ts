@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { BotAction } from '../../../interfaces/bot-actions.interfaces'
+import { BotAction } from '../../../interfaces/bot-actions'
 
 import { goTo, waitForNavigation } from '../../../actions/navigation'
 import { log } from '../../../actions/console'

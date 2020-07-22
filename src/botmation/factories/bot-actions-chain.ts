@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { BotAction } from '../interfaces/bot-actions.interfaces'
+import { BotAction } from '../interfaces/bot-actions'
 
 /**
  * @description   Botmation.actions() method comes from this Factory

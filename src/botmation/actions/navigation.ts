@@ -1,6 +1,6 @@
 import { DirectNavigationOptions, NavigationOptions } from 'puppeteer'
 
-import { BotAction } from '../interfaces/bot-actions.interfaces'
+import { BotAction } from '../interfaces/bot-actions'
 import { getDefaultGoToPageOptions } from '../helpers/navigation'
 import { logWarning } from '../helpers/console'
 

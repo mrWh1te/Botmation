@@ -1,5 +1,5 @@
 
-import { BotAction, BotIndexedDBAction } from '../interfaces/bot-actions.interfaces'
+import { BotAction, BotIndexedDBAction } from '../interfaces/bot-actions'
 import { unpipeInjects } from '../helpers/pipe'
 import { getIndexedDBStoreValue, setIndexedDBStoreValue } from '../helpers/indexed-db'
 import { injects } from './injects'

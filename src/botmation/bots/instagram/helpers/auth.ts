@@ -1,4 +1,4 @@
-import { ConditionalBotAction } from '../../../interfaces/bot-actions.interfaces'
+import { ConditionalBotAction } from '../../../interfaces/bot-actions'
 
 import { getIndexedDBValue, indexedDBStore } from 'botmation/actions/indexed-db'
 import { map } from 'botmation/actions/pipe'

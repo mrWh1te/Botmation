@@ -1,4 +1,4 @@
-import { BotFileOptions } from "../interfaces/bot-file-options.interfaces"
+import { BotFileOptions } from "../interfaces/bot-file-options"
 import { Pipe } from "./pipe"
 
 /**

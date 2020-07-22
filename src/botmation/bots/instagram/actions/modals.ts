@@ -1,7 +1,7 @@
 /**
  * @description   Functions to interact with the Modals ie web specific, Turn on Notifications
  */
-import { BotAction } from 'botmation/interfaces/bot-actions.interfaces'
+import { BotAction } from 'botmation/interfaces/bot-actions'
 
 import { TURN_OFF_NOTIFICATIONS_BUTTON_LABEL } from '../constants/modals'
 

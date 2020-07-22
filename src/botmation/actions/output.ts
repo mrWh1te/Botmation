@@ -1,4 +1,4 @@
-import { BotFilesAction } from "../interfaces/bot-actions.interfaces"
+import { BotFilesAction } from "../interfaces/bot-actions"
 
 import { forAll } from './utilities'
 import { goTo } from './navigation'

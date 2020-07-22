@@ -9,6 +9,7 @@
  *                    2) Capturing PDF's
  *                    3) Saving/Loading Cookies
  *                  Each one has their own respective directories to save in (but can be empty string for no directory, and all those directories can be put inside a parent directory ie "assets")
+ *                    Empty, default values of '', resolves to FALSE, conviently, in some functions to support the somewhat dynamic directory structure
  */
 export interface BotFileOptions {
   /**

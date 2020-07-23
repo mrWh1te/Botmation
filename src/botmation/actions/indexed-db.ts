@@ -7,8 +7,9 @@ import { PipeValue } from '../types/pipe-value'
 import { pipe } from './assembly-lines'
 
 /**
- * @description    It's a utility higher-order BotAction that sets injects before the parent chain/pipe's injects, IndexedDB store data
+ * @description    It's a higher-order BotAction that sets injects for identifying information of one IndexedDB store
  *                 Database name & version, and Store name are accepted then injected into all provided actions
+ *                 Provided actions can overwride the injected params, on an individual basis
  * @param databaseName 
  * @param databaseVersion 
  * @param storeName 
@@ -23,8 +24,9 @@ export const indexedDBStore = (databaseName: string, databaseVersion: number, st
       
 
 /**
- * @description    Supports setting the 'key' and/or 'value' from `pipedValue` 
- *                 pipedValue can be either the value to set, or an object {key: string, value: any} 
+ * @description    Set an IndexedDB Store's key value
+ *                 Supports setting the 'key' and/or 'value' from the Pipe's value
+ *                 Pipe value can be either the value to set, or an object {key: string, value: any} 
  * @param key 
  * @param value 
  * @param storeName 
@@ -34,12 +36,11 @@ export const indexedDBStore = (databaseName: string, databaseVersion: number, st
 export const setIndexedDBValue = 
   (key?: string, value?: any, storeName?: string, databaseName?: string, databaseVersion?: number): BotIndexedDBAction<void> => 
     async(page, ...injects) => {
-      // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
       const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = unpipeInjects(injects)
 
       if (!value) {
         if (pipedValue) {
-          // idea here is that the piped value is anothe object with keys {key: '', value: ''} -> to map as what we are setting in the DB
+          // idea here is that the piped value is another object with keys {key: '', value: ''} -> to map as what we are setting in the DB
           if (pipedValue.value) {
             value = pipedValue.value
           } else {
@@ -64,7 +65,9 @@ export const setIndexedDBValue =
     }
     
 /**
- * 
+ * @description    Get an IndexedDB Store's key value
+ *                 Supports 'key' from the Pipe's value
+ *                 Pipe value can be either the key whose value to get, or an object that specifies the key such as {key: string} 
  * @param key 
  * @param storeName 
  * @param databaseName 

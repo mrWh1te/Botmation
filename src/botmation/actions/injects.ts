@@ -3,8 +3,8 @@ import { PipeValue } from "../types/pipe-value"
 import { assemblyLine } from "./assembly-lines"
 
 /**
- * @description    Higher-order to set first set of injects for provided BotAction's
- * @note           If you need injects to run as a pipe, wrap injects in pipe()()
+ * @description    Higher-order to set the first few injects for wrapped BotAction's
+ * @note           If you need the injects to run as a pipe, wrap injects in pipe()() otherwise assemblyLine()() will run it as a chain
  */
 export const injects =
   (...newInjects: any[]) => 

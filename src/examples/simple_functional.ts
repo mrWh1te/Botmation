@@ -29,8 +29,7 @@ import { logError } from 'botmation/helpers/console'
       log('Screenshot taken')
     )(page)
 
-    await page.close()
-
+    await browser.close()
   } catch (error) {
     logError(error)
     

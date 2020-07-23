@@ -19,10 +19,9 @@ import { closeTurnOnNotificationsModal, isTurnOnNotificationsModalActive } from 
 import { getInstagramBaseUrl } from 'botmation/bots/instagram/helpers/urls'
 
 // More advanced BotAction's
-import { pipe, chain } from 'botmation/actions/assembly-lines'
+import { chain } from 'botmation/actions/assembly-lines'
 import { errors } from 'botmation/actions/errors'
 import { files } from 'botmation/actions/files'
-import { indexedDBStore, setIndexedDBValue, getIndexedDBValue } from 'botmation/actions/indexed-db'
 
 // Main Script
 (async () => {
@@ -46,33 +45,6 @@ import { indexedDBStore, setIndexedDBValue, getIndexedDBValue } from 'botmation/
       ),
 
       goTo(getInstagramBaseUrl()),
-
-      // Chain-link as a pipe example
-      pipe({id: 10, newPipeTest: 'success'})(
-        log('Test #1 Complete')
-      ),
-
-      // test 3
-      log('Test #3 start'),
-      // Pipeable functions that DON'T return values can be used within a chain!
-      setIndexedDBValue('key-3test', 'value-3test', 'zzzStore2', 'testDB5', 2),
-      pipe()(
-        // But others rely on the pipe to return data to subsequent pipeable functions
-        getIndexedDBValue('key-3test', 'zzzStore2', 'testDB5', 2),
-        log('Test #3 results piped:'), // this will print the piped value, in this case `value-3test`
-      ),
-
-      // test 5, higher order func
-      log('Starting Test #5 indexedDBStore()()'),
-      // Sets up the injects for BotIndexedDBAction's (optional)
-      indexedDBStore('testDB10', 1, 'zzzStore5')(
-        errors('indexedDBStore()()')(
-          log('going to set, get, then log a value from IndexedDB'),
-          setIndexedDBValue('some-key-test5', 'some-value-test5'),
-          getIndexedDBValue('some-key-test5'),
-          log('Results of Test #5 are piped:')
-        ),
-      ),
       
       // inline, hackish but do-able if your doing something on the fly
       //  follow the rules, don't return a value in a chain
@@ -81,10 +53,10 @@ import { indexedDBStore, setIndexedDBValue, getIndexedDBValue } from 'botmation/
       // },
       
       // lets log in, if we are a guest
-      log('checking is guest status'),
+      log('checking Guest status'),
       givenThat(isGuest) (
         log('is guest so logging in'),
-        login({username: 'account', password: 'password'}),
+        login({username: 'account', password: 'password'}), // <- put your username and password here
         files({cookies_directory: 'simple'})(
           errors('files()( saveCookies() )')(
             saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies 
@@ -105,7 +77,6 @@ import { indexedDBStore, setIndexedDBValue, getIndexedDBValue } from 'botmation/
         screenshot('logged-in'),
       ),
 
-
       log('Done'),
     )(page)
 
@@ -117,9 +88,9 @@ import { indexedDBStore, setIndexedDBValue, getIndexedDBValue } from 'botmation/
     })
   } finally {
     // Uncomment this code to exit the program after the script completes:
-    // setTimeout(async() => {
-    //   if (browser) await browser.close()
-    // })
+    setTimeout(async() => {
+      if (browser) await browser.close()
+    })
   }
   
 })()

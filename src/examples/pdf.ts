@@ -5,10 +5,11 @@ import puppeteer from 'puppeteer'
 
 import { Botmation } from 'botmation'
 
-// General BotAction's
 import { log } from 'botmation/actions/console'
 import { goTo } from 'botmation/actions/navigation'
 import { savePDF } from 'botmation/actions/output'
+
+import { logError } from 'botmation/helpers/console'
 
 /**
  * @description   Example on how to use savePDF()
@@ -18,7 +19,8 @@ import { savePDF } from 'botmation/actions/output'
  */
 
 (async () => {
-  let browser: puppeteer.Browser
+  try {
+    let browser: puppeteer.Browser
 
     browser = await puppeteer.launch({headless: true}) // headless: false breaks PDF saving!!! see https://github.com/puppeteer/puppeteer/issues/1829
     const bot = await Botmation.asyncConstructor(browser)
@@ -34,6 +36,8 @@ import { savePDF } from 'botmation/actions/output'
       log('PDF saved')
     )
     
+    await browser.close()
+  } catch(error) {
+    logError(error)
   }
-  
-)();
+})();

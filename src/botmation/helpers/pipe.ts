@@ -25,13 +25,13 @@ export const unpipeInjects = (injectsMaybePiped: any[]): any[] => {
  * @param injects 
  */
 export const getInjectsPipeOrEmptyPipe = <P = any>(injects: any[]): Pipe<P> =>
-  injects.length > 0 && isPipe(injects[injects.length - 1]) ? injects[injects.length - 1] : emptyPipe()
+  injects.length > 0 && isPipe(injects[injects.length - 1]) ? injects[injects.length - 1] : createEmptyPipe()
 
 
 /**
  * @description     Creates an empty Pipe
  */
-export const emptyPipe = (): EmptyPipe => wrapValueInPipe()
+export const createEmptyPipe = (): EmptyPipe => wrapValueInPipe()
 
 /**
  * @description     Creates a Pipe with the provided value
@@ -78,5 +78,5 @@ export const pipeInjects = (injects: any[]): any[] => {
     return injects
   }
 
-  return [...injects, emptyPipe()]
+  return [...injects, createEmptyPipe()]
 }

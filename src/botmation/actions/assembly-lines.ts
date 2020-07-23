@@ -1,5 +1,5 @@
 import { BotAction, Pipe } from "botmation/interfaces"
-import { injectsHavePipe, pipeInjects, wrapValueInPipe, getInjectsPipeOrEmptyPipe, emptyPipe } from "botmation/helpers/pipe"
+import { injectsHavePipe, pipeInjects, wrapValueInPipe, getInjectsPipeOrEmptyPipe, createEmptyPipe } from "botmation/helpers/pipe"
 import { PipeValue } from "botmation/types/pipe-value"
 
 //
@@ -148,7 +148,7 @@ export const pipeRunner =
   (...actions: BotAction<PipeValue|void>[]): BotAction<PipeValue<R>> =>
     async(page, ...injects) => {
       // Possible for last inject to be the piped value
-      let pipe: Pipe = emptyPipe()
+      let pipe: Pipe = createEmptyPipe()
 
       // in case we are used in a chain, injects won't have a pipe at the end
       if (injectsHavePipe(injects)) {

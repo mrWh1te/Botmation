@@ -5,10 +5,9 @@ import { logError } from "botmation/helpers/console"
 import { pipe, chain } from "./assembly-lines"
 
 /**
- * @description    Mechanic for error handling
- *                 Higher-order to wrap ran actions in a named try/catch block
+ * @description    Higher-order BotAction to run actions in a try/catch block that logs errors with the provided errorBlockName
  *                 
- *                 Helps with finding thrown errors
+ *                 Helps with finding thrown errors, as you can nest errors()() closer and closer to the action in complex sequences
  * 
  *                 Supports chain()() and pipe()()
  * @param errorBlockName errors caught will be logged with this name

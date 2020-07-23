@@ -9,10 +9,10 @@ import { BASE_URL } from 'tests/urls'
 import { BotAction } from 'botmation/interfaces'
 
 /**
- * @description   Utilities Action Factory
- *                The factory methods here return BotAction's for the bots to handle more complex use-cases
+ * @description   Utility BotAction's
+ *                The factory methods here return BotAction's for the bots to handle more complex functional flows
  */
-describe('[Botmation:Action Factory] Utilities', () => {
+describe('[Botmation] actions/utilities', () => {
 
   let mockPage: Page
 
@@ -45,9 +45,6 @@ describe('[Botmation:Action Factory] Utilities', () => {
   it('should resolve the condition and ONLY run the chain of actions if the resolved condition equals TRUE', async() => {
     const conditionResolvingTRUE:BotAction<boolean> = async() => new Promise(resolve => resolve(true))
     const conditionResolvingFALSE:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
-    // The support for rejecting a Promise in a BotConditionalAction is being dropped
-    // You must return a boolean value. Reject will not be understood as FALSE. That's an Error that is handled now by errors()()
-    // const conditionReject:BotAction<boolean> = async() => new Promise((resolve, reject) => reject(new Error('test')))
 
     // These actions should run
     await givenThat(conditionResolvingTRUE)(
@@ -61,20 +58,11 @@ describe('[Botmation:Action Factory] Utilities', () => {
       type('example copy 2')
     )(mockPage)
 
-    // These actions should NOT run
-    // await givenThat(conditionReject)(
-    //   click('example selector 2'),
-    //   type('example copy 2')
-    // )(mockPage)
-
     expect(mockPage.click).toHaveBeenNthCalledWith(1, 'example selector 1')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, 'example copy 1')
 
     expect(mockPage.click).not.toHaveBeenNthCalledWith(2, 'example selector 2')
     expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(2, 'example copy 2')
-
-    // expect(mockPage.click).not.toHaveBeenNthCalledWith(3, 'example selector 2')
-    // expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(3, 'example copy 2')
   })
 
   //
@@ -101,8 +89,8 @@ describe('[Botmation:Action Factory] Utilities', () => {
     }
 
     // idea of this test is for a particular use-case where provided collection is an object, 
-    // whose keys are html selectors for form inputs, and the values are things to type in them
-    // so it would be one data structure for doing form input, in one succinct format
+    // whose keys are html selectors for form inputs, and the values are strings to type in
+    // so it would be one data structure for doing form input[type=text], in one succinct format
     await forAll(keyValuePairs)(
       (elementSelector, copyToType) => ([
         click(elementSelector),
@@ -121,8 +109,6 @@ describe('[Botmation:Action Factory] Utilities', () => {
   // doWhile() Unit Test
   it('should run the actions then check the condition to run the actions in a loop until the condition rejects or resolves FALSE', async() => {
     const conditionResolvingFALSE:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
-    // Mapping a rejected promise to FALSE is being dropped in favor of errors()()
-    // const conditionReject:BotAction<boolean> = async() => new Promise((resolve, reject) => reject(new Error('test')))
 
     // Main test
     let conditionResolvingCount = 0;
@@ -170,26 +156,12 @@ describe('[Botmation:Action Factory] Utilities', () => {
 
     expect(mockPage.click).not.toHaveBeenNthCalledWith(5, '2')
     expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(5, '2')
-
-    // These actions should run only once
-    // await doWhile(conditionReject)(
-    //   click('3'),
-    //   type('3')
-    // )(mockPage)
-
-    // expect(mockPage.click).toHaveBeenNthCalledWith(5, '3')
-    // expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(5, '3')
-
-    // expect(mockPage.click).not.toHaveBeenNthCalledWith(6, '3')
-    // expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(6, '3')
   })
 
   //
   // forAsLong() Unit Test
   it('should check the condition before running the actions in a loop until the condition rejects or resolves FALSE', async() => {
     const conditionResolvingFALSE:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
-    // Support for mapping reject to FALSE has been dropped. Maybe in the future errors()() will support fallback BotAction's
-    // const conditionReject:BotAction<boolean> = async() => new Promise((resolve, reject) => reject(new Error('test')))
 
     // Main test
     let conditionResolvingCount = 0;
@@ -230,14 +202,5 @@ describe('[Botmation:Action Factory] Utilities', () => {
 
     expect(mockPage.click).not.toHaveBeenNthCalledWith(3, '2')
     expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(3, '2')
-
-    // These actions should not run
-    // await forAsLong(conditionReject)(
-    //   click('3'),
-    //   type('3')
-    // )(mockPage)
-
-    // expect(mockPage.click).not.toHaveBeenNthCalledWith(3, '3')
-    // expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(3, '3')
   })
 })

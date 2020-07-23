@@ -1,12 +1,11 @@
 import { log, warning, error } from 'botmation/actions/console'
-import { botFileOptions } from 'tests/mocks/bot-file-options.mock'
 
 /**
- * @description   Console Action Factory
- *                The factory methods here return BotAction's for the bots to log themed messages in console
- * @note          These messages are logged to the Node console, not the Puppeteer page console.
+ * @description   Console BotAction's
+ *                The factory methods here return BotAction's for the bots to log themed console messages
+ * @note          These messages are logged to the Node console, not the Puppeteer Page console, unless they are evaluated inside a Puppeteer Page (ie how IndexedDB is interacted with)
  */
-describe('[Botmation:Action Factory] Console', () => {
+describe('[Botmation] actions/console', () => {
   let logs: any[]
 
   beforeAll(() => {
@@ -23,7 +22,7 @@ describe('[Botmation:Action Factory] Console', () => {
   //
   // Unit Tests
   it('should log a message to console', async () => {
-    await log('example message')(page, undefined, botFileOptions)
+    await log('example message')(page)
 
     // Get around the Chalk styling
     expect(logs[0][0]).toEqual(expect.stringMatching('Log:'))
@@ -31,7 +30,7 @@ describe('[Botmation:Action Factory] Console', () => {
   })
 
   it('should log a warning to console', async () => {    
-    await warning('example warning')(page, undefined, botFileOptions)
+    await warning('example warning')(page)
 
     // Get around the Chalk styling
     expect(logs[0][0]).toEqual(expect.stringMatching('Warning:'))
@@ -39,7 +38,7 @@ describe('[Botmation:Action Factory] Console', () => {
   })
 
   it('should log an error to console', async () => {    
-    await error('example error')(page, undefined, botFileOptions)
+    await error('example error')(page)
 
     // Get around the Chalk styling
     expect(logs[0][0]).toEqual(expect.stringMatching('Error:'))

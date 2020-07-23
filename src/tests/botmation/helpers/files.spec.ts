@@ -3,7 +3,7 @@ import { createFolderURL, getFileUrl } from '../../../botmation/helpers/files'
 /**
  * @description   Helpers: Assets (ie screenshots, cookies)
  */
-describe('[Botmation:Helpers] Assets', () => {
+describe('[Botmation] helpers/assets', () => {
 
   //
   // Unit Tests

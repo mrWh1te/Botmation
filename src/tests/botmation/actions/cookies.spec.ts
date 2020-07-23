@@ -9,14 +9,14 @@ import { BASE_URL } from 'tests/urls'
 import { wrapValueInPipe } from 'botmation/helpers/pipe'
 
 /**
- * @description   Cookies Action Factory
+ * @description   Cookies BotAction's
  *                The factory methods here return BotAction's for the bots to manage Puppeteer Page Cookies
- * @note          The order of the tests in this suite IS IMPORTANT! run the saveCookies() test before the loadCookies()!
+ * @note          The order of the tests in this suite ARE IMPORTANT! run the saveCookies() test before the loadCookies(), else refactor!
  * @note          The testing strategy focuses on unit-testing the file-system part of saving/loading cookies (writing/reading a JSON file)
  *                  then does a integration test in calling the correct Puppeteer methods in injecting or reading cookies from a Page
  */
-describe('[Botmation:Action Factory] Cookies', () => {
-  const BOT_OPTIONS = {
+describe('[Botmation] actions/cookies', () => {
+  const BOT_FILE_OPTIONS = {
     parent_output_directory: 'assets',
     cookies_directory: 'cookies'
   } as any as BotFileOptions
@@ -48,16 +48,16 @@ describe('[Botmation:Action Factory] Cookies', () => {
   //
   // saveCookies() Unit/Integration Test
   it('should call puppeteer\'s page cookies() method then create a JSON file of that data in the Cookies directory', async() => {
-    await saveCookies(COOKIES_FILENAME)(mockPage, BOT_OPTIONS, wrapValueInPipe())
+    await saveCookies(COOKIES_FILENAME)(mockPage, BOT_FILE_OPTIONS, wrapValueInPipe())
 
     expect(mockPage.cookies).toBeCalled()
-    await expect(fileExist(getFileUrl(BOT_OPTIONS.cookies_directory, BOT_OPTIONS) + '/test-cookies-1.json')).resolves.toEqual(true)
+    await expect(fileExist(getFileUrl(BOT_FILE_OPTIONS.cookies_directory, BOT_FILE_OPTIONS) + '/test-cookies-1.json')).resolves.toEqual(true)
   })
 
   //
   // loadCookies() Unit/Integration Test
   it('should loadCookies() from filename provided by injecting that data from the file into the Puppeteer Page', async() => {
-    await loadCookies(COOKIES_FILENAME)(mockPage, BOT_OPTIONS, wrapValueInPipe())
+    await loadCookies(COOKIES_FILENAME)(mockPage, BOT_FILE_OPTIONS, wrapValueInPipe())
 
     expect(mockPage.setCookie).toHaveBeenNthCalledWith(1, {
       "name": "sessionid",
@@ -76,7 +76,7 @@ describe('[Botmation:Action Factory] Cookies', () => {
   // Clean up
   afterAll(async() => {
     // The saveCookies() unit-test creates a specific file, let's delete it, to prevent future false positive's
-    const cookiesFileUrl = getFileUrl(BOT_OPTIONS.cookies_directory, BOT_OPTIONS) +  COOKIES_FILENAME + '.json'
+    const cookiesFileUrl = getFileUrl(BOT_FILE_OPTIONS.cookies_directory, BOT_FILE_OPTIONS) +  COOKIES_FILENAME + '.json'
 
     const TEST_COOKIES_FILE_EXISTS = await fileExist(cookiesFileUrl)
     if (TEST_COOKIES_FILE_EXISTS) {

@@ -11,6 +11,7 @@ import { FORM_TEXT_INPUT_SELECTOR, FORM_SUBMIT_BUTTON_SELECTOR } from '../../sel
 /**
  * @description   Test the Wrappers (Botmation class and the BotActionsChainFactory)
  *                The factory methods here return BotAction's for the bots to handle more complex use-cases
+ * @deprecated    Factories have been replaced with Assembly-Line BotAction's. The following tests will be refactored into chain()() tests.
  */
 describe('[Botmation] BotActionsChainFactory', () => {
 

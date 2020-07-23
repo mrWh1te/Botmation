@@ -6,14 +6,12 @@ import { click } from 'botmation/actions/input'
 
 import { BASE_URL, EXAMPLE_URL } from 'tests/urls'
 import { FORM_SUBMIT_BUTTON_SELECTOR } from 'tests/selectors'
-import { botFileOptions } from 'tests/mocks/bot-file-options.mock'
 
 /**
- * @description   Navigation Action Factory
+ * @description   Navigation BotAction's
  *                The factory methods here return BotAction's for the bots to input into the page as User
- *                  ie goto, waiting for navigation to complete on change
  */
-describe('[Botmation:Action Factory] Navigation', () => {
+describe('[Botmation] actions/navigation', () => {
   const mockPage = {
     goto: jest.fn(),
     url: jest.fn(() => BASE_URL),
@@ -27,14 +25,14 @@ describe('[Botmation:Action Factory] Navigation', () => {
   //
   // Basic Integration Tests
   it('should call puppeteer\'s page goto() method with the provided options', async() => {
-    await goTo(EXAMPLE_URL)(mockPage, undefined, botFileOptions)
+    await goTo(EXAMPLE_URL)(mockPage)
 
     expect(mockPage.url).toBeCalled() // are we checking the URL before requesting to go to it to prevent unnecessary requests?
     expect(mockPage.goto).toBeCalledWith('http://localhost:8080/example.html', enrichGoToPageOptions()) // are we providing default options, is the action relaying the correct url
   })
 
   it('should call puppeteer\'s waitForNavigation method', async() => {    
-    await waitForNavigation(mockPage, undefined, botFileOptions)
+    await waitForNavigation(mockPage)
 
     expect(mockPage.waitForNavigation).toBeCalled()
   })
@@ -42,13 +40,13 @@ describe('[Botmation:Action Factory] Navigation', () => {
   //
   // Unit test for both actions. Moving forward, we can rely more in Integration tests for some of these
   it('should go to example page, submit form, wait for navigation, then be on the success page', async() => {
-    await goTo(EXAMPLE_URL)(page, undefined, botFileOptions)
+    await goTo(EXAMPLE_URL)(page)
 
     // do both at the same time, so we wait for navigation to complete based on the form, 
     // and not after it's already done, which was stalling the test
     await Promise.all([
-      click(FORM_SUBMIT_BUTTON_SELECTOR)(page, undefined, botFileOptions),
-      waitForNavigation(page, undefined, botFileOptions)
+      click(FORM_SUBMIT_BUTTON_SELECTOR)(page),
+      waitForNavigation(page)
     ])
 
     await expect(page.title()).resolves.toMatch('Testing: Form Submit Success')

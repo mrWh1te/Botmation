@@ -3,7 +3,7 @@ import { sleep } from 'botmation/helpers/utilities'
 /**
  * @description   Helpers: Utilities
  */
-describe('[Botmation:Helpers] Utilities', () => {
+describe('[Botmation] helpers/utilities', () => {
   let setTimeoutFn = setTimeout
 
   afterAll(() => {

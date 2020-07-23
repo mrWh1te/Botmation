@@ -10,16 +10,16 @@ import { BASE_URL, EXAMPLE_URL } from '../urls'
 import { FORM_TEXT_INPUT_SELECTOR, FORM_SUBMIT_BUTTON_SELECTOR } from '../selectors'
 
 /**
- * @description   Test the Botmation class methods specific to the Class
+ * @description   Test the Botmation class
  */
-describe('[Botmation] Class', () => {
+describe('[Botmation] class', () => {
 
   beforeEach(async() => {
     await page.goto(BASE_URL, enrichGoToPageOptions())
   })
 
   //
-  // Async Class Instance
+  // Create Class Instance with Static Async Method
   it('should create a Botmation instance using the static asyncConstructor() then run the actions', async() => {
     const bot = await Botmation.asyncConstructor(browser) // <-- finicky test here, maybe related: https://github.com/puppeteer/puppeteer/issues/1947
 
@@ -82,7 +82,7 @@ describe('[Botmation] Class', () => {
         click: jest.fn()
     } as any as Page
     
-    // what we are testing:
+    // what we are testing
     bot.setPage(mockPage)
 
     // do these actions run on the mock page or the initial page?

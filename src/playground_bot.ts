@@ -6,8 +6,9 @@ import puppeteer from 'puppeteer'
 import { Botmation } from 'botmation'
 
 // General BotAction's
-import { log, warning } from 'botmation/actions/console'
-import { wait } from 'botmation/actions/utilities'
+import { log } from 'botmation/actions/console'
+import { goTo } from 'botmation/actions/navigation'
+import { screenshot } from 'botmation/actions/output'
 
 // helpers
 import { logError } from 'botmation/helpers/console'
@@ -21,19 +22,17 @@ import { logError } from 'botmation/helpers/console'
     browser = await puppeteer.launch({headless: false})
 
     // Start up the Instagram bot to run in the Puppeteer Browser
-    const instagramBot = await Botmation.asyncConstructor(browser)
+    const googleBot = await Botmation.asyncConstructor(browser)
 
     // Actions run in sequence
-    await instagramBot.actions(
+    await googleBot.actions(
       log('Botmation running'),
-      warning('Starting Test'),
-
-      wait(1000),
-      log('Test Complete'),
+      goTo('https://google.com'),
+      screenshot('google-homepage'),
+      log('Screenshot of Google.com saved')
     )
     
     // close up
-    await instagramBot.closePage()
     await browser.close()
   } catch (error) {
     logError(error)

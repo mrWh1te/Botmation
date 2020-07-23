@@ -11,13 +11,11 @@ import { goTo } from 'botmation/actions/navigation'
 import { screenshot } from 'botmation/actions/output'
 
 // Instagram specific BotAction's
-import { login } from 'botmation/bots/instagram/actions/auth'
-import { closeTurnOnNotificationsModal } from 'botmation/bots/instagram/actions/modals'
+import { login, isGuest, isLoggedIn } from 'botmation/bots/instagram/actions/auth'
+import { closeTurnOnNotificationsModal, isTurnOnNotificationsModalActive } from 'botmation/bots/instagram/actions/modals'
 
 // Instagram helpers
 import { getInstagramBaseUrl } from 'botmation/bots/instagram/helpers/urls'
-import { isGuest, isLoggedIn } from 'botmation/bots/instagram/helpers/auth'
-import { isTurnOnNotificationsModalActive } from 'botmation/bots/instagram/helpers/modals'
 import { logError } from 'botmation/helpers/console'
 
 // Expiremental Pipe

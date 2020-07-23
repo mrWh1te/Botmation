@@ -1,5 +1,7 @@
 /**
- * @description   These higher higher order bot actions are meant to help devs build more complex bot action chains with more ease
+ * @description   The higher order BotAction's bring a new level of dynamic behavior to BotAction's functionally
+ *                These functions are intended to be utilities for the dev's to help achieve more complex functionality,
+ *                  in a composable functional fashion
  */
 import { sleep } from '../helpers/utilities'
 
@@ -8,15 +10,11 @@ import { injectsHavePipe, wrapValueInPipe, pipeInjects } from 'botmation/helpers
 import { pipeActionOrActions, pipe } from './assembly-lines'
 
 /**
- * @description givenThat(condition returns a promise that resolves to TRUE)(run these actions in a chain)
- *              A function that returns a function that returns a function
- *              BotFactoryProvider -> BotFactoryAction -> BotAction
- * 
- *              In essence, this is a BotAction to run a provided chain of BotActions (2nd usage call), given that a promised condition (1st usage call) resolves to TRUE
+ * @description Higher Order BotAction that accepts a ConditionalBotAction (pipeable, that returns a boolean) and based on what boolean it resolves,
+ *              does it run the BotAction's provided in a pipe()(). Never the less, it does not return the final ran BotAction return value (if any)
  * @example     givenThat(isGuest)(login(...), closeSomePostLoginModal(),... more BotAction's)
  *              The condition function is async and provided the Puppeteer page instance so you can use it to determine TRUE/FALSE
  * @param condition 
- * upgraded
  */
 export const givenThat = 
   (condition: ConditionalBotAction) => 
@@ -28,26 +26,26 @@ export const givenThat =
       }
 
 /**
- * @future support piping in `collection` or new BotAction
- * @description   A forEach method to loop a collection of something, to run a chain of actions against with that something locally scoped
+ * @future support piping in the `collection`
+ * @description   A forEach method to loop a collection of (array or object with key/value pairs), to run a loop of piped actions with each iteration of the collection
  * 
  *                Special BotAction that can take an array of stuff or an object of key value pairs (dictionary)
- *                to iterate over while applying the closure (function) as provided
- *                The closure's purpose is simply to return a BotAction or BotAction[], but you can run code beforehand, but it's discouraged
+ *                to iterate over while applying the closure (botActionOrActionsFactory) as provided
+ *                The closure's purpose is simply to return a BotAction or BotAction[]
  * 
  *                The original use-case for this concept, was to be able to re-apply a script on multiple websites via a loop
  *                I've seen multiple examples online, of people using Puppeteer to write a script of actions then loop through a list of websites
- *                  to apply those actions on
+ *                  to apply the same sequence of actions on each
  *
- * @example    with an array for collection
+ * @example    with an array as the collection
  *  forAll(['google.com', 'facebook.com'])(
  *    (siteName) => ([ // you can name the variable whatever you want in the closure
  *      goTo('http://' + siteName),
- *      screenshot(siteName + '-homepage')
+ *      screenshot(siteName + '-homepage') // then re-use it in your BotAction setup
  *    ])
  *  )
  * 
- * @example    with a dictionary for collection, a good use-case of this is a form with keys being form input selectors and values being what its typed in each
+ * @example    with a dictionary as the collection, we can iterate key/value pairs in our BotAction's setup ie fill a form with keys being form input selectors and values being what its typed in each
  *  forAll({id: 'google.com', someOtherKey: 'apple.com'})(
  *    (key, siteName) => ([
  *      goTo('http://' + siteName)
@@ -61,7 +59,7 @@ export const givenThat =
  *  )
  */
 export interface Dictionary {
-  [key: string]: any // (key -> value) pairs
+  [key: string]: any // key/value pairs
 }
 export const forAll =
   (collection: any[] | Dictionary) =>
@@ -81,10 +79,8 @@ export const forAll =
       }
 
 /**
- * @description    This works like a traditional doWhile. Do these actions, then check the condition on whether or not we should do them again, and again and again
- *                    aka
- *                 Do the actions, and continue to keep doing them While this condition is TRUE
- * @experimental
+ * @description    Works like a traditional doWhile. The loop begins with running the actions in a pipe, then before each subsequent iteration of the loop, the ConditionalBotAction is resolved and tested for TRUE before continuing
+ *                 Do the actions, and continue to keep doing them While this condition continue to resolves TRUE
  * @param condition
  */
 export const doWhile = 
@@ -96,7 +92,6 @@ export const doWhile =
           const pipeValue = await pipe()(...actions)(page, ...injects)
 
           resolvedCondition = false // in case condition rejects
-          // ConditionResolved's value may be in a pipe
           if (injectsHavePipe(injects)) {
             resolvedCondition = await condition(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(pipeValue))
           } else {
@@ -106,10 +101,8 @@ export const doWhile =
       }
 
 /**
- * @description    This works like a traditional while loop. It resolves the condition each time before running the actions, and only runs the actions if the value resolved is True. 
- *                    aka
- *                 like givenThat except it loops again at the end of the bot actions chain for as long as the condition resolves True
- * @experimental
+ * @description    Works like a traditional while loop. Before each loop iteration, it resolves the ConditionalBotAction then only runs the provided BotAction's (in a pipe) if that `condition` resolved TRUE
+ *                 It continues to loop as long as the `condition` resolves TRUE each time. It only runs the BotAction's after the ConditionalBotAction resolves TRUE
  * @param condition 
  * @example     forAsLong(isLoggedIn)(
  *                goTo(...),
@@ -136,7 +129,7 @@ export const forAsLong =
       }
 
 /**
- * @description   Pauses the bot for the provided milliseconds before letting it execute the next Action
+ * @description   Pauses the runner (chain or pipe) for the provided milliseconds before continuing to the next BotAction
  * @param milliseconds 
  */
 export const wait = (milliseconds: number): BotAction => async() => {

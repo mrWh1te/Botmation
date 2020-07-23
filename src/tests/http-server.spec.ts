@@ -1,10 +1,10 @@
 /**
- * @description   This Jest Testing is configured to use `http-server` in launching whatever is in `/tests/server` 
- *                as a sandbox website to run these tests locally against, when applicable
+ * @description   Botmation's Jest Testing is configured to use `http-server` in launching a static file server based in the `/server` directory
+ *                as a sandbox website to run controlled tests locally against, when needed
  */
-describe('HTTP-Server used for Jest Testing', () => {
+describe('Checking HTTP-Server used in Testing', () => {
 
-  it('It should load, on port 8080, the main index.html file found in the ./src/tests/server/ directory', async () => {
+  it('should load on port 8080, the main index.html file found in the ./src/tests/server/ directory', async () => {
     await page.goto('http://localhost:8080')
     await expect(page.title()).resolves.toMatch('Example Testing Page')
   })

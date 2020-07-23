@@ -3,7 +3,7 @@ import { Page } from 'puppeteer'
 import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 
 import { BASE_URL } from 'tests/urls'
-import { botOptions } from 'tests/mocks/bot-options.mock'
+import { botFileOptions } from 'tests/mocks/bot-file-options.mock'
 
 import { screenshot } from 'botmation/actions/output'
 import { fileExist, deleteFile, getFileUrl } from 'botmation/helpers/files'
@@ -35,17 +35,17 @@ describe('[Botmation:Action Factory] Output', () => {
   //
   // screenshot() Integration Test
   it('should call puppeteer\'s page screenshot() method with the provided options', async() => {
-    await screenshot(SCREENSHOT_FILENAME)(mockPage, botOptions, wrapValueInPipe())
+    await screenshot(SCREENSHOT_FILENAME)(mockPage, botFileOptions, wrapValueInPipe())
 
-    expect(mockPage.screenshot).toBeCalledWith({path: getFileUrl(botOptions.screenshots_directory, botOptions) + '/test-screenshot-1.png'})
+    expect(mockPage.screenshot).toBeCalledWith({path: getFileUrl(botFileOptions.screenshots_directory, botFileOptions) + '/test-screenshot-1.png'})
   })
 
   //
   // screenshot() Unit Test
   it('should create a PNG file in the screenshots directory with the provided filename', async() => {
-    await screenshot(SCREENSHOT_FILENAME)(page, botOptions, wrapValueInPipe())
+    await screenshot(SCREENSHOT_FILENAME)(page, botFileOptions, wrapValueInPipe())
 
-    await expect(fileExist(getFileUrl(botOptions.screenshots_directory, botOptions) + '/test-screenshot-1.png')).resolves.toEqual(true)
+    await expect(fileExist(getFileUrl(botFileOptions.screenshots_directory, botFileOptions) + '/test-screenshot-1.png')).resolves.toEqual(true)
   })
 
   //
@@ -64,7 +64,7 @@ describe('[Botmation:Action Factory] Output', () => {
   // Clean up
   afterAll(async() => {
     // The screenshot() unit-test creates a specific file, let's delete it, to prevent future false positive's
-    const fileUrl = getFileUrl(botOptions.screenshots_directory, botOptions, SCREENSHOT_FILENAME) + '.png'
+    const fileUrl = getFileUrl(botFileOptions.screenshots_directory, botFileOptions, SCREENSHOT_FILENAME) + '.png'
 
     const TEST_SCREENSHOT_FILE_EXISTS = await fileExist(fileUrl)
     if (TEST_SCREENSHOT_FILE_EXISTS) {

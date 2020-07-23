@@ -125,13 +125,13 @@ describe('[Botmation] Class', () => {
       const bot = new Botmation(mockPage)
 
       // what we are testing
-      bot.closePage()
+      await bot.closePage()
 
       expect(mockPage.close).toHaveBeenCalled()
 
       // we only run close if the page is defined
       bot.setPage(undefined as any as Page)
-      bot.closePage()
+      await bot.closePage()
 
       expect(mockPage.close).not.toHaveBeenNthCalledWith(2)
   })

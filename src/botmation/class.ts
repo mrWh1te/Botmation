@@ -1,8 +1,4 @@
-/**
- * @description    Example OOP class wrapper to encapsulate the page, and any injects, a dev may choose to use
- */
-
-import { Page, Browser } from 'puppeteer'
+import * as Puppeteer from 'puppeteer'
 
 import { BotAction } from './interfaces/bot-actions'
 import { chain } from './actions/assembly-lines'
@@ -11,35 +7,34 @@ import { errors } from './actions/errors'
 
 /**
  * @name          Botmation
- * @description   Declarative bot class for running composable actions on a Puppeteer browser page
+ * @description   Example OOP class to encapsulate an Assembly-Line (chain), with any injects, a dev may choose to use
  */
 export class Botmation implements BotmationInterface {
   /**
-   * @description   Page of the brower the bot is crawling
+   * @description   Browser's Page the Botmation instance will crawl
    */
-  private page: Page
+  private page: Puppeteer.Page
 
   /**
-   * @description   Injectables for your custom BotAction's, optional
+   * @description   Injectables for the Assembly-Line
    */
   private injects: any[]
 
   /**
-   * @description   Constructor for building a Botmation instance with a specific Browser page and optional other params
    * @param page 
    * @param injects 
    */
-  constructor(page: Page, ...injects: any[]) {
+  constructor(page: Puppeteer.Page, ...injects: any[]) {
     this.page = page
     this.injects = injects
   }
   
   /**
-   * @description    static async constructor method that will get a page from the browser to operate in
+   * @description    static async constructor method to automatically get a page from the browser (if it has one), otherwise a new one, to run the Assembly-Line of BotAction's in
    * @param browser 
    * @param injects 
    */
-  public static async asyncConstructor(browser: Browser, ...injects: any[]): Promise<Botmation> {
+  public static async asyncConstructor(browser: Puppeteer.Browser, ...injects: any[]): Promise<Botmation> {
     // Grab the first open page from the browser, otherwise make a new one
     const pages = await browser.pages()
     const page = pages.length === 0 ? await browser.newPage() : pages[0]
@@ -49,21 +44,12 @@ export class Botmation implements BotmationInterface {
   }
 
   /**
-   * @description   Run BotAction's in sequence - declaratively with the composable BotActionsChainFactory
-   *                Supports higher-order bot action functions in the /actions directory
-   * 
-   *                This function gives an easy method to chain bot actions together in sequence to run on the Bot's page
-   *                So instead of doing something like this with a Puppeteer page instance:
-   *                  await page.goto(...)
-   *                  await page.keyboard.type(...)
-   * 
-   *                We remove each `await` & `page`, with dynamic scoping, through the BotActionsChainFactory to resolve the chain of promises in sequence
-   * 
-   *                This is in-part, based on a promisified pipe, but this does not take the output of the last operation as input for the next.
+   * @description   Run BotAction's in a error-safe Assembly-Line Chain
+   *                Errors unhandled within the chain are at least caught outside with Error Block Name `Botmation Class`
    * @example         
    *                  await bot.actions(
-   *                    goTo('feed'),
-   *                    favoriteAllFrom('username1', 'username2')
+   *                    goTo('http://google.com'),
+   *                    screenshot('google-home-page')
    *                  )
    * @param actions  
    */
@@ -76,18 +62,19 @@ export class Botmation implements BotmationInterface {
   /**
    * @param page {Puppeteer.Page}
    */
-  setPage(page: Page) {
+  setPage(page: Puppeteer.Page) {
     this.page = page
   }
+
   /**
    * @param page {Puppeteer.Page}
    */
-  getPage(): Page {
+  getPage(): Puppeteer.Page {
     return this.page
   }
 
   /**
-   * @description    Public method to set the Injects if needed
+   * @description    Public method to set the Injects. Does not work while actions() is resolving.
    * @param injects spreaded array
    */
   public setInjects(...injects: any[]) {

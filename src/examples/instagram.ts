@@ -9,6 +9,7 @@ import { givenThat } from 'botmation/actions/utilities'
 import { loadCookies, saveCookies } from 'botmation/actions/cookies'
 import { goTo } from 'botmation/actions/navigation'
 import { screenshot } from 'botmation/actions/output'
+import { logError } from 'botmation/helpers/console'
 
 // Instagram specific BotAction's
 import { login, isGuest, isLoggedIn } from 'botmation/bots/instagram/actions/auth'
@@ -16,13 +17,12 @@ import { closeTurnOnNotificationsModal, isTurnOnNotificationsModalActive } from 
 
 // Instagram helpers
 import { getInstagramBaseUrl } from 'botmation/bots/instagram/helpers/urls'
-import { logError } from 'botmation/helpers/console'
 
-// Expiremental Pipe
-import { indexedDBStore, setIndexedDBValue, getIndexedDBValue } from 'botmation/actions/indexed-db'
-import { files } from 'botmation/actions/files'
+// More advanced BotAction's
 import { pipe, chain } from 'botmation/actions/assembly-lines'
 import { errors } from 'botmation/actions/errors'
+import { files } from 'botmation/actions/files'
+import { indexedDBStore, setIndexedDBValue, getIndexedDBValue } from 'botmation/actions/indexed-db'
 
 // Main Script
 (async () => {

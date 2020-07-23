@@ -27,15 +27,15 @@ describe('[Botmation] helpers/assets', () => {
 
   it('getFileUrl should remain coupled to our suggestive but open directory structure in saved files to disk (hard drive)', async () => {    
     const undefinedValue = undefined as any
-    const botOptionsUndefinedParentDirectory = { parent_output_directory: undefined } as any
-    const botOptionsWithParentDirectory = { parent_output_directory: 'parent' } as any
+    const botFileOptionsUndefinedParentDirectory = { parent_output_directory: undefined } as any
+    const botFileOptionsWithParentDirectory = { parent_output_directory: 'parent' } as any
 
     const fileUrl00 = getFileUrl(undefinedValue, undefinedValue) // nothing but undefined's
-    const fileUrl0 = getFileUrl(undefinedValue, botOptionsUndefinedParentDirectory) // getting undefined values
+    const fileUrl0 = getFileUrl(undefinedValue, botFileOptionsUndefinedParentDirectory) // getting undefined values
 
-    const fileUrl1 = getFileUrl('1', botOptionsUndefinedParentDirectory)
-    const fileUrl1Parent = getFileUrl('1', botOptionsWithParentDirectory)
-    const fileUrl1ParentFileName = getFileUrl('1', botOptionsWithParentDirectory, 'example.json')
+    const fileUrl1 = getFileUrl('1', botFileOptionsUndefinedParentDirectory)
+    const fileUrl1Parent = getFileUrl('1', botFileOptionsWithParentDirectory)
+    const fileUrl1ParentFileName = getFileUrl('1', botFileOptionsWithParentDirectory, 'example.json')
     
     // fail safe cases to monitor
     expect(fileUrl00).toEqual('./')

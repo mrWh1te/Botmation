@@ -92,7 +92,7 @@ export const assemblyLine =
           else if (actions.length === 1) {
             return await actions[0](page, ...pipeInjects(injects))
           } else {
-            return await pipe()(...actions)(page, ...pipeInjects(injects))
+            return await pipeRunner(...actions)(page, ...pipeInjects(injects))
           }
         } else {
           // running a chain
@@ -100,7 +100,7 @@ export const assemblyLine =
           else if (actions.length === 1) {
             await actions[0](page, ...injects)
           } else {
-            await chain(...actions)(page, ...injects)
+            await chainRunner(...actions)(page, ...injects)
           }
         }
       }

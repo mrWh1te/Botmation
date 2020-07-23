@@ -7,7 +7,7 @@ import { getFileUrl } from 'botmation/helpers/files'
 
 /**
  * @description   Parse page's cookies and save them as JSON in a local file
- *                Relies on BotOptions (options), to determine URL
+ *                Relies on BotFileOptions (options), to determine URL
  *                Works with files()() for setting cookies directory & parent directory
  *                botFileOptions overrides injected values from files()()
  * @param fileName 
@@ -23,7 +23,7 @@ export const saveCookies = (fileName: string, botFileOptions?: Partial<BotFileOp
 
 /**
  * @description   Parse the file created with saveCookies() into cookies to load into the page
- *                Relies on BotOptions (options), to determine URL
+ *                Relies on BotFileOptions (options), to determine URL
  *                Works with files()() for setting cookies directory & parent directory
  *                botFileOptions overrides injected values from files()()
  * @param fileName 

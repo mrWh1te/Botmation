@@ -89,14 +89,10 @@ export const doWhile =
       async(page, ...injects) => {
         let resolvedCondition = true // doWhile -> run the code, then check the condition on whether or not we should run the code again
         while (resolvedCondition) {
-          const pipeValue = await pipe()(...actions)(page, ...injects)
+          await pipe()(...actions)(page, ...injects)
 
-          resolvedCondition = false // in case condition rejects
-          if (injectsHavePipe(injects)) {
-            resolvedCondition = await condition(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(pipeValue))
-          } else {
-            resolvedCondition = await condition(page, ...injects, wrapValueInPipe(pipeValue))
-          }
+          resolvedCondition = false // in case condition rejects, safer
+          resolvedCondition = await condition(page, ...pipeInjects(injects)) // use same Pipe from before, but simulate as pipe in case not
         }
       }
 
@@ -117,14 +113,11 @@ export const forAsLong =
         let resolvedCondition = await condition(page, ...pipeInjects(injects))
 
         while (resolvedCondition) {
-          const pipeValue = await pipe()(...actions)(page, ...pipeInjects(injects))
+          await pipe()(...actions)(page, ...pipeInjects(injects))
 
           // simulate pipe if needed
-          if (injectsHavePipe(injects)) {
-            resolvedCondition = await condition(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(pipeValue))
-          } else {
-            resolvedCondition = await condition(page, ...injects, wrapValueInPipe(pipeValue))
-          }
+          resolvedCondition = false // in case condition rejects
+          resolvedCondition = await condition(page, ...pipeInjects(injects)) // use same Pipe as before, unless no Pipe, than add an empty one
         }
       }
 

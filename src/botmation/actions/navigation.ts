@@ -10,7 +10,7 @@ import { logWarning } from '../helpers/console'
  *                If the URL given to navigate too is the same as the existing one, it will skip navigation and log a warning
  * @param url
  */
-export const goTo = (url: string, goToOptions: Partial<DirectNavigationOptions> = {}): BotAction => 
+export const goTo = (url: string, goToOptions?: Partial<DirectNavigationOptions>): BotAction => 
   async(page) => {
     goToOptions = enrichGoToPageOptions(goToOptions)  
 

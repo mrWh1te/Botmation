@@ -5,43 +5,45 @@ import { enrichGoToPageOptions } from '../helpers/navigation'
 import { logWarning } from '../helpers/console'
 
 /**
- * @description   Single Higher Order Function for Page Changing
+ * @description   Go to url provided in the current page
+ *                Can customize behavior with a Partial of Puppeteer's DirectNavigationOptions
  *                If the URL given to navigate too is the same as the existing one, it will skip navigation and log a warning
  * @param url
  */
-export const goTo = (url: string, goToOptions?: DirectNavigationOptions): BotAction => async(page) => {
-  if (!goToOptions) {
-    goToOptions = enrichGoToPageOptions()
-  }
+export const goTo = (url: string, goToOptions: Partial<DirectNavigationOptions> = {}): BotAction => 
+  async(page) => {
+    goToOptions = enrichGoToPageOptions(goToOptions)  
 
-  // same url check
-  if (page.url() === url) {
-    logWarning('[Action:goTo] url requested is already active')
-    return
-  }
+    // same url check
+    if (page.url() === url) {
+      logWarning('[goTo()] url requested is already active')
+      return
+    }
 
-  await page.goto(url, goToOptions)
-}
+    await page.goto(url, goToOptions)
+  }
 
 /**
- * @description   Go back one page (like hitting the "Back" button in a Browser)
+ * @description   Go back one page like hitting the "Back" button in a Browser
  * @param options 
  * @alpha 
  * @TODO Test this
  */
-export const goBack = (options?: NavigationOptions): BotAction => async(page) => {
-  await page.goBack(options)  
-}
+export const goBack = (options?: NavigationOptions): BotAction => 
+  async(page) => {
+    await page.goBack(options)  
+  }
 
 /**
- * @description   Go back one page (like hitting the "Back" button in a Browser)
+ * @description   Go forward one page like hitting the "Forward" button in a Browser
  * @param options 
  * @alpha 
  * @TODO Test this
  */
-export const goForward = (options?: NavigationOptions): BotAction => async(page) => {
-  await page.goForward(options)  
-}
+export const goForward = (options?: NavigationOptions): BotAction => 
+  async(page) => {
+    await page.goForward(options)  
+  }
 
 /**
  * @description   Reload current page. In case of multiple redirects, the navigation will resolve with the response of the last redirect.
@@ -49,12 +51,14 @@ export const goForward = (options?: NavigationOptions): BotAction => async(page)
  * @alpha 
  * @TODO Test this
  */
-export const reload = (options?: NavigationOptions): BotAction => async(page) => {
-  await page.reload(options)
-}
+export const reload = (options?: NavigationOptions): BotAction =>
+  async(page) => {
+    await page.reload(options)
+  }
 
 /**
- * @description   Wait for navigation to complete. Helpful after submitting a form that causes change pages to occur, ie logging in
+ * @description   Wait for navigation to complete
+ *                Helpful for SPA's when submitting a form causes a page change, ie logging in
  */
 export const waitForNavigation: BotAction = async(page) => {
   await page.waitForNavigation()

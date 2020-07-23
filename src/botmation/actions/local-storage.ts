@@ -26,8 +26,7 @@ export const clearAllLocalStorage: BotAction =
 export const removeLocalStorageKey = 
   (key?: string): BotAction =>
     async(page, ...injects) => {
-      // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
-      let pipedValue = getInjectsPipeValue(injects)
+      const pipedValue = getInjectsPipeValue(injects)
 
       if (!key) {
         if (pipedValue) {
@@ -46,15 +45,16 @@ export const removeLocalStorageKey =
     }
 
 /**
- * @description     Sets the `value` of 1 `key` in Local Storage
+ * @description     Set a `value` by 1 `key` in Local Storage
+ *                  It supports piping the key and value where the Pipe's value is an object like {key: 'username', value: 'sam'}
+ *                  Also, the Pipe's value can simply be the value you want to set locally ie Pipe = {brand: 'piped', value: 'sam'} or wrapped again in an object like above, then have the key set in the BotAction's param
  * @param key 
  * @param value 
  */
 export const setLocalStorageValue = 
   (key?: string, value?: string): BotAction => 
     async(page, ...injects) => {
-      // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
-      let pipedValue = getInjectsPipeValue(injects)
+      const pipedValue = getInjectsPipeValue(injects)
 
       if (!value) {
         if (pipedValue) {
@@ -62,13 +62,9 @@ export const setLocalStorageValue =
           if (pipedValue.value) {
             value = pipedValue.value
           } else {
+            // with potential fallback that the Pipe's value IS the value to set, and we'll get the key from the BotAction's higher order `key` param
             value = pipedValue
           }
-        }
-      }
-      if (!key) {
-        if (pipedValue && pipedValue.key) {
-          key = pipedValue.key
         }
       }
 
@@ -80,14 +76,15 @@ export const setLocalStorageValue =
     }
 
 /**
- * @description     Gets the `value` of 1 `key` from Local Storage
+ * @description     Get a `value` by 1 `key` from Local Storage
+ *                  It supports piping the key where the Pipe's value is an object like {key: 'username'} or the Pipe's value is simply the key ie {brand: 'piped', value: 'username'}
+ *                  If the higher order `key` param is used, then the pipe's value is ignored.
  * @param key 
  */
 export const getLocalStorageValue = 
   (key?: string): BotAction<string|null> => 
     async(page, ...injects) => {
-      // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
-      let pipedValue = getInjectsPipeValue(injects)
+      const pipedValue = getInjectsPipeValue(injects)
 
       if (!key) {
         if (pipedValue) {

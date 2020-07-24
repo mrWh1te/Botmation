@@ -8,7 +8,7 @@ import { createEmptyPipe, wrapValueInPipe } from 'botmation/helpers/pipe'
 describe('[Botmation] interfaces/pipe', () => {
 
 /**
- * @description    Type Gaurd for Piped values (values branded as `piped`)
+ * @description    Type Gaurd for Piped values (values branded as `Pipe`)
  * @param value 
  */
 

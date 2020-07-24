@@ -1,4 +1,4 @@
-import { unpipeInjects, getInjectsPipeOrEmptyPipe, createEmptyPipe, wrapValueInPipe, injectsHavePipe, getInjectsPipeValue } from "botmation/helpers/pipe"
+import { unpipeInjects, getInjectsPipeOrEmptyPipe, createEmptyPipe, wrapValueInPipe, injectsHavePipe, getInjectsPipeValue, pipeInjects } from "botmation/helpers/pipe"
 
 
 /**
@@ -91,27 +91,18 @@ describe('[Botmation] helpers/pipe', () => {
     expect(getInjectsPipeValue(injectsOnlyPipeNumber)).toEqual(5)
   })
 
+  it('pipeInjects() should return the injects provided with a Pipe at the end', () => {
+    // safe fallbacks for missing Pipe
+    expect(pipeInjects(injectsEmpty)).toEqual([{brand: 'Pipe'}])
+    expect(pipeInjects(injectsFullWithoutPipe)).toEqual(['hi', {test: 2}, 77, {brand: 'Pipe'}])
 
-  // it('enrichGoToPageOptions() should take a partial of Puppeteer.DirectNavigationOptions to overload the default values it provides in one as a safe fallback', () => {
-  //   const directNavigationOptionsEmpty: Partial<DirectNavigationOptions> = {}
-  //   const directNavigationOptionsWaitUntil: Partial<DirectNavigationOptions> = {waitUntil: 'domcontentloaded'}
+    // unpiping injects, empty pipe
+    expect(pipeInjects(injectsOnlyEmptyPipe)).toEqual([{brand: 'Pipe'}])
+    expect(pipeInjects(injectsFullWithEmptyPipe)).toEqual(['hi', {test: 2}, 77, {brand: 'Pipe'}])
 
-  //   const enrichDirectNavigationOptionsFromUndefined = enrichGoToPageOptions()
-  //   const enrichDirectNavigationOptionsFromEmpty = enrichGoToPageOptions(directNavigationOptionsEmpty)
-  //   const enrichDirectNavigationOptionsFromWaitUntil = enrichGoToPageOptions(directNavigationOptionsWaitUntil)
-
-  //   // default cases (safe fallbacks)
-  //   expect(enrichDirectNavigationOptionsFromUndefined).toEqual({
-  //     waitUntil: 'networkidle0'
-  //   })
-  //   expect(enrichDirectNavigationOptionsFromEmpty).toEqual({
-  //     waitUntil: 'networkidle0'
-  //   })
-
-  //   // overwriting default
-  //   expect(enrichDirectNavigationOptionsFromWaitUntil).toEqual({
-  //     waitUntil: 'domcontentloaded'
-  //   })
-  // })
+    // with value
+    expect(pipeInjects(injectsFullWithPipeNumber)).toEqual(['hi', {test: 2}, 77, {brand: 'Pipe', value: 5}])
+    expect(pipeInjects(injectsOnlyPipeNumber)).toEqual([{brand: 'Pipe', value: 5}])
+  })
 
 })

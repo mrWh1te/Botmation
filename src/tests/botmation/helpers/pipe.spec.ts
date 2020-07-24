@@ -1,4 +1,4 @@
-import { unpipeInjects, getInjectsPipeOrEmptyPipe } from "botmation/helpers/pipe"
+import { unpipeInjects, getInjectsPipeOrEmptyPipe, createEmptyPipe, wrapValueInPipe } from "botmation/helpers/pipe"
 
 
 /**
@@ -38,7 +38,33 @@ describe('[Botmation] helpers/pipe', () => {
     expect(getInjectsPipeOrEmptyPipe(injectsFullWithEmptyPipe)).toEqual({brand: 'Pipe'})
 
     expect(getInjectsPipeOrEmptyPipe(injectsFullWithPipeNumber)).toEqual({brand: 'Pipe', value: 5})
+  })
 
+  it('createEmptyPipe() should create an empty Pipe', () => {
+    expect(createEmptyPipe()).toEqual({brand: 'Pipe'})
+  })
+
+  it('wrapValueInPipe() should wrap value in a Pipe with a safe fallback for missing value, being an empty Pipe', () => {
+    expect(wrapValueInPipe()).toEqual({brand: 'Pipe'})
+    expect(wrapValueInPipe(undefined)).toEqual({brand: 'Pipe'})
+    expect(wrapValueInPipe(5)).toEqual({brand: 'Pipe', value: 5})
+    expect(wrapValueInPipe('dog')).toEqual({brand: 'Pipe', value: 'dog'})
+    expect(wrapValueInPipe(true)).toEqual({brand: 'Pipe', value: true})
+    expect(wrapValueInPipe({test: 22})).toEqual({brand: 'Pipe', value: {test: 22}})
+    
+    // Testing the ability of Pipe value being a Function
+    const getNumber1 = () => 1
+
+    // test code
+    const testPipe = wrapValueInPipe(getNumber1)
+    expect(testPipe.brand).toEqual('Pipe')
+    
+    // either value is undefined to break the test
+    expect(testPipe.value).not.toBeUndefined()
+    // or we run this test that we want to check
+    if (testPipe.value) {
+      expect(testPipe.value()).toEqual(1)
+    }
   })
 
 

@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { goTo, waitForNavigation } from 'botmation/actions/navigation'
+import { goTo, waitForNavigation, goBack, goForward, reload } from 'botmation/actions/navigation'
 import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 import { click } from 'botmation/actions/input'
 
@@ -15,7 +15,10 @@ describe('[Botmation] actions/navigation', () => {
   const mockPage = {
     goto: jest.fn(),
     url: jest.fn(() => BASE_URL),
-    waitForNavigation: jest.fn()
+    waitForNavigation: jest.fn(),
+    goBack: jest.fn(),
+    goForward: jest.fn(),
+    reload: jest.fn()
   } as any as Page
 
   beforeAll(async() => {
@@ -35,6 +38,24 @@ describe('[Botmation] actions/navigation', () => {
     await waitForNavigation(mockPage)
 
     expect(mockPage.waitForNavigation).toBeCalled()
+  })
+
+  it('should call Puppeteer Page goBack()', async() => {
+    await goBack()(mockPage)
+
+    expect(mockPage.goBack).toBeCalled()
+  })
+
+  it('should call Puppeteer Page goForward()', async() => {
+    await goForward()(mockPage)
+
+    expect(mockPage.goForward).toBeCalled()
+  })
+
+  it('should call Puppeteer Page reload()', async() => {
+    await reload()(mockPage)
+
+    expect(mockPage.reload).toBeCalled()
   })
 
   //

@@ -66,7 +66,7 @@ describe('[Botmation] helpers/pipe', () => {
     expect(testPipe.brand).toEqual('Pipe')
     
     // either value is undefined to break the test
-    expect(testPipe.value).not.toBeUndefined()
+    expect(testPipe.value).not.toBeFalsy()
     // or we run this test that we want to check
     if (testPipe.value) {
       expect(testPipe.value()).toEqual(1)

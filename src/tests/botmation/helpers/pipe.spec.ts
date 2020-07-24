@@ -1,4 +1,4 @@
-import { unpipeInjects, getInjectsPipeOrEmptyPipe, createEmptyPipe, wrapValueInPipe } from "botmation/helpers/pipe"
+import { unpipeInjects, getInjectsPipeOrEmptyPipe, createEmptyPipe, wrapValueInPipe, injectsHavePipe } from "botmation/helpers/pipe"
 
 
 /**
@@ -65,6 +65,14 @@ describe('[Botmation] helpers/pipe', () => {
     if (testPipe.value) {
       expect(testPipe.value()).toEqual(1)
     }
+  })
+
+  it('injectsHavePipe() should return TRUE only if the provided injects have a Pipe, otherwise it returns FALSE', () => {
+    expect(injectsHavePipe(injectsEmpty)).toEqual(false)
+    expect(injectsHavePipe(injectsFullWithoutPipe)).toEqual(false)
+    expect(injectsHavePipe(injectsOnlyEmptyPipe)).toEqual(true)
+    expect(injectsHavePipe(injectsFullWithEmptyPipe)).toEqual(true)
+    expect(injectsHavePipe(injectsFullWithPipeNumber)).toEqual(true)
   })
 
 

@@ -1,6 +1,6 @@
 import chalk, { Chalk } from 'chalk'
 
-import { prependSpacing, appendSpacing, logMessage } from 'botmation/helpers/console'
+import { prependSpacing, appendSpacing, logMessage, logWarning, logError, logPipeValue } from 'botmation/helpers/console'
 
 /**
  * @description   Console Helpers
@@ -9,6 +9,7 @@ describe('[Botmation] helpers/console', () => {
   let logs: any[]
 
   const HELLO_DOG_COPY = 'Hello dog'
+  const EMPTY_STRING = ''
 
   beforeAll(() => {
     console.log = function() {
@@ -48,80 +49,69 @@ describe('[Botmation] helpers/console', () => {
     expect(appendCopy7Size).toEqual('Hello dog       ')
   })
 
+  // The following tests focus on "message" alignment for consistency across types of log*()
   it('has logMessage() for logging a success themed string to console', () => {
     const successMessage = 'Success'
-    const emptyMessage = ''
 
     logMessage(successMessage)
-    logMessage(emptyMessage)
+    logMessage(EMPTY_STRING)
 
     expect(logs[0]).toEqual(' Log:      Success')
     expect(logs[1]).toEqual(' Log:      ')
   })
 
-// /**
-//  * @description  Log a warning themed string to console
-//  * @param warning 
-//  */
-// export const logWarning = (warning: string) => 
-//   console.log(
-//     warningTheme(' Warning: ') + prependSpacing(warning, 1)
-//   )
-// /**
-//  * @description  Log an error themed string to console
-//  * @param error 
-//  */
-// export const logError = (error: string) =>
-//   console.log(
-//     errorTheme(appendSpacing(' Error:', 3)) + prependSpacing(error, 1)
-//   )
+  it('has logWarning() for logging a warning themed string to console', () => {
+    const warningMessage = 'Careful'
 
-// /**
-//  * @description  Log a piped themed value to console with support for value types: undefined, object, boolean, function, number, and string
-//  * @param value Pipe.value
-//  */  
-// export const logPipeValue = (value: any) => {
-//   if (value === undefined) {
-//     console.log(
-//       pipedTheme(appendSpacing(' - pipe:', 2)) + prependSpacing('Empty', 1)
-//     )
-//   }
-//   if (typeof value === 'object' || typeof value === 'boolean' || typeof value === 'function') {
-//     console.log(
-//       pipedTheme(appendSpacing(' - pipe:', 2)) + prependSpacing(JSON.stringify(value), 1)
-//     )
-//   }
-//   if (typeof value === 'number' || typeof value === 'string') {
-//     console.log(
-//       pipedTheme(appendSpacing(' - pipe:', 2)) + prependSpacing(value + '', 1)
-//     )
-//   }
-// }
+    logWarning(warningMessage)
+    logWarning(EMPTY_STRING)
 
+    expect(logs[0]).toEqual(' Warning:  Careful')
+    expect(logs[1]).toEqual(' Warning:  ')
+  })
 
+  it('has logError() for logging an error themed string to console', () => {
+    const errorMessage = 'Missing'
 
-  // it('should log a message to console', async () => {
-  //   await log('example message')(page)
+    logError(errorMessage)
+    logError(EMPTY_STRING)
 
-  //   // Get around the Chalk styling
-  //   expect(logs[0][0]).toEqual(expect.stringMatching('Log:'))
-  //   expect(logs[0][0]).toEqual(expect.stringMatching('example message'))
-  // })
+    expect(logs[0]).toEqual(' Error:    Missing')
+    expect(logs[1]).toEqual(' Error:    ')
+  })
 
-  // it('should log a warning to console', async () => {    
-  //   await warning('example warning')(page)
+  it('has logPipeValue() for logging an error themed string to console', () => {
+    const undefinedValue = undefined
+    const stringValue = 'a string'
+    const numberValue = 5
+    const functionValue = () => 0
+    const objectValue = {}
+    const trueBooleanValue = true
+    const falseBooleanValue = false
 
-  //   // Get around the Chalk styling
-  //   expect(logs[0][0]).toEqual(expect.stringMatching('Warning:'))
-  //   expect(logs[0][0]).toEqual(expect.stringMatching('example warning'))
-  // })
+    logPipeValue(EMPTY_STRING)
+    expect(logs[0]).toEqual(' - pipe:   ')
 
-  // it('should log an error to console', async () => {    
-  //   await error('example error')(page)
+    logPipeValue(undefinedValue)
+    expect(logs[1]).toEqual(' - pipe:   Empty')
 
-  //   // Get around the Chalk styling
-  //   expect(logs[0][0]).toEqual(expect.stringMatching('Error:'))
-  //   expect(logs[0][0]).toEqual(expect.stringMatching('example error'))
-  // })
+    logPipeValue(stringValue)
+    expect(logs[2]).toEqual(' - pipe:   a string')
+
+    logPipeValue(numberValue)
+    expect(logs[3]).toEqual(' - pipe:   5')
+
+    logPipeValue(functionValue)
+    expect(logs[4]).toEqual(' - pipe:   () => 0')
+
+    logPipeValue(objectValue)
+    expect(logs[5]).toEqual(' - pipe:   {}')
+
+    logPipeValue(trueBooleanValue)
+    expect(logs[6]).toEqual(' - pipe:   true')
+
+    logPipeValue(falseBooleanValue)
+    expect(logs[7]).toEqual(' - pipe:   false')
+  })
 
 })

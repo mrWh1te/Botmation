@@ -41,19 +41,21 @@ export const logError = (error: string) =>
  * @param value Pipe.value
  */  
 export const logPipeValue = (value: any) => {
-  if (value === undefined) {
-    console.log(
-      pipeTheme(appendSpacing(' - pipe:', 2)) + prependSpacing('Empty', 1)
-    )
-  }
-  if (typeof value === 'object' || typeof value === 'boolean' || typeof value === 'function') {
-    console.log(
-      pipeTheme(appendSpacing(' - pipe:', 2)) + prependSpacing(JSON.stringify(value), 1)
-    )
-  }
   if (typeof value === 'number' || typeof value === 'string') {
     console.log(
       pipeTheme(appendSpacing(' - pipe:', 2)) + prependSpacing(value + '', 1)
+    )
+  } else if (typeof value === 'boolean' || typeof value === 'function') {
+    console.log(
+      pipeTheme(appendSpacing(' - pipe:', 2)) + prependSpacing(value.toString(), 1)
+    )
+  } else if (typeof value === 'object') {
+    console.log(
+      pipeTheme(appendSpacing(' - pipe:', 2)) + prependSpacing(JSON.stringify(value), 1)
+    )
+  } else if (value === undefined) {
+    console.log(
+      pipeTheme(appendSpacing(' - pipe:', 2)) + prependSpacing('Empty', 1)
     )
   }
 }

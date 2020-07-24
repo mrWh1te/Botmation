@@ -12,7 +12,7 @@ import { getInjectsPipeValue } from "botmation/helpers/pipe"
  *                 If the Pipe is missing from the `injects`, undefined will be past into the mapFunction, like an empty Pipe
  * @param mapFunction pure function to change the piped value to something else
  */
-export const map = <R extends PipeValue = PipeValue>(mapFunction: (pipedValue?: PipeValue) => R): BotAction<R> => 
+export const map = <R extends PipeValue = PipeValue>(mapFunction: (pipedValue: R) => R): BotAction<R> => 
   async (page, ...injects) => 
     mapFunction(getInjectsPipeValue(injects))
     

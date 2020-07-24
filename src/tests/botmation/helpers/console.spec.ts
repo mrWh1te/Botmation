@@ -1,6 +1,5 @@
-import chalk, { Chalk } from 'chalk'
-
 import { prependSpacing, appendSpacing, logMessage, logWarning, logError, logPipeValue } from 'botmation/helpers/console'
+import { mockChalkTheme } from "../../mocks/chalk-theme"
 
 /**
  * @description   Console Helpers
@@ -53,8 +52,8 @@ describe('[Botmation] helpers/console', () => {
   it('has logMessage() for logging a success themed string to console', () => {
     const successMessage = 'Success'
 
-    logMessage(successMessage)
-    logMessage(EMPTY_STRING)
+    logMessage(successMessage, mockChalkTheme)
+    logMessage(EMPTY_STRING, mockChalkTheme)
 
     expect(logs[0]).toEqual(' Log:      Success')
     expect(logs[1]).toEqual(' Log:      ')
@@ -63,8 +62,8 @@ describe('[Botmation] helpers/console', () => {
   it('has logWarning() for logging a warning themed string to console', () => {
     const warningMessage = 'Careful'
 
-    logWarning(warningMessage)
-    logWarning(EMPTY_STRING)
+    logWarning(warningMessage, mockChalkTheme)
+    logWarning(EMPTY_STRING, mockChalkTheme)
 
     expect(logs[0]).toEqual(' Warning:  Careful')
     expect(logs[1]).toEqual(' Warning:  ')
@@ -73,8 +72,8 @@ describe('[Botmation] helpers/console', () => {
   it('has logError() for logging an error themed string to console', () => {
     const errorMessage = 'Missing'
 
-    logError(errorMessage)
-    logError(EMPTY_STRING)
+    logError(errorMessage, mockChalkTheme)
+    logError(EMPTY_STRING, mockChalkTheme)
 
     expect(logs[0]).toEqual(' Error:    Missing')
     expect(logs[1]).toEqual(' Error:    ')
@@ -89,28 +88,28 @@ describe('[Botmation] helpers/console', () => {
     const trueBooleanValue = true
     const falseBooleanValue = false
 
-    logPipeValue(EMPTY_STRING)
+    logPipeValue(EMPTY_STRING, mockChalkTheme)
     expect(logs[0]).toEqual(' - pipe:   ')
 
-    logPipeValue(undefinedValue)
+    logPipeValue(undefinedValue, mockChalkTheme)
     expect(logs[1]).toEqual(' - pipe:   Empty')
 
-    logPipeValue(stringValue)
+    logPipeValue(stringValue, mockChalkTheme)
     expect(logs[2]).toEqual(' - pipe:   a string')
 
-    logPipeValue(numberValue)
+    logPipeValue(numberValue, mockChalkTheme)
     expect(logs[3]).toEqual(' - pipe:   5')
 
-    logPipeValue(functionValue)
+    logPipeValue(functionValue, mockChalkTheme)
     expect(logs[4]).toEqual(' - pipe:   () => 0')
 
-    logPipeValue(objectValue)
+    logPipeValue(objectValue, mockChalkTheme)
     expect(logs[5]).toEqual(' - pipe:   {}')
 
-    logPipeValue(trueBooleanValue)
+    logPipeValue(trueBooleanValue, mockChalkTheme)
     expect(logs[6]).toEqual(' - pipe:   true')
 
-    logPipeValue(falseBooleanValue)
+    logPipeValue(falseBooleanValue, mockChalkTheme)
     expect(logs[7]).toEqual(' - pipe:   false')
   })
 

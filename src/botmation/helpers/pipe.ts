@@ -38,7 +38,7 @@ export const createEmptyPipe = (): EmptyPipe => wrapValueInPipe()
  * @param value 
  */
 export const wrapValueInPipe = <P = any>(value?: P): Pipe<P> =>  ({
-  brand: 'piped',
+  brand: 'Pipe',
   value
 })
 

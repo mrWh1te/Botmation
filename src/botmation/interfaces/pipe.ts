@@ -4,7 +4,7 @@ import { PipeValue } from "botmation/types/pipe-value"
  * @description    The last inject of a piped BotAction (ran inside pipe()()) is a Pipe object whose `value` key is set to the value returned by the last BotAction in the pipe()()
  */
 export interface Pipe<V = PipeValue> {
-  brand: 'piped',
+  brand: 'Pipe',
   value?: V
 }
 
@@ -19,7 +19,7 @@ export const isPipe = <V extends PipeValue = PipeValue>(value: any): value is Pi
   }
 
   // check type gaurd
-  if (value.brand && value.brand === 'piped') {
+  if (value.brand && value.brand === 'Pipe') {
     return true
   }
 

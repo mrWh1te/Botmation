@@ -12,14 +12,18 @@ import { FORM_SUBMIT_BUTTON_SELECTOR } from 'tests/selectors'
  *                The factory methods here return BotAction's for the bots to input into the page as User
  */
 describe('[Botmation] actions/navigation', () => {
-  const mockPage = {
-    goto: jest.fn(),
-    url: jest.fn(() => BASE_URL),
-    waitForNavigation: jest.fn(),
-    goBack: jest.fn(),
-    goForward: jest.fn(),
-    reload: jest.fn()
-  } as any as Page
+  let mockPage: Page
+
+  beforeEach(() => {
+    mockPage = {
+      goto: jest.fn(),
+      url: jest.fn(() => BASE_URL),
+      waitForNavigation: jest.fn(),
+      goBack: jest.fn(),
+      goForward: jest.fn(),
+      reload: jest.fn()
+    } as any as Page
+  })
 
   beforeAll(async() => {
     await page.goto(BASE_URL, enrichGoToPageOptions())
@@ -32,6 +36,15 @@ describe('[Botmation] actions/navigation', () => {
 
     expect(mockPage.url).toBeCalled() // are we checking the URL before requesting to go to it to prevent unnecessary requests?
     expect(mockPage.goto).toBeCalledWith('http://localhost:8080/example.html', enrichGoToPageOptions()) // are we providing default options, is the action relaying the correct url
+  })
+
+  it('should call puppeteer\'s page goto() method only if the URL requested is different', async() => {
+    // mockPage.url() returns BASE_URL, so same URL in all 3 tests:
+    await goTo(BASE_URL)(mockPage)
+    await goTo(BASE_URL)(mockPage)
+    await goTo(BASE_URL)(mockPage)
+
+    expect(mockPage.goto).toBeCalledTimes(0)
   })
 
   it('should call puppeteer\'s waitForNavigation method', async() => {    

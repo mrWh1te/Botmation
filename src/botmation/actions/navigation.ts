@@ -2,7 +2,6 @@ import { DirectNavigationOptions, NavigationOptions } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-actions'
 import { enrichGoToPageOptions } from '../helpers/navigation'
-import { logWarning } from '../helpers/console'
 
 /**
  * @description   Go to url provided in the current page
@@ -16,7 +15,6 @@ export const goTo = (url: string, goToOptions?: Partial<DirectNavigationOptions>
 
     // same url check
     if (page.url() === url) {
-      logWarning('[goTo()] url requested is already active')
       return
     }
 

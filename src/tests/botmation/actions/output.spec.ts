@@ -4,7 +4,7 @@ import { promises as fs, Stats } from 'fs'
 import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 
 import { BASE_URL } from 'tests/urls'
-import { botFileOptions } from 'tests/mocks/bot-file-options.mock'
+import { botFileOptions } from 'tests/mocks/bot-file-options'
 
 import { screenshot, screenshotAll } from 'botmation/actions/output'
 import { getFileUrl } from 'botmation/helpers/files'

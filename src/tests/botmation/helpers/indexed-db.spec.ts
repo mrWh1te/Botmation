@@ -23,7 +23,7 @@ describe('[Botmation] helpers/indexed-db', () => {
     const value = 'test-value-1'
 
     await setIndexedDBStoreValue(databaseName, databaseVersion, databaseStoreName, key, value)
-    expect(getIndexedDBStoreValue(databaseName, databaseVersion, databaseStoreName, key)).resolves.toEqual('test-value-1')
+    await expect(getIndexedDBStoreValue(databaseName, databaseVersion, databaseStoreName, key)).resolves.toEqual('test-value-1')
   })
 
 })

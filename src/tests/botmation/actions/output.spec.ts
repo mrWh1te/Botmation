@@ -6,8 +6,8 @@ import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 import { BASE_URL } from 'tests/urls'
 import { botFileOptions } from 'tests/mocks/bot-file-options'
 
-import { screenshot, screenshotAll } from 'botmation/actions/output'
-import { getFileUrl } from 'botmation/helpers/files'
+import { screenshot, screenshotAll, savePDF } from 'botmation/actions/output'
+import { getFileUrl, enrichBotFileOptionsWithDefaults } from 'botmation/helpers/files'
 
 /**
  * @description   Output BotAction's
@@ -17,6 +17,7 @@ import { getFileUrl } from 'botmation/helpers/files'
  */
 describe('[Botmation] actions/output', () => {
   const SCREENSHOT_FILENAME = 'test-screenshot-1'
+  const PDF_FILENAME = 'test-pdf-1'
 
   let mockPage: Page
 
@@ -28,7 +29,8 @@ describe('[Botmation] actions/output', () => {
     mockPage = {
       screenshot: jest.fn(),
       url: jest.fn(() => ''),
-      goto: jest.fn()
+      goto: jest.fn(),
+      pdf: jest.fn()
     } as any as Page
   })
 
@@ -61,14 +63,35 @@ describe('[Botmation] actions/output', () => {
   })
 
   //
+  // savePDF() Integration
+  it('should call Puppeteer Page.pdf() with correct params', async() => {
+    await savePDF('example-pdf-filename')(mockPage, enrichBotFileOptionsWithDefaults({pdfs_directory: 'pdf'}))
+    expect(mockPage.pdf).toHaveBeenNthCalledWith(1, {path: './pdf/example-pdf-filename.pdf', format: 'A4'})
+  })
+
+  //
+  // savePDF() unit test
+  it('should create a PDF in the pdfs directory with the provided filename', async() => {
+    await savePDF(PDF_FILENAME)(page, botFileOptions)
+
+    await expect(fs.stat(getFileUrl(botFileOptions.pdfs_directory, botFileOptions) + '/test-pdf-1.pdf')).resolves.toBeInstanceOf(Stats) // rejects if file not found
+  })
+
+  //
   // Clean up
   afterAll(async() => {
     // The screenshot() unit-test creates a specific file, let's delete it, to prevent future false positive's
-    const fileUrl = getFileUrl(botFileOptions.screenshots_directory, botFileOptions, SCREENSHOT_FILENAME) + '.png'
+    const screenshotFileUrl = getFileUrl(botFileOptions.screenshots_directory, botFileOptions, SCREENSHOT_FILENAME) + '.png'
 
-    const TEST_SCREENSHOT_FILE_EXISTS = await fs.stat(fileUrl)
+    const TEST_SCREENSHOT_FILE_EXISTS = await fs.stat(screenshotFileUrl)
     if (TEST_SCREENSHOT_FILE_EXISTS) {
-      await fs.unlink(fileUrl)
+      await fs.unlink(screenshotFileUrl)
+    }
+
+    const pdfFileUrl = getFileUrl(botFileOptions.pdfs_directory, botFileOptions, PDF_FILENAME) + '.pdf'
+    const TEST_PDF_FILE_EXISTS = await fs.stat(pdfFileUrl)
+    if (TEST_PDF_FILE_EXISTS) {
+      await fs.unlink(pdfFileUrl)
     }
   })
 })

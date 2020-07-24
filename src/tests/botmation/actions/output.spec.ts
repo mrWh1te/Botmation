@@ -1,4 +1,5 @@
 import { Page } from 'puppeteer'
+import { promises as fs } from 'fs'
 
 import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 
@@ -6,7 +7,7 @@ import { BASE_URL } from 'tests/urls'
 import { botFileOptions } from 'tests/mocks/bot-file-options.mock'
 
 import { screenshot, screenshotAll } from 'botmation/actions/output'
-import { fileExist, deleteFile, getFileUrl } from 'botmation/helpers/files'
+import { fileExist, getFileUrl } from 'botmation/helpers/files'
 
 /**
  * @description   Output BotAction's
@@ -65,9 +66,9 @@ describe('[Botmation] actions/output', () => {
     // The screenshot() unit-test creates a specific file, let's delete it, to prevent future false positive's
     const fileUrl = getFileUrl(botFileOptions.screenshots_directory, botFileOptions, SCREENSHOT_FILENAME) + '.png'
 
-    const TEST_SCREENSHOT_FILE_EXISTS = await fileExist(fileUrl)
+    const TEST_SCREENSHOT_FILE_EXISTS = await fs.stat(fileUrl)
     if (TEST_SCREENSHOT_FILE_EXISTS) {
-      await deleteFile(fileUrl)
+      await fs.unlink(fileUrl)
     }
   })
 })

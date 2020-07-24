@@ -1,7 +1,8 @@
 import { Page } from 'puppeteer'
+import { promises as fs } from 'fs'
 
 import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
-import { fileExist, deleteFile, getFileUrl } from 'botmation/helpers/files'
+import { getFileUrl } from 'botmation/helpers/files'
 import { saveCookies, loadCookies } from 'botmation/actions/cookies'
 import { BotFileOptions } from 'botmation/interfaces/bot-file-options'
 
@@ -78,9 +79,9 @@ describe('[Botmation] actions/cookies', () => {
     // The saveCookies() unit-test creates a specific file, let's delete it, to prevent future false positive's
     const cookiesFileUrl = getFileUrl(BOT_FILE_OPTIONS.cookies_directory, BOT_FILE_OPTIONS) +  COOKIES_FILENAME + '.json'
 
-    const TEST_COOKIES_FILE_EXISTS = await fileExist(cookiesFileUrl)
+    const TEST_COOKIES_FILE_EXISTS = await fs.stat(cookiesFileUrl)
     if (TEST_COOKIES_FILE_EXISTS) {
-      await deleteFile(cookiesFileUrl)
+      await fs.unlink(cookiesFileUrl)
     }
   })
 })

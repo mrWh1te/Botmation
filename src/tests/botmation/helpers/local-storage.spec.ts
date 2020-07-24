@@ -5,7 +5,7 @@ import { setLocalStorageKeyValue, getLocalStorageKeyValue, removeLocalStorageIte
 Object.defineProperty(global, 'localStorage', { value: createMockLocalStorage() })
 
 /**
- * @description   Console Helpers
+ * @description   Local Storage Helpers
  */
 describe('[Botmation] helpers/local-storage', () => {
 

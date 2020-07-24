@@ -1,5 +1,5 @@
 import { Page } from 'puppeteer'
-import { promises as fs } from 'fs'
+import { promises as fs, Stats } from 'fs'
 
 import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 import { getFileUrl } from 'botmation/helpers/files'
@@ -52,7 +52,7 @@ describe('[Botmation] actions/cookies', () => {
     await saveCookies(COOKIES_FILENAME)(mockPage, BOT_FILE_OPTIONS, wrapValueInPipe())
 
     expect(mockPage.cookies).toBeCalled()
-    await expect(fileExist(getFileUrl(BOT_FILE_OPTIONS.cookies_directory, BOT_FILE_OPTIONS) + '/test-cookies-1.json')).resolves.toEqual(true)
+    await expect(fs.stat(getFileUrl(BOT_FILE_OPTIONS.cookies_directory, BOT_FILE_OPTIONS) + '/test-cookies-1.json')).resolves.toBeInstanceOf(Stats)
   })
 
   //

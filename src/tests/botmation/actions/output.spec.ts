@@ -1,5 +1,5 @@
 import { Page } from 'puppeteer'
-import { promises as fs } from 'fs'
+import { promises as fs, Stats } from 'fs'
 
 import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 
@@ -7,7 +7,7 @@ import { BASE_URL } from 'tests/urls'
 import { botFileOptions } from 'tests/mocks/bot-file-options.mock'
 
 import { screenshot, screenshotAll } from 'botmation/actions/output'
-import { fileExist, getFileUrl } from 'botmation/helpers/files'
+import { getFileUrl } from 'botmation/helpers/files'
 
 /**
  * @description   Output BotAction's
@@ -45,7 +45,7 @@ describe('[Botmation] actions/output', () => {
   it('should create a PNG file in the screenshots directory with the provided filename', async() => {
     await screenshot(SCREENSHOT_FILENAME)(page, botFileOptions)
 
-    await expect(fileExist(getFileUrl(botFileOptions.screenshots_directory, botFileOptions) + '/test-screenshot-1.png')).resolves.toEqual(true)
+    await expect(fs.stat(getFileUrl(botFileOptions.screenshots_directory, botFileOptions) + '/test-screenshot-1.png')).resolves.toBeInstanceOf(Stats) // rejects if file not found
   })
 
   //

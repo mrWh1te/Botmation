@@ -1,4 +1,4 @@
-import { unpipeInjects, getInjectsPipeOrEmptyPipe, createEmptyPipe, wrapValueInPipe, injectsHavePipe } from "botmation/helpers/pipe"
+import { unpipeInjects, getInjectsPipeOrEmptyPipe, createEmptyPipe, wrapValueInPipe, injectsHavePipe, getInjectsPipeValue } from "botmation/helpers/pipe"
 
 
 /**
@@ -18,16 +18,21 @@ describe('[Botmation] helpers/pipe', () => {
 
   // Pipe with Value
   const injectsFullWithPipeNumber = [...injectsFullWithoutPipe, {brand: 'Pipe', value: 5}]
+  // new
+  const injectsOnlyPipeNumber = [{brand: 'Pipe', value: 5}]
 
   it('unpipeInjects() should safely unpipe injects which is to return the injects with the Pipe value at the end, not the Pipe and if missing the Pipe, return undefined like an Empty Pipe', () => {
     // safe fallbacks for missing Pipe
     expect(unpipeInjects(injectsEmpty)).toEqual([undefined])
     expect(unpipeInjects(injectsFullWithoutPipe)).toEqual(['hi', {test: 2}, 77, undefined])
 
-    // unpiping injects
+    // unpiping injects, empty pipe
     expect(unpipeInjects(injectsOnlyEmptyPipe)).toEqual([undefined])
     expect(unpipeInjects(injectsFullWithEmptyPipe)).toEqual(['hi', {test: 2}, 77, undefined])
+
+    // with value
     expect(unpipeInjects(injectsFullWithPipeNumber)).toEqual(['hi', {test: 2}, 77, 5])
+    expect(unpipeInjects(injectsOnlyPipeNumber)).toEqual([5])
   })
 
   it('getInjectsPipeOrEmptyPipe() should get a Pipe from provided injects or provide a safe fallback for missing Pipe, an empty one', () => {
@@ -38,6 +43,7 @@ describe('[Botmation] helpers/pipe', () => {
     expect(getInjectsPipeOrEmptyPipe(injectsFullWithEmptyPipe)).toEqual({brand: 'Pipe'})
 
     expect(getInjectsPipeOrEmptyPipe(injectsFullWithPipeNumber)).toEqual({brand: 'Pipe', value: 5})
+    expect(getInjectsPipeOrEmptyPipe(injectsOnlyPipeNumber)).toEqual({brand: 'Pipe', value: 5})
   })
 
   it('createEmptyPipe() should create an empty Pipe', () => {
@@ -73,6 +79,16 @@ describe('[Botmation] helpers/pipe', () => {
     expect(injectsHavePipe(injectsOnlyEmptyPipe)).toEqual(true)
     expect(injectsHavePipe(injectsFullWithEmptyPipe)).toEqual(true)
     expect(injectsHavePipe(injectsFullWithPipeNumber)).toEqual(true)
+    expect(injectsHavePipe(injectsOnlyPipeNumber)).toEqual(true)
+  })
+
+  it('getInjectsPipeValue() should return the injects Pipe\'s value unless missing a Pipe, then the safe flalback is undefined like an empty Pipe', () => {
+    expect(getInjectsPipeValue(injectsEmpty)).toEqual(undefined)
+    expect(getInjectsPipeValue(injectsFullWithoutPipe)).toEqual(undefined)
+    expect(getInjectsPipeValue(injectsOnlyEmptyPipe)).toEqual(undefined)
+    expect(getInjectsPipeValue(injectsFullWithEmptyPipe)).toEqual(undefined)
+    expect(getInjectsPipeValue(injectsFullWithPipeNumber)).toEqual(5)
+    expect(getInjectsPipeValue(injectsOnlyPipeNumber)).toEqual(5)
   })
 
 

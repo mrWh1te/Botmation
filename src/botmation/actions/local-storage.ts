@@ -14,6 +14,7 @@ import {
  */
 export const clearAllLocalStorage: BotAction = 
   async (page) => {
+    /* istanbul ignore next */
     await page.evaluate(
       clearLocalStorage
     )
@@ -38,6 +39,7 @@ export const removeLocalStorageItem =
         }
       }
 
+      /* istanbul ignore next */
       await page.evaluate(
         removeLocalStorageKeyValue,
         key ? key : 'missing-key'
@@ -73,6 +75,7 @@ export const setLocalStorageItem =
         }
       }
 
+      /* istanbul ignore next */
       await page.evaluate(
         setLocalStorageKeyValue,
         key ? key : 'missing-key',
@@ -101,6 +104,7 @@ export const getLocalStorageItem =
         }
       }
 
+      /* istanbul ignore next */
       return await page.evaluate(
         getLocalStorageKeyValue,
         key ? key : 'missing-key'

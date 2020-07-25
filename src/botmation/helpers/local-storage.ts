@@ -24,7 +24,7 @@ export const getLocalStorageKeyValue = (key: string): string|null =>
  * @description    Delete key/value pair in Local Storage
  * @param key 
  */
-export const removeLocalStorageItem = (key: string) => {
+export const removeLocalStorageKeyValue = (key: string) => {
   localStorage.removeItem(key)
 }
 

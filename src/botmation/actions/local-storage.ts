@@ -4,7 +4,7 @@ import { getInjectsPipeValue } from "botmation/helpers/pipe"
 import { 
   getLocalStorageKeyValue,
   setLocalStorageKeyValue,
-  removeLocalStorageItem,
+  removeLocalStorageKeyValue,
   clearLocalStorage
 } from "botmation/helpers/local-storage"
 
@@ -23,23 +23,23 @@ export const clearAllLocalStorage: BotAction =
  * @description    Deletes one Key/Value pair from Local Storage
  * @param key 
  */
-export const removeLocalStorageKey = 
+export const removeLocalStorageItem = 
   (key?: string): BotAction =>
     async(page, ...injects) => {
-      const pipedValue = getInjectsPipeValue(injects)
+      const pipeValue = getInjectsPipeValue(injects)
 
       if (!key) {
-        if (pipedValue) {
-          if (pipedValue.key) {
-            key = pipedValue.key
+        if (pipeValue) {
+          if (pipeValue.key) {
+            key = pipeValue.key
           } else {
-            key = pipedValue
+            key = pipeValue
           }
         }
       }
 
       await page.evaluate(
-        removeLocalStorageItem,
+        removeLocalStorageKeyValue,
         key ? key : 'missing-key'
       )
     }
@@ -51,20 +51,25 @@ export const removeLocalStorageKey =
  * @param key 
  * @param value 
  */
-export const setLocalStorageValue = 
+export const setLocalStorageItem = 
   (key?: string, value?: string): BotAction => 
     async(page, ...injects) => {
-      const pipedValue = getInjectsPipeValue(injects)
+      const pipeValue = getInjectsPipeValue(injects)
 
       if (!value) {
-        if (pipedValue) {
-          // idea here is that the piped value is anothe object with keys {key: '', value: ''} -> to map as what we are setting in the DB
-          if (pipedValue.value) {
-            value = pipedValue.value
+        if (pipeValue) {
+          // idea here is that the Pipe value is anothe object with keys {key: '', value: ''} -> to map as what we are setting in the DB
+          if (pipeValue.value) {
+            value = pipeValue.value
           } else {
             // with potential fallback that the Pipe's value IS the value to set, and we'll get the key from the BotAction's higher order `key` param
-            value = pipedValue
+            value = pipeValue
           }
+        }
+      }
+      if (!key) {
+        if (pipeValue && pipeValue.key) {
+          key = pipeValue.key
         }
       }
 
@@ -81,17 +86,17 @@ export const setLocalStorageValue =
  *                  If the higher order `key` param is used, then the pipe's value is ignored.
  * @param key 
  */
-export const getLocalStorageValue = 
+export const getLocalStorageItem = 
   (key?: string): BotAction<string|null> => 
     async(page, ...injects) => {
-      const pipedValue = getInjectsPipeValue(injects)
+      const pipeValue = getInjectsPipeValue(injects)
 
       if (!key) {
-        if (pipedValue) {
-          if (pipedValue.key) {
-            key = pipedValue.key
+        if (pipeValue) {
+          if (pipeValue.key) {
+            key = pipeValue.key
           } else {
-            key = pipedValue
+            key = pipeValue
           }
         }
       }

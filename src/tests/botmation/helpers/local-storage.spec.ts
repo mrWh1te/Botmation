@@ -1,5 +1,5 @@
 import { createMockLocalStorage } from '../../mocks/local-storage'
-import { setLocalStorageKeyValue, getLocalStorageKeyValue, removeLocalStorageItem, clearLocalStorage } from 'botmation/helpers/local-storage'
+import { setLocalStorageKeyValue, getLocalStorageKeyValue, removeLocalStorageKeyValue, clearLocalStorage } from 'botmation/helpers/local-storage'
 
 // Setup Mock Local Storage
 Object.defineProperty(global, 'localStorage', { value: createMockLocalStorage() })
@@ -41,7 +41,7 @@ describe('[Botmation] helpers/local-storage', () => {
   })
 
   // Test removing (deleting) key/value pair by key
-  it('removes key/value pair by key in Local Storage with removeLocalStorageItem()', () => {
+  it('removes key/value pair by key in Local Storage with removeLocalStorageKeyValue()', () => {
     const key = 'some-key-3'
     const value = 'some-value-3'
 
@@ -49,7 +49,7 @@ describe('[Botmation] helpers/local-storage', () => {
     localStorage.setItem(key, value)
 
     // run test code
-    removeLocalStorageItem(key)
+    removeLocalStorageKeyValue(key)
 
     // confirm results
     const gotValue = localStorage.getItem('some-key-3')

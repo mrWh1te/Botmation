@@ -32,8 +32,6 @@ import { logError } from 'botmation/helpers/console'
       log('Screenshot of Google.com saved')
     )
     
-    // close up
-    await browser.close()
   } catch (error) {
     logError(error)
     

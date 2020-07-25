@@ -26,6 +26,8 @@
   },
   "keywords": [
     "social",
+    "web",
+    "browser",
     "automation",
     "login",
     "likes",
@@ -35,7 +37,7 @@
     "crawler",
     "puppeteer",
     "declarative",
-    "imperative"
+    "functional"
   ],
   "author": "Michael Lage",
   "license": "MIT",

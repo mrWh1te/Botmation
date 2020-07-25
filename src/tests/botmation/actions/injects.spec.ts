@@ -6,7 +6,7 @@ import { Page } from "puppeteer"
 // Mock the Assembly-Lines Module so when injects() imports it
 // we can test how injects() calls the exported assemblyLine higher order function
 // particularly, interested in the inner 3rd call, the actual BotAction to determine 
-// if or not we have properly set up the injects based on the provided injects, both old and new
+// if or not we have properly set up the injects based on the provided injects, both past and new
 const mockAssemblyLineBotAction = jest.fn()
 jest.mock('botmation/actions/assembly-lines', () => {
   // Require the original module to not be mocked...
@@ -15,7 +15,7 @@ jest.mock('botmation/actions/assembly-lines', () => {
   return {
     // __esModule: true, // Use it when dealing with esModules
     ...originalModule,
-    assemblyLine: () => () => mockAssemblyLineBotAction
+    assemblyLine: () => () => mockAssemblyLineBotAction // notice, only mocking the last function call, where `injects` is set
   }
 })
 
@@ -30,8 +30,8 @@ describe('[Botmation] actions/injects', () => {
   let mockPage = {} as any as Page
   
   //
-  // Basic Integration Tests
-  it('should set the injects of the inner assembly-line with the new ones at the start', async () => {
+  // Basic Unit Tests
+  it('should set the injects of the inner assembly-line correctly based on new and past injects provided', async () => {
     // no injects
     await injects()()(mockPage)
 

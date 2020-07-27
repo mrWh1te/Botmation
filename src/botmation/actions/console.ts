@@ -26,8 +26,8 @@ export const log = <R = void>(message?: string): BotAction<R> => async (page, ..
     let pipedValue = getInjectsPipeValue(injects)
     logPipeValue(pipedValue)
     console.log('\n')
+    
     return pipedValue
-
   } else {
      // To put margin between this logged message in console and the next
     //  Increase log read-ability

@@ -81,6 +81,7 @@ describe('[Botmation] helpers/console', () => {
 
   it('has logPipeValue() for logging an error themed string to console', () => {
     const undefinedValue = undefined
+    const symbolValue = Symbol('symbol-test')
     const stringValue = 'a string'
     const numberValue = 5
     const functionValue = () => 0
@@ -111,6 +112,9 @@ describe('[Botmation] helpers/console', () => {
 
     logPipeValue(falseBooleanValue, mockChalkTheme)
     expect(logs[7]).toEqual(' - pipe:   false')
+
+    logPipeValue(symbolValue, mockChalkTheme)
+    expect(logs[8]).toEqual(' - pipe:   Symbol(symbol-test)')
   })
 
 })

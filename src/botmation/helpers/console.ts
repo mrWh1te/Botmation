@@ -36,22 +36,33 @@ export const logError = (error: string, errorTheme: Chalk = chalk.bgRed) =>
  * @param value Pipe.value
  */  
 export const logPipeValue = (value: any, pipeTheme: Chalk = chalk.bgBlue) => {
-  if (typeof value === 'number' || typeof value === 'string') {
-    console.log(
-      pipeTheme(appendSpacing(' - pipe:', 2)) + prependSpacing(value + '', 1)
-    )
-  } else if (typeof value === 'boolean' || typeof value === 'function') {
-    console.log(
-      pipeTheme(appendSpacing(' - pipe:', 2)) + prependSpacing(value.toString(), 1)
-    )
-  } else if (typeof value === 'object') {
-    console.log(
-      pipeTheme(appendSpacing(' - pipe:', 2)) + prependSpacing(JSON.stringify(value), 1)
-    )
-  } else if (value === undefined) {
-    console.log(
-      pipeTheme(appendSpacing(' - pipe:', 2)) + prependSpacing('Empty', 1)
-    )
+  switch(typeof value) {
+    case 'number':
+    case 'string':
+      console.log(
+        pipeTheme(appendSpacing(' - pipe:', 2)) + prependSpacing(value + '', 1)
+      )
+    break
+
+    case 'boolean':
+    case 'function':
+    case 'symbol':
+      console.log(
+        pipeTheme(appendSpacing(' - pipe:', 2)) + prependSpacing(value.toString(), 1)
+      )
+    break
+
+    case 'object':
+      console.log(
+        pipeTheme(appendSpacing(' - pipe:', 2)) + prependSpacing(JSON.stringify(value), 1)
+      )
+    break
+
+    case 'undefined':
+    default:
+      console.log(
+        pipeTheme(appendSpacing(' - pipe:', 2)) + prependSpacing('Empty', 1)
+      )
   }
 }
 

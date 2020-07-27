@@ -37,6 +37,8 @@ describe('[Botmation] helpers/assets', () => {
     const fileUrl1 = getFileUrl('1', botFileOptionsUndefinedParentDirectory)
     const fileUrl1Parent = getFileUrl('1', botFileOptionsWithParentDirectory)
     const fileUrl1ParentFileName = getFileUrl('1', botFileOptionsWithParentDirectory, 'example.json')
+
+    const fileUrl2 = getFileUrl('', botFileOptionsWithParentDirectory) // missed edge-case
     
     // fail safe cases to monitor
     expect(fileUrl00).toEqual('./')
@@ -46,6 +48,9 @@ describe('[Botmation] helpers/assets', () => {
     expect(fileUrl1).toEqual('./1')
     expect(fileUrl1Parent).toEqual('./parent/1')
     expect(fileUrl1ParentFileName).toEqual('./parent/1/example.json')
+
+    // missed
+    expect(fileUrl2).toEqual('./parent')
   })
 
   it('enrichBotFileOptionsWithDefaults() should take a partial of any kind to overload the default values it provides for a BotFileOptions', () => {

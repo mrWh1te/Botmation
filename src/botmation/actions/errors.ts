@@ -2,7 +2,7 @@ import { BotAction } from "botmation/interfaces"
 import { PipeValue } from "../types/pipe-value"
 import { injectsHavePipe } from "botmation/helpers/pipe"
 import { logError } from "botmation/helpers/console"
-import { pipe, chain } from "./assembly-lines"
+import { pipe, chain } from "botmation/actions/assembly-lines"
 
 /**
  * @description    Higher-order BotAction to run actions in a try/catch block that logs errors with the provided errorBlockName
@@ -10,10 +10,10 @@ import { pipe, chain } from "./assembly-lines"
  *                 Helps with finding thrown errors, as you can nest errors()() closer and closer to the action in complex sequences
  * 
  *                 Supports chain()() and pipe()()
- * @param errorBlockName errors caught will be logged with this name
+ * @param errorsBlockName errors caught will be logged with this name
  */
 export const errors =
-  (errorBlockName: string = 'Anonymous') => 
+  (errorsBlockName: string = 'Unnamed Errors Block') => 
     (...actions: BotAction<PipeValue|void>[]): BotAction<any> => 
       async(page, ...injects) => {
         try {
@@ -23,7 +23,7 @@ export const errors =
   
           await chain(...(actions as BotAction[]))(page, ...injects)
         } catch(error) {
-          logError('caught in ' + errorBlockName)
+          logError('caught in ' + errorsBlockName)
           console.error(error)
           console.log('\n') // space between this message block and the next
 

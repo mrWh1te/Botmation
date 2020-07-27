@@ -1,7 +1,6 @@
 import { BotAction } from '../interfaces/bot-actions'
 import { logMessage, logWarning, logError, logPipeValue } from '../helpers/console'
 import { injectsHavePipe, getInjectsPipeValue } from 'botmation/helpers/pipe'
-import { PipeValue } from 'botmation/types/pipe-value'
 
 /**
  * @description   The following Actions are specific to the NodeJS Console, intended for the Developer.

@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 
-import { BotFilesInjects } from '../types/bot-files-injects'
-import { BotIndexedDBInjects } from 'botmation/types/bot-indexed-db-injects'
+import { BotFilesInjects } from '../types/bot-files-inject'
+import { BotIndexedDBInjects } from 'botmation/types/bot-indexed-db-inject'
 
 /**
  * @description    All BotAction Interfaces

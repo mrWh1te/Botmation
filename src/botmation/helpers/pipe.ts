@@ -3,21 +3,48 @@
  */
 
 import { isPipe, Pipe, EmptyPipe } from "botmation/interfaces/pipe"
+import { PipeValue } from "botmation/types/pipe-value"
 
 /**
- * @description    Unpipe the injects by returning the injects but with the value from the Pipe object, instead of the Pipe, with a safe fallback
- *                 If no Pipe detected, it will return the injects with undefined appended, as if an empty pipe (safe fallback)
+ * @description    Unpipe the injects by returning the injects with the Pipe value first, followed by the injects
+ *                 If no Pipe is detected, it will return the injects with an undefined value prepended, as if the injects had an empty pipe (safe fallback)
  * @param injectsMaybePiped 
- * @returns        Unpiped Injects
+ * @param minimumInjectsCount     Default is 0
+ *                                When you're not sure if the injects have the correct number your hoping for, you can make your code safer by specifying a count here to autofill with minimumInjectsFill (default undefined)
+ *                                ie IndexedDB BotAction for getting a key/value, we're not sure if the injects will be there, but we can set a minimum here, to keep the code clean
+ * @param minimumInjectsFill      Default is undefined
+ *                                If you're using minimumInjectsCount, you can specify what the injects are replaced with, when missing
+ *                                This is helpful when your injects are objects and you want to test properties/functions without testing the objects themselves
+ * @returns        Unpiped Injects, with the pipe value first
  */
-export const unpipeInjects = (injectsMaybePiped: any[]): any[] => {
-  if (injectsHavePipe(injectsMaybePiped)) {
-    // return the injects, but unpipe the value by returning the Pipe object's value
-    return [...injectsMaybePiped.slice(0, injectsMaybePiped.length - 1), injectsMaybePiped[injectsMaybePiped.length - 1].value]
-  } else {
-    // return the injects with an undefined value appended, as if we unpiped an empty pipe (safe fallback)
-    return [...injectsMaybePiped, undefined]
+export const unpipeInjects = <P extends PipeValue = PipeValue>(injectsMaybePiped: any[], minimumInjectsCount = 0, minimumInjectsFill = undefined): [P, ...any[]] => {
+  if (minimumInjectsCount > 0 && injectsMaybePiped.length < minimumInjectsCount) {
+    const minimumInjects = []
+    for(let i = 0; i < minimumInjectsCount; i++) {
+      // check for inject AND that the inject isn't a Pipe
+      if (injectsMaybePiped[i] && !isPipe(injectsMaybePiped[i])) {
+        minimumInjects.push(injectsMaybePiped[i])
+      } else {
+        minimumInjects.push(minimumInjectsFill)
+      }
+    }
+
+    return [getInjectsPipeValue(injectsMaybePiped), ...minimumInjects]
   }
+
+  return [getInjectsPipeValue(injectsMaybePiped), ...removePipe(injectsMaybePiped)]
+}
+
+/**
+ * @description    Removes Pipe from injects if the injects has one, then returns injects
+ * @param injectsv 
+ */
+export const removePipe = (injects: any[]): any[] => {
+  if (injectsHavePipe(injects)) {
+    return injects.slice(0, injects.length - 1)
+  }
+
+  return injects
 }
 
 /**

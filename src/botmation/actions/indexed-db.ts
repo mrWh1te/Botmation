@@ -5,6 +5,9 @@ import { getIndexedDBStoreValue, setIndexedDBStoreValue } from '../helpers/index
 import { injects } from './injects'
 import { PipeValue } from '../types/pipe-value'
 import { pipe } from './assembly-lines'
+import { BotIndexedDBInjects } from 'botmation/types/bot-indexed-db-inject'
+import { isObjectWithKey, isObjectWithKeyValue } from 'botmation/types/objects'
+import { getQueryKey, getQueryKeyValue } from 'botmation/types/database'
 
 /**
  * @description    It's a higher-order BotAction that sets injects for identifying information of one IndexedDB store
@@ -18,7 +21,7 @@ export const indexedDBStore = (databaseName: string, databaseVersion: number, st
   (...actions: BotAction<PipeValue|void>[]): BotAction<any> =>
     pipe()(
       injects(
-        databaseName, databaseVersion, storeName
+        [databaseName, databaseVersion, storeName] as BotIndexedDBInjects
       )(...actions)
     )
       
@@ -34,14 +37,14 @@ export const indexedDBStore = (databaseName: string, databaseVersion: number, st
  * @param databaseVersion 
  */
 export const setIndexedDBValue = 
-  (key?: string, value?: any, storeName?: string, databaseName?: string, databaseVersion?: number): BotIndexedDBAction<void> => 
+  (key?: string, value?: any, storeName?: string, databaseVersion?: number, databaseName?: string): BotIndexedDBAction<void> => 
     async(page, ...injects) => {
-      const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = unpipeInjects(injects)
+      const [pipedValue, injectDatabaseName, injectDatabaseVersion, injectStoreName] = unpipeInjects<getQueryKeyValue>(injects, 3)
 
       if (!value) {
         if (pipedValue) {
           // idea here is that the piped value is another object with keys {key: '', value: ''} -> to map as what we are setting in the DB
-          if (pipedValue.value) {
+          if (isObjectWithKeyValue(pipedValue)) {
             value = pipedValue.value
           } else {
             value = pipedValue
@@ -49,7 +52,7 @@ export const setIndexedDBValue =
         }
       }
       if (!key) {
-        if (pipedValue && pipedValue.key) {
+        if (isObjectWithKey(pipedValue)) {
           key = pipedValue.key
         }
       }
@@ -74,17 +77,16 @@ export const setIndexedDBValue =
  * @param databaseVersion 
  */
 export const getIndexedDBValue = 
-  (key?: string, storeName?: string, databaseName?: string, databaseVersion?: number): BotIndexedDBAction<PipeValue> => 
+  (key?: string, storeName?: string, databaseVersion?: number, databaseName?: string): BotIndexedDBAction<PipeValue> => 
     async(page, ...injects) => {
-      // it works, the types of the Injects are known, but resolved to the end types so devs dont get to know more....
-      const [injectDatabaseName, injectDatabaseVersion, injectStoreName, pipedValue] = unpipeInjects(injects)
+      const [pipeValue, injectDatabaseName, injectDatabaseVersion, injectStoreName] = unpipeInjects<getQueryKey>(injects, 3)
 
       if (!key) {
-        if (pipedValue) {
-          if (pipedValue.key) {
-            key = pipedValue.key
+        if (pipeValue) {
+          if (isObjectWithKey(pipeValue)) {
+            key = pipeValue.key
           } else {
-            key = pipedValue
+            key = pipeValue
           }
         }
       }

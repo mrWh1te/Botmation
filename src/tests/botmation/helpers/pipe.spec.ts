@@ -21,17 +21,17 @@ describe('[Botmation] helpers/pipe', () => {
   // new
   const injectsOnlyPipeNumber = [{brand: 'Pipe', value: 5}]
 
-  it('unpipeInjects() should safely unpipe injects which is to return the injects with the Pipe value at the end, not the Pipe and if missing the Pipe, return undefined like an Empty Pipe', () => {
+  it('unpipeInjects() should safely unpipe injects which is to return the injects with the Pipe value at the start, and if missing a Pipe, return undefined like an Empty Pipe', () => {
     // safe fallbacks for missing Pipe
     expect(unpipeInjects(injectsEmpty)).toEqual([undefined])
-    expect(unpipeInjects(injectsFullWithoutPipe)).toEqual(['hi', {test: 2}, 77, undefined])
+    expect(unpipeInjects(injectsFullWithoutPipe)).toEqual([undefined, 'hi', {test: 2}, 77])
 
     // unpiping injects, empty pipe
     expect(unpipeInjects(injectsOnlyEmptyPipe)).toEqual([undefined])
-    expect(unpipeInjects(injectsFullWithEmptyPipe)).toEqual(['hi', {test: 2}, 77, undefined])
+    expect(unpipeInjects(injectsFullWithEmptyPipe)).toEqual([undefined, 'hi', {test: 2}, 77])
 
     // with value
-    expect(unpipeInjects(injectsFullWithPipeNumber)).toEqual(['hi', {test: 2}, 77, 5])
+    expect(unpipeInjects(injectsFullWithPipeNumber)).toEqual([5, 'hi', {test: 2}, 77])
     expect(unpipeInjects(injectsOnlyPipeNumber)).toEqual([5])
   })
 

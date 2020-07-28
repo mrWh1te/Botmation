@@ -1,11 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { click, type } from 'botmation/actions/input'
-
-import { FORM_SUBMIT_BUTTON_SELECTOR, FORM_TEXT_INPUT_SELECTOR } from 'tests/selectors'
-import { BASE_URL } from 'tests/urls'
 import { map, pipeValue, emptyPipe } from 'botmation/actions/pipe'
-import { pipe } from 'botmation'
 
 /**
  * @description   Pipe BotAction's

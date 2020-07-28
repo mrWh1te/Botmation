@@ -7,14 +7,14 @@ import { BotFileOptions } from "botmation/interfaces"
 // Mock the Injects Module so when files() imports it
 // we can test how injects() is called within files()
 // particularly interested in the first param, an enriched BotFileOptions
-jest.mock('botmation/actions/injects', () => {
+jest.mock('botmation/actions/inject', () => {
   // Require the original module to not be mocked...
-  const originalModule = jest.requireActual('botmation/actions/injects')
+  const originalModule = jest.requireActual('botmation/actions/inject')
 
   return {
     // __esModule: true, // Use it when dealing with esModules
     ...originalModule,
-    injects: jest.fn(() => () => () => {})
+    inject: jest.fn(() => () => () => {})
   }
 })
 
@@ -44,24 +44,24 @@ describe('[Botmation] actions/files', () => {
     }
     await files(botfileOptions)()(mockPage)
 
-    const mockInjectsMethod = require('botmation/actions/injects').injects
+    const mockInjectMethod = require('botmation/actions/inject').inject
     
-    expect(mockInjectsMethod).toHaveBeenNthCalledWith(1, {
+    expect(mockInjectMethod).toHaveBeenNthCalledWith(1, {
       screenshots_directory: '',
       cookies_directory: '',
       pdfs_directory: ''
     })
-    expect(mockInjectsMethod).toHaveBeenNthCalledWith(2, {
+    expect(mockInjectMethod).toHaveBeenNthCalledWith(2, {
       screenshots_directory: 'screenshots',
       cookies_directory: '',
       pdfs_directory: ''
     })
-    expect(mockInjectsMethod).toHaveBeenNthCalledWith(3, {
+    expect(mockInjectMethod).toHaveBeenNthCalledWith(3, {
       screenshots_directory: '',
       cookies_directory: 'cookies',
       pdfs_directory: ''
     })
-    expect(mockInjectsMethod).toHaveBeenNthCalledWith(4, {
+    expect(mockInjectMethod).toHaveBeenNthCalledWith(4, {
       parent_output_directory: 'parent',
       screenshots_directory: 's',
       cookies_directory: 'c',
@@ -71,7 +71,7 @@ describe('[Botmation] actions/files', () => {
 
   afterAll(() => {
     // unmock the module for other tests
-    jest.unmock('botmation/actions/injects')
+    jest.unmock('botmation/actions/inject')
   })
   
 })

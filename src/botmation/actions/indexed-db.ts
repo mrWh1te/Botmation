@@ -1,11 +1,9 @@
 
 import { BotAction, BotIndexedDBAction } from '../interfaces/bot-actions'
-import { unpipeInjects } from '../helpers/pipe'
+import { unpipeInjects, pipeInjects } from '../helpers/pipe'
 import { getIndexedDBStoreValue, setIndexedDBStoreValue } from '../helpers/indexed-db'
-import { injects } from './injects'
+import { inject } from './inject'
 import { PipeValue } from '../types/pipe-value'
-import { pipe } from './assembly-lines'
-import { BotIndexedDBInjects } from 'botmation/types/bot-indexed-db-inject'
 import { isObjectWithKey, isObjectWithValue } from 'botmation/types/objects'
 import { getQueryKey, getQueryKeyValue } from 'botmation/types/database'
 
@@ -13,17 +11,18 @@ import { getQueryKey, getQueryKeyValue } from 'botmation/types/database'
  * @description    It's a higher-order BotAction that sets injects for identifying information of one IndexedDB store
  *                 Database name & version, and Store name are accepted then injected into all provided actions
  *                 Provided actions can overwride the injected params, on an individual basis
+ *                 Parent assembly-line injects are not passed in
  * @param databaseName 
  * @param databaseVersion 
  * @param storeName 
  */
 export const indexedDBStore = (databaseName: string, databaseVersion: number, storeName: string) =>
   (...actions: BotAction<PipeValue|void>[]): BotAction<any> =>
-    pipe()(
-      injects(
-        [databaseName, databaseVersion, storeName] as BotIndexedDBInjects
-      )(...actions)
-    )
+    async(page, ...injects) => 
+      inject(
+        databaseName, databaseVersion, storeName
+      )(...actions)(page, ...pipeInjects(injects))
+      
       
 
 /**

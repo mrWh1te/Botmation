@@ -1,12 +1,17 @@
 import { Page } from 'puppeteer'
 
-import { BASE_URL } from 'tests/urls'
 import { 
   setIndexedDBValue,
   getIndexedDBValue,
   indexedDBStore
 } from 'botmation/actions/indexed-db'
-import { BotIndexedDBInjects } from 'botmation/types/bot-indexed-db-inject'
+
+const mockInject3rdCall = jest.fn()
+jest.mock('botmation/actions/inject', () => {
+  return {
+    inject: jest.fn(() => () => mockInject3rdCall)
+  }
+})
 
 /**
  * @description   IndexedDB BotAction's
@@ -32,6 +37,24 @@ describe('[Botmation] actions/indexed-db', () => {
     mockPage = {
       evaluate: jest.fn()
     } as any as Page
+  })
+
+  it('indexedDBStore()() should set the first few injects as BotIndexedDBInjects from higher order params', async() => {
+    const injectsWithoutPipe = [25, 'hi', 'World']
+    let mockPage = {} as any as Page
+
+    await indexedDBStore(higherOrderDatabaseName, higherOrderDatabaseVersion, higherOrderStoreName)()(mockPage)
+    await indexedDBStore(higherOrderDatabaseName, higherOrderDatabaseVersion, higherOrderStoreName)()(mockPage, ...injectsWithoutPipe)
+    await indexedDBStore(higherOrderDatabaseName, higherOrderDatabaseVersion, higherOrderStoreName)()(mockPage, ...injectsWithoutPipe, {brand: 'Pipe', value: 'injects()()() test value'})
+
+    const {inject: mockInject} = require('botmation/actions/inject')
+    expect(mockInject).toHaveBeenNthCalledWith(1, 'higher-order-database-name', 1, 'higher-order-store-name')
+    expect(mockInject).toHaveBeenNthCalledWith(2, 'higher-order-database-name', 1, 'higher-order-store-name')
+    expect(mockInject).toHaveBeenNthCalledWith(3, 'higher-order-database-name', 1, 'higher-order-store-name')
+
+    expect(mockInject3rdCall).toHaveBeenNthCalledWith(1, {}, {brand: 'Pipe', value: undefined})
+    expect(mockInject3rdCall).toHaveBeenNthCalledWith(2, {}, 25, 'hi', 'World', {brand: 'Pipe', value: undefined})
+    expect(mockInject3rdCall).toHaveBeenNthCalledWith(3, {}, 25, 'hi', 'World', {brand: 'Pipe', value: 'injects()()() test value'})
   })
 
   //
@@ -129,24 +152,19 @@ describe('[Botmation] actions/indexed-db', () => {
     expect(mockPage.evaluate).toHaveBeenNthCalledWith(12, expect.any(Function), 'missing-db-name', 1, 'missing-store', 'missing-key')
   })
 
-  //
-  // Unit-Tests / E2E 
-  //   to confirm we are calling the correct Functions. The integration tests above dont have a way to check which anonymous functions ran.., this e2e helps confirm they are called
-  // it('should set a few key/value pairs, get the values by key, remove a key/value pair, fail safely in trying to get that key/value and clear all key/value pairs', async() => {
-  //   // Puppeteer page, load some URL
-  //   await page.goto(BASE_URL)
+  // E2E Test
+  // E2E test was resulting in a false fail from an error, see Issue: https://github.com/smooth-code/jest-puppeteer/issues/311
+  // it('should set a key/value pair in a new Database & Store, then update that value and get it again', async() => {
+  //   await setIndexedDBValue('a-key', 'a-value', 'a-store', 1, 'a-db')(page)
+  //   expect(getIndexedDBValue('a-key', 'a-store', 1, 'a-db')(page)).resolves.toEqual('a-value')
 
-  //   // 1. Create some key/value pairs in Local Storage
-  //   await setIndexedDBValue('key-1', 'value-1')(page)
-  //   await setIndexedDBValue('key-2', 'value-2')(page)
-  //   await setIndexedDBValue('key-3', 'value-3')(page)
+  //   await setIndexedDBValue('a-key', 'b-value', 'a-store', 1, 'a-db')(page)
+  //   expect(getIndexedDBValue('a-key', 'a-store', 1, 'a-db')(page)).resolves.toEqual('b-value')
 
-  //   // 2. Read in those newly created key/value pairs from Local Storage and test them
-  //   await expect(getIndexedDBValue('key-1')(page)).resolves.toEqual('value-1')
-  //   await expect(getIndexedDBValue('key-2')(page)).resolves.toEqual('value-2')
-  //   await expect(getIndexedDBValue('key-3')(page)).resolves.toEqual('value-3')
-
-  //   // 4. Safely returns null if key not found?
-  //   await expect(getIndexedDBValue('key-1')(page)).resolves.toEqual(null)
+  //   // if you were to add a new key/value pair, that would change the schema, therefore need to bump up db version number
   // })
+  
+  afterAll(() => {
+    jest.unmock('botmation/actions/inject')
+  })
 })

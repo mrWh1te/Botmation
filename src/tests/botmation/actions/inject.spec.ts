@@ -1,6 +1,6 @@
 
 
-import { injects } from "botmation/actions/injects"
+import { inject } from "botmation/actions/inject"
 import { Page } from "puppeteer"
 
 // Mock the Assembly-Lines Module so when injects() imports it
@@ -20,9 +20,9 @@ jest.mock('botmation/actions/assembly-lines', () => {
 })
 
 /**
- * @description   Injects BotAction
+ * @description   Inject BotAction
  */
-describe('[Botmation] actions/injects', () => {
+describe('[Botmation] actions/inject', () => {
 
   const newInjects = ['new1', 'new2']
   const pastInjects = ['past1', 'past2', 'past3']
@@ -33,13 +33,13 @@ describe('[Botmation] actions/injects', () => {
   // Basic Unit Tests
   it('should set the injects of the inner assembly-line correctly based on new and past injects provided', async () => {
     // no injects
-    await injects()()(mockPage)
+    await inject()()(mockPage)
 
     // new injects, but no past injects
-    await injects(...newInjects)()(mockPage)
+    await inject(...newInjects)()(mockPage)
 
     // new injects, and past injects
-    await injects(...newInjects)()(mockPage, ...pastInjects)
+    await inject(...newInjects)()(mockPage, ...pastInjects)
     
     expect(mockAssemblyLineBotAction).toHaveBeenNthCalledWith(1, {})
     expect(mockAssemblyLineBotAction).toHaveBeenNthCalledWith(2, {}, 'new1', 'new2')

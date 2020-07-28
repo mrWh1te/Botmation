@@ -12,7 +12,6 @@
  * @param key 
  * @param value 
  */
-/* istanbul ignore next */
 export function setIndexedDBStoreValue(databaseName: string, databaseVersion: number, storeName: string, key: string, value: any) {
   return new Promise((resolve, reject) => {
 
@@ -69,7 +68,6 @@ export function setIndexedDBStoreValue(databaseName: string, databaseVersion: nu
  * @param storeName 
  * @param key 
  */
-/* istanbul ignore next */
 export function getIndexedDBStoreValue(databaseName: string, databaseVersion: number, storeName: string, key: string) {
   return new Promise((resolve, reject) => {
     const openRequest = indexedDB.open(databaseName, databaseVersion)

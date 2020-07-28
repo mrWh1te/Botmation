@@ -44,7 +44,7 @@ describe('[Botmation] actions/files', () => {
     }
     await files(botfileOptions)()(mockPage)
 
-    const mockInjectMethod = require('botmation/actions/inject').inject
+    const {inject: mockInjectMethod} = require('botmation/actions/inject')
     
     expect(mockInjectMethod).toHaveBeenNthCalledWith(1, {
       screenshots_directory: '',

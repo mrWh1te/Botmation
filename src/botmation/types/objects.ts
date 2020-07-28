@@ -25,5 +25,5 @@ export const isObjectWithValue = (data: any): data is {value: any} => {
     return false
   }
 
-  return (typeof data === 'object' && data.value !== undefined)
+  return typeof data === 'object' && data.value !== undefined
 }

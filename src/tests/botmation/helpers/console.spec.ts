@@ -10,6 +10,8 @@ describe('[Botmation] helpers/console', () => {
   const HELLO_DOG_COPY = 'Hello dog'
   const EMPTY_STRING = ''
 
+  const originalConsoleLog = console.log
+
   beforeAll(() => {
     console.log = function() {
       logs.push(
@@ -115,6 +117,10 @@ describe('[Botmation] helpers/console', () => {
 
     logPipeValue(symbolValue, mockChalkTheme)
     expect(logs[8]).toEqual(' - pipe:   Symbol(symbol-test)')
+  })
+
+  afterAll(() => {
+    console.log = originalConsoleLog
   })
 
 })

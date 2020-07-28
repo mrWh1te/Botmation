@@ -7,6 +7,7 @@ import { log, warning, error } from 'botmation/actions/console'
  */
 describe('[Botmation] actions/console', () => {
   let logs: any[]
+  const originalConsoleLog = console.log
 
   beforeAll(() => {
     // We can do Integration instead, by jest.fn() the log, then checking we call it with params
@@ -104,6 +105,10 @@ describe('[Botmation] actions/console', () => {
     expect(logs[1][0]).toEqual(expect.stringMatching('55'))
     
     expect(pipeValueReturned).toEqual(55)
+  })
+
+  afterAll(() => {
+    console.log = originalConsoleLog
   })
 
 })

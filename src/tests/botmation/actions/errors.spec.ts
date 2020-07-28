@@ -20,6 +20,8 @@ jest.mock('botmation/helpers/console', () => {
 describe('[Botmation] actions/errors', () => {
 
   let consoleErrorLog: any[] = []
+  const originalConsoleLog = console.log
+  const originalConsoleError = console.error
 
   beforeAll(() => {
     console.log = jest.fn()
@@ -101,6 +103,8 @@ describe('[Botmation] actions/errors', () => {
   afterAll(() => {
     // unmock the module for other tests
     jest.unmock('botmation/helpers/console')
+    console.log = originalConsoleLog
+    console.error = originalConsoleError
   })
   
 })

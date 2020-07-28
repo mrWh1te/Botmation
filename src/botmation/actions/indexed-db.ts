@@ -6,7 +6,7 @@ import { injects } from './injects'
 import { PipeValue } from '../types/pipe-value'
 import { pipe } from './assembly-lines'
 import { BotIndexedDBInjects } from 'botmation/types/bot-indexed-db-inject'
-import { isObjectWithKey, isObjectWithKeyValue } from 'botmation/types/objects'
+import { isObjectWithKey, isObjectWithValue } from 'botmation/types/objects'
 import { getQueryKey, getQueryKeyValue } from 'botmation/types/database'
 
 /**
@@ -44,7 +44,7 @@ export const setIndexedDBValue =
       if (!value) {
         if (pipedValue) {
           // idea here is that the piped value is another object with keys {key: '', value: ''} -> to map as what we are setting in the DB
-          if (isObjectWithKeyValue(pipedValue)) {
+          if (isObjectWithValue(pipedValue)) {
             value = pipedValue.value
           } else {
             value = pipedValue

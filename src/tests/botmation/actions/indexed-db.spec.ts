@@ -38,41 +38,54 @@ describe('[Botmation] actions/indexed-db', () => {
   // Basic Integration Tests
   //  - testing param support via higher order function call or injects
   //    - higher order values override corresponding injected values
-  // it('setIndexedDBValue() should call Page.evaluate() with a helper function and the correct values for key, value, storeName, databaseName, and databaseVersion', async() => {
-  //   // No injects, key/value comes from higher order func call
-  //   await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue)(mockPage)
+  it('setIndexedDBValue() should call Page.evaluate() with a helper function and the correct values for key, value, storeName, databaseName, and databaseVersion', async() => {
+    // no injects, all values come from higher order
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage)
 
-  //   // higher order key, value through Pipe
-  //   await setIndexedDBValue(undefined, higherOrderParamValue)(mockPage, {brand: 'Pipe', value: {key: injectedPipeParamKey}})
+    // varying BotIndexedDBInjects, all values come from higher order
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage, injectDatabaseName)
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage, injectDatabaseName, injectDatabaseVersion)
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName)
 
-  //   // injects value, key through Pipe (1 object for case of supporting Piping both key/value, and the other just value, no object for the case of shorter path in Piping key (not possible for value, in this particular BotAction)
-  //   await setIndexedDBValue(higherOrderParamKey)(mockPage, {brand: 'Pipe', value: {value: injectedPipeParamValue}})
-  //   await setIndexedDBValue(higherOrderParamKey)(mockPage, {brand: 'Pipe', value: injectedPipeParamValue})
+    // Full BotIndexedDBInjects with Pipe for `key`, higher order key overrides pipe provided
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName, {brand: 'Pipe', value: injectedPipeParamKey})
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName, {brand: 'Pipe', value: {key: injectedPipeParamKey}})
 
-  //   // key/value through Pipe, no higher order param
-  //   await setIndexedDBValue()(mockPage, {brand: 'Pipe', value: {key: injectedPipeParamKey, value: injectedPipeParamValue}})
+    // No higher order, so key & values comes from Pipe, other values from injects
+    await setIndexedDBValue()(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName, {brand: 'Pipe', value: {key: injectedPipeParamKey, value: injectedPipeParamValue}})
 
-  //   // nothing at all, safe fallbacks for key/value
-  //   await setIndexedDBValue()(mockPage)
+    // Mixes of higher order and injects
+    await setIndexedDBValue(higherOrderParamKey)(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName, {brand: 'Pipe', value: injectedPipeParamValue})
+    await setIndexedDBValue(higherOrderParamKey)(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName, {brand: 'Pipe', value: {value: injectedPipeParamValue}})
 
-  //   // Injects have Pipe with value, but higher order func call param overloads that value, without a higher-order key
-  //   await setIndexedDBValue(undefined, higherOrderParamValue)(mockPage, {brand: 'Pipe', value: {key: injectedPipeParamKey, value: injectedPipeParamValue}}) // key comes from injects, value ultimately comes from higher order
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue)(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName)
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName)(mockPage, injectDatabaseName, injectDatabaseVersion)
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseVersion)(mockPage, injectDatabaseName)
 
-  //   // Injects have Pipe with both key/value, but higher order func call param overloads the key
-  //   await setIndexedDBValue(higherOrderParamKey)(mockPage, {brand: 'Pipe', value: {key: injectedPipeParamKey, value: injectedPipeParamValue}}) // key ultimately comes from higher order, value comes from Pipe
+    // missing everything, safe fallbacks
+    await setIndexedDBValue()(mockPage)
 
-  //   // Expectations - higher-order params overwrites Pipe provided ones, always
-  //   expect(mockPage.evaluate).toHaveBeenNthCalledWith(1, expect.any(Function), 'higher-order-key', 'higher-order-value')
-  //   expect(mockPage.evaluate).toHaveBeenNthCalledWith(2, expect.any(Function), 'pipe-key', 'higher-order-value')
-  //   expect(mockPage.evaluate).toHaveBeenNthCalledWith(3, expect.any(Function), 'higher-order-key', 'pipe-value')
-  //   expect(mockPage.evaluate).toHaveBeenNthCalledWith(4, expect.any(Function), 'higher-order-key', 'pipe-value')
-  //   expect(mockPage.evaluate).toHaveBeenNthCalledWith(5, expect.any(Function), 'pipe-key', 'pipe-value')
-  //   expect(mockPage.evaluate).toHaveBeenNthCalledWith(6, expect.any(Function), 'missing-key', 'missing-value')
-  //   expect(mockPage.evaluate).toHaveBeenNthCalledWith(7, expect.any(Function), 'pipe-key', 'higher-order-value')
-  //   expect(mockPage.evaluate).toHaveBeenNthCalledWith(8, expect.any(Function), 'higher-order-key', 'pipe-value')
-  // })
+    // expectations
+    // higher order values override
+    expect(mockPage.evaluate).toHaveBeenNthCalledWith(1, expect.any(Function), 'higher-order-database-name', 1, 'higher-order-store-name', 'higher-order-key', 'higher-order-value')
+    expect(mockPage.evaluate).toHaveBeenNthCalledWith(2, expect.any(Function), 'higher-order-database-name', 1, 'higher-order-store-name', 'higher-order-key', 'higher-order-value')
+    expect(mockPage.evaluate).toHaveBeenNthCalledWith(3, expect.any(Function), 'higher-order-database-name', 1, 'higher-order-store-name', 'higher-order-key', 'higher-order-value')
+    expect(mockPage.evaluate).toHaveBeenNthCalledWith(4, expect.any(Function), 'higher-order-database-name', 1, 'higher-order-store-name', 'higher-order-key', 'higher-order-value')
+    expect(mockPage.evaluate).toHaveBeenNthCalledWith(5, expect.any(Function), 'higher-order-database-name', 1, 'higher-order-store-name', 'higher-order-key', 'higher-order-value')
+    expect(mockPage.evaluate).toHaveBeenNthCalledWith(6, expect.any(Function), 'higher-order-database-name', 1, 'higher-order-store-name', 'higher-order-key', 'higher-order-value')
 
-  it('getIndexedDBValue() should call Page.evaluate() with a helper function and the correct value for `key`', async() => {
+    expect(mockPage.evaluate).toHaveBeenNthCalledWith(7, expect.any(Function), 'inject-database-name', 2, 'inject-store-name', 'pipe-key', 'pipe-value')
+    expect(mockPage.evaluate).toHaveBeenNthCalledWith(8, expect.any(Function), 'inject-database-name', 2, 'inject-store-name', 'higher-order-key', 'pipe-value')
+    expect(mockPage.evaluate).toHaveBeenNthCalledWith(9, expect.any(Function), 'inject-database-name', 2, 'inject-store-name', 'higher-order-key', 'pipe-value') // ?
+
+    expect(mockPage.evaluate).toHaveBeenNthCalledWith(10, expect.any(Function), 'inject-database-name', 2, 'inject-store-name', 'higher-order-key', 'higher-order-value')
+    expect(mockPage.evaluate).toHaveBeenNthCalledWith(11, expect.any(Function), 'inject-database-name', 2, 'higher-order-store-name', 'higher-order-key', 'higher-order-value')
+    expect(mockPage.evaluate).toHaveBeenNthCalledWith(12, expect.any(Function), 'inject-database-name', 1, 'higher-order-store-name', 'higher-order-key', 'higher-order-value')
+
+    expect(mockPage.evaluate).toHaveBeenNthCalledWith(13, expect.any(Function), 'missing-db-name', 1, 'missing-store', 'missing-key', 'missing-value')
+  })
+
+  it('getIndexedDBValue() should call Page.evaluate() with a helper function and the correct values for key, storeName, databaseName, and databaseVersion', async() => {
     // no injects, all values come from higher order
     await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage)
 
@@ -89,7 +102,6 @@ describe('[Botmation] actions/indexed-db', () => {
     await getIndexedDBValue()(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName, {brand: 'Pipe', value: injectedPipeParamKey})
     await getIndexedDBValue()(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName, {brand: 'Pipe', value: {key: injectedPipeParamKey}})
 
-    // 9
     // Mixes of higher order and injects
     await getIndexedDBValue(higherOrderParamKey)(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName)
     await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName)(mockPage, injectDatabaseName, injectDatabaseVersion)
@@ -99,6 +111,7 @@ describe('[Botmation] actions/indexed-db', () => {
     await getIndexedDBValue()(mockPage)
 
     // expectations
+    // higher order values override
     expect(mockPage.evaluate).toHaveBeenNthCalledWith(1, expect.any(Function), 'higher-order-database-name', 1, 'higher-order-store-name', 'higher-order-key')
     expect(mockPage.evaluate).toHaveBeenNthCalledWith(2, expect.any(Function), 'higher-order-database-name', 1, 'higher-order-store-name', 'higher-order-key')
     expect(mockPage.evaluate).toHaveBeenNthCalledWith(3, expect.any(Function), 'higher-order-database-name', 1, 'higher-order-store-name', 'higher-order-key')

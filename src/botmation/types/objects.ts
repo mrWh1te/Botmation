@@ -13,26 +13,17 @@ export const isObjectWithKey = (data: any): data is {key: string} => {
     return false
   }
 
-  if (typeof data.key === 'string') {
-    return true
-  }
-
-  return false
+  return typeof data.key === 'string'
 }
 
 /**
- * @description    Is data provided an Object with `key` & `value` properties
- *                 ie setting data in a DB
+ * @description   Is data provided an Object with a `value` property
  * @param data 
  */
-export const isObjectWithKeyValue = (data: any): data is {key: string, value: any} => {
+export const isObjectWithValue = (data: any): data is {value: any} => {
   if (!data) {
     return false
   }
 
-  if (typeof data.key === 'string' && data.value) {
-    return true
-  }
-
-  return false
+  return typeof data === 'object' && data.value
 }

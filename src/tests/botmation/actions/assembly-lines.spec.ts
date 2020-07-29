@@ -36,6 +36,12 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(mockChainAction1).toHaveBeenNthCalledWith(1, {}, 2, 3, 5, 7, 11)
     expect(mockChainAction1).toHaveBeenNthCalledWith(2, {})
 
+    expect(mockChainAction2).toHaveBeenNthCalledWith(1, {}, 2, 3, 5, 7, 11)
+    expect(mockChainAction2).toHaveBeenNthCalledWith(2, {})
+
+    expect(mockChainAction3).toHaveBeenNthCalledWith(1, {}, 2, 3, 5, 7, 11)
+    expect(mockChainAction3).toHaveBeenNthCalledWith(2, {})
+
     expect(testResult1).toBeUndefined()
     expect(testResult2).toBeUndefined()
   })

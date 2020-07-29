@@ -73,7 +73,7 @@ describe('[Botmation] class', () => {
 
   //
   // set page
-  it('should have a mutator method for changing the page instance', async() => {
+  it('should have a mutator/accessor methods for changing the page instance and getting the instance', async() => {
     // Create bot with actual page
     const bot = new Botmation(page)
 
@@ -91,6 +91,10 @@ describe('[Botmation] class', () => {
     )
 
     expect(mockPage.click).toHaveBeenNthCalledWith(1, 'mock selector')
+
+    // test the get
+    bot.setPage(1337 as any as Page)
+    expect(bot.getPage()).toEqual(1337)
   })
 
   //

@@ -17,8 +17,9 @@ export function setIndexedDBStoreValue(databaseName: string, databaseVersion: nu
 
     const openRequest = indexedDB.open(databaseName, databaseVersion)
 
-    openRequest.onerror = function(this: IDBRequest<IDBDatabase>, ev: Event) { 
-      reject(this.error) 
+    openRequest.onerror = function(this: IDBRequest<IDBDatabase>, ev: Event) {
+      ev.stopPropagation()
+      return reject(this.error) 
     }
     openRequest.onupgradeneeded = function(this: IDBOpenDBRequest, ev: IDBVersionChangeEvent): any { 
       if (!this.result.objectStoreNames.contains(storeName)) {
@@ -37,16 +38,19 @@ export function setIndexedDBStoreValue(databaseName: string, databaseVersion: nu
         let store = db.createObjectStore(storeName)
         const storeRequest = store.put(value, key)
 
-        storeRequest.onerror = () => {
+        storeRequest.onerror = function(this: IDBRequest<IDBValidKey>, ev: Event) {
+          ev.stopPropagation()
           return reject()
         }
         storeRequest.onsuccess = () => {
+          db.close()
           return resolve()
         }
       } else {
-        db.onerror = () => { 
+        db.onerror = function(this: IDBDatabase, ev: Event) { 
           db.close()
-          return reject(this.error)
+          ev.stopPropagation()
+          return reject()
         }
   
         db.transaction(storeName, 'readwrite')
@@ -73,17 +77,19 @@ export function getIndexedDBStoreValue(databaseName: string, databaseVersion: nu
     const openRequest = indexedDB.open(databaseName, databaseVersion)
 
     openRequest.onerror = function(this: IDBRequest<IDBDatabase>, ev: Event) { 
+      ev.stopPropagation()
       reject(this.error) 
     }
-    openRequest.onupgradeneeded = function(this: IDBOpenDBRequest, ev: IDBVersionChangeEvent): any { 
-      this.result.createObjectStore(storeName)
-    }
+    // openRequest.onupgradeneeded = function(this: IDBOpenDBRequest, ev: IDBVersionChangeEvent): any { 
+    //   this.result.createObjectStore(storeName)
+    // }
 
     openRequest.onsuccess = function(this: IDBRequest<IDBDatabase>, ev: Event) {
       const db = this.result
 
       db.onerror = (err) => { 
-        db.close()
+        ev.stopPropagation()
+        // db.close()
         return reject(this.error) 
       }
 

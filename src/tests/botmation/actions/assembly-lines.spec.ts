@@ -1,5 +1,5 @@
 import { Page } from 'puppeteer'
-import { chainRunner, pipeRunner, pipeActionOrActions, chain } from 'botmation/actions/assembly-lines'
+import { chainRunner, pipeRunner, pipeActionOrActions, chain, pipe } from 'botmation/actions/assembly-lines'
 
 /**
  * @description   Assembly-Lines BotAction's
@@ -184,6 +184,82 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(mockAction1).toHaveBeenNthCalledWith(4, {}, 2, 3, 5, 7, 11)
 
     expect(mockAction1).not.toHaveBeenCalledTimes(5)
+  })
+
+  it('pipe() should run given actions efficiently in a pipe (values returned are Piped into subsequent actions), provide an empty Pipe, if the injects coming in do not have a Pipe and overwrite the initial past in Pipe value if given a value to pipe()', async() => {
+    const mockAction1 = jest.fn(() => Promise.resolve('apples'))
+    const mockAction2 = jest.fn(() => Promise.resolve('bananas'))
+    const mockAction3 = jest.fn(() => Promise.resolve('spinach'))
+
+    const valueToPipe = 'a-value-to-be-piped'
+
+    // 1. pipe, no actions
+    const testResult1 = await pipe()()(mockPage, {brand: 'Pipe'})
+    expect(testResult1).toBeUndefined()
+
+    // 2. pipe, 1 action, value to pipe
+    const testResult2 = await pipe(valueToPipe)(mockAction1)(mockPage, {brand: 'Pipe'})
+    expect(testResult2).toEqual('apples')
+    expect(mockAction1).toHaveBeenNthCalledWith(1, {}, {brand: 'Pipe', value: 'a-value-to-be-piped'})
+
+    // 3. pipe, 1 action, no value to pipe
+    const testResult3 = await pipe()(mockAction1)(mockPage, {brand: 'Pipe', value: 'oranges'})
+    expect(testResult3).toEqual('apples')
+    expect(mockAction1).toHaveBeenNthCalledWith(2, {}, {brand: 'Pipe', value: 'oranges'})
+
+    // 4. pipe, actions, value to pipe
+    const testResult4 = await pipe(valueToPipe)(mockAction1, mockAction2, mockAction3)(mockPage, {brand: 'Pipe', value: 'oranges'})
+    expect(testResult4).toEqual('spinach')
+    expect(mockAction1).toHaveBeenNthCalledWith(3, {}, {brand: 'Pipe', value: 'a-value-to-be-piped'})
+    expect(mockAction2).toHaveBeenNthCalledWith(1, {}, {brand: 'Pipe', value: 'apples'})
+    expect(mockAction3).toHaveBeenNthCalledWith(1, {}, {brand: 'Pipe', value: 'bananas'})
+
+    // 5. pipe, actions, no value to pipe
+    const testResult5 = await pipe()(mockAction1, mockAction2, mockAction3)(mockPage, {brand: 'Pipe', value: 'oranges'})
+    expect(testResult5).toEqual('spinach')
+    expect(mockAction1).toHaveBeenNthCalledWith(4, {}, {brand: 'Pipe', value: 'oranges'})
+    expect(mockAction2).toHaveBeenNthCalledWith(2, {}, {brand: 'Pipe', value: 'apples'})
+    expect(mockAction3).toHaveBeenNthCalledWith(2, {}, {brand: 'Pipe', value: 'bananas'})
+
+    // 6. no pipe, no actions
+    const testResult6 = await pipe()()(mockPage)
+    expect(testResult6).toBeUndefined()
+
+    // 7. no pipe, 1 action, value to pipe
+    const testResult7 = await pipe(valueToPipe)(mockAction1)(mockPage)
+    expect(testResult7).toEqual('apples')
+    expect(mockAction1).toHaveBeenNthCalledWith(5, {}, {brand: 'Pipe', value: 'a-value-to-be-piped'})
+
+    // 8. no pipe, 1 action, no value to pipe
+    const testResult8 = await pipe()(mockAction1)(mockPage)
+    expect(testResult8).toEqual('apples')
+    expect(mockAction1).toHaveBeenNthCalledWith(6, {}, {brand: 'Pipe', value: undefined})
+
+    // 9. no pipe, actions, value to pipe
+    const testResult9 = await pipe(valueToPipe)(mockAction1, mockAction2, mockAction3)(mockPage)
+    expect(testResult9).toEqual('spinach')
+    expect(mockAction1).toHaveBeenNthCalledWith(7, {}, {brand: 'Pipe', value: 'a-value-to-be-piped'})
+    expect(mockAction2).toHaveBeenNthCalledWith(3, {}, {brand: 'Pipe', value: 'apples'})
+    expect(mockAction3).toHaveBeenNthCalledWith(3, {}, {brand: 'Pipe', value: 'bananas'})
+
+    // 10. no pipe, actions, no value to pipe
+    const testResult10 = await pipe()(mockAction1, mockAction2, mockAction3)(mockPage)
+    expect(testResult10).toEqual('spinach')
+    expect(mockAction1).toHaveBeenNthCalledWith(8, {}, {brand: 'Pipe', value: undefined})
+    expect(mockAction2).toHaveBeenNthCalledWith(4, {}, {brand: 'Pipe', value: 'apples'})
+    expect(mockAction3).toHaveBeenNthCalledWith(4, {}, {brand: 'Pipe', value: 'bananas'})
+
+    // 11. pipe, 1 action, value to pipe, injects
+    const testResult11 = await pipe(valueToPipe)(mockAction1)(mockPage, 1, 3, 3, 7, {brand: 'Pipe', value: 'oranges'})
+    expect(testResult11).toEqual('apples')
+    expect(mockAction1).toHaveBeenNthCalledWith(9, {}, 1, 3, 3, 7, {brand: 'Pipe', value: 'a-value-to-be-piped'})
+
+    // 12. pipe, actions, value to pipe, injects
+    const testResult12 = await pipe(valueToPipe)(mockAction1, mockAction2, mockAction3)(mockPage, 1, 3, 3, 7, {brand: 'Pipe', value: 'oranges'})
+    expect(testResult12).toEqual('spinach')
+    expect(mockAction1).toHaveBeenNthCalledWith(10, {}, 1, 3, 3, 7, {brand: 'Pipe', value: 'a-value-to-be-piped'})
+    expect(mockAction2).toHaveBeenNthCalledWith(5, {}, 1, 3, 3, 7, {brand: 'Pipe', value: 'apples'})
+    expect(mockAction3).toHaveBeenNthCalledWith(5, {}, 1, 3, 3, 7, {brand: 'Pipe', value: 'bananas'})
   })
 
 })

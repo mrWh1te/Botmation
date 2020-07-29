@@ -1,5 +1,5 @@
 import { Page } from 'puppeteer'
-import { chainRunner, pipeRunner, pipeActionOrActions, chain, pipe } from 'botmation/actions/assembly-lines'
+import { chainRunner, pipeRunner, pipeActionOrActions, chain, pipe, assemblyLine } from 'botmation/actions/assembly-lines'
 
 /**
  * @description   Assembly-Lines BotAction's
@@ -171,6 +171,9 @@ describe('[Botmation] actions/assembly-lines', () => {
     // 5. no injects, no actions ?
     await chain()(mockPage)
 
+    // 6. injects, pipe, no actions
+    expect(chain()(mockPage, ...mockInjectsNoPipe, mockPipe)).resolves.toBeUndefined() // missing edge-case
+
     expect(mockAction1).toHaveBeenNthCalledWith(1, {}, 2, 3, 5, 7, 11)
     expect(mockAction2).toHaveBeenNthCalledWith(1, {}, 2, 3, 5, 7, 11)
     expect(mockAction3).toHaveBeenNthCalledWith(1, {}, 2, 3, 5, 7, 11)
@@ -260,6 +263,64 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(mockAction1).toHaveBeenNthCalledWith(10, {}, 1, 3, 3, 7, {brand: 'Pipe', value: 'a-value-to-be-piped'})
     expect(mockAction2).toHaveBeenNthCalledWith(5, {}, 1, 3, 3, 7, {brand: 'Pipe', value: 'apples'})
     expect(mockAction3).toHaveBeenNthCalledWith(5, {}, 1, 3, 3, 7, {brand: 'Pipe', value: 'bananas'})
+  })
+
+  it('assemblyLine() should efficiently run the actions provided in a returned pipe or non-returned chain, depending if the injects coming in have a Pipe or not with the exception of the higher order forceInPipe flag set to TRUE', async() => {
+    const mockAction1 = jest.fn(() => Promise.resolve('mars'))
+    const mockAction2 = jest.fn(() => Promise.resolve('saturn'))
+    const mockAction3 = jest.fn(() => Promise.resolve('pluto'))
+
+    // 1-6 returns values
+
+    // 1. pipe, no actions, injects
+    const testResult1 = await assemblyLine()()(mockPage, ...mockInjectsNoPipe, mockPipe)
+    expect(testResult1).toBeUndefined()
+
+    // 2. no pipe, force in pipe, no actions, injects
+    const testResult2 = await assemblyLine(true)()(mockPage, ...mockInjectsNoPipe)
+    expect(testResult2).toBeUndefined()
+
+    // 3. pipe, 1 action, injects
+    const testResult3 = await assemblyLine()(mockAction1)(mockPage, ...mockInjectsNoPipe, mockPipe)
+    expect(testResult3).toEqual('mars')
+    expect(mockAction1).toHaveBeenNthCalledWith(1, {}, 2, 3, 5, 7, 11, {brand: 'Pipe', value: 'mock-pipe-value'})
+
+    // 4. no pipe, force in pipe, 1 action, injects
+    const testResult4 = await assemblyLine(true)(mockAction1)(mockPage, ...mockInjectsNoPipe)
+    expect(testResult4).toEqual('mars')
+    expect(mockAction1).toHaveBeenNthCalledWith(2, {}, 2, 3, 5, 7, 11, {brand: 'Pipe', value: undefined})
+
+    // 5. pipe, actions, injects
+    const testResult5 = await assemblyLine()(mockAction1, mockAction2, mockAction3)(mockPage, ...mockInjectsNoPipe, mockPipe)
+    expect(testResult5).toEqual('pluto')
+    expect(mockAction1).toHaveBeenNthCalledWith(3, {}, 2, 3, 5, 7, 11, {brand: 'Pipe', value: 'mock-pipe-value'})
+    expect(mockAction2).toHaveBeenNthCalledWith(1, {}, 2, 3, 5, 7, 11, {brand: 'Pipe', value: 'mars'})
+    expect(mockAction3).toHaveBeenNthCalledWith(1, {}, 2, 3, 5, 7, 11, {brand: 'Pipe', value: 'saturn'})
+
+    // 6. no pipe, force in pipe, actions, injects
+    const testResult6 = await assemblyLine(true)(mockAction1, mockAction2, mockAction3)(mockPage, ...mockInjectsNoPipe)
+    expect(testResult6).toEqual('pluto')
+    expect(mockAction1).toHaveBeenNthCalledWith(4, {}, 2, 3, 5, 7, 11, {brand: 'Pipe', value: undefined})
+    expect(mockAction2).toHaveBeenNthCalledWith(2, {}, 2, 3, 5, 7, 11, {brand: 'Pipe', value: 'mars'})
+    expect(mockAction3).toHaveBeenNthCalledWith(2, {}, 2, 3, 5, 7, 11, {brand: 'Pipe', value: 'saturn'})
+
+    // 7-9 do no return values, but await returns undefined in a Promise that resolves no value
+
+    // 7. no pipe (chain), no actions, injects
+    const testResult7 = await assemblyLine()()(mockPage, ...mockInjectsNoPipe)
+    expect(testResult7).toBeUndefined()
+
+    // 8. no pipe (chain), 1 action, injects
+    const testResult8 = await assemblyLine()(mockAction1)(mockPage, ...mockInjectsNoPipe)
+    expect(testResult8).toBeUndefined()
+    expect(mockAction1).toHaveBeenNthCalledWith(5, {}, 2, 3, 5, 7, 11)
+
+    // 9. no pipe (chain), actions, injects
+    const testResult9 = await assemblyLine()(mockAction1, mockAction2, mockAction3)(mockPage, ...mockInjectsNoPipe)
+    expect(testResult9).toBeUndefined()
+    expect(mockAction1).toHaveBeenNthCalledWith(6, {}, 2, 3, 5, 7, 11)
+    expect(mockAction2).toHaveBeenNthCalledWith(3, {}, 2, 3, 5, 7, 11)
+    expect(mockAction3).toHaveBeenNthCalledWith(3, {}, 2, 3, 5, 7, 11)
   })
 
 })

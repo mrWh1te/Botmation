@@ -24,17 +24,20 @@ describe('[Botmation] actions/assembly-lines', () => {
     const mockChainAction3 = jest.fn(() => Promise.resolve())
 
     // injects
-    await chainRunner(
+    const testResult1 = await chainRunner(
       mockChainAction1, mockChainAction2, mockChainAction3
     )(mockPage, ...mockInjectsNoPipe)
 
     // no injects
-    await chainRunner(
+    const testResult2 = await chainRunner(
       mockChainAction1, mockChainAction2, mockChainAction3
     )(mockPage)
 
     expect(mockChainAction1).toHaveBeenNthCalledWith(1, {}, 2, 3, 5, 7, 11)
     expect(mockChainAction1).toHaveBeenNthCalledWith(2, {})
+
+    expect(testResult1).toBeUndefined()
+    expect(testResult2).toBeUndefined()
   })
 
   it('pipeRunner() should return a BotAction that runs a spread array of BotAction\'s, separated with Piping', async() => {

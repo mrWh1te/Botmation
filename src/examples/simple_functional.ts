@@ -2,7 +2,7 @@
  * @description  Simple Example Script
  */
 import puppeteer from 'puppeteer'
-import { BotActionsChainFactory as Bot } from 'botmation'
+import { chain } from 'botmation/actions/assembly-lines'
 
 // General BotAction's
 import { log } from 'botmation/actions/console'
@@ -22,15 +22,13 @@ import { logError } from 'botmation/helpers/console'
     const page = pages.length === 0 ? await browser.newPage() : pages[0]
 
     // Run the chain of actions
-    await Bot(page)(
+    await chain(
       log('Bot running'),
       goTo('https://google.com'),
       screenshot('google-homepage-fn'),
       log('Screenshot taken')
-    )
-    
-    // close when done
-    await page.close()
+    )(page)
+
     await browser.close()
   } catch (error) {
     logError(error)

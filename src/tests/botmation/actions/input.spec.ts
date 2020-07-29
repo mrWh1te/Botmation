@@ -4,14 +4,13 @@ import { click, type } from 'botmation/actions/input'
 
 import { FORM_SUBMIT_BUTTON_SELECTOR, FORM_TEXT_INPUT_SELECTOR } from 'tests/selectors'
 import { BASE_URL } from 'tests/urls'
-import { botOptions } from 'tests/mocks/bot-options.mock'
 
 /**
- * @description   Input Action Factory
+ * @description   Input BotAction's
  *                The factory methods here return BotAction's for the bots to input into the page as User
  *                  ie mouse click, keyboard typing
  */
-describe('[Botmation:Action Factory] Input', () => {
+describe('[Botmation] actions/input', () => {
   const inputCopy = 'My cat is black'
 
   beforeAll(async() => {
@@ -25,7 +24,7 @@ describe('[Botmation:Action Factory] Input', () => {
       click: jest.fn()
     } as any as Page
     
-    await click(FORM_SUBMIT_BUTTON_SELECTOR)(mockPage, botOptions)
+    await click(FORM_SUBMIT_BUTTON_SELECTOR)(mockPage)
 
     expect(mockPage.click).toBeCalledWith('form button[type="submit"]')
   })
@@ -37,7 +36,7 @@ describe('[Botmation:Action Factory] Input', () => {
       }
     } as any as Page
     
-    await type(inputCopy)(mockPage, botOptions)
+    await type(inputCopy)(mockPage)
 
     expect(mockPage.keyboard.type).toBeCalledWith('My cat is black')
   })
@@ -45,8 +44,8 @@ describe('[Botmation:Action Factory] Input', () => {
   //
   // Unit test of these actions for clicking and typing as wrapped BotAction factory methods
   it('should focus on input, by click(), then type() "My cat is black" into it', async() => {
-    await click(FORM_TEXT_INPUT_SELECTOR)(page, botOptions)
-    await type(inputCopy)(page, botOptions)
+    await click(FORM_TEXT_INPUT_SELECTOR)(page)
+    await type(inputCopy)(page)
 
     const formInputEl = await page.$(FORM_TEXT_INPUT_SELECTOR)
     const formInputValue = await formInputEl?.getProperty('value')

@@ -1,58 +1,51 @@
 /**
- * @description   These higher higher order bot actions are meant to help devs build more complex bot action chains with more ease
+ * @description   The higher order BotAction's bring a new level of dynamic behavior to BotAction's functionally
+ *                These functions are intended to be utilities for the dev's to help achieve more complex functionality,
+ *                  in a composable functional fashion
  */
-import { Page } from 'puppeteer'
-
 import { sleep } from '../helpers/utilities'
 
-import { applyBotActionOrActions } from '../helpers/actions'
-import { BotAction, ConditionalBotAction } from '../interfaces/bot-action.interfaces'
-import { BotActionsChainFactory } from '../factories/bot-actions-chain.factory'
-import { BotOptions } from '../interfaces/bot-options.interfaces'
+import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions'
+import { injectsHavePipe, wrapValueInPipe, pipeInjects } from 'botmation/helpers/pipe'
+import { pipeActionOrActions, pipe } from './assembly-lines'
 
 /**
- * @description givenThat(condition returns a promise that resolves to TRUE)(run these actions in a chain)
- *              A function that returns a function that returns a function
- *              BotFactoryProvider -> BotFactoryAction -> BotAction
- * 
- *              In essence, this is a BotAction to run a provided chain of BotActions (2nd usage call), given that a promised condition (1st usage call) resolves to TRUE
+ * @description Higher Order BotAction that accepts a ConditionalBotAction (pipeable, that returns a boolean) and based on what boolean it resolves,
+ *              does it run the BotAction's provided in a pipe()(). Never the less, it does not return the final ran BotAction return value (if any)
  * @example     givenThat(isGuest)(login(...), closeSomePostLoginModal(),... more BotAction's)
  *              The condition function is async and provided the Puppeteer page instance so you can use it to determine TRUE/FALSE
  * @param condition 
  */
 export const givenThat = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction[]): BotAction => 
-      async(page: Page, options, ...injects) => {
-        try {
-          if (await condition(page, options, ...injects)) {
-            await BotActionsChainFactory(page, options, ...injects)(...actions)
-          }
-        } catch (error) {
-          // logError(error)
+    (...actions: BotAction<any>[]): BotAction => 
+      async(page, ...injects) => {
+        if (await condition(page, ...pipeInjects(injects))) {
+          await pipe()(...actions)(page, ...injects)
         }
       }
 
 /**
- * @description   A forEach method to loop a collection of something, to run a chain of actions against with that something locally scoped
+ * @future support piping in the `collection`
+ * @description   A forEach method to loop a collection of (array or object with key/value pairs), to run a loop of piped actions with each iteration of the collection
  * 
  *                Special BotAction that can take an array of stuff or an object of key value pairs (dictionary)
- *                to iterate over while applying the closure (function) as provided
- *                The closure's purpose is simply to return a BotAction or BotAction[], but you can run code beforehand, but it's discouraged
+ *                to iterate over while applying the closure (botActionOrActionsFactory) as provided
+ *                The closure's purpose is simply to return a BotAction or BotAction[]
  * 
  *                The original use-case for this concept, was to be able to re-apply a script on multiple websites via a loop
  *                I've seen multiple examples online, of people using Puppeteer to write a script of actions then loop through a list of websites
- *                  to apply those actions on
+ *                  to apply the same sequence of actions on each
  *
- * @example    with an array for collection
+ * @example    with an array as the collection
  *  forAll(['google.com', 'facebook.com'])(
  *    (siteName) => ([ // you can name the variable whatever you want in the closure
  *      goTo('http://' + siteName),
- *      screenshot(siteName + '-homepage')
+ *      screenshot(siteName + '-homepage') // then re-use it in your BotAction setup
  *    ])
  *  )
  * 
- * @example    with a dictionary for collection, a good use-case of this is a form with keys being form input selectors and values being what its typed in each
+ * @example    with a dictionary as the collection, we can iterate key/value pairs in our BotAction's setup ie fill a form with keys being form input selectors and values being what its typed in each
  *  forAll({id: 'google.com', someOtherKey: 'apple.com'})(
  *    (key, siteName) => ([
  *      goTo('http://' + siteName)
@@ -66,52 +59,46 @@ export const givenThat =
  *  )
  */
 export interface Dictionary {
-  [key: string]: any // (key -> value) pairs
+  [key: string]: any // key/value pairs
 }
 export const forAll =
   (collection: any[] | Dictionary) =>
-    (botActionOrActionsFactory: (...args: any[]) => BotAction[] | BotAction): BotAction =>
-      async(page: Page, options: BotOptions, ...injects: any[]) => {
+    (botActionOrActionsFactory: (...args: any[]) => BotAction<any>[] | BotAction<any>): BotAction =>
+      async(page, ...injects) => {
         if (Array.isArray(collection)) {
           // Array
           for(let i = 0; i < collection.length; i++) {
-            await applyBotActionOrActions(page, options, botActionOrActionsFactory(collection[i]), ...injects)
+            await pipeActionOrActions(botActionOrActionsFactory(collection[i]))(page, ...injects)
           }
         } else {
           // Dictionary
           for (const [key, value] of Object.entries(collection)) {
-            await applyBotActionOrActions(page, options, botActionOrActionsFactory(key, value), ...injects)
+            await pipeActionOrActions(botActionOrActionsFactory(key, value))(page, ...injects)
           }
         }
       }
 
 /**
- * @description    This works like a traditional doWhile. Do these actions, then check the condition on whether or not we should do them again, and again and again
- *                    aka
- *                 Do the actions, and continue to keep doing them While this condition is TRUE
- * @experimental
+ * @description    Works like a traditional doWhile. The loop begins with running the actions in a pipe, then before each subsequent iteration of the loop, the ConditionalBotAction is resolved and tested for TRUE before continuing
+ *                 Do the actions, and continue to keep doing them While this condition continue to resolves TRUE
  * @param condition
  */
 export const doWhile = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction[]): BotAction => 
-      async(page: Page, options, ...injects) => {
-        try {
-          let resolvedCondition = true // doWhile -> run the code, then check the condition on whether or not we should run the code again
-          while (resolvedCondition) {
-            await BotActionsChainFactory(page, options, ...injects)(...actions)
-            resolvedCondition = await condition(page, options, ...injects)
-          }
-        } catch (error) {
-          // logError(error)
+    (...actions: BotAction<any>[]): BotAction => 
+      async(page, ...injects) => {
+        let resolvedCondition = true // doWhile -> run the code, then check the condition on whether or not we should run the code again
+        while (resolvedCondition) {
+          await pipe()(...actions)(page, ...injects)
+
+          resolvedCondition = false // in case condition rejects, safer
+          resolvedCondition = await condition(page, ...pipeInjects(injects)) // use same Pipe from before, but simulate as pipe in case not
         }
       }
 
 /**
- * @description    This works like a traditional while loop. It resolves the condition each time before running the actions, and only runs the actions if the value resolved is True. 
- *                    aka
- *                 like givenThat except it loops again at the end of the bot actions chain for as long as the condition resolves True
- * @experimental
+ * @description    Works like a traditional while loop. Before each loop iteration, it resolves the ConditionalBotAction then only runs the provided BotAction's (in a pipe) if that `condition` resolved TRUE
+ *                 It continues to loop as long as the `condition` resolves TRUE each time. It only runs the BotAction's after the ConditionalBotAction resolves TRUE
  * @param condition 
  * @example     forAsLong(isLoggedIn)(
  *                goTo(...),
@@ -122,21 +109,22 @@ export const doWhile =
 export const forAsLong = 
   (condition: ConditionalBotAction) => 
     (...actions: BotAction[]): BotAction => 
-      async(page: Page, options, ...injects) => {
-        try {
-          let resolvedCondition = await(condition(page, options, ...injects))
-          while (resolvedCondition) {
-            await BotActionsChainFactory(page, options, ...injects)(...actions)
-            resolvedCondition = await condition(page, options, ...injects)
-          }
-        } catch (error) {
-          // logError(error)
+      async(page, ...injects) => {
+        let resolvedCondition = await condition(page, ...pipeInjects(injects))
+
+        while (resolvedCondition) {
+          await pipe()(...actions)(page, ...pipeInjects(injects))
+
+          // simulate pipe if needed
+          resolvedCondition = false // in case condition rejects
+          resolvedCondition = await condition(page, ...pipeInjects(injects)) // use same Pipe as before, unless no Pipe, than add an empty one
         }
       }
 
 /**
- * @description   Pauses the bot for the provided milliseconds before letting it execute the next Action
+ * @description   Pauses the runner (chain or pipe) for the provided milliseconds before continuing to the next BotAction
  * @param milliseconds 
  */
-export const wait = (milliseconds: number): BotAction => async() => 
+export const wait = (milliseconds: number): BotAction => async() => {
   await sleep(milliseconds)
+} 

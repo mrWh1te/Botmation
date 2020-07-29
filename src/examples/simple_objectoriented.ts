@@ -8,6 +8,7 @@ import { Botmation } from 'botmation'
 import { log } from 'botmation/actions/console'
 import { goTo } from 'botmation/actions/navigation'
 import { screenshot } from 'botmation/actions/output'
+
 import { logError } from 'botmation/helpers/console'
 
 (async () => {
@@ -15,7 +16,7 @@ import { logError } from 'botmation/helpers/console'
 
   try {
     // Get the browser from Puppeteer
-    browser = await puppeteer.launch({headless: false}) // {headless: false} shows the browser, run in headless if you don't care to see
+    browser = await puppeteer.launch({headless: false}) // {headless: false} shows the browser, {headless: true} hides the browser during execution
 
     // We can use Botmation's static asyncConstructor method to grab a page, from the provided browser, for the bot
     const bot = await Botmation.asyncConstructor(browser)
@@ -44,7 +45,6 @@ import { logError } from 'botmation/helpers/console'
     )
 
     // Done
-    await bot2.closePage()
     await browser.close()
   } catch (error) {
     logError(error)

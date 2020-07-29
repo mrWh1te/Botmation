@@ -1,10 +1,12 @@
-import { Page } from 'puppeteer'
+import { ConditionalBotAction } from 'botmation/interfaces/bot-actions'
+import { BotAction } from 'botmation/interfaces/bot-actions'
 
-import { BotAction } from '../../../interfaces/bot-action.interfaces'
-import { BotActionsChainFactory } from '../../../factories/bot-actions-chain.factory'
-
-import { goTo, waitForNavigation } from '../../../actions/navigation'
-import { log } from '../../../actions/console'
+import { chain } from 'botmation/actions/assembly-lines'
+import { goTo, waitForNavigation } from 'botmation/actions/navigation'
+import { click, type } from 'botmation/actions/input'
+import { getIndexedDBValue, indexedDBStore } from 'botmation/actions/indexed-db'
+import { map } from 'botmation/actions/pipe'
+import { log } from 'botmation/actions/console'
 
 import { getInstagramLoginUrl } from '../helpers/urls'
 import { 
@@ -12,25 +14,47 @@ import {
   FORM_AUTH_PASSWORD_INPUT_SELECTOR,
   FORM_AUTH_SUBMIT_BUTTON_SELECTOR
 } from '../selectors'
-import { click, type } from '../../../actions/input'
+import { errors } from 'botmation/actions/errors'
 
+/**
+ * @description    ConditionalBotAction that resolves TRUE if the User is NOT logged in
+ *                 Checks IndexedDB redux, store 'paths' for `users.viewerId` value (only has value if logged in)
+ * @param page
+ * @param injects
+ */
+export const isGuest: ConditionalBotAction = async(page, ...injects) =>
+  await indexedDBStore('redux', 'paths')(
+    getIndexedDBValue('users.viewerId'),
+    map(viewerId => viewerId ? false : true),
+  )(page, ...injects)
 
+/**
+ * @description    ConditionalBotAction that resolves TRUE if the User is logged in
+ *                 Checks IndexedDB redux, store 'paths' for `users.viewerId` value (only has value if logged in)
+ * @param page
+ * @param injects
+ */
+export const isLoggedIn: ConditionalBotAction = async(page, ...injects) =>
+  await indexedDBStore('redux', 'paths')(
+    getIndexedDBValue('users.viewerId'),
+    map(viewerId => viewerId ? true : false)
+  )(page, ...injects)
 
 /**
  * @description  BotAction that attempts the login flow for Instagram
- *               This BotAction is a great example of how 1 Action can wrap a whole other list of Action's, while using the same actions() code design
- * @param {username, password} destructured from BotAuthOptions 
+ * @param {username, password} destructured
  */
-export const login = ({username, password}: {username: string, password: string}): BotAction => async(page: Page, options, ...injects) =>
-  // This is how a single BotAction can run its own sequence of BotAction's prior to the next call of the original bot.actions() sequence
-  BotActionsChainFactory(page, options, ...injects)(
-    goTo(getInstagramLoginUrl()),
-    click(FORM_AUTH_USERNAME_INPUT_SELECTOR),
-    type(username),
-    click(FORM_AUTH_PASSWORD_INPUT_SELECTOR),
-    type(password),
-    click(FORM_AUTH_SUBMIT_BUTTON_SELECTOR),
-    waitForNavigation(),
-    log('Login Complete')
-  )
+export const login = ({username, password}: {username: string, password: string}): BotAction => async(page, ...injects) =>
+  chain(
+    errors('Instagram login()')(
+      goTo(getInstagramLoginUrl()),
+      click(FORM_AUTH_USERNAME_INPUT_SELECTOR),
+      type(username),
+      click(FORM_AUTH_PASSWORD_INPUT_SELECTOR),
+      type(password),
+      click(FORM_AUTH_SUBMIT_BUTTON_SELECTOR),
+      waitForNavigation,
+      log('Login Complete')
+    )
+  )(page, ...injects)
   

@@ -1,3 +1,4 @@
-export * from './bot-action.interfaces'
-export * from './bot-options.interfaces'
-export * from './botmation.interface'
+export * from './bot-actions'
+export * from './bot-file-options'
+export * from './botmation'
+export * from './pipe'

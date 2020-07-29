@@ -1,11 +1,11 @@
 import { DirectNavigationOptions } from 'puppeteer'
 
 /**
- * @description   This provides the default safe options' values for the Puppeteer's Page object's goto() method
- *                Particularly configured to work with SPA's, but has the option to overload as needed
- * @param overloadDefaultOptions 
+ * @description   Enrich provided param (Puppeteer's DirectNavigationOptions) with safe defaults in navigation ie goTo()
+ *                This safe default is configured for SPA's, in case of additional network requests that may impact final app appearance
+ * @param overloadDefaultOptions Partial{Puppeteer.DirectNavigationOptions}
  */
-export const getDefaultGoToPageOptions = (overloadDefaultOptions: DirectNavigationOptions = {}): DirectNavigationOptions => ({
+export const enrichGoToPageOptions = (overloadDefaultOptions: Partial<DirectNavigationOptions> = {}): DirectNavigationOptions => ({
   waitUntil: 'networkidle0',
   ...overloadDefaultOptions
 })

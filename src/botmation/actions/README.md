@@ -64,7 +64,7 @@ export const login = ({username, password}: {username: string, password: string}
       click(FORM_AUTH_PASSWORD_INPUT_SELECTOR),
       type(password),
       click(FORM_AUTH_SUBMIT_BUTTON_SELECTOR),
-      waitForNavigation(),
+      waitForNavigation,
       log('Login Complete')
     )
 ```
@@ -134,7 +134,7 @@ These higher order functions provide a simple way to navigate URL's.
   Default `goToOptions` are provided, therefore, optional. You can override the defaults with whatever you want, it follows the `DirectNavigationOptions` from the `@types/puppeteer` package
 - `waitForNavigation()`
 
-  Simply awaits Puppeteer's Page's `waitForNavigation()` async method that can be helpful when navigating Single Page Applications ie filling a form that causes the page to change
+  Simply awaits Puppeteer's Page's `waitForNavigation` async method that can be helpful when navigating Single Page Applications ie filling a form that causes the page to change
 
 ## Output
 

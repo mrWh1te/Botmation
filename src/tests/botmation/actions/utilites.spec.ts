@@ -1,23 +1,29 @@
 import { Page } from 'puppeteer'
 
-import { getDefaultGoToPageOptions } from 'botmation/helpers/navigation'
-import { givenThat, forAll, doWhile, forAsLong } from 'botmation/actions/utilities'
+import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
+import { givenThat, forAll, doWhile, forAsLong, wait } from 'botmation/actions/utilities'
 import { click, type } from 'botmation/actions/input'
 import { goTo } from 'botmation/actions/navigation'
 
 import { BASE_URL } from 'tests/urls'
-import { botOptions } from 'tests/mocks/bot-options.mock'
+import { BotAction } from 'botmation/interfaces'
+
+jest.mock('botmation/helpers/utilities', () => {
+  return {
+    sleep: jest.fn(() => Promise.resolve())
+  }
+})
 
 /**
- * @description   Utilities Action Factory
- *                The factory methods here return BotAction's for the bots to handle more complex use-cases
+ * @description   Utility BotAction's
+ *                The factory methods here return BotAction's for the bots to handle more complex functional flows
  */
-describe('[Botmation:Action Factory] Utilities', () => {
+describe('[Botmation] actions/utilities', () => {
 
   let mockPage: Page
 
   beforeAll(async() => {
-    await page.goto(BASE_URL, getDefaultGoToPageOptions())
+    await page.goto(BASE_URL, enrichGoToPageOptions())
   })
 
   beforeEach(() => {
@@ -33,46 +39,37 @@ describe('[Botmation:Action Factory] Utilities', () => {
 
   //
   // sleep() Integration Test
-  // it('should call setTimeout with the correct values', async() => {
-    // jest.useFakeTimers()
-    // TBI: jest does not natively support async/await promised based setTimeout
-    //      therefore, there is no simple way to test this. Fortunately, it's a simple Action
-    // Follow here: https://github.com/facebook/jest/issues/7151
-  // })
+  it('should call setTimeout with the correct values', async() => {
+    await wait(5003234)(mockPage)
+
+    const mockSleepHelper = require('botmation/helpers/utilities').sleep
+
+    expect(mockSleepHelper).toHaveBeenNthCalledWith(1, 5003234)
+  })
 
   //
   // givenThat() Unit Test
   it('should resolve the condition and ONLY run the chain of actions if the resolved condition equals TRUE', async() => {
-    const conditionResolvingTRUE = async(page: Page) => new Promise<boolean>(resolve => resolve(true))
-    const conditionResolvingFALSE = async(page: Page) => new Promise<boolean>(resolve => resolve(false))
-    const conditionReject = async(page: Page) => new Promise<boolean>((resolve, reject) => reject(new Error('test')))
+    const conditionResolvingTRUE:BotAction<boolean> = async() => new Promise(resolve => resolve(true))
+    const conditionResolvingFALSE:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
 
     // These actions should run
     await givenThat(conditionResolvingTRUE)(
       click('example selector 1'),
       type('example copy 1')
-    )(mockPage, botOptions)
+    )(mockPage)
 
     // These actions should NOT run
     await givenThat(conditionResolvingFALSE)(
       click('example selector 2'),
       type('example copy 2')
-    )(mockPage, botOptions)
-
-    // These actions should NOT run
-    await givenThat(conditionReject)(
-      click('example selector 2'),
-      type('example copy 2')
-    )(mockPage, botOptions)
+    )(mockPage)
 
     expect(mockPage.click).toHaveBeenNthCalledWith(1, 'example selector 1')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, 'example copy 1')
 
     expect(mockPage.click).not.toHaveBeenNthCalledWith(2, 'example selector 2')
     expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(2, 'example copy 2')
-
-    expect(mockPage.click).not.toHaveBeenNthCalledWith(3, 'example selector 2')
-    expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(3, 'example copy 2')
   })
 
   //
@@ -84,13 +81,13 @@ describe('[Botmation:Action Factory] Utilities', () => {
       (webPage) => ([
         goTo('http://localhost:8080/' + webPage)
       ])
-    )(mockPage, botOptions)
+    )(mockPage)
 
     // Note given the mock, these url's don't have to be real
     expect(mockPage.url).toHaveBeenNthCalledWith(3) // called 3 times
-    expect(mockPage.goto).toHaveBeenNthCalledWith(1, 'http://localhost:8080/example.html', getDefaultGoToPageOptions())
-    expect(mockPage.goto).toHaveBeenNthCalledWith(2, 'http://localhost:8080/example2.html', getDefaultGoToPageOptions())
-    expect(mockPage.goto).toHaveBeenNthCalledWith(3, 'http://localhost:8080/success.html', getDefaultGoToPageOptions())
+    expect(mockPage.goto).toHaveBeenNthCalledWith(1, 'http://localhost:8080/example.html', enrichGoToPageOptions())
+    expect(mockPage.goto).toHaveBeenNthCalledWith(2, 'http://localhost:8080/example2.html', enrichGoToPageOptions())
+    expect(mockPage.goto).toHaveBeenNthCalledWith(3, 'http://localhost:8080/success.html', enrichGoToPageOptions())
   })
   it('should call the list of Actions for each key->value pair in the object provided', async() => {
     const keyValuePairs = {
@@ -99,14 +96,14 @@ describe('[Botmation:Action Factory] Utilities', () => {
     }
 
     // idea of this test is for a particular use-case where provided collection is an object, 
-    // whose keys are html selectors for form inputs, and the values are things to type in them
-    // so it would be one data structure for doing form input, in one succinct format
+    // whose keys are html selectors for form inputs, and the values are strings to type in
+    // so it would be one data structure for doing form input[type=text], in one succinct format
     await forAll(keyValuePairs)(
       (elementSelector, copyToType) => ([
         click(elementSelector),
         type(copyToType)
       ])
-    )(mockPage, botOptions)
+    )(mockPage)
 
     expect(mockPage.click).toHaveBeenNthCalledWith(1, 'form input[name="username"]')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, 'example username')
@@ -118,12 +115,11 @@ describe('[Botmation:Action Factory] Utilities', () => {
   //
   // doWhile() Unit Test
   it('should run the actions then check the condition to run the actions in a loop until the condition rejects or resolves FALSE', async() => {
-    const conditionResolvingFALSE = async(page: Page) => new Promise<boolean>(resolve => resolve(false))
-    const conditionReject = async(page: Page) => new Promise<boolean>((resolve, reject) => reject(new Error('test')))
+    const conditionResolvingFALSE:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
 
     // Main test
     let conditionResolvingCount = 0;
-    const conditionResolvesTrueUntil3rdResolveAsFalse = async(page: Page) =>
+    const conditionResolvesTrueUntil3rdResolveAsFalse = async() =>
       new Promise<boolean>(resolve => {
         // let it resolve True twice, then resolve False
         if (conditionResolvingCount > 1) {
@@ -142,7 +138,7 @@ describe('[Botmation:Action Factory] Utilities', () => {
     await doWhile(conditionResolvesTrueUntil3rdResolveAsFalse)(
       click('1'),
       type('1')
-    )(mockPage, botOptions)
+    )(mockPage)
 
     expect(mockPage.click).toHaveBeenNthCalledWith(1, '1')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, '1')
@@ -160,36 +156,23 @@ describe('[Botmation:Action Factory] Utilities', () => {
     await doWhile(conditionResolvingFALSE)(
       click('2'),
       type('2')
-    )(mockPage, botOptions)
+    )(mockPage)
 
     expect(mockPage.click).toHaveBeenNthCalledWith(4, '2')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(4, '2')
 
     expect(mockPage.click).not.toHaveBeenNthCalledWith(5, '2')
     expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(5, '2')
-
-    // These actions should run only once
-    await doWhile(conditionReject)(
-      click('3'),
-      type('3')
-    )(mockPage, botOptions)
-
-    expect(mockPage.click).toHaveBeenNthCalledWith(5, '3')
-    expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(5, '3')
-
-    expect(mockPage.click).not.toHaveBeenNthCalledWith(6, '3')
-    expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(6, '3')
   })
 
   //
   // forAsLong() Unit Test
   it('should check the condition before running the actions in a loop until the condition rejects or resolves FALSE', async() => {
-    const conditionResolvingFALSE = async(page: Page) => new Promise<boolean>(resolve => resolve(false))
-    const conditionReject = async(page: Page) => new Promise<boolean>((resolve, reject) => reject(new Error('test')))
+    const conditionResolvingFALSE:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
 
     // Main test
     let conditionResolvingCount = 0;
-    const conditionResolvesTrueUntil3rdResolveAsFalse = async(page: Page) =>
+    const conditionResolvesTrueUntil3rdResolveAsFalse = async() =>
       new Promise<boolean>(resolve => {
         // let it resolve True twice, then resolve False
         if (conditionResolvingCount > 1) {
@@ -207,7 +190,7 @@ describe('[Botmation:Action Factory] Utilities', () => {
     await forAsLong(conditionResolvesTrueUntil3rdResolveAsFalse)(
       click('1'),
       type('1')
-    )(mockPage, botOptions)
+    )(mockPage)
 
     expect(mockPage.click).toHaveBeenNthCalledWith(1, '1')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, '1')
@@ -222,18 +205,13 @@ describe('[Botmation:Action Factory] Utilities', () => {
     await forAsLong(conditionResolvingFALSE)(
       click('2'),
       type('2')
-    )(mockPage, botOptions)
+    )(mockPage)
 
     expect(mockPage.click).not.toHaveBeenNthCalledWith(3, '2')
     expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(3, '2')
+  })
 
-    // These actions should not run
-    await forAsLong(conditionReject)(
-      click('3'),
-      type('3')
-    )(mockPage, botOptions)
-
-    expect(mockPage.click).not.toHaveBeenNthCalledWith(3, '3')
-    expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(3, '3')
+  afterAll(() => {
+    jest.unmock('botmation/helpers/utilities')
   })
 })

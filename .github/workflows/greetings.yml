@@ -10,4 +10,4 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         issue-message: 'Thank you for submitting an issue! We greatly appreciate it. We will follow up as soon as we can.'
-        pr-message: 'Thank you for submitting a Pull Request! If you need any assistance, do not hesitate to @ mrWh1te on Github, the Technical Lead of this project.'
+        pr-message: 'Thank you for submitting a Pull Request! If you need any assistance, reach out to @mrWh1te on Github.'

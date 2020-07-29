@@ -45,6 +45,7 @@ describe('[Botmation] class', () => {
       newPage: jest.fn(() => mockPage)
     } as any as Browser
     
+    // when browser has no pages, it creates one to use
     const bot = await Botmation.asyncConstructor(mockBrowser)
 
     await bot.actions(
@@ -54,6 +55,13 @@ describe('[Botmation] class', () => {
     expect(mockBrowser.pages).toHaveBeenCalled()
     expect(mockBrowser.newPage).toHaveBeenCalled()
     expect(mockPage.click).toHaveBeenCalledWith('example html selector')
+
+    // When browser has pages, it uses the first one
+    const mockBrowserHasPages = {
+      pages: jest.fn(() => ['page1', 'page2', 'page3'])
+    } as any as Browser
+    const bot2 = await Botmation.asyncConstructor(mockBrowserHasPages)
+    expect(bot2.getPage()).toEqual('page1')
   })
 
   //

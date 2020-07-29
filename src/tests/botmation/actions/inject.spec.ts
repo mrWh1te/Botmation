@@ -27,11 +27,15 @@ describe('[Botmation] actions/inject', () => {
   const newInjects = ['new1', 'new2']
   const pastInjects = ['past1', 'past2', 'past3']
 
-  let mockPage = {} as any as Page
+  let mockPage: Page
+
+  beforeEach(() => {
+    mockPage = {} as any as Page
+  })
   
   //
   // Basic Unit Tests
-  it('should set the injects of the inner assembly-line correctly based on new and past injects provided', async () => {
+  it('inject()() should set the injects of the inner assembly-line correctly based on new and past injects provided', async () => {
     // no injects
     await inject()()(mockPage)
 

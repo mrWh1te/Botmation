@@ -63,7 +63,7 @@ describe('[Botmation] helpers/indexed-db', () => {
     await expect(getIndexedDBStoreValue(databaseName, 1, 'botmationStore', 'test-1-key')).resolves.toEqual('test-1-value')
   })
 
-  it('getIndexedDBStoreValue() should reject on IndexedDB Request Error', async() => {
+  it('getIndexedDBStoreValue() should throw on IndexedDB Request Error', async() => {
     // Create DB with high version number, then request lower number to trigger VersionError
     const setupTestRequest = indexedDB.open(databaseName, 99)
     await new Promise((resolve, reject) => {
@@ -101,7 +101,7 @@ describe('[Botmation] helpers/indexed-db', () => {
     }
   })
 
-  it('getIndexedDBStoreValue() should reject on a transaction Error', async() => {
+  it('getIndexedDBStoreValue() should throw on a transaction Error', async() => {
     await new Promise((resolve, reject) => {
       const request = indexedDB.open(databaseName)
 
@@ -168,62 +168,113 @@ describe('[Botmation] helpers/indexed-db', () => {
     expect(getIndexedDBStoreValue(databaseName, 1, databaseStoreName, 'does-not-exist-key')).resolves.toBeUndefined()
   })
 
-  // it('setIndexedDBStoreValue() should reject on IndexedDB Database Error ie from data constraint', async() => {
-  //   // thank you, https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB
-  //   // const customerData = [
-  //   //   { ssn: "444-44-4444", name: "Bill", age: 35, email: "bill@company.com" },
-  //   //   { ssn: "555-55-5555", name: "Donna", age: 32, email: "donna@home.org" }
-  //   // ]
+  it('setIndexedDBStoreValue() should throw on IndexedDB Request Error', async() => {
+    // Create DB with high version number, then request lower number to trigger VersionError
+    const setupTestRequest = indexedDB.open(databaseName, 99)
+    await new Promise((resolve, reject) => {
+      setupTestRequest.onerror = function(this: IDBRequest<IDBDatabase>, ev: Event) {
+        return reject(this.error)
+      }
+      setupTestRequest.onupgradeneeded = function(this: IDBOpenDBRequest, ev: IDBVersionChangeEvent): any { 
+        if (!this.result.objectStoreNames.contains(databaseStoreName)) {
+          this.result.createObjectStore(databaseStoreName)
+        }
+      }
+      setupTestRequest.onsuccess = function(this: IDBRequest<IDBDatabase>, ev: Event) {
+        const db = this.result
 
-  //   await new Promise((resolve, reject) => {
-  //     const request = indexedDB.open(databaseName)
-  
-  //     request.onerror = function(this, ev) {
-  //       ev.stopPropagation()
-  //       // Handle errors.
-  //       return reject()
-  //     }
-  //     request.onupgradeneeded = function(this, event) {
-  //       const db = this.result
-  
-  //       // Create an objectStore to hold information about our customers. We're
-  //       // going to use "ssn" as our key path because it's guaranteed to be
-  //       // unique - or at least that's what I was told during the kickoff meeting.
-  //       const objectStore = db.createObjectStore("customers", { keyPath: "ssn" })
-  
-  //       // Create an index to search customers by name. We may have duplicates
-  //       // so we can't use a unique index.
-  //       objectStore.createIndex("email", "email", { unique: true })
-  
-  //       // Create an index to search customers by email. We want to ensure that
-  //       // no two customers have the same email, so use a unique index.
-  //       // objectStore.createIndex("email", "email", { unique: true })
-  
-  //       // Use transaction oncomplete to make sure the objectStore creation is 
-  //       // finished before adding data into it.
-  //       objectStore.transaction.oncomplete = function(event) {
-  //         // Store values in the newly created objectStore.
-  //         // const customerObjectStore = db.transaction("customers", "readwrite").objectStore("customers")
-  //         // customerData.forEach(function(customer) {
-  //         //   customerObjectStore.add(customer)
-  //         // })
-  //         db.close()
-  //         return resolve()
-  //       }
-  //       objectStore.transaction.onerror = function(this, ev) {
-  //         ev.stopPropagation()
-  //         return reject()
-  //       }
-  //     }
-  //   })
+        db.onerror = (err) => { 
+          db.close()
+          return reject(this.error) 
+        }
 
-  //   try {
-  //     await setIndexedDBStoreValue(databaseName, 1, 'customers', 'test-4-key', 'test-4-value')
-  //   } catch (error) {
-  //     expect(error).toBeInstanceOf(Error)
-  //     expect(error.name).toEqual('DataError')
-  //   }
-  // })
+        db.transaction(databaseStoreName, 'readwrite')
+          .objectStore(databaseStoreName)
+          .put('test-2-value', 'test-2-key')
+          .onsuccess = function(this: IDBRequest<any>, ev: Event) {
+            db.close()
+            return resolve()
+          }
+      }
+    })
+
+    try {
+      await setIndexedDBStoreValue(databaseName, 5, databaseStoreName, 'test-3-key', 'test-3-value')
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error)
+      expect(error.name).toEqual('VersionError')
+    }
+  })
+
+  it('setIndexedDBStoreValue() should throw on a transaction Error', async() => {
+    await new Promise((resolve, reject) => {
+      const request = indexedDB.open(databaseName)
+
+      request.onerror = function(this, ev) {
+        return reject(this.error)
+      }
+      request.onupgradeneeded = function(this, ev) {
+        this.result.createObjectStore(databaseStoreName)
+      }
+      request.onsuccess = function(this, ev) {
+        const db = this.result
+
+        db.onerror = function(this, ev) {
+          db.close()
+          return reject('IndexedDB Request DB.onerror()')
+        }
+
+        db.transaction(databaseStoreName, 'readwrite')
+          .objectStore(databaseStoreName)
+          .put('test-3-value', 'test-3-key')
+          .onsuccess = function(this, ev) {
+            db.close()
+            return resolve()
+          }
+      }
+    })
+
+    try {
+      await setIndexedDBStoreValue(databaseName, 1, 'store-does-not-exist', 'test-53-key', 'a-value')
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error) // store does not exist
+    }
+  })
+
+  it('setIndexedDBStoreValue() should create a new store when using a bigger version number', async() => {
+    const setupTestRequest = indexedDB.open(databaseName)
+    await new Promise((resolve, reject) => {
+      setupTestRequest.onerror = function(this: IDBRequest<IDBDatabase>, ev: Event) {
+        return reject(this.error)
+      }
+      setupTestRequest.onupgradeneeded = function(this: IDBOpenDBRequest, ev: IDBVersionChangeEvent): any { 
+        if (!this.result.objectStoreNames.contains(databaseStoreName)) {
+          this.result.createObjectStore(databaseStoreName)
+        }
+      }
+      setupTestRequest.onsuccess = function(this: IDBRequest<IDBDatabase>, ev: Event) {
+        const db = this.result
+
+        db.onerror = (err) => { 
+          db.close()
+          return reject(this.error) 
+        }
+
+        db.transaction(databaseStoreName, 'readwrite')
+          .objectStore(databaseStoreName)
+          .put('test-1-value', 'test-1-key')
+          .onsuccess = function(this: IDBRequest<any>, ev: Event) {
+            db.close()
+            return resolve()
+          }
+      }
+    })
+
+    // The following covers a line of code that was getting marked out of coverage, particularly setIndexedDBStoreValue()'s onupgradeneeded, to create a new store
+    // The following assertion invokes that line of code, but given it's noted as out of coverage, it's commented to be ignored from coverage data collection 
+    // Therefore, keep this here for the unit of functionanlity of creating a store that yet does not exist during a db version upgrade (ie none -> 1, 1 -> n)
+    await expect(setIndexedDBStoreValue(databaseName, 2, 'botmationStore2', 'test-1-key', 'some-value')).resolves
+  })
 
   //
   // E2E of setting and getting IndexedDB Store key/value pairs, to save time

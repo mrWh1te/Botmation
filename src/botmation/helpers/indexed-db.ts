@@ -22,6 +22,7 @@ export function setIndexedDBStoreValue(databaseName: string, databaseVersion: nu
 
     // when adding a new store, do a higher db version number to invoke this function:
     openRequest.onupgradeneeded = function(this: IDBOpenDBRequest, ev: IDBVersionChangeEvent): any { 
+      /* istanbul ignore next */
       if (!this.result.objectStoreNames.contains(storeName)) {
         this.result.createObjectStore(storeName)
       }
@@ -58,7 +59,6 @@ export function getIndexedDBStoreValue(databaseName: string, databaseVersion: nu
     const openRequest = indexedDB.open(databaseName, databaseVersion)
 
     openRequest.onerror = function(this: IDBRequest<IDBDatabase>, ev: Event) {
-      openRequest.transaction?.db.close()
       return reject(this.error) 
     }
 

@@ -181,7 +181,7 @@ describe('[Botmation] actions/assembly-lines', () => {
     const testResult5 = await chain()(mockPage)
 
     // 6. injects, pipe, no actions
-    expect(chain()(mockPage, ...mockInjectsNoPipe, mockPipe)).resolves.toBeUndefined() // missing edge-case
+    await expect(chain()(mockPage, ...mockInjectsNoPipe, mockPipe)).resolves.toBeUndefined() // missing edge-case
 
     expect(mockAction1).toHaveBeenNthCalledWith(1, {}, 2, 3, 5, 7, 11)
     expect(mockAction2).toHaveBeenNthCalledWith(1, {}, 2, 3, 5, 7, 11)

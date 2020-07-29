@@ -24,8 +24,6 @@ export const goTo = (url: string, goToOptions?: Partial<DirectNavigationOptions>
 /**
  * @description   Go back one page like hitting the "Back" button in a Browser
  * @param options 
- * @alpha 
- * @TODO Test this
  */
 export const goBack = (options?: NavigationOptions): BotAction => 
   async(page) => {
@@ -35,8 +33,6 @@ export const goBack = (options?: NavigationOptions): BotAction =>
 /**
  * @description   Go forward one page like hitting the "Forward" button in a Browser
  * @param options 
- * @alpha 
- * @TODO Test this
  */
 export const goForward = (options?: NavigationOptions): BotAction => 
   async(page) => {
@@ -46,8 +42,6 @@ export const goForward = (options?: NavigationOptions): BotAction =>
 /**
  * @description   Reload current page. In case of multiple redirects, the navigation will resolve with the response of the last redirect.
  * @param options 
- * @alpha 
- * @TODO Test this
  */
 export const reload = (options?: NavigationOptions): BotAction =>
   async(page) => {

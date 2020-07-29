@@ -15,9 +15,6 @@ import { PipeValue } from "botmation/types/pipe-value"
 export const chain =
   (...actions: BotAction[]): BotAction =>
     async(page, ...injects) => {
-      // TODO test running chain()() inside a pipe()()
-      //    a) does it get a Pipe value undefined minimum? it did, until the following code to "remove pipe" was added
-
       // pipe support for running a chain inside a pipe as a real chain
       // otherwise, the injects will naturally carry the pipe through the whole chain of actions in the last inject
       // but, could that be desirable? A new kind of assembly line, similar to chain but carries a Pipe through (1 case ignoring BotAction returns, the other piping those return values)

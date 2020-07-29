@@ -1,5 +1,5 @@
-import { inject } from "botmation/actions/inject"
 import { Page } from "puppeteer"
+import { inject } from "botmation/actions/inject"
 
 /**
  * @description    No module mocking in here

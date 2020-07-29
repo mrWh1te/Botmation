@@ -44,7 +44,7 @@ export const screenshotAll = (urls: string[], botFileOptions?: Partial<BotFileOp
 /**
  * @description    Save webpage as PDF
  * @param fileName 
- * @alpha  should we add ability to customize options of pdf() ie `format`, `printBackground` see Puppeteer.PDFOptions (typed)
+ * @beta  should we add ability to customize options of pdf() ie `format`, `printBackground` see Puppeteer.PDFOptions (typed)
  * @note          Launching the browser without headless (headless: false) breaks this
  *                See https://github.com/puppeteer/puppeteer/issues/1829
  */

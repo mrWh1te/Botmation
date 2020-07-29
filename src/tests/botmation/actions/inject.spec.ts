@@ -4,7 +4,7 @@ import { inject } from "botmation/actions/inject"
 import { Page } from "puppeteer"
 
 // Mock the Assembly-Lines Module so when injects() imports it
-// we can test how injects() calls the exported assemblyLine higher order function
+// we can test how inject() calls the exported assemblyLine higher order function
 // particularly, interested in the inner 3rd call, the actual BotAction to determine 
 // if or not we have properly set up the injects based on the provided injects, both past and new
 const mockAssemblyLineBotAction = jest.fn()

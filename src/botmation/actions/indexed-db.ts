@@ -19,7 +19,7 @@ import { getQueryKey, getQueryKeyValue } from 'botmation/types/database'
 export const indexedDBStore = (databaseName: string, databaseVersion: number, storeName: string) =>
   (...actions: BotAction<PipeValue|void>[]): BotAction<any> =>
     async(page, ...injects) => 
-      inject(
+      await inject(
         databaseName, databaseVersion, storeName
       )(...actions)(page, ...pipeInjects(injects))
       

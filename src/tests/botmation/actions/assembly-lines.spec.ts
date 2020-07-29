@@ -157,19 +157,19 @@ describe('[Botmation] actions/assembly-lines', () => {
     const mockAction3 = jest.fn(() => Promise.resolve())
 
     // 1. injects without pipe, actions
-    await chain(mockAction1, mockAction2, mockAction3)(mockPage, ...mockInjectsNoPipe)
+    const testResult1 = await chain(mockAction1, mockAction2, mockAction3)(mockPage, ...mockInjectsNoPipe)
 
     // 2. injects with pipe, actions
-    await chain(mockAction1, mockAction2, mockAction3)(mockPage, ...mockInjectsNoPipe, mockPipe)
+    const testResult2 = await chain(mockAction1, mockAction2, mockAction3)(mockPage, ...mockInjectsNoPipe, mockPipe)
 
     // 3. injects without pipe, 1 action
-    await chain(mockAction1)(mockPage, ...mockInjectsNoPipe)
+    const testResult3 = await chain(mockAction1)(mockPage, ...mockInjectsNoPipe)
 
     // 4. injects with pipe, 1 action
-    await chain(mockAction1)(mockPage, ...mockInjectsNoPipe, mockPipe)
+    const testResult4 = await chain(mockAction1)(mockPage, ...mockInjectsNoPipe, mockPipe)
 
     // 5. no injects, no actions ?
-    await chain()(mockPage)
+    const testResult5 = await chain()(mockPage)
 
     // 6. injects, pipe, no actions
     expect(chain()(mockPage, ...mockInjectsNoPipe, mockPipe)).resolves.toBeUndefined() // missing edge-case
@@ -187,6 +187,13 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(mockAction1).toHaveBeenNthCalledWith(4, {}, 2, 3, 5, 7, 11)
 
     expect(mockAction1).not.toHaveBeenCalledTimes(5)
+
+    // Constrain chain's to ultimately resolve as undefined, since their last async function will not return a value, other than undefined
+    expect(testResult1).toBeUndefined()
+    expect(testResult2).toBeUndefined()
+    expect(testResult3).toBeUndefined()
+    expect(testResult4).toBeUndefined()
+    expect(testResult5).toBeUndefined()
   })
 
   it('pipe() should run given actions efficiently in a pipe (values returned are Piped into subsequent actions), provide an empty Pipe, if the injects coming in do not have a Pipe and overwrite the initial past in Pipe value if given a value to pipe()', async() => {

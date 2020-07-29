@@ -28,7 +28,7 @@ import { files } from 'botmation/actions/files'
   let browser: puppeteer.Browser
 
   try {
-    browser = await puppeteer.launch({headless: true})
+    browser = await puppeteer.launch({headless: false})
     const pages = await browser.pages()
     const page = pages.length === 0 ? await browser.newPage() : pages[0]
 

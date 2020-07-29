@@ -3,7 +3,7 @@ import { Page, Browser } from 'puppeteer'
 
 import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 import { click, type } from 'botmation/actions/input'
-import { goTo } from 'botmation/actions/navigation'
+import { goTo, waitForNavigation } from 'botmation/actions/navigation'
 import { Botmation } from 'botmation/class'
 
 import { BASE_URL, EXAMPLE_URL } from '../urls'
@@ -14,28 +14,14 @@ import { FORM_TEXT_INPUT_SELECTOR, FORM_SUBMIT_BUTTON_SELECTOR } from '../select
  */
 describe('[Botmation] class', () => {
 
-  beforeEach(async() => {
-    await page.goto(BASE_URL, enrichGoToPageOptions())
-  })
-
   //
   // Create Class Instance with Static Async Method
-  it('should create a Botmation instance using the static asyncConstructor() then run the actions', async() => {
-    const bot = await Botmation.asyncConstructor(browser) // <-- finicky test here, maybe related: https://github.com/puppeteer/puppeteer/issues/1947
-
-    await bot.actions(
-      goTo(EXAMPLE_URL),
-      click(FORM_TEXT_INPUT_SELECTOR),
-      type('loremlipsumloremlipsum'),
-      click(FORM_SUBMIT_BUTTON_SELECTOR)
-    )
-
-    expect(bot.getPage().url()).toEqual('http://localhost:8080/success.html?answer=loremlipsumloremlipsum')
-  })
   it('should create a Botmation instance using the static asyncConstructor() and create a new page when the browser has none automatically', async() => {
     /// this mocked use-case is for when the browser provided has no tabs open
     const mockPage = {
-      click: jest.fn()
+      click: jest.fn(),
+      goto: jest.fn(),
+      url: () => 'some-url'
     } as any as Page
     const mockPages = [] as any // no pages 
     // the async constructor method's purpose is to get the page (tab) from the browser
@@ -49,12 +35,14 @@ describe('[Botmation] class', () => {
     const bot = await Botmation.asyncConstructor(mockBrowser)
 
     await bot.actions(
-      click('example html selector')
+      click('example html selector'),
+      goTo('example-url')
     )
 
     expect(mockBrowser.pages).toHaveBeenCalled()
     expect(mockBrowser.newPage).toHaveBeenCalled()
     expect(mockPage.click).toHaveBeenCalledWith('example html selector')
+    expect(mockPage.goto).toHaveBeenCalledWith('example-url', enrichGoToPageOptions())
 
     // When browser has pages, it uses the first one
     const mockBrowserHasPages = {
@@ -70,10 +58,12 @@ describe('[Botmation] class', () => {
     const bot = new Botmation(page)
 
     await bot.actions(
+      goTo(BASE_URL),
       goTo(EXAMPLE_URL),
       click(FORM_TEXT_INPUT_SELECTOR),
       type('loremlipsum'),
-      click(FORM_SUBMIT_BUTTON_SELECTOR)
+      click(FORM_SUBMIT_BUTTON_SELECTOR),
+      waitForNavigation
     )
 
     expect(page.url()).toEqual('http://localhost:8080/success.html?answer=loremlipsum')
@@ -83,7 +73,7 @@ describe('[Botmation] class', () => {
   // set page
   it('should have a mutator/accessor methods for changing the page instance and getting the instance', async() => {
     // Create bot with actual page
-    const bot = new Botmation(page)
+    const bot = new Botmation({} as any as Page)
 
     // Change bot's page with mock page
     const mockPage = {

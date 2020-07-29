@@ -16,10 +16,10 @@ describe('[Botmation] helpers/utilities', () => {
   // sleep
   it('should return a promise for pausing execution by calling setTimeout', async () => {
     const mockSetTimeout = jest.fn()
-    global.setTimeout = (fn: Function, milliseconds: number) => {
+    global.setTimeout = ((fn: Function, milliseconds: number) => {
         mockSetTimeout(milliseconds)
         return fn()
-    }
+    }) as any as typeof setTimeout
 
     await sleep(1337)
 

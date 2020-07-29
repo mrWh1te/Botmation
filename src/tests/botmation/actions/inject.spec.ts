@@ -1,7 +1,6 @@
-
+import { Page } from "puppeteer"
 
 import { inject } from "botmation/actions/inject"
-import { Page } from "puppeteer"
 
 // Mock the Assembly-Lines Module so when injects() imports it
 // we can test how inject() calls the exported assemblyLine higher order function
@@ -10,11 +9,11 @@ import { Page } from "puppeteer"
 const mockAssemblyLineBotAction = jest.fn()
 jest.mock('botmation/actions/assembly-lines', () => {
   // Require the original module to not be mocked...
-  const originalModule = jest.requireActual('botmation/actions/assembly-lines');
+  // const originalModule = jest.requireActual('botmation/actions/assembly-lines')
 
   return {
     // __esModule: true, // Use it when dealing with esModules
-    ...originalModule,
+    // ...originalModule,
     assemblyLine: () => () => mockAssemblyLineBotAction // notice, only mocking the last function call, where `injects` is set
   }
 })

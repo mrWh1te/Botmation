@@ -43,14 +43,14 @@ describe('[Botmation] actions/indexed-db', () => {
     const injectsWithoutPipe = [25, 'hi', 'World']
     let mockPage = {} as any as Page
 
-    await indexedDBStore(higherOrderDatabaseName, higherOrderDatabaseVersion, higherOrderStoreName)()(mockPage)
-    await indexedDBStore(higherOrderDatabaseName, higherOrderDatabaseVersion, higherOrderStoreName)()(mockPage, ...injectsWithoutPipe)
-    await indexedDBStore(higherOrderDatabaseName, higherOrderDatabaseVersion, higherOrderStoreName)()(mockPage, ...injectsWithoutPipe, {brand: 'Pipe', value: 'injects()()() test value'})
+    await indexedDBStore(higherOrderDatabaseName, higherOrderStoreName, higherOrderDatabaseVersion)()(mockPage)
+    await indexedDBStore(higherOrderDatabaseName, higherOrderStoreName, higherOrderDatabaseVersion)()(mockPage, ...injectsWithoutPipe)
+    await indexedDBStore(higherOrderDatabaseName, higherOrderStoreName, higherOrderDatabaseVersion)()(mockPage, ...injectsWithoutPipe, {brand: 'Pipe', value: 'injects()()() test value'})
 
     const {inject: mockInject} = require('botmation/actions/inject')
-    expect(mockInject).toHaveBeenNthCalledWith(1, 'higher-order-database-name', 1, 'higher-order-store-name')
-    expect(mockInject).toHaveBeenNthCalledWith(2, 'higher-order-database-name', 1, 'higher-order-store-name')
-    expect(mockInject).toHaveBeenNthCalledWith(3, 'higher-order-database-name', 1, 'higher-order-store-name')
+    expect(mockInject).toHaveBeenNthCalledWith(1, 1, 'higher-order-database-name', 'higher-order-store-name')
+    expect(mockInject).toHaveBeenNthCalledWith(2, 1, 'higher-order-database-name', 'higher-order-store-name')
+    expect(mockInject).toHaveBeenNthCalledWith(3, 1, 'higher-order-database-name', 'higher-order-store-name')
 
     expect(mockInject3rdCall).toHaveBeenNthCalledWith(1, {}, {brand: 'Pipe', value: undefined})
     expect(mockInject3rdCall).toHaveBeenNthCalledWith(2, {}, 25, 'hi', 'World', {brand: 'Pipe', value: undefined})
@@ -63,27 +63,27 @@ describe('[Botmation] actions/indexed-db', () => {
   //    - higher order values override corresponding injected values
   it('setIndexedDBValue() should call Page.evaluate() with a helper function and the correct values for key, value, storeName, databaseName, and databaseVersion', async() => {
     // no injects, all values come from higher order
-    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage)
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseName, higherOrderDatabaseVersion)(mockPage)
 
     // varying BotIndexedDBInjects, all values come from higher order
-    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage, injectDatabaseName)
-    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage, injectDatabaseName, injectDatabaseVersion)
-    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName)
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseName, higherOrderDatabaseVersion)(mockPage, injectDatabaseVersion)
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseName, higherOrderDatabaseVersion)(mockPage, injectDatabaseVersion, injectDatabaseName)
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseName, higherOrderDatabaseVersion)(mockPage, injectDatabaseVersion, injectDatabaseName, injectStoreName)
 
     // Full BotIndexedDBInjects with Pipe for `key`, higher order key overrides pipe provided
-    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName, {brand: 'Pipe', value: injectedPipeParamKey})
-    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName, {brand: 'Pipe', value: {key: injectedPipeParamKey}})
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseName, higherOrderDatabaseVersion)(mockPage, injectDatabaseVersion, injectDatabaseName, injectStoreName, {brand: 'Pipe', value: injectedPipeParamKey})
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseName, higherOrderDatabaseVersion)(mockPage, injectDatabaseVersion, injectDatabaseName, injectStoreName, {brand: 'Pipe', value: {key: injectedPipeParamKey}})
 
     // No higher order, so key & values comes from Pipe, other values from injects
-    await setIndexedDBValue()(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName, {brand: 'Pipe', value: {key: injectedPipeParamKey, value: injectedPipeParamValue}})
+    await setIndexedDBValue()(mockPage, injectDatabaseVersion, injectDatabaseName, injectStoreName, {brand: 'Pipe', value: {key: injectedPipeParamKey, value: injectedPipeParamValue}})
 
     // Mixes of higher order and injects
-    await setIndexedDBValue(higherOrderParamKey)(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName, {brand: 'Pipe', value: injectedPipeParamValue})
-    await setIndexedDBValue(higherOrderParamKey)(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName, {brand: 'Pipe', value: {value: injectedPipeParamValue}})
+    await setIndexedDBValue(higherOrderParamKey)(mockPage, injectDatabaseVersion, injectDatabaseName, injectStoreName, {brand: 'Pipe', value: injectedPipeParamValue})
+    await setIndexedDBValue(higherOrderParamKey)(mockPage, injectDatabaseVersion, injectDatabaseName, injectStoreName, {brand: 'Pipe', value: {value: injectedPipeParamValue}})
 
-    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue)(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName)
-    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName)(mockPage, injectDatabaseName, injectDatabaseVersion)
-    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseVersion)(mockPage, injectDatabaseName)
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue)(mockPage, injectDatabaseVersion, injectDatabaseName, injectStoreName)
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName)(mockPage, injectDatabaseVersion, injectDatabaseName)
+    await setIndexedDBValue(higherOrderParamKey, higherOrderParamValue, higherOrderStoreName, higherOrderDatabaseName)(mockPage, injectDatabaseVersion)
 
     // missing everything, safe fallbacks
     await setIndexedDBValue()(mockPage)
@@ -103,32 +103,32 @@ describe('[Botmation] actions/indexed-db', () => {
 
     expect(mockPage.evaluate).toHaveBeenNthCalledWith(10, expect.any(Function), 'inject-database-name', 2, 'inject-store-name', 'higher-order-key', 'higher-order-value')
     expect(mockPage.evaluate).toHaveBeenNthCalledWith(11, expect.any(Function), 'inject-database-name', 2, 'higher-order-store-name', 'higher-order-key', 'higher-order-value')
-    expect(mockPage.evaluate).toHaveBeenNthCalledWith(12, expect.any(Function), 'inject-database-name', 1, 'higher-order-store-name', 'higher-order-key', 'higher-order-value')
+    expect(mockPage.evaluate).toHaveBeenNthCalledWith(12, expect.any(Function), 'higher-order-database-name', 2, 'higher-order-store-name', 'higher-order-key', 'higher-order-value')
 
-    expect(mockPage.evaluate).toHaveBeenNthCalledWith(13, expect.any(Function), 'missing-db-name', 1, 'missing-store', 'missing-key', 'missing-value')
+    expect(mockPage.evaluate).toHaveBeenNthCalledWith(13, expect.any(Function), 'missing-db-name', undefined, 'missing-store', 'missing-key', 'missing-value')
   })
 
   it('getIndexedDBValue() should call Page.evaluate() with a helper function and the correct values for key, storeName, databaseName, and databaseVersion', async() => {
     // no injects, all values come from higher order
-    await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage)
+    await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName, higherOrderDatabaseName, higherOrderDatabaseVersion)(mockPage)
 
     // varying BotIndexedDBInjects, all values come from higher order
-    await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage, injectDatabaseName)
-    await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage, injectDatabaseName, injectDatabaseVersion)
-    await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName)
+    await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName, higherOrderDatabaseName, higherOrderDatabaseVersion)(mockPage, injectDatabaseVersion)
+    await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName, higherOrderDatabaseName, higherOrderDatabaseVersion)(mockPage, injectDatabaseVersion, injectDatabaseName)
+    await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName, higherOrderDatabaseName, higherOrderDatabaseVersion)(mockPage, injectDatabaseVersion, injectDatabaseName, injectStoreName)
 
     // Full BotIndexedDBInjects with Pipe for `key`, higher order key overrides pipe provided
-    await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName, {brand: 'Pipe', value: injectedPipeParamKey})
-    await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName, higherOrderDatabaseVersion, higherOrderDatabaseName)(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName, {brand: 'Pipe', value: {key: injectedPipeParamKey}})
+    await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName, higherOrderDatabaseName, higherOrderDatabaseVersion)(mockPage, injectDatabaseVersion, injectDatabaseName, injectStoreName, {brand: 'Pipe', value: injectedPipeParamKey})
+    await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName, higherOrderDatabaseName, higherOrderDatabaseVersion)(mockPage, injectDatabaseVersion, injectDatabaseName, injectStoreName, {brand: 'Pipe', value: {key: injectedPipeParamKey}})
 
     // No higher order, so key comes from Pipe, other values from injects
-    await getIndexedDBValue()(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName, {brand: 'Pipe', value: injectedPipeParamKey})
-    await getIndexedDBValue()(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName, {brand: 'Pipe', value: {key: injectedPipeParamKey}})
+    await getIndexedDBValue()(mockPage, injectDatabaseVersion, injectDatabaseName, injectStoreName, {brand: 'Pipe', value: injectedPipeParamKey})
+    await getIndexedDBValue()(mockPage, injectDatabaseVersion, injectDatabaseName, injectStoreName, {brand: 'Pipe', value: {key: injectedPipeParamKey}})
 
     // Mixes of higher order and injects
-    await getIndexedDBValue(higherOrderParamKey)(mockPage, injectDatabaseName, injectDatabaseVersion, injectStoreName)
-    await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName)(mockPage, injectDatabaseName, injectDatabaseVersion)
-    await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName, higherOrderDatabaseVersion)(mockPage, injectDatabaseName)
+    await getIndexedDBValue(higherOrderParamKey)(mockPage, injectDatabaseVersion, injectDatabaseName, injectStoreName)
+    await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName)(mockPage, injectDatabaseVersion, injectDatabaseName)
+    await getIndexedDBValue(higherOrderParamKey, higherOrderStoreName, higherOrderDatabaseName)(mockPage, injectDatabaseVersion)
 
     // missing everything, safe fallbacks
     await getIndexedDBValue()(mockPage)
@@ -147,9 +147,9 @@ describe('[Botmation] actions/indexed-db', () => {
 
     expect(mockPage.evaluate).toHaveBeenNthCalledWith(9, expect.any(Function), 'inject-database-name', 2, 'inject-store-name', 'higher-order-key')
     expect(mockPage.evaluate).toHaveBeenNthCalledWith(10, expect.any(Function), 'inject-database-name', 2, 'higher-order-store-name', 'higher-order-key')
-    expect(mockPage.evaluate).toHaveBeenNthCalledWith(11, expect.any(Function), 'inject-database-name', 1, 'higher-order-store-name', 'higher-order-key')
+    expect(mockPage.evaluate).toHaveBeenNthCalledWith(11, expect.any(Function), 'higher-order-database-name', 2, 'higher-order-store-name', 'higher-order-key')
 
-    expect(mockPage.evaluate).toHaveBeenNthCalledWith(12, expect.any(Function), 'missing-db-name', 1, 'missing-store', 'missing-key')
+    expect(mockPage.evaluate).toHaveBeenNthCalledWith(12, expect.any(Function), 'missing-db-name', undefined, 'missing-store', 'missing-key')
   })
 
   // E2E Test

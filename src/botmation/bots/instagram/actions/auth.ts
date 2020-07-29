@@ -23,7 +23,7 @@ import { errors } from 'botmation/actions/errors'
  * @param injects
  */
 export const isGuest: ConditionalBotAction = async(page, ...injects) =>
-  await indexedDBStore('redux', 1, 'paths')(
+  await indexedDBStore('redux', 'paths')(
     getIndexedDBValue('users.viewerId'),
     map(viewerId => viewerId ? false : true),
   )(page, ...injects)
@@ -35,7 +35,7 @@ export const isGuest: ConditionalBotAction = async(page, ...injects) =>
  * @param injects
  */
 export const isLoggedIn: ConditionalBotAction = async(page, ...injects) =>
-  await indexedDBStore('redux', 1, 'paths')(
+  await indexedDBStore('redux', 'paths')(
     getIndexedDBValue('users.viewerId'),
     map(viewerId => viewerId ? true : false)
   )(page, ...injects)

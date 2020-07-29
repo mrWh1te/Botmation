@@ -16,11 +16,11 @@ import { getQueryKey, getQueryKeyValue } from 'botmation/types/database'
  * @param databaseVersion 
  * @param storeName 
  */
-export const indexedDBStore = (databaseName: string, databaseVersion: number, storeName: string) =>
+export const indexedDBStore = (databaseName: string, storeName: string, databaseVersion?: number) =>
   (...actions: BotAction<PipeValue|void>[]): BotAction<any> =>
     async(page, ...injects) => 
       await inject(
-        databaseName, databaseVersion, storeName
+        databaseVersion, databaseName, storeName
       )(...actions)(page, ...pipeInjects(injects))
       
       
@@ -36,9 +36,9 @@ export const indexedDBStore = (databaseName: string, databaseVersion: number, st
  * @param databaseVersion 
  */
 export const setIndexedDBValue = 
-  (key?: string, value?: any, storeName?: string, databaseVersion?: number, databaseName?: string): BotIndexedDBAction<void> => 
+  (key?: string, value?: any, storeName?: string, databaseName?: string, databaseVersion?: number): BotIndexedDBAction<void> => 
     async(page, ...injects) => {
-      const [pipedValue, injectDatabaseName, injectDatabaseVersion, injectStoreName] = unpipeInjects<getQueryKeyValue>(injects, 3)
+      const [pipedValue, injectDatabaseVersion, injectDatabaseName, injectStoreName] = unpipeInjects<getQueryKeyValue>(injects, 3)
 
       if (!value) {
         if (pipedValue) {
@@ -59,7 +59,7 @@ export const setIndexedDBValue =
       await page.evaluate(
         setIndexedDBStoreValue,
         databaseName ? databaseName : injectDatabaseName ? injectDatabaseName : 'missing-db-name',
-        databaseVersion ? databaseVersion : injectDatabaseVersion ? injectDatabaseVersion : 1,
+        databaseVersion ? databaseVersion : injectDatabaseVersion ? injectDatabaseVersion : undefined, // grab latest version
         storeName ? storeName : injectStoreName ? injectStoreName : 'missing-store', 
         key ? key : 'missing-key',
         value ? value : 'missing-value'
@@ -76,9 +76,9 @@ export const setIndexedDBValue =
  * @param databaseVersion 
  */
 export const getIndexedDBValue = 
-  (key?: string, storeName?: string, databaseVersion?: number, databaseName?: string): BotIndexedDBAction<PipeValue> => 
+  (key?: string, storeName?: string, databaseName?: string, databaseVersion?: number): BotIndexedDBAction<PipeValue> => 
     async(page, ...injects) => {
-      const [pipeValue, injectDatabaseName, injectDatabaseVersion, injectStoreName] = unpipeInjects<getQueryKey>(injects, 3)
+      const [pipeValue, injectDatabaseVersion, injectDatabaseName, injectStoreName] = unpipeInjects<getQueryKey>(injects, 3)
 
       if (!key) {
         if (pipeValue) {
@@ -93,7 +93,7 @@ export const getIndexedDBValue =
       return await page.evaluate(
         getIndexedDBStoreValue,
         databaseName ? databaseName : injectDatabaseName ? injectDatabaseName : 'missing-db-name',
-        databaseVersion ? databaseVersion : injectDatabaseVersion ? injectDatabaseVersion : 1,
+        databaseVersion ? databaseVersion : injectDatabaseVersion ? injectDatabaseVersion : undefined, // on open, it will grab latest version if undefined
         storeName ? storeName : injectStoreName ? injectStoreName : 'missing-store',
         key ? key : 'missing-key'
       ) as PipeValue

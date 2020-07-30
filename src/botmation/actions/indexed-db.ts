@@ -4,8 +4,8 @@ import { unpipeInjects, pipeInjects } from '../helpers/pipe'
 import { getIndexedDBStoreValue, setIndexedDBStoreValue } from '../helpers/indexed-db'
 import { inject } from './inject'
 import { PipeValue } from '../types/pipe-value'
-import { isObjectWithKey, isObjectWithValue } from 'botmation/types/objects'
-import { getQueryKey, getQueryKeyValue } from 'botmation/types/database'
+import { isObjectWithKey, isObjectWithValue } from '../types/objects'
+import { getQueryKey, getQueryKeyValue } from '../types/database'
 
 /**
  * @description    It's a higher-order BotAction that sets injects for identifying information of one IndexedDB store

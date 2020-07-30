@@ -1,9 +1,7 @@
 import { promises as fs } from 'fs'
 
-import { BotFilesAction } from '../interfaces/bot-actions'
-import { enrichBotFileOptionsWithDefaults } from 'botmation/helpers/files'
-import { BotFileOptions } from 'botmation/interfaces'
-import { getFileUrl } from 'botmation/helpers/files'
+import { enrichBotFileOptionsWithDefaults, getFileUrl } from '../helpers/files'
+import { BotFileOptions, BotFilesAction } from '../interfaces'
 
 /**
  * @description   Parse page's cookies and save them as JSON in a local file

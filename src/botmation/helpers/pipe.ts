@@ -2,8 +2,8 @@
  * Functions that help with piping: pipe()() / Pipe
  */
 
-import { isPipe, Pipe, EmptyPipe } from "botmation/interfaces/pipe"
-import { PipeValue } from "botmation/types/pipe-value"
+import { isPipe, Pipe, EmptyPipe } from "../interfaces/pipe"
+import { PipeValue } from "../types/pipe-value"
 
 /**
  * @description    Unpipe the injects by returning the injects with the Pipe value first, followed by the injects

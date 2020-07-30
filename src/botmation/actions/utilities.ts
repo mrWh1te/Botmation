@@ -1,13 +1,13 @@
+import { pipeActionOrActions, pipe } from './assembly-lines'
+import { sleep } from '../helpers/utilities'
+import { pipeInjects } from '../helpers/pipe'
+import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions'
+
 /**
  * @description   The higher order BotAction's bring a new level of dynamic behavior to BotAction's functionally
  *                These functions are intended to be utilities for the dev's to help achieve more complex functionality,
  *                  in a composable functional fashion
  */
-import { sleep } from '../helpers/utilities'
-
-import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions'
-import { injectsHavePipe, wrapValueInPipe, pipeInjects } from 'botmation/helpers/pipe'
-import { pipeActionOrActions, pipe } from './assembly-lines'
 
 /**
  * @description Higher Order BotAction that accepts a ConditionalBotAction (pipeable, that returns a boolean) and based on what boolean it resolves,

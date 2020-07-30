@@ -1,4 +1,4 @@
-import { BotFileOptions } from "botmation/interfaces/bot-file-options"
+import { BotFileOptions } from "../interfaces/bot-file-options"
 
 /**
  * @description   Enrich provided BotFileOptions partial with safe default values

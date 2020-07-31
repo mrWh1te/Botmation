@@ -13,11 +13,15 @@ import { errors } from 'botmation/actions/errors'
  */
 describe('[Botmation] actions/assembly-lines chain() e2e', () => {
 
+  beforeEach(async () => {
+    await jestPuppeteer.resetPage()
+  })
+
   //
   // Functional
   it('should run a chain of actions which submits the example form with errors() wrapping', async() => {
     try {
-      await chain(
+      await (chain(
         // errors('chain-test')(
           goTo(BASE_URL),
           goTo(EXAMPLE_URL),
@@ -26,10 +30,13 @@ describe('[Botmation] actions/assembly-lines chain() e2e', () => {
           click(FORM_SUBMIT_BUTTON_SELECTOR),
           waitForNavigation
         // )
-      )(page)
-    } catch (error) {}
+      )(page))
+    } catch (error) {
+      console.log('What do we have here?')
+      console.error(error)
+    }
 
-    expect(page.url()).toEqual('http://localhost:8080/success.html?answer=loremlipsum2')
+    await expect(page.url()).toEqual('http://localhost:8080/success.html?answer=loremlipsum2')
   })
 
 })

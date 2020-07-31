@@ -1,4 +1,4 @@
-import 'expect-puppeteer'
+// import 'expect-puppeteer'
 import { Page, Browser } from 'puppeteer'
 
 import { enrichGoToPageOptions } from 'botmation/helpers/navigation'

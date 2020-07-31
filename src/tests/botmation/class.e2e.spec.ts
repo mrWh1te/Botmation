@@ -10,11 +10,7 @@ import { FORM_TEXT_INPUT_SELECTOR, FORM_SUBMIT_BUTTON_SELECTOR } from '../select
 /**
  * @description   E2E
  */
-describe('[Botmation] e2e Botmation class', () => {
-
-  beforeEach(async() => {
-    await goTo(BASE_URL)(page)
-  })
+describe('[Botmation] Botmation class e2e', () => {
 
   //
   // Botmation Class Instance
@@ -22,6 +18,7 @@ describe('[Botmation] e2e Botmation class', () => {
     const bot = new Botmation(page)
 
     await bot.actions(
+      goTo(BASE_URL),
       goTo(EXAMPLE_URL),
       click(FORM_TEXT_INPUT_SELECTOR),
       type('loremlipsum'),

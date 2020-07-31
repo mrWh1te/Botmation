@@ -1,7 +1,6 @@
-// import 'expect-puppeteer'
-// import { Page, Browser } from 'puppeteer'
+import 'expect-puppeteer'
+import { Page } from 'puppeteer'
 
-// import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 import { click, type } from 'botmation/actions/input'
 import { goTo, waitForNavigation } from 'botmation/actions/navigation'
 import { Botmation } from 'botmation/class'
@@ -10,7 +9,6 @@ import { BASE_URL, EXAMPLE_URL } from '../urls'
 import { FORM_TEXT_INPUT_SELECTOR, FORM_SUBMIT_BUTTON_SELECTOR } from '../selectors'
 import { chain } from 'botmation/actions/assembly-lines'
 import { errors } from 'botmation/actions/errors'
-import { Page } from 'puppeteer'
 
 /**
  * @description   E2E

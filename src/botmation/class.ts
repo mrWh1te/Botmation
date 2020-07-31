@@ -54,8 +54,10 @@ export class Botmation implements BotmationInterface {
    * @param actions  
    */
   public async actions(...actions: BotAction[]): Promise<void> {
-    return errors('Botmation Class')(
-      chain(...actions)
+    await chain(
+      errors('Botmation Class')(
+        ...actions
+      )
     )(this.page, ...this.injects)
   }
 

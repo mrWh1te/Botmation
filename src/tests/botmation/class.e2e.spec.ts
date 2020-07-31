@@ -17,16 +17,21 @@ describe('[Botmation] Botmation class e2e', () => {
   it('should create a Botmation instance then run the actions to submit the example form', async() => {
     const bot = new Botmation(page)
 
-    await bot.actions(
-      goTo(BASE_URL),
-      goTo(EXAMPLE_URL),
-      click(FORM_TEXT_INPUT_SELECTOR),
-      type('loremlipsum'),
-      click(FORM_SUBMIT_BUTTON_SELECTOR),
-      waitForNavigation
-    )
+    try {
+      await bot.actions(
+        goTo(BASE_URL),
+        goTo(EXAMPLE_URL),
+        click(FORM_TEXT_INPUT_SELECTOR),
+        type('loremlipsum'),
+        click(FORM_SUBMIT_BUTTON_SELECTOR),
+        waitForNavigation
+      )
+    } catch(error) {
+      console.log('What do we have here?')
+      console.error(error)
+    }
 
-    expect(page.url()).toEqual('http://localhost:8080/success.html?answer=loremlipsum')
+    await expect(page.url()).toEqual('http://localhost:8080/success.html?answer=loremlipsum')
   })
 
 })

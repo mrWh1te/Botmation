@@ -19,6 +19,7 @@ module.exports = {
     "**/botmation/**/*.ts",
     "!**/botmation/bots/**/*.ts",
     "!**/botmation/index.ts",
+    "!**/botmation/types/index.ts",
     "!**/node_modules/**",
     "!**/build/**",
     "!**/dist/**",

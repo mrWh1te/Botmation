@@ -1,8 +1,8 @@
-import { BotAction } from "botmation/interfaces"
+import { BotAction } from "../interfaces"
 import { PipeValue } from "../types/pipe-value"
-import { injectsHavePipe } from "botmation/helpers/pipe"
-import { logError } from "botmation/helpers/console"
-import { pipe, chain } from "botmation/actions/assembly-lines"
+import { injectsHavePipe } from "../helpers/pipe"
+import { logError } from "../helpers/console"
+import { pipe, chain } from "../actions/assembly-lines"
 
 /**
  * @description    Higher-order BotAction to run actions in a try/catch block that logs errors with the provided errorBlockName

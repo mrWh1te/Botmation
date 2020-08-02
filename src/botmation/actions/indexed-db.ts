@@ -4,8 +4,8 @@ import { unpipeInjects } from '../helpers/pipe'
 import { getIndexedDBStoreValue, setIndexedDBStoreValue } from '../helpers/indexed-db'
 import { inject } from './inject'
 import { PipeValue } from '../types/pipe-value'
-import { isObjectWithKey, isObjectWithValue } from 'botmation/types/objects'
-import { getQueryKey, getQueryKeyValue } from 'botmation/types/database'
+import { isObjectWithKey, isObjectWithValue } from '../types/objects'
+import { getQueryKey, getQueryKeyValue } from '../types/database'
 import { pipe } from './assembly-lines'
 
 /**

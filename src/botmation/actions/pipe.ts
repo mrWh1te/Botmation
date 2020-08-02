@@ -1,6 +1,6 @@
-import { BotAction } from "botmation/interfaces"
-import { PipeValue } from "botmation/types/pipe-value"
-import { getInjectsPipeValue } from "botmation/helpers/pipe"
+import { BotAction } from "../interfaces"
+import { PipeValue } from "../types/pipe-value"
+import { getInjectsPipeValue } from "../helpers/pipe"
 
 //
 // BotAction's Focused on Piping

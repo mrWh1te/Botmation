@@ -1,5 +1,5 @@
 import { BotFileOptions, BotAction } from "botmation/interfaces"
-import { enrichBotFileOptionsWithDefaults } from "botmation/helpers/files"
+import { enrichBotFileOptionsWithDefaults } from "../helpers/files"
 import { inject } from "./inject"
 import { errors } from "./errors"
 

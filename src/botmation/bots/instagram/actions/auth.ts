@@ -1,12 +1,12 @@
-import { ConditionalBotAction } from 'botmation/interfaces/bot-actions'
-import { BotAction } from 'botmation/interfaces/bot-actions'
+import { ConditionalBotAction } from '../../../interfaces/bot-actions'
+import { BotAction } from '../../../interfaces/bot-actions'
 
-import { chain } from 'botmation/actions/assembly-lines'
-import { goTo, waitForNavigation } from 'botmation/actions/navigation'
-import { click, type } from 'botmation/actions/input'
-import { getIndexedDBValue, indexedDBStore } from 'botmation/actions/indexed-db'
-import { map } from 'botmation/actions/pipe'
-import { log } from 'botmation/actions/console'
+import { chain } from '../../../actions/assembly-lines'
+import { goTo, waitForNavigation } from '../../../actions/navigation'
+import { click, type } from '../../../actions/input'
+import { getIndexedDBValue, indexedDBStore } from '../../../actions/indexed-db'
+import { map } from '../../../actions/pipe'
+import { log } from '../../../actions/console'
 
 import { getInstagramLoginUrl } from '../helpers/urls'
 import { 
@@ -14,8 +14,8 @@ import {
   FORM_AUTH_PASSWORD_INPUT_SELECTOR,
   FORM_AUTH_SUBMIT_BUTTON_SELECTOR
 } from '../selectors'
-import { errors } from 'botmation/actions/errors'
-import { wait } from 'botmation/actions/utilities'
+import { errors } from '../../../actions/errors'
+import { wait } from '../../../actions/utilities'
 
 /**
  * @description    ConditionalBotAction that resolves TRUE if the User is NOT logged in

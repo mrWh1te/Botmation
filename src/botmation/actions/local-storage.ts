@@ -1,12 +1,12 @@
-import { BotAction } from "botmation/interfaces"
-import { getInjectsPipeValue } from "botmation/helpers/pipe"
+import { BotAction } from "../interfaces"
+import { getInjectsPipeValue } from "../helpers/pipe"
 
 import { 
   getLocalStorageKeyValue,
   setLocalStorageKeyValue,
   removeLocalStorageKeyValue,
   clearLocalStorage
-} from "botmation/helpers/local-storage"
+} from "../helpers/local-storage"
 
 /**
  * @description     Care! Clears all key/value pairs from Local Storage

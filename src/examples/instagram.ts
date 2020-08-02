@@ -20,7 +20,6 @@ import { getInstagramBaseUrl } from 'botmation/bots/instagram/helpers/urls'
 
 // More advanced BotAction's
 import { chain } from 'botmation/actions/assembly-lines'
-import { errors } from 'botmation/actions/errors'
 import { files } from 'botmation/actions/files'
 
 // Main Script
@@ -28,7 +27,7 @@ import { files } from 'botmation/actions/files'
   let browser: puppeteer.Browser
 
   try {
-    browser = await puppeteer.launch({headless: true})
+    browser = await puppeteer.launch({headless: false})
     const pages = await browser.pages()
     const page = pages.length === 0 ? await browser.newPage() : pages[0]
 
@@ -37,11 +36,9 @@ import { files } from 'botmation/actions/files'
       
       // Sets up the injects for BotFileAction's (optional)
       files({cookies_directory: 'simple'})(
-        errors('files()( loadCookes() )')(
-          // Takes the name of the file to load cookies from
-          // Match this value with the same used in saveCookies()
-          loadCookies('instagram'),
-        ),
+        // Takes the name of the file to load cookies from
+        // Match this value with the same used in saveCookies()
+        loadCookies('instagram'),
       ),
 
       goTo(getInstagramBaseUrl()),
@@ -58,9 +55,7 @@ import { files } from 'botmation/actions/files'
         log('is guest so logging in'),
         login({username: 'account', password: 'password'}), // <- put your username and password here
         files({cookies_directory: 'simple'})(
-          errors('files()( saveCookies() )')(
-            saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies 
-          ),
+          saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies 
         ),
         log('Saved Cookies')
       ),

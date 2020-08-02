@@ -1,6 +1,7 @@
 import { BotFileOptions, BotAction } from "botmation/interfaces"
 import { enrichBotFileOptionsWithDefaults } from "botmation/helpers/files"
 import { inject } from "./inject"
+import { errors } from "./errors"
 
 /**
  * @description    Higher-order BotAction to inject an enriched "BotFileOptions" from an optional provided Partial of one
@@ -10,6 +11,6 @@ import { inject } from "./inject"
  */
 export const files = (fileOptions?: Partial<BotFileOptions>) =>
   (...actions: BotAction[]): BotAction =>
-    inject(
-      enrichBotFileOptionsWithDefaults(fileOptions)
-    )(...actions)
+    inject(enrichBotFileOptionsWithDefaults(fileOptions))(
+      errors('files()()')(...actions)
+    )

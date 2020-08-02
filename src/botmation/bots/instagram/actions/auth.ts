@@ -15,6 +15,7 @@ import {
   FORM_AUTH_SUBMIT_BUTTON_SELECTOR
 } from '../selectors'
 import { errors } from 'botmation/actions/errors'
+import { wait } from 'botmation/actions/utilities'
 
 /**
  * @description    ConditionalBotAction that resolves TRUE if the User is NOT logged in
@@ -44,7 +45,7 @@ export const isLoggedIn: ConditionalBotAction = async(page, ...injects) =>
  * @description  BotAction that attempts the login flow for Instagram
  * @param {username, password} destructured
  */
-export const login = ({username, password}: {username: string, password: string}): BotAction => async(page, ...injects) =>
+export const login = ({username, password}: {username: string, password: string}): BotAction =>
   chain(
     errors('Instagram login()')(
       goTo(getInstagramLoginUrl()),
@@ -54,7 +55,8 @@ export const login = ({username, password}: {username: string, password: string}
       type(password),
       click(FORM_AUTH_SUBMIT_BUTTON_SELECTOR),
       waitForNavigation,
+      wait(1000), // artificially wait 1sec to give time for app to update IndexedDB (so auth checks work)
       log('Login Complete')
     )
-  )(page, ...injects)
+  )
   

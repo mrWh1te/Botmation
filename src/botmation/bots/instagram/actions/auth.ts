@@ -23,11 +23,11 @@ import { wait } from 'botmation/actions/utilities'
  * @param page
  * @param injects
  */
-export const isGuest: ConditionalBotAction = async(page, ...injects) =>
-  await indexedDBStore('redux', 'paths')(
+export const isGuest: ConditionalBotAction = 
+  indexedDBStore('redux', 'paths')(
     getIndexedDBValue('users.viewerId'),
     map(viewerId => viewerId ? false : true),
-  )(page, ...injects)
+  )
 
 /**
  * @description    ConditionalBotAction that resolves TRUE if the User is logged in
@@ -35,11 +35,11 @@ export const isGuest: ConditionalBotAction = async(page, ...injects) =>
  * @param page
  * @param injects
  */
-export const isLoggedIn: ConditionalBotAction = async(page, ...injects) =>
-  await indexedDBStore('redux', 'paths')(
+export const isLoggedIn: ConditionalBotAction =
+  indexedDBStore('redux', 'paths')(
     getIndexedDBValue('users.viewerId'),
     map(viewerId => viewerId ? true : false)
-  )(page, ...injects)
+  )
 
 /**
  * @description  BotAction that attempts the login flow for Instagram

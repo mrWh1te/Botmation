@@ -1,4 +1,4 @@
-import { BotAction } from "botmation/interfaces"
+import { BotAction } from "../interfaces"
 import { PipeValue } from "../types/pipe-value"
 import { assemblyLine } from "./assembly-lines"
 

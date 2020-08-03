@@ -83,7 +83,7 @@ await chain(
 
     // Take a screenshot of Google homepage
     goTo('https://google.com'), // 1. "Navigation" BotAction
-    screenshot('google-homepage'), // 2. "Output" BotAction
+    screenshot('google-homepage'), // 2. "Files" BotAction
     
     // Take a screenshot of Dogpile homepage
     goTo('https://dogpile.com'), // 3. 
@@ -193,7 +193,7 @@ import { chain, goTo, screenshot } from 'botmation'
 
 But, as a reference, the `BotAction`'s are organized in multiple files, by type, in the `/actions` directory of the library.
 
-As of v2.0.x, there are 13 groups of actions to build from: 
+As of v2.0.x, there are 12 groups of actions to build from: 
 
  - `assembly-line`
     - assemble and run `BotAction`'s in lines
@@ -204,21 +204,19 @@ As of v2.0.x, there are 13 groups of actions to build from:
  - `errors`
     - try/catch errors in assembly-lines
  - `files`
-    - customize `BotAction`'s for cookies and outputs
+    - write files to local disk ie screenshots, pdf's
  - `indexed-db`
     - read/write to page's IndexedDB
  - `inject`
     - insert new injects into a line of `BotAction`'s
  - `input`
-    - simulate User input like typing and clicking with a mouse
+    - simulate User input ie typing and clicking with a mouse
  - `local-storage`
     - read/write/delete from a page's Local Storage
  - `navigation`
     - change the page's URL, wait for form submissions to change page URL, back, forward, refresh
- - `output`
-    - output files to local disk like screenshots, pdf's
  - `utilities`
-    - handle more complex logic patterns like if statements and for loops
+    - handle more complex logic patterns ie if statements and for loops
 
 
 Documentation
@@ -290,7 +288,7 @@ await chain(
 )(page, service, todaysDate)
 ```
 
-The assembled `BotAction`'s in the `chain()` will be called with `service` and `todaysDate` as the second and third parameters. For example, the "Output" `BotAction`'s are a special interface of `BotAction` called `BotFilesAction`. Special interfaces of `BotAction` simply type the `injects` they are expecting, so in the case of `BotFilesAction`, `BotFileOptions` is the type of the first inject.
+The assembled `BotAction`'s in the `chain()` will be called with `service` and `todaysDate` as the second and third parameters. For example, most "Files" `BotAction`'s use a special interface of `BotAction` called `BotFilesAction`. Special interfaces of `BotAction` simply type the `injects` they are expecting, so in the case of `BotFilesAction`, `BotFileOptions` is the type of the first inject.
 
 Now, what if you want to compose a line of actions, but with new injects? You can use the `inject()()` `BotAction` to inject new injects, before higher level injects. A few `BotAction`'s are composed with `inject()()` like `files()()` and `indexedDBStore()()`. Those composed `BotAction`'s inject the first few `injects` (before passing in any other injects from a higher context) for the declared `BotAction`'s assembled.
 

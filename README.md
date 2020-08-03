@@ -27,7 +27,7 @@ It has 100% code test coverage.
 
 # Introduction
 
-Botmation is a library of composable functions called `BotAction`'s, for writing Puppeteer scripts in a fun, simple, & testable way.
+Botmation is a library of composable functions called `BotAction`'s, for writing Puppeteer scripts in a fun, testable, declarative way.
 
 > “Everything should be made as simple as possible, but no simpler.” - Albert Einstein
 
@@ -114,12 +114,12 @@ This is as simple as it gets. When there is no need to add a layer of customizat
 
 ```typescript
 await chain(
-  login({username: 'username', password: 'password'}),
+  submitLoginForm({username: 'username', password: 'password'}),
   waitForNavigation, // <- no ()
   log('Done')
 )(page)
 ```
-See there is no sync function calls to use `waitForNavigation`, it's a constant that is equal to a `BotAction`. Nice and simple.
+See there is no sync function calls to use `waitForNavigation`, it's a constant that is set directly to a `BotAction`. Nice and simple.
 
 Now what if you want to create a `BotAction` that is customizable? Let's take a look at a simple one, in "Navigation" called `reload()` that simply reloads the browser page, like hitting the "refresh" button with some optional `options`:
 
@@ -130,7 +130,7 @@ const reload = (options?: NavigationOptions): BotAction =>
   }
 ```
 
-This syntax is the most common in the `BotAction`'s of Botmation. A single higher-order sync function that provides customizing parameters with safe defaults, for a returned async function (`BotAction`). Here, we manually `await` Puppeteer `Page`'s `reload()` method and pass in the higher-order `options` parameter, to customize the reload operation.
+This syntax is the most common in Botmation. A single higher-order sync function that provides customizing parameters with safe defaults, for composing an async function called a `BotAction`. Here, we manually `await` Puppeteer `Page`'s `reload()` method and pass in the higher-order `options` parameter, to customize the reload operation.
 
 The higher order parameters can be whatever you need them to be, on a function by function basis. They're typed as a spread array of `any`, so add more if you need more. Also, you are not limited to one higher-order sync function, you can stack them up, as high as you need! The possibilities are truly endless, but try to keep it simple & composable.
 

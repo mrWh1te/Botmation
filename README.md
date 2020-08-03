@@ -31,35 +31,14 @@ Botmation is a library of composable functions called `BotAction`'s, for writing
 
 > “Everything should be made as simple as possible, but no simpler.” - Albert Einstein
 
-1. Introduction
-    - BotAction
-    - Chain
-    - Making BotAction's
-2. Getting Started
-    - Install
-    - Library Reference // tutorial continuing the rabit hole
-    - Documentation
-    - Examples
-3. Advanced Techniques
-    - Injects
-    - Pipe
-    - Conditions
-    - Loops
-    - Error Handling
-4. Dev Notes
-    - Library Development
-    - Library Testing
-    - Issues/Feature Requests
-    - Contributors
-
 BotAction
 ---------
 
 Botmation's goal is to cover all the possibilities of web crawling functionality with separate composable functions called `BotAction`'s.
 
-A `BotAction` is an async function that does one particular thing. For example, change the page URL, take a screenshot, type something with a keyboard, click something with a mouse, manage your Instagram account, etc. Some kind of User based web automation, from really specific minute to high-level tasks.
+<img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
 
-<img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="190" align="right">
+A `BotAction` is an async function that does one particular thing. For example, change the page URL, take a screenshot, type something with a keyboard, click something with a mouse, manage your Instagram account, etc. Some kind of User based web automation, from really specific minute to high-level tasks.
 
 These functions are passed in a Puppeteer Page instance and are all organized by type. Some `BotAction`'s are very simple, without any parameters, while others are complex with multiple higher-order sync functions that must be called first, to retrieve the actual `BotAction`.
 
@@ -110,16 +89,7 @@ const waitForNavigation: BotAction = async(page) => {
 }
 ```
 
-This is as simple as it gets. When there is no need to add a layer of customization to the `BotAction`, then there is no need to wrap it with higher-order sync functions. Simplicity is great, use this style when possible. Let's see this `BotAction` assembled in a `chain()`:
-
-```typescript
-await chain(
-  submitLoginForm({username: 'username', password: 'password'}),
-  waitForNavigation, // <- no ()
-  log('Done')
-)(page)
-```
-See there is no sync function calls to use `waitForNavigation`, it's a constant that is set directly to a `BotAction`. Nice and simple.
+This is as simple as it gets. When there is no need to add a layer of customization to the `BotAction`, then there is no need to wrap it with higher-order sync functions. Simplicity is great, use this style when possible. 
 
 Now what if you want to create a `BotAction` that is customizable? Let's take a look at a simple one, in "Navigation" called `reload()` that simply reloads the browser page, like hitting the "refresh" button with some optional `options`:
 
@@ -134,9 +104,9 @@ This syntax is the most common in Botmation. A single higher-order sync function
 
 The higher order parameters can be whatever you need them to be, on a function by function basis. They're typed as a spread array of `any`, so add more if you need more. Also, you are not limited to one higher-order sync function, you can stack them up, as high as you need! The possibilities are truly endless, but try to keep it simple & composable.
 
-Now what if you want to create a `BotAction` to handle a high-level task, like in a complex User-Story. This `BotAction` will need to run a bunch of other `BotAction`'s, in order to complete its task. For this, we use Composition to compose a new `BotAction` from an assembly line of other `BotAction`'s.
+Now what if you want to create a `BotAction` to handle a high-level task, like in an User-Story. This `BotAction` will need to run a bunch of other `BotAction`'s, in order to complete its task. For this, we use Composition to compose a new `BotAction` made from an assembly line of `BotAction`'s.
 
-It's all up to you, as to how you need to orchestrate it. Let's get started with a helpful example, a `login()` `BotAction` for a common scenario:
+Let's get started with a helpful example, a `login()` `BotAction` for a common scenario:
 
 ```typescript
 const login = ({username, password}: {username: string, password: string}): BotAction =>
@@ -152,7 +122,7 @@ const login = ({username, password}: {username: string, password: string}): BotA
   )
 ```
 
-It looks magical, but the typing all works out.
+It looks magical, but the typing keeps it all in check.
 
 `login()` is a sync function that provides customization for `username` and `password`. It returns a `BotAction`, which is made from a composition of other `BotAction`'s. That composition is made through an Assembly Line, in this case, `chain()`.
 
@@ -170,8 +140,6 @@ Botmation is a NodeJS library written in TypeScript. You'll need [node.js](http:
 
 Install
 -------
-
-<img alt="Orange Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/orange_bot.PNG" width="175" align="right">
 
 Install Botmation with `npm` and save it as a dependency:
 
@@ -194,6 +162,8 @@ import { chain, goTo, screenshot } from 'botmation'
 But, as a reference, the `BotAction`'s are organized in multiple files, by type, in the `/actions` directory of the library.
 
 As of v2.0.x, there are 12 groups of actions to build from: 
+
+<img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="190" align="right" style="position: relative;top: 30px;">
 
  - `assembly-line`
     - assemble and run `BotAction`'s in lines
@@ -323,6 +293,8 @@ So in essence, if a `BotAction` does not return a value, it effectively empties 
 
 There are also separate functions in this library, that you will find in the module, that are not `BotAction`'s but regular functions, mostly pure, that help in some way. There are many `helper` functions for when your piping.
 
+<img alt="Orange Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/orange_bot.PNG" width="175" align="right">
+
 To name a few, there are `unpipeInjects()`, `removePipe()`, `getInjectsPipeValue()`, `wrapValueInPipe()`, `pipeInjects()`, and so forth. They do what they sound like they do. When starting out, the first three are most relevant.
 
 If you're not interested in whats injected, but the Pipe value, use `getInjectsPipeValue()` it has safe fallbacks for when there is no Pipe, etc. See the Local Storage `BotAction`'s for examples.
@@ -408,8 +380,6 @@ Also, you can nest `errors()()` as deeply as you want. This is to help isolate, 
 
 Library Development
 -------------------
-
-<img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
 
 First, clone the repo locally, then install the npm dependencies. You can build the library locally with this command:
 ```

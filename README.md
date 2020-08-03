@@ -12,16 +12,90 @@
 
 A TypeScript library for using [Puppeteer](https://github.com/puppeteer/puppeteer) in a declarative way.
 
+<img alt="Baby Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/baby_bot.PNG" width="175" align="right">
+
 Why choose Botmation?
 ---------------------
 
-It enables devs to use Puppeteer with less code. <img alt="Baby Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/baby_bot.PNG" width="175" align="right">
+It empowers Puppeteer code with a simple pattern to maximize readability, reusability and testability.
 
-It has a loose architectural pattern to build chains of simple reusable functions called Bot Actions.
+It has a Compositional design with safe defaults for composing bots with ease.
 
-It embraces flexibility with its design that enables the nesting of Bot Action chains.
+It has a low learning curve, that hopefully, at your own pace, inspires an appreciation for the possibilities of Functional programming.
 
-It gives choice, like in approach: Object-Oriented or purely Functional.
+Botmation has 100% test coverage.
+
+# Overview
+
+Botmation is mostly a library of functions called `BotAction`'s for writing Puppeteer scripts in a reusable & composable manner.
+
+> “Everything should be made as simple as possible, but no simpler.” - Albert Einstein
+
+1. Overview
+    - BotAction
+    - Chain
+2. Getting Started
+    - Install
+    - Library Reference // tutorial continuing the rabit hole
+    - Documentation
+<img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="230" align="right">
+    - Examples
+        - Object-Oriented
+        - Concurrency
+        - Instagram
+3. Advanced BotAction's
+    - Utilities
+    - Errors
+    - Inject
+    - Pipe
+        - IndexedDB & Local Storage
+4. Dev Notes
+    - Library Development
+    - Library Testing
+    - Issues/Feature Requests
+    - Contributors
+
+BotAction
+---------
+
+A `BotAction` is an async function that does one particular thing, like change the page URL, take a screenshot, type something with a keyboard, click something with a mouse, etc.
+
+Botmation's goal is to cover all the possibilities of web crawling with `BotAction`'s, organized into themes and domains. Some `BotAction`'s are very simple, without any parameters, while others are complex with multiple higher-order sync functions that must be called to retrieve them. Either way, these functions are units for assembly, like in a factory. 
+
+Assembling `BotAction`'s is done with a fundamental type of `BotAction` called `Assembly Lines`. `Assembly Lines` run a sequence of `BotAction`'s, one by one, in the order declared. The best one to get started with, is the simplest one, called `chain()()`.
+
+Chain
+-----
+
+The `chain()()` `BotAction` runs the declared `BotAction`'s, in the order received. Here is an example of a `chain()()` that will run `BotAction`'s to take screenshots of various web sites:
+
+```typescript
+const page = await browser.newPage() // Puppeteer Browser
+
+await chain(
+    //
+    // Declared BotAction's: (#. = order ran)
+
+    // Take a screenshot of Google homepage
+    goTo('https://google.com'), // 1. "Navigation" BotAction
+    screenshot('google-homepage'), // 2. "Output" BotAction
+    
+    // Take a screenshot of Dogpile homepage
+    goTo('https://dogpile.com'), // 3. 
+    screenshot('dogpile-homepage') // 4.
+)(page)
+```
+
+Each `BotAction` in the chain (`goTo()`, `screenshot()`) is ran asynchronously, one at a time. Now given `chain()` returns a `BotAction`, you can use it again, inside to isolate `BotAction`'s in their own line, or create a new `BotAction` that is a chain of other `BotAction`'s, doing complex stuff for a particular, high-level thing.
+
+
+[Botmation: Actions documentation](/src/botmation/actions/README.md)
+
+# Getting Started
+
+Botmation is a NodeJS library written in TypeScript. You'll need NodeJS and the TypeScript compiler (`tsc`) installed, if you haven't already, follow this guide.
+
+> todo the guide above in another doc, hopefully just links
 
 Install
 -------
@@ -29,44 +103,24 @@ Install
 First make sure you have installed the latest version of [node.js](http://nodejs.org/)
 (You may need to restart your computer after this step).
 
+<img alt="Orange Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/orange_bot.PNG" width="175" align="right">
+
 Then install it with `npm`:
 
-    npm install botmation
+    npm i -s botmation
 
 If you're just getting started, install `puppeteer` & `@types/puppeteer`:
 
-    npm install puppeteer @types/puppeteer
+    npm i -s puppeteer @types/puppeteer
 
-# Getting Started
-
-This project is about breaking down Puppeteer code into simple reusable functions called Bot Actions. To get started with available Bot Actions, and how to make your own, read the [Botmation: Actions documentation](/src/botmation/actions/README.md). When it comes to using these actions, there are two provided approaches: Object-Oriented and Functional.
-
-### 1) Object-Oriented
-
-<img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="180" align="right">
-
-The `Botmation` [class](/src/botmation/class.ts) gives you two options in creating an object instance. 1) Provide a browser `page` from a Puppeteer instance to the main class constructor. 2) Provide the browser from a Puppeteer instance to the static class method `asyncConstrutor()`. The first approach is good when you want finer control of the browser page ("Chrome" tab) used. The second approach is a little simpler, but gives you less control on which page (browser tab) is used. 
-
-Either way, after creating an instance, use the `actions()` method, to compose a chain of Bot Actions. These will run in sequence, one after the other. They are simple `async` functions, awaited one at a time, in a promise resolving chain.
-
-See the [object-oriented example code](/src/examples/simple_objectoriented.ts) to get started.
-
-### 2) Functional
-
-The `Botmation` class's `actions()` method is provided by a higher order function, called the [BotActionsChainFactory](/src/botmation/factories/bot-actions-chain.factory.ts) function. It's the center piece of this project. It's an async function to resolve a chain of promises, or in this context, a chain of Bot Actions, one link at a time.
-
-Therefore, you can skip the Object-Oriented Botmation class by directly using this function, without losing any core functionality. It can even be reused inside a Bot Action, to make one action represent a whole other chain of actions! Read more in the [Botmation: Actions documentation](/src/botmation/actions/README.md).
-
-See the [functional example code](/src/examples/simple_functional.ts) to get started.
-
-# Library Reference
+Library Reference
+-----------------
 
 After intalling through `npm`, you can import either the `Botmation` class or the main `BotActionsChainFactory` function from the main module: 
 ```javascript
 // Object Oriented, or Purely Functional
 import { Botmation, BotActionsChainFactory as Bot } from 'botmation';
 ```
-<img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
 
 The actions are organized in various files in the `/actions` directory. As of v1.0.x, there are 6 groups of actions you can import from: 
 ```javascript
@@ -79,13 +133,20 @@ import { screenshot } from 'botmation/actions/output';
 import { forAll } from 'botmation/actions/utilities';
 ```
 
+Documentation
+-------------
+
 To learn about the available Bot Actions, how to chain them together, and how to make your own, visit the [Botmation: Actions documentation](/src/botmation/actions/README.md).
 
-# Examples
+Examples
+--------
 
 In the `./src/examples` [directory](/src/examples), exists a small collection of simple bots, to help you get going.
 
 You can clone this repo, install npm dependencies, then build the source code:
+
+<img alt="Blue Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/blue_bot.PNG" width="150" align="right">
+
 ```
 npm run build
 ```
@@ -96,11 +157,15 @@ npm run examples/simple_objectoriented
 npm run examples/simple_functional
 npm run examples/instagram
 npm run examples/screenshots
+npm run examples/pdf
 ```
 
-# Running Bots Concurrently
+See the [object-oriented example code](/src/examples/simple_objectoriented.ts) to get started.
 
-<img alt="Blue Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/blue_bot.PNG" width="150" align="right">
+See the [functional example code](/src/examples/simple_functional.ts) to get started.
+
+
+### Running Bots Concurrently
 
 This project works with the [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster) module, so you can run multiple bots concurrently!
 
@@ -114,7 +179,49 @@ npm run build && npm run examples/puppeteer-cluster
 
 It will build the project source code then run the puppeteer-cluster example.
 
-# Library Development
+# Advanced BotAction's
+
+There's more you can do, given the composable nature of these functions.
+
+<img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
+
+Utilities
+---------
+
+`Utility` `BotAction`'s provide higher-order functions for conditionals and loops like if statements, and for each. Here's a simplified code bit from the Instagram example that attempts to login, only, *if* the "User" is a Guest:
+
+```typescript
+await chain(
+    // "Console" BotAction
+    log('Bot is running aka User'),
+
+    // "Utility" BotAction givenThat() resolves a "Conditional" BotAction for a boolean value
+    //    Given that the value resolves TRUE, run the actions declared inside the block
+    givenThat(isGuest)(
+        log('is guest so logging in'),
+        login({username: 'account', password: 'password'}),
+    ),
+
+    givenThat(isLoggedIn)( // in case something went wrong
+        log('bot is logged in')
+    )
+)(page)
+```
+
+Errors
+------
+
+Inject
+------
+
+Pipe
+----
+ie IndexedDB & Local Storage for getting values
+
+# Dev Notes
+
+Library Development
+-------------------
 
 First, clone the repo locally, then install the npm dependencies. You can build the library locally with this command:
 ```
@@ -123,25 +230,26 @@ npm run build
 
 The [playground_bot](/src/playground_bot.ts) is a dedicated spot for trying out new Bot Actions, etc. You can run it's code, after running the build command, with:
 
-<img alt="Orange Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/orange_bot.PNG" width="175" align="right">
-
 ```
 npm run playground
 ```
 
-## Library Tests
+Library Testing
+---------------
 
-All our testing is done with [Jest](https://jestjs.io/).
+All our testing (e2e, unit, and integration) is done with [Jest](https://jestjs.io/).
 
 Learn more about the library's testing strategy and coverage with the [Botmation: Tests documentation](/src/tests/README.md).
 
-## Issues & Feature Requests
+Issues & Feature Requests
+-------------------------
 
 Open Issues on Github. Please specify if it's a feature request or a bug.
 
 When reporting bugs, please provide sample code to recreate the bug, relevant error messages/logs, and any other information that may help.
 
-## Contributors
+Contributors
+------------
 
 ### Code
 

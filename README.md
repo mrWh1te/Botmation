@@ -102,7 +102,43 @@ But, wait, it gets better, you can nest infinitely deep, in theory (limited by h
 Making Custom BotAction's
 -------------------------
 
-A `BotAction` can be written manually as an async function operating on a Puppeteer `Page`. Also, a `BotAction` can be a composition of other `BotAction`'s, or even a mix of compositions and manual. It's all up to you, as to how you want to orchestrate it all. Let's get started with a fun, and immediately impactful example, a `login()` `BotAction` for an "example" website:
+The way you make a custom `BotAction` is the same way the library makes them. The library exposes the same parts that it uses to make simple to complex ones, but for now, let's start with the simplest.
+
+The simplest kind of BotAction is one that has no higher order sync functions to customize the async functionality. Let's take a look at an example `BotAction` from "Navigation", called `waitForNavigation`:
+
+```typescript
+const waitForNavigation: BotAction = async(page) => {
+  await page.waitForNavigation()
+}
+```
+
+This is as simple as it gets. When there is no need to add a layer of customization to the `BotAction`, then there is no need to wrap it with higher-order sync functions. Simplicity is great, use this style when possible. Let's see this `BotAction` assembled in a `chain()`:
+
+```typescript
+await chain(
+  login({username: 'username', password: 'password'}),
+  waitForNavigation, // <- no ()
+  log('Done')
+)(page)
+```
+See there is no sync function calls to use `waitForNavigation`, it's a constant that is equal to a `BotAction`. Nice and simple.
+
+Now what if you want to create a `BotAction` that is customizable? Let's take a look at a simple one, in "Navigation" called `reload()` that simply reloads the browser page, like hitting the "refresh" button with some optional `options`:
+
+```typescript
+const reload = (options?: NavigationOptions): BotAction =>
+  async(page) => {
+    await page.reload(options)
+  }
+```
+
+This syntax is the most common in the `BotAction`'s of Botmation. A single higher-order sync function that provides customizing parameters with safe defaults, for a returned async function (`BotAction`). Here, we manually `await` Puppeteer `Page`'s `reload()` method and pass in the higher-order `options` parameter, to customize the reload operation.
+
+The higher order parameters can be whatever you need them to be, on a function by function basis. They're typed as a spread array of `any`, so add more if you need more. Also, you are not limited to one higher-order sync function, you can stack them up, as high as you need! The possibilities are truly endless, but try to keep it simple & composable.
+
+Now what if you want to create a `BotAction` to handle a high-level task, like in a complex User-Story. This `BotAction` will need to run a bunch of other `BotAction`'s, in order to complete its task. For this, we use Composition to compose a new `BotAction` from an assembly line of other `BotAction`'s.
+
+It's all up to you, as to how you need to orchestrate it. Let's get started with a helpful example, a `login()` `BotAction` for a common scenario:
 
 ```typescript
 const login = ({username, password}: {username: string, password: string}): BotAction =>
@@ -117,41 +153,16 @@ const login = ({username, password}: {username: string, password: string}): BotA
       log('Login Complete')
   )
 ```
-`login()` is a sync function that returns a `BotAction`, an async function. This `BotAction` is a composition made from a `chain()` of `BotAction`'s. Here, we see only one call of `chain()` (the same `chain()` in the code example, higher above), but we don't see the second call of `chain()()` where the `page` is passed in and the function is resolved (`await`). That's because, we don't want too here. The second call of `chain()()` is the `BotAction` that we want to return, not run, in this case. We're designing a bot part, not the bot itself. The bot runs the parts, which `page` passed in. 
 
-That's cool, but kind of magical, how about a manual, non-composed `BotAction` to help understand what they are? Most of the rudimentary `BotAction`'s are built manually, as in, not a composition of other actions.
+It looks magical, but the typing all works out.
 
-Let's take a look at a simple one, in "Navigation" called `reload()` that simply reloads the browser page, like hitting the "refresh" button:
+`login()` is a sync function that provides customization for `username` and `password`. It returns a `BotAction`, which is made from a composition of other `BotAction`'s. That composition is made through an Assembly Line, in this case, `chain()`.
 
-```typescript
-const reload = (options?: NavigationOptions): BotAction =>
-  async(page) => {
-    await page.reload(options)
-  }
-```
+Here, we see only one call of `chain()` (the sync call), and don't see the second call of `chain()()` (the async `BotAction` call). That's because, we don't want too here. We're not running a bot just yet, but building a bot part so we're composing the `BotAction`. The second call of `chain()()` is the `BotAction` that we want to return, not run.
 
-This syntax is common in the building blocks of Botmation. A single higher-order sync function that provides customizing parameters for a returned async function (`BotAction`). Here, we manually `await` Puppeteer `Page`'s `reload()` method and pass in the higher-order `options` param.
+It's all strongly typed, so if you're worried about remembering when to call the second call or first, don't, Botmation's strong typing will catch that for you through an IDE Intellisense.
 
-The higher order params can be whatever you need them to be, on a function by function basis. They're typed as a spread array of `any`. Also, you are not limited to one higher-order sync function, you may go as high as you want! The possibilities are truly endless, but keep it simple.
-
-As for completion sake, let's look at the simplest kind of BotAction, one that has no higher order sync functions that customize the async functionality. Again let's take a look at a `BotAction` from "Navigation", called `waitForNavigation`:
-
-```typescript
-const waitForNavigation: BotAction = async(page) => {
-  await page.waitForNavigation()
-}
-```
-
-This is as simple as a `BotAction` gets. When there is no need to customize the `BotAction` with higher-order params, then there is no need for any higher-order sync functions. Simplicity is great. How about let's see this `BotAction` composed in a `chain()`:
-
-```typescript
-await chain(
-  login({username: 'username', password: 'password'}),
-  waitForNavigation, // <- no ()
-  log('Done')
-)(page)
-```
-See there is no sync function calls with `waitForNavigation`, it's a constant that is equal to a `BotAction`. Nice and simple.
+For now, it's best to think about your tasks as parts to build, making them easy to test, and then compose solutions (bots) for all high level problems.
 
 [Botmation: Actions documentation](/src/botmation/actions/README.md)
 

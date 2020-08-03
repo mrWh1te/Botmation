@@ -19,11 +19,11 @@ Why choose Botmation?
 
 It empowers Puppeteer code with a simple pattern to maximize code readability, reusability and testability.
 
-It has a Compositional design with safe defaults for easily composing Puppeteer code.
+It has a Compositional design with safe defaults for building bots with less code.
 
-It has a low learning curve, with a learn at your own pace, to hopefully inspire an appreciation for the possibilities of Functional programming.
+It has a learn at your own pace design, to hopefully inspire an appreciation for the possibilities of Functional programming.
 
-It has 100% source test coverage.
+It has 100% code test coverage.
 
 # Introduction
 
@@ -34,16 +34,12 @@ Botmation is a library of composable functions called `BotAction`'s, for writing
 1. Introduction
     - BotAction
     - Chain
-    - Making Custom BotAction's
+    - Making BotAction's
 2. Getting Started
     - Install
     - Library Reference // tutorial continuing the rabit hole
     - Documentation
-<img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="215" align="right">
     - Examples
-        - Object-Oriented
-        - Concurrency
-        - Instagram
 3. Advanced Techniques
     - Injects
     - Pipe
@@ -62,6 +58,8 @@ BotAction
 Botmation's goal is to cover all the possibilities of web crawling functionality with separate composable functions called `BotAction`'s.
 
 A `BotAction` is an async function that does one particular thing. For example, change the page URL, take a screenshot, type something with a keyboard, click something with a mouse, manage your Instagram account, etc. Some kind of User based web automation, from really specific minute to high-level tasks.
+
+<img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="190" align="right">
 
 These functions are passed in a Puppeteer Page instance and are all organized by type. Some `BotAction`'s are very simple, without any parameters, while others are complex with multiple higher-order sync functions that must be called first, to retrieve the actual `BotAction`.
 
@@ -99,8 +97,8 @@ Therefore, Botmation let's us use higher-order sync functions to compose async f
 
 But, wait, it gets better, you can nest infinitely deep, in theory (limited by hardware resources). Since `chain()` returns a `BotAction`, you can use it again as an action, to isolate `BotAction`'s in their own line, or create a new `BotAction` that is a chain of other `BotAction`'s in a separate chain, doing complex stuff for a particular, high-level thing. It's actually the way high-level task based `BotAction`'s are usually composed.
 
-Making Custom BotAction's
--------------------------
+Making BotAction's
+------------------
 
 The way you make a custom `BotAction` is the same way the library makes them. The library exposes the same parts that it uses to make simple to complex ones, but for now, let's start with the simplest.
 
@@ -168,73 +166,70 @@ For now, it's best to think about your tasks as parts to build, making them easy
 
 # Getting Started
 
-Botmation is a NodeJS library written in TypeScript. You'll need NodeJS and the TypeScript compiler (`tsc`) installed, if you haven't already, follow this guide.
-
-> todo the guide above in another doc, hopefully just links
+Botmation is a NodeJS library written in TypeScript. You'll need [node.js](http://nodejs.org/) LTS and the TypeScript compiler (`tsc`) installed globally (or some kind of transpiling).
 
 Install
 -------
 
-First make sure you have installed the latest version of [node.js](http://nodejs.org/)
-(You may need to restart your computer after this step).
-
 <img alt="Orange Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/orange_bot.PNG" width="175" align="right">
 
-Install Botmation with `npm`:
+Install Botmation with `npm` and save it as a dependency:
 
-    npm i -s botmation
+    npm install -s botmation
 
-If you're just getting started, install `puppeteer` & `@types/puppeteer`:
+If you're just getting started, install `puppeteer` latest v2 & `@types/puppeteer` v3.0.1:
 
-    npm i -s puppeteer @types/puppeteer
+    npm install -s puppeteer@">=2.0.0 <3.0.0" @types/puppeteer@3.0.1
+
+While `Botmation` source code works with major version 3, 4, and 5, the e2e testing has a bug that is limiting the packaging, as of this moment. If you want to use Botmation with the latest version, you'll need to close the repo locally and work from the playground bot. From there you can install the latest `@types/puppeteer` and `puppeteer` then build Botmation source code with it, just the E2E tests will become unstable.
 
 Library Reference
 -----------------
 
-After intalling through `npm`, you can import any `BotAction` from the main module: 
+After intalling through `npm`, you should import all `BotAction`'s from the main module: 
 ```javascript
 import { chain, goTo, screenshot } from 'botmation'
 ```
 
-The `BotAction`'s are organized in various files, by groups, in the `/actions` directory of the library.
+But, as a reference, the `BotAction`'s are organized in multiple files, by type, in the `/actions` directory of the library.
 
-As of v2.0.x, there are 13 groups of actions you can import from: 
+As of v2.0.x, there are 13 groups of actions to build from: 
 
- - assembly-line
-    - assembly and run `BotAction`'s in lines
- - console
+ - `assembly-line`
+    - assemble and run `BotAction`'s in lines
+ - `console`
     - log messages to the nodeJS console
- - cookies
+ - `cookies`
     - read/write page cookies
- - errors
+ - `errors`
     - try/catch errors in assembly-lines
- - files
-    - customize `BotAction`'s for cookies, and output
- - indexed-db
+ - `files`
+    - customize `BotAction`'s for cookies and outputs
+ - `indexed-db`
     - read/write to page's IndexedDB
- - inject
+ - `inject`
     - insert new injects into a line of `BotAction`'s
- - input
-    - Input as a User into a page like type and click
- - local-storage
-    - read/write from a page's local storage
- - navigation
-    - change the page's URL, wait for form submissions
- - output
+ - `input`
+    - simulate User input like typing and clicking with a mouse
+ - `local-storage`
+    - read/write/delete from a page's Local Storage
+ - `navigation`
+    - change the page's URL, wait for form submissions to change page URL, back, forward, refresh
+ - `output`
     - output files to local disk like screenshots, pdf's
- - utilities
+ - `utilities`
     - handle more complex logic patterns like if statements and for loops
 
 
 Documentation
 -------------
 
-To learn about the available Bot Actions, how to chain them together, and how to make your own, visit the [Botmation: Actions documentation](/src/botmation/actions/README.md).
+To learn about the available `BotAction`'s visit the [Botmation: BotAction's Documentation](/src/botmation/actions/README.md).
 
 Examples
 --------
 
-In the `./src/examples` [directory](/src/examples), exists a small collection of simple bots, to help you get going.
+In the `./src/examples` [directory](/src/examples) of this repo (excluded from the npm module), exists a small collection of simple bots, to help you get going.
 
 You can clone this repo, install npm dependencies, then build the source code:
 
@@ -252,11 +247,7 @@ npm run examples/instagram
 npm run examples/screenshots
 npm run examples/pdf
 ```
-
-See the [object-oriented example code](/src/examples/simple_objectoriented.ts) to get started.
-
-See the [functional example code](/src/examples/simple_functional.ts) to get started.
-
+You can go into any of these and make changes, then build the source code and run them again. There is a simple object oriented example, that can give ideas on how functions of a class can just be composed `BotAction`'s. Do it however you want.
 
 ### Running Bots Concurrently
 
@@ -305,7 +296,43 @@ Now, what if you want to compose a line of actions, but with new injects? You ca
 
 Pipe
 ----
-ie IndexedDB & Local Storage for getting values
+
+There's another kind of Assembly Line for passing data from one `BotAction` in a line to the next `BotAction`, and so forth. It's called Pipe. When `BotAction`'s are assembled in a Pipe, the values they return (technically wrapped in Promises, but abstracted away by the async/await generators), are "piped" into subsequent `BotAction`'s. It does this by wrapping the value in a branded object, for type gaurding, called `Pipe` then injects the `Pipe` object at the very end of the `injects`.
+
+So how about some useful examples to understand why. What if you want to compose a Bot that does things with Local Storage. Maybe the authentication of the Bot relies on Local Storage to determine if the Bot is logged in or not, how would that be done in a composed way? That's where Piping comes in, as it allows a `BotAction` to return a value for another `BotAction` to operate with.
+
+Let's get started with a simple example of writing and reading a value to Local Storage:
+```typescript
+await pipe()(
+   setLocalStorageItem('userID', '12345'),
+   getLocalStorageItem('userID'), // this will pipe '12345' into the next `BotAction`
+   log('User ID is in the Pipe')
+)(page)
+```
+Now, instead of diving into Local Storage `BotAction`'s, let's just consider what's happening in the context of this Assembly Line: Pipe. `setLocalStorageItem()` set a key/value in Local Storage, and does *not* return a value. However, `getLocalStorageItem()` reads the value by the `key` given, then returns it. Unmentioned before, the "Console" `BotAction`'s support logging the Pipe value, when there is a Pipe, so the `pipe()()()` above will log to console the Pipe value of `12345`.
+
+`pipe()()()` runs the assembled actions and checks for values returned. When a function doesn't return a value, that is considered an `Empty Pipe`. Empty pipes are still injected at the end. They look like this:
+
+```typescript
+const anEmptyPipe = {
+    brand: 'Pipe',
+    value: undefined
+}
+```
+If there is no Pipe injected into a `pipe()()` from a higher context, then the `pipe()()()` itself will inject an empty one into each assembled `BotAction`.
+
+So in essence, if a `BotAction` does not return a value, it effectively empties the current Pipe value. It's important to know.
+
+There are also separate functions in this library, that you will find in the module, that are not `BotAction`'s but regular functions, mostly pure, that help in some way. There are many `helper` functions for when your piping.
+
+To name a few, there are `unpipeInjects()`, `removePipe()`, `getInjectsPipeValue()`, `wrapValueInPipe()`, `pipeInjects()`, and so forth. They do what they sound like they do. When starting out, the first three are most relevant.
+
+If you're not interested in whats injected, but the Pipe value, use `getInjectsPipeValue()` it has safe fallbacks for when there is no Pipe, etc. See the Local Storage `BotAction`'s for examples.
+
+If you're interested in the injects and what's possibly in the Pipe, use `unpipeInjects()`, which allows you to specify the number of `injects` you're expecting, and safely get a Pipe value even if there is no Pipe. See the IndexedDB `BotAction`'s for examples.
+
+If you just want the `injects` without any Pipe, use `removePipe()`. All these helper functions are designed to be used in `BotAction`'s.
+
 
 Conditions
 ----------

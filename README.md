@@ -44,12 +44,12 @@ Botmation is a library of composable functions called `BotAction`'s, for writing
         - Object-Oriented
         - Concurrency
         - Instagram
-3. Advanced
-    - Utilities
-    - Error Handling
+3. Advanced Techniques
     - Injects
     - Pipe
-        - IndexedDB & Local Storage
+    - Conditions
+    - Loops
+    - Error Handling
 4. Dev Notes
     - Library Development
     - Library Testing
@@ -102,7 +102,7 @@ But, wait, it gets better, you can nest infinitely deep, in theory (limited by h
 Making Custom BotAction's
 -------------------------
 
-A `BotAction` can be written manually as an async function operating on a Puppeteer `page`. a `BotAction` can be composed of other `BotAction`'s, or even a mix of custom and manual. It's all composable, up to you, as to how you want to play with them, but let's get started with a helpful example, a `login()` `BotAction` for a pretend website:
+A `BotAction` can be written manually as an async function operating on a Puppeteer `Page`. Also, a `BotAction` can be a composition of other `BotAction`'s, or even a mix of compositions and manual. It's all up to you, as to how you want to orchestrate it all. Let's get started with a fun, and immediately impactful example, a `login()` `BotAction` for an "example" website:
 
 ```typescript
 const login = ({username, password}: {username: string, password: string}): BotAction =>
@@ -117,7 +117,7 @@ const login = ({username, password}: {username: string, password: string}): BotA
       log('Login Complete')
   )
 ```
-`login()` is a sync function that returns a `BotAction`, an async function. Here we see only one call of `chain()` (the same `chain()` in the code example above) but we don't see the second call of `chain()()` where the `page` is passed in and the function is `await`ed. That's because, we don't want too. The second call of `chain()()` is the `BotAction` so here we use the higher-order call of `chain()` to compose other `BotAction`'s in a line, which then returns a `BotAction` to actually run the line with the, to be, provied Puppeteer `page`.
+`login()` is a sync function that returns a `BotAction`, an async function. This `BotAction` is a composition made from a `chain()` of `BotAction`'s. Here, we see only one call of `chain()` (the same `chain()` in the code example, higher above), but we don't see the second call of `chain()()` where the `page` is passed in and the function is resolved (`await`). That's because, we don't want too here. The second call of `chain()()` is the `BotAction` that we want to return, not run, in this case. We're designing a bot part, not the bot itself. The bot runs the parts, which `page` passed in. 
 
 That's cool, but kind of magical, how about a manual, non-composed `BotAction` to help understand what they are? Most of the rudimentary `BotAction`'s are built manually, as in, not a composition of other actions.
 
@@ -261,14 +261,49 @@ npm run build && npm run examples/puppeteer-cluster
 
 It will build the project source code then run the puppeteer-cluster example.
 
-# Advanced BotAction's
+# Advanced Techniques
 
-There's more you can do, given the composable nature of these functions.
+There's more you can do, given the composable nature of these functions. For starters, `BotAction`'s have an optional param, yet to be mentioned that's part of a higher order system called `injects`.
 
-Utilities
----------
+Injects
+-------
 
-`Utility` `BotAction`'s provide higher-order functions for conditionals and loops like if statements, and for each. Here's a simplified code bit from the Instagram example that attempts to login, only, *if* the "User" is a Guest:
+Let's take a look at the actual `BotAction` Function interface:
+```typescript
+interface BotAction<R = void, I extends Array<any> = any[]> extends Function {
+  (page: Page, ...injects: I) : Promise<R>
+}
+```
+
+See, there is a second param, after `page` called `injects` which, by default, is a spread array of `any`. It's optional, you don't have to use it. But, it's idea is useful.
+
+If you need to provide an object(s), value(s), service(s), etc. consistently to a line of `BotAction`'s, you can do so by injecting them. Let's see how we inject them in the first place:
+
+```typescript
+const service = new ServiceA()
+const todaysDate = new Date()
+
+await chain(
+    // ... actions
+)(page, service, todaysDate)
+```
+
+The assembled `BotAction`'s in the `chain()` will be called with `service` and `todaysDate` as the second and third parameters. For example, the "Output" `BotAction`'s are a special interface of `BotAction` called `BotFilesAction`. Special interfaces of `BotAction` simply type the `injects` they are expecting, so in the case of `BotFilesAction`, there's an expected `BotFileOptions` inject, as the first one.
+
+Now, what if you want to compose a line of actions, but with new injects? You can use the `inject()()` `BotAction` to inject new injects first, before higher level injects. A few `BotAction`'s are composed with `inject()()` like `files()()` and `indexedDBStore()()`. Those composed `BotAction`'s set relevant `injects` for the declared `BotAction`'s assembled.
+
+Pipe
+----
+ie IndexedDB & Local Storage for getting values
+
+Conditions
+----------
+
+What if you want to run an assembly line of actions, but only after finding something in the Page to be true? Botmation has you covered in a special type of `BotAction` called `Utilities`.
+
+Let's get started with the simplest one called `givenThat()()` that is basically a functional if statement.
+
+Here's a simplified bit of code from the Instagram example that attempts to login, only, *if* the "User" is a Guest:
 
 ```typescript
 await chain(
@@ -288,15 +323,37 @@ await chain(
 )(page)
 ```
 
+`givenThat()` accepts a `ConditionalBotAction` that is a `BotAction` that returns a boolean value. If the value returned is `TRUE`, then the assembled actions are ran in a Pipe.
+
+Loops
+-----
+
+What about running the same scraping `BotAction` or actions in a for loop against an array of website url's? It's a common web crawling use-case. Botmation has you covered. From the `BotAction`'s type "Utilities" exists `forAll()()` that will iterate a collection (object of key/value pairs or an array) passed in `forAll()` against a callback function that returns a `BotAction` or an array of `BotAction`'s.
+
+Let's see an example:
+```typescript
+await chain(
+    forAll(['google', 'facebook'])(
+        (siteDomain) => ([ // you can name the variable whatever you want in the closure
+            goTo('http://' + siteDomain + '.com'),
+            screenshot(siteDomain + '-homepage') // then re-use it in your BotAction setup
+        ])
+    )
+)(page)
+```
+Here we pass in array of site domain's in the first call then in the second call pass in an anonymous function, which gets called on each loop iteration of the collection, which in this case is once for each site domain in the array.
+
+When this `forAll()()` completes, it will have visted and screenshot each domain in the array, in the order declared. See documentation for more details.
+
 Errors
 ------
+Given the principle of 100% Composition, error handling has been omitted entirely from the library's core. Assembly-lines don't try to catch an errors, and this was done in favor of a new `BotAction`, with the goal of isolating errors deep in nested assembly lines.
 
-Inject
-------
+`errors()()` wraps the assembled `BotAction`'s of the second call in a try/catch where errors caught are logged in the console with the Errors Block Name provided in the first call. Let's see an example:
 
-Pipe
-----
-ie IndexedDB & Local Storage for getting values
+```typescript
+
+```
 
 # Dev Notes
 

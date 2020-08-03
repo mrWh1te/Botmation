@@ -17,23 +17,24 @@ A TypeScript library for using [Puppeteer](https://github.com/puppeteer/puppetee
 Why choose Botmation?
 ---------------------
 
-It empowers Puppeteer code with a simple pattern to maximize readability, reusability and testability.
+It empowers Puppeteer code with a simple pattern to maximize code readability, reusability and testability.
 
-It has a Compositional design with safe defaults for composing bots with ease.
+It has a Compositional design with safe defaults for easily composing Puppeteer code.
 
-It has a low learning curve, that hopefully, at your own pace, inspires an appreciation for the possibilities of Functional programming.
+It has a low learning curve, with a learn at your own pace, to hopefully inspire an appreciation for the possibilities of Functional programming.
 
-Botmation has 100% test coverage.
+It has 100% source test coverage.
 
 # Introduction
 
-Botmation is mostly a library of functions called `BotAction`'s for writing Puppeteer scripts in a reusable & composable manner.
+Botmation is a library of composable functions called `BotAction`'s, for writing Puppeteer scripts in a fun, simple, & testable way.
 
 > “Everything should be made as simple as possible, but no simpler.” - Albert Einstein
 
 1. Introduction
     - BotAction
     - Chain
+    - Making Custom BotAction's
 2. Getting Started
     - Install
     - Library Reference // tutorial continuing the rabit hole
@@ -43,10 +44,10 @@ Botmation is mostly a library of functions called `BotAction`'s for writing Pupp
         - Object-Oriented
         - Concurrency
         - Instagram
-3. Advanced BotAction's
+3. Advanced
     - Utilities
-    - Errors
-    - Inject
+    - Error Handling
+    - Injects
     - Pipe
         - IndexedDB & Local Storage
 4. Dev Notes
@@ -58,16 +59,22 @@ Botmation is mostly a library of functions called `BotAction`'s for writing Pupp
 BotAction
 ---------
 
-A `BotAction` is an async function that does one particular thing, like change the page URL, take a screenshot, type something with a keyboard, click something with a mouse, etc.
+Botmation's goal is to cover all the possibilities of web crawling functionality with separate composable functions called `BotAction`'s.
 
-Botmation's goal is to cover all the possibilities of web crawling with `BotAction`'s, organized into themes and domains. Some `BotAction`'s are very simple, without any parameters, while others are complex with multiple higher-order sync functions that must be called to retrieve them. Either way, these functions are units for assembly, like in a factory. 
+A `BotAction` is an async function that does one particular thing. For example, change the page URL, take a screenshot, type something with a keyboard, click something with a mouse, manage your Instagram account, etc. Some kind of User based web automation, from really specific minute to high-level tasks.
 
-Assembling `BotAction`'s is done with a fundamental type of `BotAction` called `Assembly Lines`. `Assembly Lines` run a sequence of `BotAction`'s, one by one, in the order declared. The best one to get started with, is the simplest one, called `chain()()`.
+These functions are passed in a Puppeteer Page instance and are all organized by type. Some `BotAction`'s are very simple, without any parameters, while others are complex with multiple higher-order sync functions that must be called first, to retrieve the actual `BotAction`.
+
+`BotAction`'s are designed for composing, that is they are all considered bot "parts" (units of functionality that make up web crawlers) that you declare in order, to build a bot that does what you need. Therefore, `BotAction`'s are for assembly, like in a car factory, assembly lines build the cars, part by part. Similarly, Botmation, has a particular type of `BotAction` that assembles `BotAction`'s into into new `BotAction`'s or bot parts, if you will.
+
+> It's confusing at first, especially if your new to Functional programming, but a `BotAction` can both be a part of a Bot and a Bot itself, thanks to the compositional nature of the function's design. If you don't understand it right now, don't worry, keep on as the code is easier to get.
+
+Assembling `BotAction`'s is done with a fundamental type of `BotAction` called `Assembly Lines`. `Assembly Lines` assemble `BotAction`'s in a sequence, one by one, in the order declared, then run the actions. The best one to get started with, is the simplest one, called `chain()()`.
 
 Chain
 -----
 
-The `chain()()` `BotAction` runs the declared `BotAction`'s, in the order received. Here is an example of a `chain()()` that will run `BotAction`'s to take screenshots of various web sites:
+The `chain()()` `BotAction` runs the declared `BotAction`'s, in the order received. Here is an example of a `chain()()` that runs `BotAction`'s to take screenshots of Google & Dogpile:
 
 ```typescript
 const page = await browser.newPage() // Puppeteer Browser
@@ -86,8 +93,65 @@ await chain(
 )(page)
 ```
 
-Each `BotAction` in the chain (`goTo()`, `screenshot()`) is ran asynchronously, one at a time. Now given `chain()` returns a `BotAction`, you can use it again, inside to isolate `BotAction`'s in their own line, or create a new `BotAction` that is a chain of other `BotAction`'s, doing complex stuff for a particular, high-level thing.
+The first call of `chain()` is a declared list of `BotAction`'s to run in order, and the second call of `chain()()` is the actual `BotAction`, for which a `page` instance is passed. The `BotAction`'s assembled run on the passed in chain's page.
 
+Therefore, Botmation let's us use higher-order sync functions to compose async functionality, all while typing less (how many `await` statements do you see?).
+
+But, wait, it gets better, you can nest infinitely deep, in theory (limited by hardware resources). Since `chain()` returns a `BotAction`, you can use it again as an action, to isolate `BotAction`'s in their own line, or create a new `BotAction` that is a chain of other `BotAction`'s in a separate chain, doing complex stuff for a particular, high-level thing. It's actually the way high-level task based `BotAction`'s are usually composed.
+
+Making Custom BotAction's
+-------------------------
+
+A `BotAction` can be written manually as an async function operating on a Puppeteer `page`. a `BotAction` can be composed of other `BotAction`'s, or even a mix of custom and manual. It's all composable, up to you, as to how you want to play with them, but let's get started with a helpful example, a `login()` `BotAction` for a pretend website:
+
+```typescript
+const login = ({username, password}: {username: string, password: string}): BotAction =>
+  chain(
+      goTo('https://example.com/login.html'),
+      click('form input[name="username"]'),
+      type(username),
+      click('form input[name="password"]'),
+      type(password),
+      click('form button[type="submit"]'),
+      waitForNavigation,
+      log('Login Complete')
+  )
+```
+`login()` is a sync function that returns a `BotAction`, an async function. Here we see only one call of `chain()` (the same `chain()` in the code example above) but we don't see the second call of `chain()()` where the `page` is passed in and the function is `await`ed. That's because, we don't want too. The second call of `chain()()` is the `BotAction` so here we use the higher-order call of `chain()` to compose other `BotAction`'s in a line, which then returns a `BotAction` to actually run the line with the, to be, provied Puppeteer `page`.
+
+That's cool, but kind of magical, how about a manual, non-composed `BotAction` to help understand what they are? Most of the rudimentary `BotAction`'s are built manually, as in, not a composition of other actions.
+
+Let's take a look at a simple one, in "Navigation" called `reload()` that simply reloads the browser page, like hitting the "refresh" button:
+
+```typescript
+const reload = (options?: NavigationOptions): BotAction =>
+  async(page) => {
+    await page.reload(options)
+  }
+```
+
+This syntax is common in the building blocks of Botmation. A single higher-order sync function that provides customizing parameters for a returned async function (`BotAction`). Here, we manually `await` Puppeteer `Page`'s `reload()` method and pass in the higher-order `options` param.
+
+The higher order params can be whatever you need them to be, on a function by function basis. They're typed as a spread array of `any`. Also, you are not limited to one higher-order sync function, you may go as high as you want! The possibilities are truly endless, but keep it simple.
+
+As for completion sake, let's look at the simplest kind of BotAction, one that has no higher order sync functions that customize the async functionality. Again let's take a look at a `BotAction` from "Navigation", called `waitForNavigation`:
+
+```typescript
+const waitForNavigation: BotAction = async(page) => {
+  await page.waitForNavigation()
+}
+```
+
+This is as simple as a `BotAction` gets. When there is no need to customize the `BotAction` with higher-order params, then there is no need for any higher-order sync functions. Simplicity is great. How about let's see this `BotAction` composed in a `chain()`:
+
+```typescript
+await chain(
+  login({username: 'username', password: 'password'}),
+  waitForNavigation, // <- no ()
+  log('Done')
+)(page)
+```
+See there is no sync function calls with `waitForNavigation`, it's a constant that is equal to a `BotAction`. Nice and simple.
 
 [Botmation: Actions documentation](/src/botmation/actions/README.md)
 

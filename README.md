@@ -305,8 +305,8 @@ Let's get started with a simple example of writing and reading a value to Local 
 ```typescript
 await pipe()(
    setLocalStorageItem('userID', '12345'),
-   getLocalStorageItem('userID'), // this will pipe '12345' into the next `BotAction`
-   log('User ID is in the Pipe')
+   getLocalStorageItem('userID'),
+   log('User ID is in the Pipe') // has '12345' in a Pipe injected
 )(page)
 ```
 Now, instead of diving into Local Storage `BotAction`'s, let's just consider what's happening in the context of this Assembly Line: Pipe. `setLocalStorageItem()` set a key/value in Local Storage, and does *not* return a value. However, `getLocalStorageItem()` reads the value by the `key` given, then returns it. Unmentioned before, the "Console" `BotAction`'s support logging the Pipe value, when there is a Pipe, so the `pipe()()()` above will log to console the Pipe value of `12345`.
@@ -348,8 +348,9 @@ await chain(
     // "Console" BotAction
     log('Bot is running aka User'),
 
-    // "Utility" BotAction givenThat() resolves a "Conditional" BotAction for a boolean value
-    //    Given that the value resolves TRUE, run the actions declared inside the block
+    // "Utility" BotAction givenThat() 
+    //    Resolves a "Conditional" BotAction for a boolean value
+    //    If that value equals TRUE, then run the actions declared
     givenThat(isGuest)(
         log('is guest so logging in'),
         login({username: 'account', password: 'password'}),
@@ -372,9 +373,9 @@ Let's see an example:
 ```typescript
 await chain(
     forAll(['google', 'facebook'])(
-        (siteDomain) => ([ // you can name the variable whatever you want in the closure
+        (siteDomain) => ([ // name the var whatever desired in the closure
             goTo('http://' + siteDomain + '.com'),
-            screenshot(siteDomain + '-homepage') // then re-use it in your BotAction setup
+            screenshot(siteDomain + '-homepage')
         ])
     )
 )(page)

@@ -275,7 +275,7 @@ interface BotAction<R = void, I extends Array<any> = any[]> extends Function {
 }
 ```
 
-See, there is a second param, after `page` called `injects` which, by default, is a spread array of `any`. It's optional, you don't have to use it. But, it's idea is useful.
+See, there is a second param, after `page` called `injects` which, by default, is a spread array of `any`. It's optional, you don't have to use it. But, it can be handy.
 
 If you need to provide an object(s), value(s), service(s), etc. consistently to a line of `BotAction`'s, you can do so by injecting them. Let's see how we inject them in the first place:
 
@@ -288,9 +288,9 @@ await chain(
 )(page, service, todaysDate)
 ```
 
-The assembled `BotAction`'s in the `chain()` will be called with `service` and `todaysDate` as the second and third parameters. For example, the "Output" `BotAction`'s are a special interface of `BotAction` called `BotFilesAction`. Special interfaces of `BotAction` simply type the `injects` they are expecting, so in the case of `BotFilesAction`, there's an expected `BotFileOptions` inject, as the first one.
+The assembled `BotAction`'s in the `chain()` will be called with `service` and `todaysDate` as the second and third parameters. For example, the "Output" `BotAction`'s are a special interface of `BotAction` called `BotFilesAction`. Special interfaces of `BotAction` simply type the `injects` they are expecting, so in the case of `BotFilesAction`, `BotFileOptions` is the type of the first inject.
 
-Now, what if you want to compose a line of actions, but with new injects? You can use the `inject()()` `BotAction` to inject new injects first, before higher level injects. A few `BotAction`'s are composed with `inject()()` like `files()()` and `indexedDBStore()()`. Those composed `BotAction`'s set relevant `injects` for the declared `BotAction`'s assembled.
+Now, what if you want to compose a line of actions, but with new injects? You can use the `inject()()` `BotAction` to inject new injects, before higher level injects. A few `BotAction`'s are composed with `inject()()` like `files()()` and `indexedDBStore()()`. Those composed `BotAction`'s inject the first few `injects` (before passing in any other injects from a higher context) for the declared `BotAction`'s assembled.
 
 Pipe
 ----
@@ -347,13 +347,25 @@ When this `forAll()()` completes, it will have visted and screenshot each domain
 
 Errors
 ------
-Given the principle of 100% Composition, error handling has been omitted entirely from the library's core. Assembly-lines don't try to catch an errors, and this was done in favor of a new `BotAction`, with the goal of isolating errors deep in nested assembly lines.
+Given the principle of 100% Composition, error handling has been omitted entirely from the library's core. Assembly Lines don't try to catch any errors, and this was done in favor of creating a simple composable solution for isolating errors in deeply nested assembly lines. The solution, is let you guess, another `BotAction` called `errors()()`.
 
-`errors()()` wraps the assembled `BotAction`'s of the second call in a try/catch where errors caught are logged in the console with the Errors Block Name provided in the first call. Let's see an example:
+`errors()()` wraps assembled `BotAction`'s of the second call, `errors()()` in a try/catch, where errors caught are logged in the console with the Errors Block Name provided in the first call, `errors()`. Let's see an example:
 
 ```typescript
-
+await chain(
+    errors('scrape flow 1')( // <-- error block name
+        // actions to run in a wrapped try/catch:
+        goTo('site to scrape'),
+        // ... 
+    ),
+    log('this runs, even if errors()() catches something')
+)(page)
 ```
+So if any actions in the assembled second `errors()()` call throws an error, the error is caught by the `errors()()` `BotAction` and then logged to the console with the Error Block Name provided in the first function call `error()`. After an error is thrown, remaining actions assembled are stopped, but the higher order assembly-line continues.
+
+`errors()()` checks the higher order context `injects` for a Pipe, and runs the assembled actions in a Pipe, only if a Pipe was detected.
+
+Also, you can nest `errors()()` as deeply as you want. This is to help isolate, tough to find async bugs, in deeply nested assembly lines. Make sure to give each one an uniquely identifying Error Block Name, so you can identify where the error was caught. If a nested `errors()()` catches a thrown error, it effectively swallows it, so higher level `errors()()` will not see it. This helps isolate bugs in the async functionality.
 
 # Dev Notes
 

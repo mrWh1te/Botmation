@@ -25,20 +25,20 @@ It has a low learning curve, that hopefully, at your own pace, inspires an appre
 
 Botmation has 100% test coverage.
 
-# Overview
+# Introduction
 
 Botmation is mostly a library of functions called `BotAction`'s for writing Puppeteer scripts in a reusable & composable manner.
 
 > “Everything should be made as simple as possible, but no simpler.” - Albert Einstein
 
-1. Overview
+1. Introduction
     - BotAction
     - Chain
 2. Getting Started
     - Install
     - Library Reference // tutorial continuing the rabit hole
     - Documentation
-<img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="230" align="right">
+<img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="215" align="right">
     - Examples
         - Object-Oriented
         - Concurrency
@@ -105,7 +105,7 @@ First make sure you have installed the latest version of [node.js](http://nodejs
 
 <img alt="Orange Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/orange_bot.PNG" width="175" align="right">
 
-Then install it with `npm`:
+Install Botmation with `npm`:
 
     npm i -s botmation
 
@@ -116,22 +116,40 @@ If you're just getting started, install `puppeteer` & `@types/puppeteer`:
 Library Reference
 -----------------
 
-After intalling through `npm`, you can import either the `Botmation` class or the main `BotActionsChainFactory` function from the main module: 
+After intalling through `npm`, you can import any `BotAction` from the main module: 
 ```javascript
-// Object Oriented, or Purely Functional
-import { Botmation, BotActionsChainFactory as Bot } from 'botmation';
+import { chain, goTo, screenshot } from 'botmation'
 ```
 
-The actions are organized in various files in the `/actions` directory. As of v1.0.x, there are 6 groups of actions you can import from: 
-```javascript
-// Examples of importing a Bot Action from each group
-import { log } from 'botmation/actions/console';
-import { saveCookies } from 'botmation/actions/cookies';
-import { click, type } from 'botmation/actions/input';
-import { goTo } from 'botmation/actions/navigation';
-import { screenshot } from 'botmation/actions/output';
-import { forAll } from 'botmation/actions/utilities';
-```
+The `BotAction`'s are organized in various files, by groups, in the `/actions` directory of the library.
+
+As of v2.0.x, there are 13 groups of actions you can import from: 
+
+ - assembly-line
+    - assembly and run `BotAction`'s in lines
+ - console
+    - log messages to the nodeJS console
+ - cookies
+    - read/write page cookies
+ - errors
+    - try/catch errors in assembly-lines
+ - files
+    - customize `BotAction`'s for cookies, and output
+ - indexed-db
+    - read/write to page's IndexedDB
+ - inject
+    - insert new injects into a line of `BotAction`'s
+ - input
+    - Input as a User into a page like type and click
+ - local-storage
+    - read/write from a page's local storage
+ - navigation
+    - change the page's URL, wait for form submissions
+ - output
+    - output files to local disk like screenshots, pdf's
+ - utilities
+    - handle more complex logic patterns like if statements and for loops
+
 
 Documentation
 -------------
@@ -183,8 +201,6 @@ It will build the project source code then run the puppeteer-cluster example.
 
 There's more you can do, given the composable nature of these functions.
 
-<img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
-
 Utilities
 ---------
 
@@ -222,6 +238,8 @@ ie IndexedDB & Local Storage for getting values
 
 Library Development
 -------------------
+
+<img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
 
 First, clone the repo locally, then install the npm dependencies. You can build the library locally with this command:
 ```

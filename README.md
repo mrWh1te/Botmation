@@ -248,7 +248,7 @@ Have fun!
 
 # Advanced Techniques
 
-There's more you can do with Botmation, given the composable nature of `BotAction`'s. For starters, `BotAction`'s have an optional param, yet to be mentioned that's part of a higher order system called `injects`.
+There's a lot more you can do with Botmation, given the composable nature of `BotAction`'s. For starters, `BotAction`'s have an optional param, yet to be mentioned that's part of a higher order system, called `injects`.
 
 Injects
 -------
@@ -260,7 +260,7 @@ interface BotAction<R = void, I extends Array<any> = any[]> extends Function {
 }
 ```
 
-See, there is a second param, after `page` called `injects` which, by default, is a spread array of `any`. It's optional, you don't have to use it. But, it can be handy.
+See, there is a second param, after `page` called `injects` which, by default, is a spread array of `any`. It's optional, you don't have to use it. But, it can be handy. All `Assembly Lines` supports the `injects` system.
 
 If you need to provide an object(s), value(s), service(s), etc. consistently to a line of `BotAction`'s, you can do so by injecting them. Let's see how we inject them in the first place:
 
@@ -273,28 +273,46 @@ await chain(
 )(page, service, todaysDate)
 ```
 
-The assembled `BotAction`'s in the `chain()` will be called with `service` and `todaysDate` as the second and third parameters. For example, most "Files" `BotAction`'s use a special interface of `BotAction` called `BotFilesAction`. Special interfaces of `BotAction` simply type the `injects` they are expecting, so in the case of `BotFilesAction`, `BotFileOptions` is the type of the first inject.
+The assembled `BotAction`'s in the `chain()` will be called with `service` and `todaysDate` as the second and third parameters.
 
-Now, what if you want to compose a line of actions, but with new injects? You can use the `inject()()` `BotAction` to inject new injects, before higher level injects. A few `BotAction`'s are composed with `inject()()` like `files()()` and `indexedDBStore()()`. Those composed `BotAction`'s inject the first few `injects` (before passing in any other injects from a higher context) for the declared `BotAction`'s assembled.
+Now, what if you want to compose a line of actions, but with new injects? You can use the `inject()()` `BotAction` to pass in new injects, prepended to the higher level injects. A few `BotAction`'s are composed with `inject()()` like `files()()` and `indexedDBStore()()`. Those composed `BotAction`'s inject the first few `injects` provided in the first `inject()` call then pass in the other injects from the higher context, for the declared `BotAction`'s.
+
+Here's an example:
+```typescript
+const generalService = new GeneralService()
+const specialService = new SpecialService()
+
+await chain(
+    inject(specialService)(
+        goTo('http://example.com/special-page.html'),
+        doSomethingSpecial()
+        // these actions have `specialService` as their 1st inject
+        // and `generalService` as their 2nd inject
+    ),
+    log('some message') // this log() BotAction will NOT have `specialService` injected
+                        // but, will still have `generalService` as its 1st inject
+)(page, generalService)
+```
+This gives granular control of what's passed in the spread `injects` array for assembled `BotAction`'s.
 
 Pipe
 ----
 
-There's another kind of Assembly Line for passing data from one `BotAction` in a line to the next `BotAction`, and so forth. It's called Pipe. When `BotAction`'s are assembled in a Pipe, the values they return (technically wrapped in Promises, but abstracted away by the async/await generators), are "piped" into subsequent `BotAction`'s. It does this by wrapping the value in a branded object, for type gaurding, called `Pipe` then injects the `Pipe` object at the very end of the `injects`.
+There's another kind of Assembly Line, a special kind, that passes data from one `BotAction` in a line to the next `BotAction`, and so forth. It's called Pipe. When `BotAction`'s are assembled in a Pipe, the values they return (technically wrapped in Promises, but abstracted away by the async/await generators), are "piped" into subsequent `BotAction`'s. The Pipe handles this by wrapping the value resolved in a branded Pipe object (for type gaurding), called `Pipe` then injects the `Pipe` object at the very end of the spread `injects` array in the `BotAction`.
 
-So how about some useful examples to understand why. What if you want to compose a Bot that does things with Local Storage. Maybe the authentication of the Bot relies on Local Storage to determine if the Bot is logged in or not, how would that be done in a composed way? That's where Piping comes in, as it allows a `BotAction` to return a value for another `BotAction` to operate with.
+So how about some useful examples to understand when to use this. What if you want to compose a Bot that does things with Local Storage. Maybe the authentication of the Bot relies on data in Local Storage, how would one go about composing such functionality, where data must be scraped first before operating? That's where Piping comes in, as it allows a `BotAction` to return a value for the next `BotAction` to operate with.
 
 Let's get started with a simple example of writing and reading a value to Local Storage:
 ```typescript
 await pipe()(
    setLocalStorageItem('userID', '12345'),
    getLocalStorageItem('userID'),
-   log('User ID is in the Pipe') // has '12345' in a Pipe injected
+   log('User ID is in the Pipe') // has '12345' as the Pipe valued logged to console
 )(page)
 ```
-Now, instead of diving into Local Storage `BotAction`'s, let's just consider what's happening in the context of this Assembly Line: Pipe. `setLocalStorageItem()` set a key/value in Local Storage, and does *not* return a value. However, `getLocalStorageItem()` reads the value by the `key` given, then returns it. Unmentioned before, the "Console" `BotAction`'s support logging the Pipe value, when there is a Pipe, so the `pipe()()()` above will log to console the Pipe value of `12345`.
+Now, instead of diving into Local Storage `BotAction`'s, let's consider what's happening in the context of this Pipe. `setLocalStorageItem()` set a key/value in Local Storage, and does *not* return a value. However, `getLocalStorageItem()` reads the value by the `key` provided, then returns it. Unmentioned before, the "Console" `BotAction`'s support logging the Pipe value, when there is a Pipe, so the `log()` call will log to console the Pipe value of `12345`.
 
-`pipe()()()` runs the assembled actions and checks for values returned. When a function doesn't return a value, that is considered an `Empty Pipe`. Empty pipes are still injected at the end. They look like this:
+`pipe()()()` runs the assembled actions, one at a time, and checks the values returned from each. When a function doesn't return a value, that is considered emptying the Pipe. Empty pipes are still injected. They look like this:
 
 ```typescript
 const anEmptyPipe = {
@@ -302,31 +320,28 @@ const anEmptyPipe = {
     value: undefined
 }
 ```
-If there is no Pipe injected into a `pipe()()` from a higher context, then the `pipe()()()` itself will inject an empty one into each assembled `BotAction`.
+If there is no Pipe injected into a `pipe()()` from a higher context, then the `pipe()()()` itself will inject an empty one into the first assembled `BotAction`. So no matter what, there is always a Pipe as the last inject, when a `BotAction` is assembled in a Pipe. Also, it's possible to set the Pipe value for the first `BotAction` by passing that in the first `pipe()` call.
 
-So in essence, if a `BotAction` does not return a value, it effectively empties the current Pipe value. It's important to know.
-
-There are also separate functions in this library, that you will find in the module, that are not `BotAction`'s but regular functions, mostly pure, that help in some way. There are many `helper` functions for when your piping.
+There are also separate functions in this library, that you will find in the module, that are not `BotAction`'s but regular functions, mostly pure, that help build `BotAction`'s by removing boilerplate. For example, there are many `helper` functions for piping.
 
 <img alt="Orange Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/orange_bot.PNG" width="175" align="right">
 
-To name a few, there are `unpipeInjects()`, `removePipe()`, `getInjectsPipeValue()`, `wrapValueInPipe()`, `pipeInjects()`, and so forth. They do what they sound like they do. When starting out, the first three are most relevant.
+To name a few, there are `unpipeInjects()`, `removePipe()`, `getInjectsPipeValue()`, `wrapValueInPipe()`, `pipeInjects()`, and so forth. They do what they sound like they do and mostly expect an `injects` param. When starting out, the first three are the most relevant as they help write `BotAction`'s that can use the Pipe safely, so they can be used in a Chain.
 
-If you're not interested in whats injected, but the Pipe value, use `getInjectsPipeValue()` it has safe fallbacks for when there is no Pipe, etc. See the Local Storage `BotAction`'s for examples.
+If you're not interested in whats injected, but need the Pipe value, use `getInjectsPipeValue()` as it has safe fallbacks for when there is no Pipe, in case the `BotAction` is assembled in a Chain. See the Local Storage `BotAction`'s for examples, in how it's used.
 
-If you're interested in the injects and what's possibly in the Pipe, use `unpipeInjects()`, which allows you to specify the number of `injects` you're expecting, and safely get a Pipe value even if there is no Pipe. See the IndexedDB `BotAction`'s for examples.
+If you're interested in the injects and the Pipe value, use `unpipeInjects()`, which allows you to specify the number of `injects` you're expecting, to safely retrieve them with the Pipe value, even if there was no Pipe, or some `injects` didn't get injected. See the IndexedDB `BotAction`'s for examples.
 
-If you just want the `injects` without any Pipe, use `removePipe()`. All these helper functions are designed to be used in `BotAction`'s.
+If you just want the `injects` without any Pipe, use `removePipe()`. All these helper functions are designed to be used in `BotAction`'s to reduce boilerplate.
 
+Conditionals
+------------
 
-Conditions
-----------
+What if you want to run an assembly line of actions, but only after finding something in the Page to be true? Botmation has you covered with a special type of `BotAction` called `Utilities`.
 
-What if you want to run an assembly line of actions, but only after finding something in the Page to be true? Botmation has you covered in a special type of `BotAction` called `Utilities`.
+Let's get started with the simplest one, called `givenThat()()`, a functional if statement.
 
-Let's get started with the simplest one called `givenThat()()` that is basically a functional if statement.
-
-Here's a simplified bit of code from the Instagram example that attempts to login, only, *if* the "User" is a Guest:
+Here's a simplified bit of code from the Instagram example that attempts to login, only, *if* the Bot is a Guest:
 
 ```typescript
 await chain(
@@ -335,24 +350,26 @@ await chain(
 
     // "Utility" BotAction givenThat() 
     //    Resolves a "Conditional" BotAction for a boolean value
-    //    If that value equals TRUE, then run the actions declared
+    //    Only if that value equals TRUE, then the actions assembled are ran
     givenThat(isGuest)(
         log('is guest so logging in'),
         login({username: 'account', password: 'password'}),
     ),
 
-    givenThat(isLoggedIn)( // in case something went wrong
-        log('bot is logged in')
+    givenThat(isLoggedIn)(
+        log('Bot is logged in')
     )
 )(page)
 ```
 
-`givenThat()` accepts a `ConditionalBotAction` that is a `BotAction` that returns a boolean value. If the value returned is `TRUE`, then the assembled actions are ran in a Pipe.
+`givenThat()` accepts a special kind of `BotAction` called `ConditionalBotAction`. Therefore, `isGuest` and `isLoggedIn` are actually `BotAction`'s with stricter typing that returns a boolean value. If the value returned is `true`, then the assembled actions are ran in a Pipe.
 
-Loops
------
+So what happens is that `givenThat()` resolves the `ConditionalBotAction` which can be a complex composition of actions to determine something, in this case whether or not the Bot is logged in.
 
-What about running the same scraping `BotAction` or actions in a for loop against an array of website url's? It's a common web crawling use-case. Botmation has you covered. From the `BotAction`'s type "Utilities" exists `forAll()()` that will iterate a collection (object of key/value pairs or an array) passed in `forAll()` against a callback function that returns a `BotAction` or an array of `BotAction`'s.
+Looping
+-------
+
+What about running the same scraping `BotAction` or actions in a for loop against an array of website url's? It's a common web scraping scenario. Botmation has you covered. From the `BotAction`'s type "Utilities" exists a useful `BotAction` called `forAll()()` that will iterate a collection (either an object's key/value pairs or an array's values) against a callback function that returns a `BotAction` or an array of `BotAction`'s.
 
 Let's see an example:
 ```typescript
@@ -365,31 +382,31 @@ await chain(
     )
 )(page)
 ```
-Here we pass in array of site domain's in the first call then in the second call pass in an anonymous function, which gets called on each loop iteration of the collection, which in this case is once for each site domain in the array.
+Here we pass in a collection, an array of site domain's in the first call of `forAll()` then in the second call pass in an anonymous function, a closure, which gets called on each iteration of the collection, which in this case is once for each site domain in the array.
 
-When this `forAll()()` completes, it will have visted and screenshot each domain in the array, in the order declared. See documentation for more details.
+When this `forAll()()` completes, it will have visted and taken screenshots of each domain in the array, in the order declared. See documentation for more details & examples.
 
-Errors
-------
-Given the principle of 100% Composition, error handling has been omitted entirely from the library's core. Assembly Lines don't try to catch any errors, and this was done in favor of creating a simple composable solution for isolating errors in deeply nested assembly lines. The solution, is let you guess, another `BotAction` called `errors()()`.
+Error Handling
+--------------
+Error handling has been omitted entirely from the library's core. Assembly Lines don't try to catch any errors, and this was done in favor of creating a simple composable solution for finding errors in deeply nested assembly lines. Debugging async code is hard & time consuming. So a solution was designed to help narrow down thrown errors to the exact `BotAction`. This is done with a special type of `BotAction`, called `errors()()`.
 
-`errors()()` wraps assembled `BotAction`'s of the second call, `errors()()` in a try/catch, where errors caught are logged in the console with the Errors Block Name provided in the first call, `errors()`. Let's see an example:
+`errors()()` wraps assembled `BotAction`'s in a try/catch, where errors caught are logged to the console with the Errors Block Name provided in the first `errors()` call. Let's see an example:
 
 ```typescript
 await chain(
-    errors('scrape flow 1')( // <-- error block name
+    errors('A specific error block name')(
         // actions to run in a wrapped try/catch:
         goTo('site to scrape'),
         // ... 
     ),
-    log('this runs, even if errors()() catches something')
+    log('this runs, even if errors()() catches an error')
 )(page)
 ```
-So if any actions in the assembled second `errors()()` call throws an error, the error is caught by the `errors()()` `BotAction` and then logged to the console with the Error Block Name provided in the first function call `error()`. After an error is thrown, remaining actions assembled are stopped, but the higher order assembly-line continues.
+So if any actions in the assembled `errors()()` call throws an error, the error is caught by the `errors()()` `BotAction` and then logged to the console with the Error Block Name provided. After an error is thrown, the remaining assembled actions assembled are ignored (they don't run), but the higher order assembly-line continues.
 
-`errors()()` checks the higher order context `injects` for a Pipe, and runs the assembled actions in a Pipe, only if a Pipe was detected.
+`errors()()` checks the higher order context `injects` for a Pipe, and runs the assembled actions in a Pipe, only if a Pipe was detected. It tries to keep the style of assembly consistent.
 
-Also, you can nest `errors()()` as deeply as you want. This is to help isolate, tough to find async bugs, in deeply nested assembly lines. Make sure to give each one an uniquely identifying Error Block Name, so you can identify where the error was caught. If a nested `errors()()` catches a thrown error, it effectively swallows it, so higher level `errors()()` will not see it. This helps isolate bugs in the async functionality.
+Also, you can nest `errors()()` as deeply as you want. This is to help isolate, tough to find async bugs, in deeply nested assembly lines. Make sure to give each one an uniquely identifying Error Block Name, so you can identify where the error was caught. If a nested `errors()()` catches a thrown error, it swallows it, so higher level `errors()()` will not see it. This helps isolate bugs in the async functionality.
 
 # Dev Notes
 

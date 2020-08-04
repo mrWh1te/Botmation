@@ -146,9 +146,9 @@ Install Botmation with `npm` and save it as a dependency:
 
     npm install -s botmation
 
-If you're just getting started, install `puppeteer` latest v2 & `@types/puppeteer` v3.0.1:
+If you're just getting started, install `puppeteer` latest v2 & `@types/puppeteer` v3.0.0:
 
-    npm install -s puppeteer@">=2.0.0 <3.0.0" @types/puppeteer@3.0.1
+    npm install -s puppeteer@">=2.0.0 <3.0.0" @types/puppeteer@3.0.0
 
 While `Botmation` source code works with Puppeteer version 3, 4, and 5, the E2E testing has a bug that is limiting the packaging, as of this moment.
 

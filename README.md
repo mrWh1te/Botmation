@@ -322,6 +322,16 @@ const anEmptyPipe = {
 ```
 If there is no Pipe injected into a `pipe()()` from a higher context, then the `pipe()()()` itself will inject an empty one into the first assembled `BotAction`. So no matter what, there is always a Pipe as the last inject, when a `BotAction` is assembled in a Pipe. Also, it's possible to set the Pipe value for the first `BotAction` by passing that in the first `pipe()` call.
 
+There are a collection of `BotAction`'s specific to piping: `map()`, `pipeValue()`, and `emptyPipe`. The last two do what they say, and `map()` accepts a pure function to operate on the Pipe value, so if you want to cast the Pipe value from one type to another, `map()` is the `BotAction` to use. Let's see an example, `isGuest` from Instagram auth, uses `map()` to map the Pipe value to the appropriate boolean value:
+```typescript
+const isGuest: ConditionalBotAction = 
+  indexedDBStore('redux', 'paths')(
+    getIndexedDBValue('users.viewerId'),
+    map(viewerId => viewerId ? false : true),
+  )
+```
+Here we are getting a value from `redux` IndexedDB, from a store called `paths`, with the key `users.viewerId`, which in this case, at this time, returns a string or undefined. Then the returned value (Pipe value) is mapped to the correct values for `isGuest`. So if the `viewerId` is defined, then the Bot is considered logged in, therefore `isGuest` is `false` otherwise `true`.
+
 There are also separate functions in this library, that you will find in the module, that are not `BotAction`'s but regular functions, mostly pure, that help build `BotAction`'s by removing boilerplate. For example, there are many `helper` functions for piping.
 
 <img alt="Orange Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/orange_bot.PNG" width="175" align="right">

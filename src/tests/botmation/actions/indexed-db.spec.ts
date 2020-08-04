@@ -156,10 +156,10 @@ describe('[Botmation] actions/indexed-db', () => {
   // E2E test was resulting in a false fail from an error, see Issue: https://github.com/smooth-code/jest-puppeteer/issues/311
   // it('should set a key/value pair in a new Database & Store, then update that value and get it again', async() => {
   //   await setIndexedDBValue('a-key', 'a-value', 'a-store', 1, 'a-db')(page)
-  //   expect(getIndexedDBValue('a-key', 'a-store', 1, 'a-db')(page)).resolves.toEqual('a-value')
+  //   await expect(getIndexedDBValue('a-key', 'a-store', 1, 'a-db')(page)).resolves.toEqual('a-value')
 
   //   await setIndexedDBValue('a-key', 'b-value', 'a-store', 1, 'a-db')(page)
-  //   expect(getIndexedDBValue('a-key', 'a-store', 1, 'a-db')(page)).resolves.toEqual('b-value')
+  //   await expect(getIndexedDBValue('a-key', 'a-store', 1, 'a-db')(page)).resolves.toEqual('b-value')
 
   //   // if you were to add a new key/value pair, that would change the schema, therefore need to bump up db version number
   // })

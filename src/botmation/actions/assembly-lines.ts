@@ -1,6 +1,12 @@
-import { BotAction, Pipe } from "botmation/interfaces"
-import { injectsHavePipe, pipeInjects, wrapValueInPipe, getInjectsPipeOrEmptyPipe, createEmptyPipe } from "botmation/helpers/pipe"
-import { PipeValue } from "botmation/types/pipe-value"
+import { BotAction, Pipe } from "../interfaces"
+import { 
+  injectsHavePipe,
+  pipeInjects,
+  wrapValueInPipe,
+  getInjectsPipeOrEmptyPipe,
+  createEmptyPipe
+} from "../helpers/pipe"
+import { PipeValue } from "../types/pipe-value"
 
 //
 // These functions resolve the actions (aka run them), in order received, like on an assembly line, 1 action at a time - going down the conveyer belt

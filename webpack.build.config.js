@@ -14,6 +14,7 @@ module.exports = {
     'playground_bot': path.resolve(__dirname, 'src/playground_bot.ts'),
     //
     // Examples
+    'examples/pdf': path.resolve(__dirname, 'src/examples/pdf.ts'),
     'examples/simple_functional': path.resolve(__dirname, 'src/examples/simple_functional.ts'),
     'examples/simple_objectoriented': path.resolve(__dirname, 'src/examples/simple_objectoriented.ts'),
     'examples/instagram': path.resolve(__dirname, 'src/examples/instagram.ts'),

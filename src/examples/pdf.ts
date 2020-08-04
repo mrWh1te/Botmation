@@ -7,7 +7,7 @@ import { Botmation } from 'botmation'
 
 import { log } from 'botmation/actions/console'
 import { goTo } from 'botmation/actions/navigation'
-import { savePDF } from 'botmation/actions/output'
+import { savePDF } from 'botmation/actions/files'
 
 import { logError } from 'botmation/helpers/console'
 

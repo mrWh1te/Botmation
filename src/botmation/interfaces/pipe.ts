@@ -1,4 +1,4 @@
-import { PipeValue } from "botmation/types/pipe-value"
+import { PipeValue } from "../types/pipe-value"
 
 /**
  * @description    The last inject of a piped BotAction (ran inside pipe()()) is a Pipe object whose `value` key is set to the value returned by the last BotAction in the pipe()()

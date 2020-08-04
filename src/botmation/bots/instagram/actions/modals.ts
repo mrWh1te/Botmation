@@ -1,12 +1,12 @@
 /**
  * @description   Functions to interact with the Instagram's Modals
  */
-import { BotAction } from 'botmation/interfaces/bot-actions'
+import { BotAction } from '../../../interfaces/bot-actions'
 
 import { TURN_OFF_NOTIFICATIONS_BUTTON_LABEL } from '../constants/modals'
 import { MAIN_MODAL_HEADER_SELECTOR } from '../selectors'
 import { TURN_OFF_NOTIFICATIONS_MODAL_HEADER_TEXT } from '../constants/modals'
-import { ConditionalBotAction } from 'botmation/interfaces'
+import { ConditionalBotAction } from '../../../interfaces'
 
 /**
  * @description   ConditionalBotAction that resolves TRUE if the "Turn On Notifications Modal" is detected as in, actively displaying in the webpage

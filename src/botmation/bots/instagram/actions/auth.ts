@@ -1,12 +1,12 @@
-import { ConditionalBotAction } from 'botmation/interfaces/bot-actions'
-import { BotAction } from 'botmation/interfaces/bot-actions'
+import { ConditionalBotAction } from '../../../interfaces/bot-actions'
+import { BotAction } from '../../../interfaces/bot-actions'
 
-import { chain } from 'botmation/actions/assembly-lines'
-import { goTo, waitForNavigation } from 'botmation/actions/navigation'
-import { click, type } from 'botmation/actions/input'
-import { getIndexedDBValue, indexedDBStore } from 'botmation/actions/indexed-db'
-import { map } from 'botmation/actions/pipe'
-import { log } from 'botmation/actions/console'
+import { chain } from '../../../actions/assembly-lines'
+import { goTo, waitForNavigation } from '../../../actions/navigation'
+import { click, type } from '../../../actions/input'
+import { getIndexedDBValue, indexedDBStore } from '../../../actions/indexed-db'
+import { map } from '../../../actions/pipe'
+import { log } from '../../../actions/console'
 
 import { getInstagramLoginUrl } from '../helpers/urls'
 import { 
@@ -14,7 +14,8 @@ import {
   FORM_AUTH_PASSWORD_INPUT_SELECTOR,
   FORM_AUTH_SUBMIT_BUTTON_SELECTOR
 } from '../selectors'
-import { errors } from 'botmation/actions/errors'
+import { errors } from '../../../actions/errors'
+import { wait } from '../../../actions/utilities'
 
 /**
  * @description    ConditionalBotAction that resolves TRUE if the User is NOT logged in
@@ -22,11 +23,11 @@ import { errors } from 'botmation/actions/errors'
  * @param page
  * @param injects
  */
-export const isGuest: ConditionalBotAction = async(page, ...injects) =>
-  await indexedDBStore('redux', 'paths')(
+export const isGuest: ConditionalBotAction = 
+  indexedDBStore('redux', 'paths')(
     getIndexedDBValue('users.viewerId'),
     map(viewerId => viewerId ? false : true),
-  )(page, ...injects)
+  )
 
 /**
  * @description    ConditionalBotAction that resolves TRUE if the User is logged in
@@ -34,17 +35,17 @@ export const isGuest: ConditionalBotAction = async(page, ...injects) =>
  * @param page
  * @param injects
  */
-export const isLoggedIn: ConditionalBotAction = async(page, ...injects) =>
-  await indexedDBStore('redux', 'paths')(
+export const isLoggedIn: ConditionalBotAction =
+  indexedDBStore('redux', 'paths')(
     getIndexedDBValue('users.viewerId'),
     map(viewerId => viewerId ? true : false)
-  )(page, ...injects)
+  )
 
 /**
  * @description  BotAction that attempts the login flow for Instagram
  * @param {username, password} destructured
  */
-export const login = ({username, password}: {username: string, password: string}): BotAction => async(page, ...injects) =>
+export const login = ({username, password}: {username: string, password: string}): BotAction =>
   chain(
     errors('Instagram login()')(
       goTo(getInstagramLoginUrl()),
@@ -54,7 +55,8 @@ export const login = ({username, password}: {username: string, password: string}
       type(password),
       click(FORM_AUTH_SUBMIT_BUTTON_SELECTOR),
       waitForNavigation,
+      wait(1000), // artificially wait 1sec to give time for app to update IndexedDB (so auth checks work)
       log('Login Complete')
     )
-  )(page, ...injects)
+  )
   

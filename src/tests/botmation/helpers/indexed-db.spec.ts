@@ -165,7 +165,7 @@ describe('[Botmation] helpers/indexed-db', () => {
       }
     })
     
-    expect(getIndexedDBStoreValue(databaseName, 1, databaseStoreName, 'does-not-exist-key')).resolves.toBeUndefined()
+    await expect(getIndexedDBStoreValue(databaseName, 1, databaseStoreName, 'does-not-exist-key')).resolves.toBeUndefined()
   })
 
   it('setIndexedDBStoreValue() should throw on IndexedDB Request Error', async() => {

@@ -11,38 +11,42 @@ var nodeExternals = require('webpack-node-externals');
 module.exports = {
   entry: {
     //
-    // Class & BotActionsFactory
-    'index': path.resolve(__dirname, 'src/botmation/index.ts'),
+    // Class & Assembly-Lines
+    'index': path.resolve(__dirname, 'src/botmation/index.ts'), // barrel
     //
-    // Interfaces
+    // Interfaces & Types
     'interfaces': path.resolve(__dirname, 'src/botmation/interfaces/index.ts'), // barrel
+    'types': path.resolve(__dirname, 'src/botmation/types/index.ts'), // barrel
     //
     // Actions
+    'actions/assembly-lines': path.resolve(__dirname, 'src/botmation/actions/assembly-lines.ts'),
     'actions/console': path.resolve(__dirname, 'src/botmation/actions/console.ts'),
     'actions/cookies': path.resolve(__dirname, 'src/botmation/actions/cookies.ts'),
+    'actions/errors': path.resolve(__dirname, 'src/botmation/actions/errors.ts'),
+    'actions/files': path.resolve(__dirname, 'src/botmation/actions/files.ts'),
+    'actions/indexed-db': path.resolve(__dirname, 'src/botmation/actions/indexed-db.ts'),
     'actions/input': path.resolve(__dirname, 'src/botmation/actions/input.ts'),
+    'actions/local-storage': path.resolve(__dirname, 'src/botmation/actions/local-storage.ts'),
     'actions/navigation': path.resolve(__dirname, 'src/botmation/actions/navigation.ts'),
-    'actions/output': path.resolve(__dirname, 'src/botmation/actions/output.ts'),
+    'actions/pipe': path.resolve(__dirname, 'src/botmation/actions/pipe.ts'),
     'actions/utilities': path.resolve(__dirname, 'src/botmation/actions/utilities.ts'),
     // 
     // Helpers
-    'helpers/actions': path.resolve(__dirname, 'src/botmation/helpers/actions.ts'),
-    'helpers/assets': path.resolve(__dirname, 'src/botmation/helpers/assets.ts'),
-    'helpers/bot-options': path.resolve(__dirname, 'src/botmation/helpers/bot-options.ts'),
+    'helpers/console': path.resolve(__dirname, 'src/botmation/helpers/console.ts'),
     'helpers/files': path.resolve(__dirname, 'src/botmation/helpers/files.ts'),
+    'helpers/indexed-db': path.resolve(__dirname, 'src/botmation/helpers/indexed-db.ts'),
+    'helpers/local-storage': path.resolve(__dirname, 'src/botmation/helpers/local-storage.ts'),
     'helpers/navigation': path.resolve(__dirname, 'src/botmation/helpers/navigation.ts'),
+    'helpers/pipe': path.resolve(__dirname, 'src/botmation/helpers/pipe.ts'),
     'helpers/utilities': path.resolve(__dirname, 'src/botmation/helpers/utilities.ts'),
     //
     // Site Specific
     // Instagram
     'bots/instagram/selectors': path.resolve(__dirname, 'src/botmation/bots/instagram/selectors.ts'),
     'bots/instagram/actions/auth': path.resolve(__dirname, 'src/botmation/bots/instagram/actions/auth.ts'),
-    'bots/instagram/actions/feed': path.resolve(__dirname, 'src/botmation/bots/instagram/actions/feed.ts'),
     'bots/instagram/actions/modals': path.resolve(__dirname, 'src/botmation/bots/instagram/actions/modals.ts'),
     'bots/instagram/constants/modals': path.resolve(__dirname, 'src/botmation/bots/instagram/constants/modals.ts'),
     'bots/instagram/constants/urls': path.resolve(__dirname, 'src/botmation/bots/instagram/constants/urls.ts'),
-    'bots/instagram/helpers/auth': path.resolve(__dirname, 'src/botmation/bots/instagram/helpers/auth.ts'),
-    'bots/instagram/helpers/modals': path.resolve(__dirname, 'src/botmation/bots/instagram/helpers/modals.ts'),
     'bots/instagram/helpers/urls': path.resolve(__dirname, 'src/botmation/bots/instagram/helpers/urls.ts'),
   },
   module: {
@@ -68,6 +72,8 @@ module.exports = {
       switch(chunkData.chunk.name) {
         case 'interfaces':
           return 'interfaces/index.js';
+        case 'types':
+          return 'types/index.js'
         case 'index':
         default:
           return '[name].js';
@@ -83,7 +89,8 @@ module.exports = {
     minimize: false
   },
   plugins: [
-    new CopyPlugin([
+    new CopyPlugin({
+      patterns: [
       // Copy over and tweak the package.json for npm package
       { 
         from: 'package.json', 
@@ -118,7 +125,7 @@ module.exports = {
         to: 'README.md',
         toType: 'file'
       }
-    ])
+    ]})
   ],
   mode: 'development',
   node: {

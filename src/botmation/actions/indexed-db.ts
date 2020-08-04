@@ -1,11 +1,12 @@
 
 import { BotAction, BotIndexedDBAction } from '../interfaces/bot-actions'
-import { unpipeInjects, pipeInjects } from '../helpers/pipe'
+import { unpipeInjects } from '../helpers/pipe'
 import { getIndexedDBStoreValue, setIndexedDBStoreValue } from '../helpers/indexed-db'
 import { inject } from './inject'
 import { PipeValue } from '../types/pipe-value'
-import { isObjectWithKey, isObjectWithValue } from 'botmation/types/objects'
-import { getQueryKey, getQueryKeyValue } from 'botmation/types/database'
+import { isObjectWithKey, isObjectWithValue } from '../types/objects'
+import { getQueryKey, getQueryKeyValue } from '../types/database'
+import { pipe } from './assembly-lines'
 
 /**
  * @description    It's a higher-order BotAction that sets injects for identifying information of one IndexedDB store
@@ -18,12 +19,11 @@ import { getQueryKey, getQueryKeyValue } from 'botmation/types/database'
  */
 export const indexedDBStore = (databaseName: string, storeName: string, databaseVersion?: number) =>
   (...actions: BotAction<PipeValue|void>[]): BotAction<any> =>
-    async(page, ...injects) => 
-      await inject(
-        databaseVersion, databaseName, storeName
-      )(...actions)(page, ...pipeInjects(injects))
-      
-      
+    pipe()(
+      inject(databaseVersion, databaseName, storeName)(
+        ...actions
+      )
+    )
 
 /**
  * @description    Set an IndexedDB Store's key value

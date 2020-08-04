@@ -172,9 +172,9 @@ These focus on piping.
 - `map<R extends PipeValue = PipeValue>(mapFunction: (pipedValue: PipeValue) => R): BotAction<R>`
 
   Map accepts a pure function to run against the Pipe's value. If you need to cast the Pipe's value, map it from one type to another, you can do so simply with `map()`.
-- `pipeValue<R extends PipeValue = PipeValue>(valueToPipe: PipeValue): BotAction<R>`
+- `pipeValue<R extends PipeValue = PipeValue>(valueToPipe: R|undefined): BotAction<R|undefined>`
   
-  This can be used to set the Pipe value for the next `BotAction` in an Assembly Line.
+  This can be used to set the Pipe value for the next `BotAction` in an Assembly Line. 
 - `emptyPipe: BotAction`
 
   This `BotAction` simply returns `undefined` which empties the Pipe. An empty Pipe is one that `value` is `undefined`.

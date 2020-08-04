@@ -8,7 +8,7 @@ import { log } from 'botmation/actions/console'
 import { givenThat } from 'botmation/actions/utilities'
 import { loadCookies, saveCookies } from 'botmation/actions/cookies'
 import { goTo } from 'botmation/actions/navigation'
-import { screenshot } from 'botmation/actions/output'
+import { screenshot } from 'botmation/actions/files'
 import { logError } from 'botmation/helpers/console'
 
 // Instagram specific BotAction's

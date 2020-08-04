@@ -8,7 +8,7 @@ import { Botmation } from 'botmation'
 // General BotAction's
 import { log } from 'botmation/actions/console'
 import { goTo } from 'botmation/actions/navigation'
-import { screenshot } from 'botmation/actions/output'
+import { screenshot } from 'botmation/actions/files'
 
 // helpers
 import { logError } from 'botmation/helpers/console'

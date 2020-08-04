@@ -7,7 +7,7 @@ import { chain } from 'botmation/actions/assembly-lines'
 // General BotAction's
 import { log } from 'botmation/actions/console'
 import { goTo } from 'botmation/actions/navigation'
-import { screenshot } from 'botmation/actions/output'
+import { screenshot } from 'botmation/actions/files'
 import { logError } from 'botmation/helpers/console'
 
 (async () => {

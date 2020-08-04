@@ -3,7 +3,7 @@ import { Page } from 'puppeteer'
 
 // Actions
 import { goTo } from 'botmation/actions/navigation'
-import { screenshot } from 'botmation/actions/output'
+import { screenshot } from 'botmation/actions/files'
 import { log } from 'botmation/actions/console'
 
 // Class for injecting the page

@@ -28,7 +28,6 @@ module.exports = {
     'actions/input': path.resolve(__dirname, 'src/botmation/actions/input.ts'),
     'actions/local-storage': path.resolve(__dirname, 'src/botmation/actions/local-storage.ts'),
     'actions/navigation': path.resolve(__dirname, 'src/botmation/actions/navigation.ts'),
-    'actions/output': path.resolve(__dirname, 'src/botmation/actions/output.ts'),
     'actions/pipe': path.resolve(__dirname, 'src/botmation/actions/pipe.ts'),
     'actions/utilities': path.resolve(__dirname, 'src/botmation/actions/utilities.ts'),
     // 

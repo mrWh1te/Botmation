@@ -12,7 +12,7 @@
 
 A TypeScript library for using [Puppeteer](https://github.com/puppeteer/puppeteer) in a declarative way.
 
-<img alt="Baby Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/baby_bot.PNG" width="175" align="right">
+<img alt="Baby Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/baby_bot.PNG" width="175" align="right" style="position:relative;top:10px">
 
 Why choose Botmation?
 ---------------------
@@ -166,7 +166,7 @@ As a reference, the `BotAction`'s are organized by type, in the `/actions` direc
 
 As of v2.0.x, there are 12 groups of actions to build from: 
 
-<img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="190" align="right" style="position: relative;top: 30px;">
+<img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="200" align="right" style="position: relative;top: 30px;">
 
  - `assembly-line`
     - assemble and run `BotAction`'s in lines
@@ -218,7 +218,12 @@ npm run examples/instagram
 npm run examples/screenshots
 npm run examples/pdf
 ```
-You can go into any of these and make changes, then build the source code and run them again. There is a simple object oriented example, that can give ideas on how functions of a class can just be composed `BotAction`'s. Do it however you want.
+You can go into any of these and make changes, then build the source code and run them again. Here they are:
+ - [Simple Object-Oriented](/src/examples/simple_objectoriented.ts)
+ - [Simple Functional](/src/examples/simple_functional.ts)
+ - [Screenshots](/src/examples/screenshots.ts)
+ - [PDF](/src/examples/pdf.ts)
+ - [Instagram ](/src/examples/instagram.ts)
 
 ### Running Bots Concurrently
 
@@ -295,12 +300,12 @@ await chain(
 ```
 This gives granular control of what's passed in the spread `injects` array for assembled `BotAction`'s.
 
-Pipe
-----
+Piping
+------
 
-There's another kind of Assembly Line, a special kind, that passes data from one `BotAction` in a line to the next `BotAction`, and so forth. It's called Pipe. When `BotAction`'s are assembled in a Pipe, the values they return (technically wrapped in Promises, but abstracted away by the async/await generators), are "piped" into subsequent `BotAction`'s. The Pipe handles this by wrapping the value resolved in a branded Pipe object (for type gaurding), called `Pipe` then injects the `Pipe` object at the very end of the spread `injects` array in the `BotAction`.
+There's another kind of Assembly Line, a special kind, for passing data from one `BotAction` to the next. It's called Pipe. When `BotAction`'s are assembled in a Pipe, the values they return, are "piped" into subsequent `BotAction`'s. This means the Pipe wraps the values resolved from each `BotAction`, in a branded Pipe object (for type gaurding), called `Pipe` then injects the `Pipe` object at the very end of the spread `injects` array.
 
-So how about some useful examples to understand when to use this. What if you want to compose a Bot that does things with Local Storage. Maybe the authentication of the Bot relies on data in Local Storage, how would one go about composing such functionality, where data must be scraped first before operating? That's where Piping comes in, as it allows a `BotAction` to return a value for the next `BotAction` to operate with.
+This is useful for sharing data, like data scraped from a web page. For example, what if a website stored an auth token in Local Storage? With a Pipe, a `BotAction` can get the value, then other `BotAction`'s can operate on it through a Pipe. That's where Piping comes in, as it allows a `BotAction` to return a value for the next `BotAction` to operate with.
 
 Let's get started with a simple example of writing and reading a value to Local Storage:
 ```typescript
@@ -310,9 +315,11 @@ await pipe()(
    log('User ID is in the Pipe') // has '12345' as the Pipe valued logged to console
 )(page)
 ```
-Now, instead of diving into Local Storage `BotAction`'s, let's consider what's happening in the context of this Pipe. `setLocalStorageItem()` set a key/value in Local Storage, and does *not* return a value. However, `getLocalStorageItem()` reads the value by the `key` provided, then returns it. Unmentioned before, the "Console" `BotAction`'s support logging the Pipe value, when there is a Pipe, so the `log()` call will log to console the Pipe value of `12345`.
+Now, instead of diving into Local Storage `BotAction`'s, let's consider what's happening in the context of this Pipe. `setLocalStorageItem()` sets a key/value in Local Storage, and does *not* return a value. However, `getLocalStorageItem()` reads the value by the `key` provided, then returns the value found. 
 
-`pipe()()()` runs the assembled actions, one at a time, and checks the values returned from each. When a function doesn't return a value, that is considered emptying the Pipe. Empty pipes are still injected. They look like this:
+> "Console" `BotAction`'s support logging Pipe values, when a Pipe is present, so the `log()` call seen here, will log in additional statement to the console with Pipe value of `"12345"`.
+
+`pipe()()()` runs the assembled actions, one at a time, and checks the values returned from each. When a function doesn't return a value, that is considered, emptying the Pipe. Empty pipes are still injected. They look like this:
 
 ```typescript
 const anEmptyPipe = {
@@ -320,9 +327,11 @@ const anEmptyPipe = {
     value: undefined
 }
 ```
-If there is no Pipe injected into a `pipe()()` from a higher context, then the `pipe()()()` itself will inject an empty one into the first assembled `BotAction`. So no matter what, there is always a Pipe as the last inject, when a `BotAction` is assembled in a Pipe. Also, it's possible to set the Pipe value for the first `BotAction` by passing that in the first `pipe()` call.
+When running a `pipe()()` in a context without one, `pipe()()()` will inject an empty one into the first assembled `BotAction`, unless you override that by passing in a value to Pipe in the first `pipe()` call.
 
-There are a collection of `BotAction`'s specific to piping: `map()`, `pipeValue()`, and `emptyPipe`. The last two do what they say, and `map()` accepts a pure function to operate on the Pipe value, so if you want to cast the Pipe value from one type to another, `map()` is the `BotAction` to use. Let's see an example, `isGuest` from Instagram auth, uses `map()` to map the Pipe value to the appropriate boolean value:
+No matter what, there is always a Pipe appended at the end of the `injects`, when `BotAction`'s are assembled in a Pipe.
+
+There are a collection of `BotAction`'s specific to piping: `map()`, `pipeValue()`, and `emptyPipe`. `map()` accepts a pure function to operate on the Pipe value, so if you want to cast the Pipe value from one type to another, use the `map()` `BotAction`. Let's see an example, `isGuest` from Instagram auth, uses `map()` to convert the Pipe value to the correct boolean value:
 ```typescript
 const isGuest: ConditionalBotAction = 
   indexedDBStore('redux', 'paths')(
@@ -330,19 +339,19 @@ const isGuest: ConditionalBotAction =
     map(viewerId => viewerId ? false : true),
   )
 ```
-Here we are getting a value from `redux` IndexedDB, from a store called `paths`, with the key `users.viewerId`, which in this case, at this time, returns a string or undefined. Then the returned value (Pipe value) is mapped to the correct values for `isGuest`. So if the `viewerId` is defined, then the Bot is considered logged in, therefore `isGuest` is `false` otherwise `true`.
+Here we are getting a value from the `redux` IndexedDB, a store called `paths`, by the key `users.viewerId`. The returned value (Pipe value) is mapped to the correct values for `isGuest`. Basically, if the `viewerId` is defined, then the Bot is considered logged in, therefore `isGuest` is `false` otherwise it is `true`.
 
-There are also separate functions in this library, that you will find in the module, that are not `BotAction`'s but regular functions, mostly pure, that help build `BotAction`'s by removing boilerplate. For example, there are many `helper` functions for piping.
+Also, there are separate functions in this library, that are found in the module, that are not `BotAction`'s, but regular functions, to help reduce boilerplate called `Helpers`. For example, there are many `helper` functions for piping.
 
 <img alt="Orange Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/orange_bot.PNG" width="175" align="right">
 
-To name a few, there are `unpipeInjects()`, `removePipe()`, `getInjectsPipeValue()`, `wrapValueInPipe()`, `pipeInjects()`, and so forth. They do what they sound like they do and mostly expect an `injects` param. When starting out, the first three are the most relevant as they help write `BotAction`'s that can use the Pipe safely, so they can be used in a Chain.
+To name a few, there are `unpipeInjects()`, `removePipe()`, `getInjectsPipeValue()`, `wrapValueInPipe()`, `pipeInjects()`, and so forth. When starting out with piping, the first three are the most relevant as they help write pipeable `BotAction`'s that can be still be used safely in a Chain.
 
 If you're not interested in whats injected, but need the Pipe value, use `getInjectsPipeValue()` as it has safe fallbacks for when there is no Pipe, in case the `BotAction` is assembled in a Chain. See the Local Storage `BotAction`'s for examples, in how it's used.
 
 If you're interested in the injects and the Pipe value, use `unpipeInjects()`, which allows you to specify the number of `injects` you're expecting, to safely retrieve them with the Pipe value, even if there was no Pipe, or some `injects` didn't get injected. See the IndexedDB `BotAction`'s for examples.
 
-If you just want the `injects` without any Pipe, use `removePipe()`. All these helper functions are designed to be used in `BotAction`'s to reduce boilerplate.
+If you just want the `injects` without any Pipe, use `removePipe()`.
 
 Conditionals
 ------------

@@ -10,7 +10,9 @@
 
 <img src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/banner/1556x379v2.png" alt="Botmation Crew" width="474">
 
-A TypeScript library for using [Puppeteer](https://github.com/puppeteer/puppeteer) in a declarative way.
+A TypeScript library for using [Puppeteer](https://github.com/puppeteer/puppeteer) in a declarative, functional and composable way.
+
+> “Everything should be made as simple as possible, but no simpler.” - Albert Einstein
 
 <img alt="Baby Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/baby_bot.PNG" width="175" align="right" style="position:relative;top:10px">
 
@@ -34,8 +36,6 @@ Botmation is like a slightly opinionated framework for Puppeteer. In that it is 
 You can compose new `BotAction`'s from the ones provided and build your own from scratch.
 
 The possibilities are truly endless!
-
-> “Everything should be made as simple as possible, but no simpler.” - Albert Einstein
 
 BotAction
 ---------

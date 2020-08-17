@@ -10,10 +10,10 @@
 
 > “Everything should be made as simple as possible, but no simpler.” - Albert Einstein
 
-<img alt="Baby Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/baby_bot.PNG" width="125" align="right" style="position:relative;top:60px">
-
 Why choose Botmation?
 ---------------------
+
+<img alt="Baby Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/baby_bot.PNG" width="125" align="right">
 
 It empowers Puppeteer code with a simple pattern that maximizes code readability, reusability and testability.
 

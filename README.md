@@ -10,7 +10,7 @@
 
 > “Everything should be made as simple as possible, but no simpler.” - Albert Einstein
 
-<img alt="Baby Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/baby_bot.PNG" width="175" align="right" style="position:relative;top:10px">
+<img alt="Baby Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/baby_bot.PNG" width="125" align="right" style="position:relative;top:60px">
 
 Why choose Botmation?
 ---------------------

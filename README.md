@@ -3,6 +3,7 @@
 [![npm](https://img.shields.io/npm/v/botmation)](https://www.npmjs.com/package/botmation)
 [![Build Status](https://travis-ci.com/mrWh1te/Botmation.svg?branch=master)](https://travis-ci.com/mrWh1te/Botmation)
 [![codecov](https://img.shields.io/codecov/c/github/mrWh1te/Botmation/master?label=codecov)](https://codecov.io/gh/mrWh1te/Botmation)
+[![LGTM Grade](https://img.shields.io/lgtm/grade/javascript/github/mrWh1te/Botmation)](https://lgtm.com/projects/g/mrWh1te/Botmation)
 [![dependencies Status](https://david-dm.org/mrWh1te/Botmation/status.svg)](https://david-dm.org/mrWh1te/Botmation)
 ![GitHub](https://img.shields.io/github/license/mrWh1te/Botmation)
 

@@ -21,6 +21,7 @@
     "examples/puppeteer-cluster": "node build/examples/puppeteer-cluster.js",
     "examples/screenshots": "node build/examples/screenshots.js",
     "examples/pdf": "node build/examples/screenshots.js",
+    "linkedin": "node build/examples/linkedin.js",
     "test": "jest --runInBand",
     "localtestsite": "http-server src/tests/server",
     "insta": "npm run examples/instagram"

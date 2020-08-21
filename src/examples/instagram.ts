@@ -12,11 +12,11 @@ import { screenshot } from 'botmation/actions/files'
 import { logError } from 'botmation/helpers/console'
 
 // Instagram specific BotAction's
-import { login, isGuest, isLoggedIn } from 'botmation/bots/instagram/actions/auth'
-import { closeTurnOnNotificationsModal, isTurnOnNotificationsModalActive } from 'botmation/bots/instagram/actions/modals'
+import { login, isGuest, isLoggedIn } from 'botmation/sites/instagram/actions/auth'
+import { closeTurnOnNotificationsModal, isTurnOnNotificationsModalActive } from 'botmation/sites/instagram/actions/modals'
 
 // Instagram helpers
-import { getInstagramBaseUrl } from 'botmation/bots/instagram/helpers/urls'
+import { getInstagramBaseUrl } from 'botmation/sites/instagram/helpers/urls'
 
 // More advanced BotAction's
 import { chain } from 'botmation/actions/assembly-lines'

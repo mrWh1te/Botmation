@@ -56,12 +56,12 @@ export const getInjectsPipeOrEmptyPipe = <P = any>(injects: any[]): Pipe<P> =>
 
 
 /**
- * @description     Creates an empty Pipe
+ * @description     Creates an empty Pipe object
  */
 export const createEmptyPipe = (): EmptyPipe => wrapValueInPipe()
 
 /**
- * @description     Creates a Pipe with the provided value
+ * @description     Creates a Pipe object with the provided value
  * @param value 
  */
 export const wrapValueInPipe = <P = any>(value?: P): Pipe<P> =>  ({

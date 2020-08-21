@@ -20,6 +20,7 @@ module.exports = {
     'examples/instagram': path.resolve(__dirname, 'src/examples/instagram.ts'),
     'examples/puppeteer-cluster': path.resolve(__dirname, 'src/examples/puppeteer-cluster.ts'),
     'examples/screenshots': path.resolve(__dirname, 'src/examples/screenshots.ts'),
+    'examples/linkedin': path.resolve(__dirname, 'src/examples/linkedin.ts'),
   },
   module: {
     rules: [

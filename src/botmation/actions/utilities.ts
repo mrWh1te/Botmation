@@ -6,8 +6,9 @@
 import { sleep } from '../helpers/utilities'
 
 import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions'
-import { pipeInjects } from '../helpers/pipe'
+import { pipeInjects, getInjectsPipeValue } from '../helpers/pipe'
 import { pipeActionOrActions, pipe } from './assembly-lines'
+import { logWarning } from 'botmation/helpers/console'
 
 /**
  * @description Higher Order BotAction that accepts a ConditionalBotAction (pipeable, that returns a boolean) and based on what boolean it resolves,
@@ -62,15 +63,26 @@ export interface Dictionary {
   [key: string]: any // key/value pairs
 }
 export const forAll =
-  (collection: any[] | Dictionary) =>
+  (collection?: any[] | Dictionary) =>
     (botActionOrActionsFactory: (...args: any[]) => BotAction<any>[] | BotAction<any>): BotAction =>
       async(page, ...injects) => {
+        // the collection can be passed in via higher-order params or Pipe object value
+        // higher-order params trump Pipe object value
+        if (!collection) {
+          collection = getInjectsPipeValue(injects)
+        }
+
+        if (!collection) {
+          logWarning('Utilities forAll() missing collection')
+          collection = []
+        }
+
         if (Array.isArray(collection)) {
           // Array
           for(let i = 0; i < collection.length; i++) {
             await pipeActionOrActions(botActionOrActionsFactory(collection[i]))(page, ...injects)
           }
-        } else {
+        } else if(typeof collection === 'object' && collection !== null) {
           // Dictionary
           for (const [key, value] of Object.entries(collection)) {
             await pipeActionOrActions(botActionOrActionsFactory(key, value))(page, ...injects)

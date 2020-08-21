@@ -23,6 +23,7 @@ export * from './actions/input'
 export * from './actions/local-storage'
 export * from './actions/navigation'
 export * from './actions/pipe'
+export * from './actions/scraping'
 export * from './actions/utilities'
 
 //

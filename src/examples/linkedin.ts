@@ -6,8 +6,10 @@ import { goTo } from 'botmation/actions/navigation'
 import { screenshot } from 'botmation/actions/files'
 
 // More advanced BotAction's
-import { chain } from 'botmation/actions/assembly-lines'
+import { pipe, $$, saveCookies, loadCookies, wait } from 'botmation'
 import { login } from 'botmation/sites/linkedin/actions/auth'
+import { toggleMessagingOverlay } from 'botmation/sites/linkedin/actions/messaging'
+import { likeAllFrom } from 'botmation/sites/linkedin/actions/feed'
 
 // Helper for creating filenames that sort naturally
 const generateTimeStamp = (): string => {
@@ -19,7 +21,8 @@ const generateTimeStamp = (): string => {
        ( x.getMonth() + 1 ) + '-' + 
          x.getDate() + '-' + 
          x.getHours() + '-' + 
-         x.getMinutes();
+         x.getMinutes() + '-' + 
+         x.getSeconds();
 }
 
 // Main Script
@@ -31,13 +34,20 @@ const generateTimeStamp = (): string => {
    const pages = await browser.pages()
    const page = pages.length === 0 ? await browser.newPage() : pages[0]
    
-   await chain(
+   await pipe()(
     log('Botmation running'),
 
-    login('linked-in-email@example.com', 'linkedin-password'),
+    loadCookies('linkedin'),
 
-    goTo('https://www.linkedin.com/feed/'),
-    screenshot(generateTimeStamp()) // filename ie "2020-8-21-13-20.png"
+    goTo('https://www.linkedin.com/feed/', {waitUntil: 'domcontentloaded'}),
+
+    wait(5000), // tons of stuff loads... no rush
+    toggleMessagingOverlay, // be default, loads in open state
+
+    // saveCookies('linkedin'),
+    screenshot(generateTimeStamp()), // filename ie "2020-8-21-13-20.png"
+
+    likeAllFrom('Peter Parker', 'Harry Potter'),
    
    )(page)
 

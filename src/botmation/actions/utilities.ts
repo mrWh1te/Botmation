@@ -8,7 +8,7 @@ import { sleep } from '../helpers/utilities'
 import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions'
 import { pipeInjects, getInjectsPipeValue } from '../helpers/pipe'
 import { pipeActionOrActions, pipe } from './assembly-lines'
-import { logWarning } from 'botmation/helpers/console'
+import { logWarning } from '../helpers/console'
 
 /**
  * @description Higher Order BotAction that accepts a ConditionalBotAction (pipeable, that returns a boolean) and based on what boolean it resolves,
@@ -85,7 +85,7 @@ export const forAll =
           }
 
         } else {
-          // coded like this for testing coverage bug creating false negative on this branch
+          // coded for testing coverage bug creating false negative on this branch
           if (typeof collection === 'object' && collection !== null) {
             // Dictionary
             for (const [key, value] of Object.entries(collection)) {

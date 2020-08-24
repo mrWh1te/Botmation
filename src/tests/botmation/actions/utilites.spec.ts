@@ -14,6 +14,12 @@ jest.mock('botmation/helpers/utilities', () => {
   }
 })
 
+jest.mock('botmation/helpers/console', () => {
+  return {
+    logWarning: jest.fn(() => {})
+  }
+})
+
 /**
  * @description   Utility BotAction's
  *                The factory methods here return BotAction's for the bots to handle more complex functional flows
@@ -74,7 +80,7 @@ describe('[Botmation] actions/utilities', () => {
 
   //
   // forAll() Unit Tests
-  it('should call the list of Actions for each item in the array provided', async() => {
+  it('should call the list of Actions for each item in the array provided through either higher-order param or Pipe object value', async() => {
     const urls = ['example.html', 'example2.html', 'success.html']
 
     await forAll(urls)(
@@ -88,7 +94,45 @@ describe('[Botmation] actions/utilities', () => {
     expect(mockPage.goto).toHaveBeenNthCalledWith(1, 'http://localhost:8080/example.html', enrichGoToPageOptions())
     expect(mockPage.goto).toHaveBeenNthCalledWith(2, 'http://localhost:8080/example2.html', enrichGoToPageOptions())
     expect(mockPage.goto).toHaveBeenNthCalledWith(3, 'http://localhost:8080/success.html', enrichGoToPageOptions())
+
+    // reset mockPage to run same tests again except with Piping the collection
+    mockPage = {
+      url: jest.fn(() => ''),
+      goto: jest.fn()
+    } as any as Page
+
+    await forAll()(
+      (webPage) => ([
+        goTo('http://localhost:8080/' + webPage)
+      ])
+    )(mockPage, {brand: 'Pipe', value: urls})
+
+    // Note given the mock, these url's don't have to be real
+    expect(mockPage.url).toHaveBeenNthCalledWith(3) // called 3 times
+    expect(mockPage.goto).toHaveBeenNthCalledWith(1, 'http://localhost:8080/example.html', enrichGoToPageOptions())
+    expect(mockPage.goto).toHaveBeenNthCalledWith(2, 'http://localhost:8080/example2.html', enrichGoToPageOptions())
+    expect(mockPage.goto).toHaveBeenNthCalledWith(3, 'http://localhost:8080/success.html', enrichGoToPageOptions())
+
+    // reset mockPage to run same tests again except with Piping the collection
+    mockPage = {
+      url: jest.fn(() => ''),
+      goto: jest.fn()
+    } as any as Page
+
+    const {logWarning: mocklogWarning} = require('botmation/helpers/console')
+
+    await forAll()(
+      (webPage) => ([
+        goTo('http://localhost:8080/' + webPage)
+      ])
+    )(mockPage)
+    
+    expect(mocklogWarning).toHaveBeenCalledTimes(1)
+    expect(mocklogWarning).toHaveBeenNthCalledWith(1, 'Utilities forAll() missing collection')
+    expect(mockPage.url).toHaveBeenCalledTimes(0)
+    expect(mockPage.goto).toHaveBeenCalledTimes(0)
   })
+
   it('should call the list of Actions for each key->value pair in the object provided', async() => {
     const keyValuePairs = {
       'form input[name="username"]': 'example username',
@@ -110,6 +154,39 @@ describe('[Botmation] actions/utilities', () => {
 
     expect(mockPage.click).toHaveBeenNthCalledWith(2, 'form input[name="password"]')
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(2, 'example password')
+
+    // reset mockPage to run same tests again except with Piping the collection
+    mockPage = {
+      click: jest.fn(),
+      keyboard: {
+        type: jest.fn()
+      }
+    } as any as Page
+
+    await forAll()(
+      (elementSelector, copyToType) => ([
+        click(elementSelector),
+        type(copyToType)
+      ])
+    )(mockPage, {brand:'Pipe', value: keyValuePairs})
+    
+    expect(mockPage.click).toHaveBeenNthCalledWith(1, 'form input[name="username"]')
+    expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(1, 'example username')
+
+    expect(mockPage.click).toHaveBeenNthCalledWith(2, 'form input[name="password"]')
+    expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(2, 'example password')
+  })
+
+  it('should recognize null is an object not to iterate', async() => {
+    await forAll()(
+      (elementSelector, copyToType) => ([
+        click(elementSelector),
+        type(copyToType)
+      ])
+    )(mockPage, {brand:'Pipe', value: null})
+    
+    expect(mockPage.click).toHaveBeenCalledTimes(0)
+    expect(mockPage.keyboard.type).toHaveBeenCalledTimes(0)
   })
 
   //
@@ -213,5 +290,6 @@ describe('[Botmation] actions/utilities', () => {
 
   afterAll(() => {
     jest.unmock('botmation/helpers/utilities')
+    jest.unmock('botmation/helpers/console')
   })
 })

@@ -10,6 +10,8 @@ import { log } from 'botmation/actions/console'
 import { goTo } from 'botmation/actions/navigation'
 import { screenshot } from 'botmation/actions/files'
 
+import { $$, pipe } from 'botmation';
+
 // helpers
 import { logError } from 'botmation/helpers/console'
 
@@ -26,10 +28,15 @@ import { logError } from 'botmation/helpers/console'
 
     // Actions run in sequence
     await googleBot.actions(
-      log('Botmation running'),
-      goTo('https://google.com'),
-      screenshot('google-homepage'),
-      log('Screenshot of Google.com saved')
+      // log('Botmation running'),
+      // goTo('https://google.com'),
+      // screenshot('google-homepage'),
+      // log('Screenshot of Google.com saved')
+      goTo('http://localhost:8080'),
+      pipe()(
+        $$('section p'),
+        log()
+      )
     )
     
   } catch (error) {

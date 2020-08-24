@@ -37,14 +37,15 @@ const generateTimeStamp = (): string => {
    await pipe()(
     log('Botmation running'),
 
-    loadCookies('linkedin'),
+    login('lage.michael@gmail.com', 'n3v3r.GiveUp'),
+    // loadCookies('linkedin'),
 
     goTo('https://www.linkedin.com/feed/', {waitUntil: 'domcontentloaded'}),
 
     wait(5000), // tons of stuff loads... no rush
     toggleMessagingOverlay, // be default, loads in open state
 
-    // saveCookies('linkedin'),
+    saveCookies('linkedin'),
     screenshot(generateTimeStamp()), // filename ie "2020-8-21-13-20.png"
 
     likeAllFrom('Peter Parker', 'Harry Potter'),

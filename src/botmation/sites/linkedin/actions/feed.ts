@@ -1,9 +1,18 @@
-import { ConditionalBotAction, BotAction, pipe, $$, forAll, givenThat } from '../../..'
+import { 
+  ConditionalBotAction, 
+  BotAction, 
+  pipe, 
+  $$, 
+  forAll, 
+  givenThat, 
+  map, 
+  log 
+} from '../../..'
 
 /**
  * Returns a NodeListOf Element like an array of HTML elements representing the Feed's posts
  */
-export const getFeedPosts: BotAction<NodeListOf<Element>> = 
+export const getFeedPosts: BotAction<Element[]> = 
   $$('.application-outlet .feed-outlet [role="main"] [data-id]')
 
 /**
@@ -30,15 +39,18 @@ export const like = (post: Element): BotAction =>
  * Clicks the "Like" button for every Post in your feed
  * @param peopleNames 
  */
-export const likeAllFrom = (...peopleNames: string[]): BotAction => pipe()(
-  getFeedPosts,
-  forAll()(
-    post => ([
-      givenThat(postIsAuthoredByAPerson(post, ...peopleNames))(
-        // scroll to post necessary to click off page link? ie click anchor link
-        // the feature, auto-scroll, was added to `page.click()` but in a later Puppeteer version, irc
-        like(post)
-      )
-    ])
+export const likeAllFrom = (...peopleNames: string[]): BotAction => 
+  pipe()(
+    getFeedPosts,
+    map(Array.from), // convert NodeList into Array
+    log('test'),
+    forAll()(
+      post => ([
+        givenThat(postIsAuthoredByAPerson(post, ...peopleNames))(
+          // scroll to post necessary to click off page link? ie click anchor link
+          // the feature, auto-scroll, was added to `page.click()` but in a later Puppeteer version, irc
+          like(post)
+        )
+      ])
+    )
   )
-)

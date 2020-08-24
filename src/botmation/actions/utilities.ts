@@ -77,15 +77,20 @@ export const forAll =
           collection = []
         }
 
+        /* istanbul ignore else  */
         if (Array.isArray(collection)) {
           // Array
           for(let i = 0; i < collection.length; i++) {
             await pipeActionOrActions(botActionOrActionsFactory(collection[i]))(page, ...injects)
           }
-        } else if(typeof collection === 'object' && collection !== null) {
-          // Dictionary
-          for (const [key, value] of Object.entries(collection)) {
-            await pipeActionOrActions(botActionOrActionsFactory(key, value))(page, ...injects)
+
+        } else {
+          // coded like this for testing coverage bug creating false negative on this branch
+          if (typeof collection === 'object' && collection !== null) {
+            // Dictionary
+            for (const [key, value] of Object.entries(collection)) {
+              await pipeActionOrActions(botActionOrActionsFactory(key, value))(page, ...injects)
+            }
           }
         }
       }

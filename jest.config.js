@@ -17,7 +17,7 @@ module.exports = {
   coverageDirectory: '<rootDir>/build/coverage',
   collectCoverageFrom: [
     "**/botmation/**/*.ts",
-    "!**/botmation/bots/**/*.ts",
+    "!**/botmation/sites/**/*.ts",
     "!**/botmation/index.ts",
     "!**/botmation/types/index.ts",
     "!**/node_modules/**",

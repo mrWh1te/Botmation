@@ -1,6 +1,6 @@
 {
   "name": "botmation",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "A TypeScript library for using Puppeteer with a declarative syntax in composing web crawler automation",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,6 +21,7 @@
     "examples/puppeteer-cluster": "node build/examples/puppeteer-cluster.js",
     "examples/screenshots": "node build/examples/screenshots.js",
     "examples/pdf": "node build/examples/screenshots.js",
+    "linkedin": "node build/examples/linkedin.js",
     "test": "jest --runInBand",
     "localtestsite": "http-server src/tests/server",
     "insta": "npm run examples/instagram"
@@ -41,10 +42,12 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^4.0.0",
+    "cheerio": "^0.22.0",
     "puppeteer": "^2.0.0",
     "puppeteer-cluster": "^0.21.0"
   },
   "devDependencies": {
+    "@types/cheerio": "^0.22.21",
     "@types/jest": "^25.1.2",
     "@types/jest-environment-puppeteer": "^4.3.1",
     "@types/node": "^14.0.1",

@@ -42,12 +42,12 @@ module.exports = {
     //
     // Site Specific
     // Instagram
-    'bots/instagram/selectors': path.resolve(__dirname, 'src/botmation/bots/instagram/selectors.ts'),
-    'bots/instagram/actions/auth': path.resolve(__dirname, 'src/botmation/bots/instagram/actions/auth.ts'),
-    'bots/instagram/actions/modals': path.resolve(__dirname, 'src/botmation/bots/instagram/actions/modals.ts'),
-    'bots/instagram/constants/modals': path.resolve(__dirname, 'src/botmation/bots/instagram/constants/modals.ts'),
-    'bots/instagram/constants/urls': path.resolve(__dirname, 'src/botmation/bots/instagram/constants/urls.ts'),
-    'bots/instagram/helpers/urls': path.resolve(__dirname, 'src/botmation/bots/instagram/helpers/urls.ts'),
+    'sites/instagram/selectors': path.resolve(__dirname, 'src/botmation/sites/instagram/selectors.ts'),
+    'sites/instagram/actions/auth': path.resolve(__dirname, 'src/botmation/sites/instagram/actions/auth.ts'),
+    'sites/instagram/actions/modals': path.resolve(__dirname, 'src/botmation/sites/instagram/actions/modals.ts'),
+    'sites/instagram/constants/modals': path.resolve(__dirname, 'src/botmation/sites/instagram/constants/modals.ts'),
+    'sites/instagram/constants/urls': path.resolve(__dirname, 'src/botmation/sites/instagram/constants/urls.ts'),
+    'sites/instagram/helpers/urls': path.resolve(__dirname, 'src/botmation/sites/instagram/helpers/urls.ts'),
   },
   module: {
     rules: [

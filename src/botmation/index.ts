@@ -23,6 +23,7 @@ export * from './actions/input'
 export * from './actions/local-storage'
 export * from './actions/navigation'
 export * from './actions/pipe'
+export * from './actions/scrapers'
 export * from './actions/utilities'
 
 //
@@ -41,12 +42,11 @@ export * from './class'
 
 //
 // Bots 
-//  @future moved to separate module ? ie 1 Module / Domain
 //
 
 //
 // Instagram
-export * from './bots/instagram/selectors'
-export * from './bots/instagram/actions/auth'
-export * from './bots/instagram/actions/modals'
-export * from './bots/instagram/helpers/urls'
+export * from './sites/instagram/selectors'
+export * from './sites/instagram/actions/auth'
+export * from './sites/instagram/actions/modals'
+export * from './sites/instagram/helpers/urls'

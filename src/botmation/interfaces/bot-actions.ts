@@ -2,6 +2,7 @@ import { Page } from 'puppeteer'
 
 import { BotFilesInjects } from '../types/bot-files-inject'
 import { BotIndexedDBInjects } from '../types/bot-indexed-db-inject'
+import { ScraperBotInjects } from '../types/scraper-bot-injects'
 
 /**
  * @description    All BotAction Interfaces
@@ -60,4 +61,12 @@ export interface BotFilesAction<R = void> {
  */
 export interface BotIndexedDBAction<R = any> {
   (page: Page, ...injects: BotIndexedDBInjects) : Promise<R>
+}
+
+/**
+ * @description   Specifies return type (scraper bot action's scrape things from the web so they return objects representating what they scrape)
+ *                and Inject (1st) of a HTML Parser to be html parsing agnostic
+ */
+export interface ScraperBotAction<R = object> {
+  (page: Page, ...injects: ScraperBotInjects) : Promise<R>
 }

@@ -37,7 +37,7 @@ const generateTimeStamp = (): string => {
    await pipe()(
     log('Botmation running'),
 
-    login('lage.michael@gmail.com', 'n3v3r.GiveUp'),
+    login('youremail@example.com', 'your-password'),
     // loadCookies('linkedin'),
 
     goTo('https://www.linkedin.com/feed/', {waitUntil: 'domcontentloaded'}),

@@ -5,7 +5,6 @@ import {
   $$, 
   forAll, 
   givenThat, 
-  log 
 } from '../../..'
 
 /**
@@ -41,11 +40,10 @@ export const like = (post: Element): BotAction =>
 export const likeAllFrom = (...peopleNames: string[]): BotAction => 
   pipe()(
     getFeedPosts,
-    log('test'),
     forAll()(
       post => ([
         givenThat(postIsAuthoredByAPerson(post, ...peopleNames))(
-          // scroll to post necessary to click off page link? ie click anchor link
+          // scroll to post necessary to click off page link? ie click anchor link (new scrollTo() "navigation" BotAction?)
           // the feature, auto-scroll, was added to `page.click()` but in a later Puppeteer version, irc
           like(post)
         )

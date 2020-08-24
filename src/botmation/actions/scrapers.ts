@@ -30,17 +30,20 @@ export const htmlParser = (htmlParser: Function) =>
  */
 export const $ = <R = CheerioStatic>(htmlSelector: string, higherOrderHTMLParser?: Function): ScraperBotAction<R> => 
   async(page, injectedHTMLParser) => {
+    let parser: Function
+
     if (!higherOrderHTMLParser) {
       if (injectedHTMLParser) {
-        higherOrderHTMLParser = injectedHTMLParser
+        parser = injectedHTMLParser
       } else {
-        // default case if no html parser is provided
-        higherOrderHTMLParser = cheerio.load
+        parser = cheerio.load
       }
+    } else {
+      parser = higherOrderHTMLParser
     }
 
     const scrapedHTML = await page.evaluate(getElementOuterHTML, htmlSelector)
-    return higherOrderHTMLParser(scrapedHTML)
+    return parser(scrapedHTML)
   }
   
 /**

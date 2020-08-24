@@ -73,27 +73,27 @@ As of v2.0.x, there are 12 groups of `BotAction` to compose with:
 
 <img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="200" align="right" style="position: relative;top: 30px;">
 
- - [assembly-line](https://www.botmation.dev/botaction/assembly-lines)
+ - [assembly-line](https://www.botmation.dev/api/assembly-lines)
     - compose and run `BotAction`'s in lines
- - [console](https://www.botmation.dev/botaction/console)
+ - [console](https://www.botmation.dev/api/console)
     - log messages to the nodeJS console
- - [cookies](https://www.botmation.dev/botaction/cookies)
+ - [cookies](https://www.botmation.dev/api/cookies)
     - read/write page cookies
- - [errors](https://www.botmation.dev/botaction/errors)
+ - [errors](https://www.botmation.dev/api/errors)
     - try/catch errors in assembly-lines
- - [files](https://www.botmation.dev/botaction/files)
+ - [files](https://www.botmation.dev/api/files)
     - write files to local disk ie screenshots, pdf's
- - [indexed-db](https://www.botmation.dev/botaction/indexed-db)
+ - [indexed-db](https://www.botmation.dev/api/indexed-db)
     - read/write to page's IndexedDB
- - [inject](https://www.botmation.dev/botaction/inject)
+ - [inject](https://www.botmation.dev/api/inject)
     - insert new injects into a line of `BotAction`'s
- - [input](https://www.botmation.dev/botaction/input)
+ - [input](https://www.botmation.dev/api/input)
     - simulate User input ie typing and clicking with a mouse
- - [local-storage](https://www.botmation.dev/botaction/local-storage)
+ - [local-storage](https://www.botmation.dev/api/local-storage)
     - read/write/delete from a page's Local Storage
- - [navigation](https://www.botmation.dev/botaction/navigation)
+ - [navigation](https://www.botmation.dev/api/navigation)
     - change the page's URL, wait for form submissions to change page URL, back, forward, refresh
- - [utilities](https://www.botmation.dev/botaction/utilties)
+ - [utilities](https://www.botmation.dev/api/utilties)
     - handle more complex logic patterns ie if statements and for loops
 
 Examples

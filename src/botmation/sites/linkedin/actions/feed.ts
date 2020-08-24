@@ -5,7 +5,6 @@ import {
   $$, 
   forAll, 
   givenThat, 
-  map, 
   log 
 } from '../../..'
 
@@ -42,7 +41,6 @@ export const like = (post: Element): BotAction =>
 export const likeAllFrom = (...peopleNames: string[]): BotAction => 
   pipe()(
     getFeedPosts,
-    map(Array.from), // convert NodeList into Array
     log('test'),
     forAll()(
       post => ([

@@ -1,18 +1,12 @@
 import { Page } from 'puppeteer'
 
 import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
-import { givenThat, forAll, doWhile, forAsLong, wait } from 'botmation/actions/utilities'
+import { givenThat, forAll, doWhile, forAsLong } from 'botmation/actions/utilities'
 import { click, type } from 'botmation/actions/input'
 import { goTo } from 'botmation/actions/navigation'
 
 import { BASE_URL } from 'tests/urls'
 import { BotAction } from 'botmation/interfaces'
-
-jest.mock('botmation/helpers/utilities', () => {
-  return {
-    sleep: jest.fn(() => Promise.resolve())
-  }
-})
 
 jest.mock('botmation/helpers/console', () => {
   return {
@@ -41,16 +35,6 @@ describe('[Botmation] actions/utilities', () => {
       url: jest.fn(() => ''),
       goto: jest.fn()
     } as any as Page
-  })
-
-  //
-  // sleep() Integration Test
-  it('should call setTimeout with the correct values', async() => {
-    await wait(5003234)(mockPage)
-
-    const mockSleepHelper = require('botmation/helpers/utilities').sleep
-
-    expect(mockSleepHelper).toHaveBeenNthCalledWith(1, 5003234)
   })
 
   //
@@ -289,7 +273,6 @@ describe('[Botmation] actions/utilities', () => {
   })
 
   afterAll(() => {
-    jest.unmock('botmation/helpers/utilities')
     jest.unmock('botmation/helpers/console')
   })
 })

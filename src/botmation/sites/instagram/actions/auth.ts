@@ -2,7 +2,7 @@ import { ConditionalBotAction } from '../../../interfaces/bot-actions'
 import { BotAction } from '../../../interfaces/bot-actions'
 
 import { chain } from '../../../actions/assembly-lines'
-import { goTo, waitForNavigation } from '../../../actions/navigation'
+import { goTo, waitForNavigation, wait } from '../../../actions/navigation'
 import { click, type } from '../../../actions/input'
 import { getIndexedDBValue, indexedDBStore } from '../../../actions/indexed-db'
 import { map } from '../../../actions/pipe'
@@ -15,7 +15,6 @@ import {
   FORM_AUTH_SUBMIT_BUTTON_SELECTOR
 } from '../selectors'
 import { errors } from '../../../actions/errors'
-import { wait } from '../../../actions/utilities'
 
 /**
  * @description    ConditionalBotAction that resolves TRUE if the User is NOT logged in

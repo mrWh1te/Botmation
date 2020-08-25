@@ -34,7 +34,6 @@ export * from './helpers/indexed-db'
 export * from './helpers/local-storage'
 export * from './helpers/navigation'
 export * from './helpers/pipe'
-export * from './helpers/utilities'
 
 //
 // Class

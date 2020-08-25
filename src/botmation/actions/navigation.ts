@@ -1,7 +1,7 @@
 import { DirectNavigationOptions, NavigationOptions } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-actions'
-import { enrichGoToPageOptions } from '../helpers/navigation'
+import { enrichGoToPageOptions, sleep } from '../helpers/navigation'
 
 /**
  * @description   Go to url provided in the current page
@@ -55,3 +55,11 @@ export const reload = (options?: NavigationOptions): BotAction =>
 export const waitForNavigation: BotAction = async(page) => {
   await page.waitForNavigation()
 }
+
+/**
+ * @description   Pauses the runner (chain or pipe) for the provided milliseconds before continuing to the next BotAction
+ * @param milliseconds 
+ */
+export const wait = (milliseconds: number): BotAction => async() => {
+  await sleep(milliseconds)
+} 

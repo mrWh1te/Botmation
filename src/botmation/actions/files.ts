@@ -39,17 +39,12 @@ export const screenshot = (fileName: string, botFileOptions?: Partial<BotFileOpt
  * @request   add ability like via a closure, to customize the filename for easier reuse in a cycle (like ability to timestamp the file etc)
  */
 export const screenshotAll = (urls: string[], botFileOptions?: Partial<BotFileOptions>): BotFilesAction => 
-  async(page, options) => {
-    // botFileOptions' values overwrite injected ones in `options`
-    const hydratedOptions = enrichBotFileOptionsWithDefaults({...options, ...botFileOptions})
-
-    await forAll(urls)(
-      url => ([
-        goTo(url),
-        screenshot(url.replace(/[^a-zA-Z]/g, '_')) // filenames are created from urls by replacing nonsafe characters with underscores
-      ])
-    )(page, hydratedOptions)
-  }
+  forAll(urls)(
+    url => ([
+      goTo(url),
+      screenshot(url.replace(/[^a-zA-Z]/g, '_'), botFileOptions) // filenames are created from urls by replacing nonsafe characters with underscores
+    ])
+  )
 
 
 /**

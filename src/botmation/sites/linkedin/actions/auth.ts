@@ -1,6 +1,50 @@
-import { BotAction } from '../../../interfaces/bot-actions'
-import { chain, goTo, click, type, waitForNavigation, log } from '../../..'
+import { BotAction, ConditionalBotAction } from '../../../interfaces/bot-actions'
+import { 
+  chain,
+  pipe,
+  goTo,
+  waitForNavigation,
+  click,
+  type,
+  log,
+  getLocalStorageItem,
+  map
+} from '../../..'
 
+/**
+ * LinkedIn Auth
+ *  - Few patterns noticed on 8/26/2020 that seem to be pretty consistent in regards to signaling AUTH
+ *    1) there is some kind of key `oauth2_*` in Session Storage as a Guest, and nothing as a Logged In User
+ *    2) local storage is empty as a new guest (incognito tab), and complete with multiple `voyager-web:*` keys pointing to what seems to data belonging to web app features ie state slices
+ *    3) cookies carries the same `JSESSIONID`, `b*cookie` through auth process, but adds new key/values such as `li_at`, `liap`, `sdsc`, `sl`, `UserMatchHistory` and `visit` - I have wishful thinking `visit` with value `v=1&M` is truthful, perhaps is a flag for isLoggedIn
+ *        In addition, `AMCV_*` and `AMCVS_*` carries an encoded value through
+ * 
+ *     Wondering if maybe `C_C_M` key in Local Storage is related to cp in code, which seems auth/user related
+ */
+
+/**
+ * Tests the page for being a "guest" in LinkedIn (not logged in)
+ */
+ export const isGuest: ConditionalBotAction = pipe()(
+  // data feature for user notifications
+  getLocalStorageItem('voyager-web:badges'),
+  map(value => value === null)
+)
+
+/**
+ * Test page for being logged in LinkedIn
+ */
+export const isLoggedIn: ConditionalBotAction = pipe()(
+  // data feature for user notifications
+  getLocalStorageItem('voyager-web:badges'),
+  map(value => typeof value === 'string')
+)
+
+/**
+ * Login sequence for LinkedIn
+ * @param emailOrPhone 
+ * @param password 
+ */
 export const login = (emailOrPhone: string, password: string): BotAction =>
   chain(
     goTo('https://www.linkedin.com/login'),

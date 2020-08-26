@@ -36,14 +36,14 @@ export const getFeedPosts = (filterPromotedContent: boolean = true): BotAction<C
  * @param peopleNames 
  */
 export const postIsAuthoredByAPerson = (post: CheerioStatic, ...peopleNames: string[]): ConditionalBotAction => 
-  async() => {
+  async() => 
     // if the CheerioStatic post has close matching in author text box a name from peopleNames list, then TRUE else FALSE
-    return peopleNames.some(name => name.toLowerCase() === post('.feed-shared-actor__title').text().toLowerCase())
+    peopleNames.some(name => name.toLowerCase() === post('.feed-shared-actor__title').text().toLowerCase())
     // TODO add helpers for fuzzy text matching using nGrams(3) -> trigrams with like 80% threshold and higher-order params override (ie for 100%)
     //    that way, adding/removing nicknames, middle initials, etc will not break script
     // use https://www.npmjs.com/package/trigram-utils asDictionary(), build unique list of key's, and see how much overlaps
     // don't forget to buffer the strings with spaces (1 before and 1 after to increase matching potential slightly, since this is a few words instead of a sentence(s))
-  }
+  
 
 /**
  * Clicks the "Like" button inside the provided Post, if the Like button hasn't been pressed
@@ -56,7 +56,7 @@ export const postIsAuthoredByAPerson = (post: CheerioStatic, ...peopleNames: str
 export const like = (post: CheerioStatic): BotAction =>
   // Puppeteer.page.click() returned promise will reject if the selector isn't found
   //    so if button is Pressed, it will reject since the aria-label value will not match
-  errors('LinkedIn like() - could not find Post Like Button')(
+  errors('LinkedIn like() - could not find Post Like Button or already Liked')(
     click( 'div[data-id="' + post('div[data-id]').attr('data-id') + '"] button[aria-label="Like ' + post('.feed-shared-actor__title').text() + '’s post"]')
   )
   

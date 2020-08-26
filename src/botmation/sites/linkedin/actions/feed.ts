@@ -5,13 +5,26 @@ import {
   $$, 
   forAll, 
   givenThat, 
+  click,
+  errors,
+  map
 } from '../../..'
 
 /**
  * Returns an array of CheerioStatic HTML elements representing the Feed's posts
+ * @param filterPromotedContent optional, default is TRUE to remove posts from scraped feed if they are "Promoted"
  */
-export const getFeedPosts: BotAction<CheerioStatic[]> = 
-  $$('.application-outlet .feed-outlet [role="main"] [data-id]')
+export const getFeedPosts = (filterPromotedContent: boolean = true): BotAction<CheerioStatic[]> =>
+  pipe()(
+    $$('.application-outlet .feed-outlet [role="main"] [data-id]'),
+    map((cheerioPosts: CheerioStatic[]) => {
+      if (!filterPromotedContent) {
+        return cheerioPosts
+      }
+
+      return cheerioPosts.filter(post => post('.feed-shared-actor__sub-description').text().toLowerCase() !== 'promoted')
+    })
+  )
 
 /**
  * Returns TRUE if at least one person name closely matches the author name of the provided Post, otherwise FALSE
@@ -37,17 +50,21 @@ export const postIsAuthoredByAPerson = (post: CheerioStatic, ...peopleNames: str
  * @param post 
  */
 export const like = (post: CheerioStatic): BotAction =>
-  async(page) => {
-    // click the like button, located inside this `post` CheerioStatic
-  }
+  // Puppeteer.page.click() returned promise will reject if the selector isn't
+  errors('LinkedIn like() - could not find Post Like Button')(
+    click( 'div[data-id="' + post('div[data-id]').attr('data-id') + '"] button[aria-label="Like ' + post('.feed-shared-actor__title').text() + '’s post"]')
+  )
+  
 
 /**
- * Clicks the "Like" button for every Post in your feed
+ * @description Clicks the "Like" button for every Post presently loaded in your feed (not including future lazily loaded, as triggered by scrolling near bottom), filtered by author name
+ * Does not load in lazily loaded "pages" of feed (on scroll), therefore would need to add a forAsLong()() to get a new list of feed posts, scroll/liking to the end, etc with this function on each "page"
+ *  Maybe an exit condition by date? Stop going once posts are X days old
  * @param peopleNames 
  */
 export const likeAllFrom = (...peopleNames: string[]): BotAction => 
   pipe()(
-    getFeedPosts,
+    getFeedPosts(),
     forAll()(
       post => ([
         givenThat(postIsAuthoredByAPerson(post, ...peopleNames))(

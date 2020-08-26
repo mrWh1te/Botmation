@@ -10,6 +10,7 @@ import { pipe, $$, saveCookies, loadCookies, wait } from 'botmation'
 import { login } from 'botmation/sites/linkedin/actions/auth'
 import { toggleMessagingOverlay } from 'botmation/sites/linkedin/actions/messaging'
 import { likeAllFrom } from 'botmation/sites/linkedin/actions/feed'
+import { goToFeed } from 'botmation/sites/linkedin/actions/navigation'
 
 // Helper for creating filenames that sort naturally
 const generateTimeStamp = (): string => {
@@ -40,7 +41,7 @@ const generateTimeStamp = (): string => {
     login('youremail@example.com', 'your-password'),
     // loadCookies('linkedin'),
 
-    goTo('https://www.linkedin.com/feed/', {waitUntil: 'domcontentloaded'}),
+    goToFeed,
 
     wait(5000), // tons of stuff loads... no rush
     toggleMessagingOverlay, // be default, loads in open state

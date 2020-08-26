@@ -9,6 +9,7 @@ import {
   errors,
   map
 } from '../../..'
+import { goToFeed } from './navigation'
 
 /**
  * Returns an array of CheerioStatic HTML elements representing the Feed's posts
@@ -16,6 +17,7 @@ import {
  */
 export const getFeedPosts = (filterPromotedContent: boolean = true): BotAction<CheerioStatic[]> =>
   pipe()(
+    goToFeed,
     $$('.application-outlet .feed-outlet [role="main"] [data-id]'),
     map((cheerioPosts: CheerioStatic[]) => {
       if (!filterPromotedContent) {

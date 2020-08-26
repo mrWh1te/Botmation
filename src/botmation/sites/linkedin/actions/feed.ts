@@ -44,13 +44,16 @@ export const postIsAuthoredByAPerson = (post: CheerioStatic, ...peopleNames: str
   }
 
 /**
- * Clicks the "Like" button inside the provided Post 
+ * Clicks the "Like" button inside the provided Post, if the Like button hasn't been pressed
+ *   if LinkedIn Feed Post Like button is not pressed, its aria-label has Poster's name included in text
+ *   if LinkedIn Feed Post Like button is pressed, its aria-label has only "Like" as its value, no Poster name
  * @future This function is coupled with the getFeedPosts. 
  *         It would be nice to rely on ie Post.id as param to then find that "Like" button in page to click. In order to, de-couple this function
  * @param post 
  */
 export const like = (post: CheerioStatic): BotAction =>
-  // Puppeteer.page.click() returned promise will reject if the selector isn't
+  // Puppeteer.page.click() returned promise will reject if the selector isn't found
+  //    so if button is Pressed, it will reject since the aria-label value will not match
   errors('LinkedIn like() - could not find Post Like Button')(
     click( 'div[data-id="' + post('div[data-id]').attr('data-id') + '"] button[aria-label="Like ' + post('.feed-shared-actor__title').text() + '’s post"]')
   )

@@ -3,6 +3,12 @@ import { BotAction, goTo } from "../../.."
 /**
  * 
  */
+export const goHome: BotAction = 
+  goTo('https://www.linkedin.com/', {waitUntil: 'domcontentloaded'})
+
+/**
+ * 
+ */
 export const goToFeed: BotAction = 
   goTo('https://www.linkedin.com/feed/', {waitUntil: 'domcontentloaded'})
 

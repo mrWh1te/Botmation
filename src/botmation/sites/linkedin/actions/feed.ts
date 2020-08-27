@@ -18,7 +18,7 @@ import { goToFeed } from './navigation'
 export const getFeedPosts = (filterPromotedContent: boolean = true): BotAction<CheerioStatic[]> =>
   pipe()(
     goToFeed,
-    $$('.application-outlet .feed-outlet [role="main"] [data-id]'),
+    $$('.application-outlet .feed-outlet [role="main"] div[data-id]'),
     map((cheerioPosts: CheerioStatic[]) => {
       if (!filterPromotedContent) {
         return cheerioPosts

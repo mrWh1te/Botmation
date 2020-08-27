@@ -9,7 +9,9 @@ import { BotAction, ScraperBotAction } from '../interfaces/bot-actions'
 import { inject } from '../actions/inject'
 import { errors } from '../actions/errors'
 import { getElementOuterHTML, getElementsOuterHTML } from '../helpers/scrapers'
+import { unpipeInjects } from '../helpers/pipe'
 import { pipe } from './assembly-lines'
+import { logMessage } from 'botmation/helpers/console'
 
 /**
  * @description   Inject htmlParser for ScraperBotAction's
@@ -51,20 +53,26 @@ export const $ = <R = CheerioStatic>(htmlSelector: string, higherOrderHTMLParser
  * @param htmlSelector 
  */
 export const $$ = <R = CheerioStatic[]>(htmlSelector: string, higherOrderHTMLParser?: Function): ScraperBotAction<R> => 
-  async(page, injectedHTMLParser) => {
+  async(page, ...injects) => {
     let parser: Function
 
-    if (!higherOrderHTMLParser) {
+    // Future support piping the HTML selector with higher-order overriding
+    const [,injectedHTMLParser] = unpipeInjects(injects, 1)
+
+    if (higherOrderHTMLParser) {
+      parser = higherOrderHTMLParser
+    } else {
       if (injectedHTMLParser) {
         parser = injectedHTMLParser
       } else {
         parser = cheerio.load
       }
-    } else {
-      parser = higherOrderHTMLParser
     }
 
     const scrapedHTMLs = await page.evaluate(getElementsOuterHTML, htmlSelector)
-    return scrapedHTMLs.map(scrapedHTML => parser(scrapedHTML)) as any as R
+
+    const cheerioEls: CheerioStatic[] = scrapedHTMLs.map(scrapedHTML => parser(scrapedHTML)) 
+
+    return cheerioEls as any as R
   }
 

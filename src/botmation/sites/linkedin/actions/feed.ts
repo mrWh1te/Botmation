@@ -10,6 +10,7 @@ import {
   map
 } from '../../..'
 import { goToFeed } from './navigation'
+import { feedPostsSelector, feedPostAuthorSelector } from '../selectors'
 
 /**
  * Returns an array of CheerioStatic HTML elements representing the Feed's posts
@@ -18,7 +19,7 @@ import { goToFeed } from './navigation'
 export const getFeedPosts = (filterPromotedContent: boolean = true): BotAction<CheerioStatic[]> =>
   pipe()(
     goToFeed,
-    $$('.application-outlet .feed-outlet [role="main"] div[data-id]'),
+    $$(feedPostsSelector),
     map((cheerioPosts: CheerioStatic[]) => {
       if (!filterPromotedContent) {
         return cheerioPosts
@@ -38,7 +39,7 @@ export const getFeedPosts = (filterPromotedContent: boolean = true): BotAction<C
 export const postIsAuthoredByAPerson = (post: CheerioStatic, ...peopleNames: string[]): ConditionalBotAction => 
   async() => 
     // if the CheerioStatic post has close matching in author text box a name from peopleNames list, then TRUE else FALSE
-    peopleNames.some(name => name.toLowerCase() === post('.feed-shared-actor__title').text().toLowerCase())
+    peopleNames.some(name => name.toLowerCase() === post(feedPostAuthorSelector).text().toLowerCase())
     // TODO add helpers for fuzzy text matching using nGrams(3) -> trigrams with like 80% threshold and higher-order params override (ie for 100%)
     //    that way, adding/removing nicknames, middle initials, etc will not break script
     // use https://www.npmjs.com/package/trigram-utils asDictionary(), build unique list of key's, and see how much overlaps
@@ -56,8 +57,8 @@ export const postIsAuthoredByAPerson = (post: CheerioStatic, ...peopleNames: str
 export const like = (post: CheerioStatic): BotAction =>
   // Puppeteer.page.click() returned promise will reject if the selector isn't found
   //    so if button is Pressed, it will reject since the aria-label value will not match
-  errors('LinkedIn like() - could not find Post Like Button or already Liked')(
-    click( 'div[data-id="' + post('div[data-id]').attr('data-id') + '"] button[aria-label="Like ' + post('.feed-shared-actor__title').text() + '’s post"]')
+  errors('LinkedIn like() - Could not Like Post: Either already Liked or button not found')(
+    click( 'div[data-id="' + post('div[data-id]').attr('data-id') + '"] button[aria-label="Like ' + post(feedPostAuthorSelector).text() + '’s post"]')
   )
 
   // be cool if errors had the ability to be provided a BotAction to run in a simulated pipe and returned on error

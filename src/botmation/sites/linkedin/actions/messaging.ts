@@ -1,7 +1,8 @@
 import { BotAction, click } from '../../..'
+import { messagingOverlayHeaderSelector } from '../selectors'
 
 /**
  * 
  */
 export const toggleMessagingOverlay: BotAction =
-  click('header.msg-overlay-bubble-header')
+  click(messagingOverlayHeaderSelector)

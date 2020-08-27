@@ -58,8 +58,8 @@ const generateTimeStamp = (): string => {
     givenThat(isLoggedIn)(
       toggleMessagingOverlay, // be default, loads in open state
       screenshot(generateTimeStamp()), // filename ie "2020-8-21-13-20.png"
+      
       // likeAllFrom('Peter Parker', 'Harry Potter'),
-
       getFeedPosts(),
       forAll()(
         post => ([

@@ -59,6 +59,9 @@ export const like = (post: CheerioStatic): BotAction =>
   errors('LinkedIn like() - could not find Post Like Button or already Liked')(
     click( 'div[data-id="' + post('div[data-id]').attr('data-id') + '"] button[aria-label="Like ' + post('.feed-shared-actor__title').text() + '’s post"]')
   )
+
+  // be cool if errors had the ability to be provided a BotAction to run in a simulated pipe and returned on error
+  //    so here, we can return ie a value signaling we did not like it because it was already liked
   
 
 /**

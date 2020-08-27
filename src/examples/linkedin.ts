@@ -2,11 +2,12 @@ import puppeteer from 'puppeteer'
 
 // General BotAction's
 import { log } from 'botmation/actions/console'
-import { goTo } from 'botmation/actions/navigation'
+// import { goTo } from 'botmation/actions/navigation'
 import { screenshot } from 'botmation/actions/files'
+// import { loadCookies } from 'botmation/actions/cookies'
 
 // More advanced BotAction's
-import { pipe, $$, saveCookies, loadCookies, wait } from 'botmation'
+import { pipe, saveCookies, wait } from 'botmation'
 import { login } from 'botmation/sites/linkedin/actions/auth'
 import { toggleMessagingOverlay } from 'botmation/sites/linkedin/actions/messaging'
 import { likeAllFrom } from 'botmation/sites/linkedin/actions/feed'

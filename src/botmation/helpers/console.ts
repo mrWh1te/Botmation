@@ -53,9 +53,15 @@ export const logPipeValue = (value: any, pipeTheme: Chalk = chalk.bgBlue) => {
     break
 
     case 'object':
-      console.log(
-        pipeTheme(appendSpacing(' - pipe:', 2)) + prependSpacing(JSON.stringify(value), 1)
-      )
+      if (typeof value.toString === 'function') {
+        console.log(
+          pipeTheme(appendSpacing(' - pipe:', 2)) + prependSpacing(value.toString(), 1)
+        )
+      } else {
+        console.log(
+          pipeTheme(appendSpacing(' - pipe:', 2)) + prependSpacing(JSON.stringify(value), 1)
+        )
+      }
     break
 
     case 'undefined':

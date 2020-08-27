@@ -3,7 +3,6 @@
  *                These functions are intended to be utilities for the dev's to help achieve more complex functionality,
  *                  in a composable functional fashion
  */
-import { sleep } from '../helpers/utilities'
 
 import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions'
 import { pipeInjects, getInjectsPipeValue } from '../helpers/pipe'
@@ -137,11 +136,3 @@ export const forAsLong =
           resolvedCondition = await condition(page, ...pipeInjects(injects)) // use same Pipe as before, unless no Pipe, than add an empty one
         }
       }
-
-/**
- * @description   Pauses the runner (chain or pipe) for the provided milliseconds before continuing to the next BotAction
- * @param milliseconds 
- */
-export const wait = (milliseconds: number): BotAction => async() => {
-  await sleep(milliseconds)
-} 

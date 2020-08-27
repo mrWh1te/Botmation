@@ -2,14 +2,17 @@ import puppeteer from 'puppeteer'
 
 // General BotAction's
 import { log } from 'botmation/actions/console'
-import { goTo } from 'botmation/actions/navigation'
+// import { goTo } from 'botmation/actions/navigation'
 import { screenshot } from 'botmation/actions/files'
+import { loadCookies } from 'botmation/actions/cookies'
 
 // More advanced BotAction's
-import { pipe, $$, saveCookies, loadCookies, wait } from 'botmation'
-import { login } from 'botmation/sites/linkedin/actions/auth'
+import { pipe, saveCookies, wait, errors, givenThat, forAll, emptyPipe } from 'botmation'
+import { login, isGuest, isLoggedIn } from 'botmation/sites/linkedin/actions/auth'
 import { toggleMessagingOverlay } from 'botmation/sites/linkedin/actions/messaging'
-import { likeAllFrom } from 'botmation/sites/linkedin/actions/feed'
+import { getFeedPosts } from 'botmation/sites/linkedin/actions/feed'
+import { goHome } from 'botmation/sites/linkedin/actions/navigation'
+import { feedPostAuthorSelector } from 'botmation/sites/linkedin/selectors'
 
 // Helper for creating filenames that sort naturally
 const generateTimeStamp = (): string => {
@@ -30,27 +33,47 @@ const generateTimeStamp = (): string => {
  let browser: puppeteer.Browser
 
  try {
-   browser = await puppeteer.launch({headless: false})
+   browser = await puppeteer.launch({headless: true})
    const pages = await browser.pages()
    const page = pages.length === 0 ? await browser.newPage() : pages[0]
    
-   await pipe()(
+   const linkedin_bot = pipe()(
     log('Botmation running'),
 
-    login('youremail@example.com', 'your-password'),
-    // loadCookies('linkedin'),
+    errors('load LinkedIn cookies')(
+      loadCookies('linkedin')
+    ),
 
-    goTo('https://www.linkedin.com/feed/', {waitUntil: 'domcontentloaded'}),
+    goHome,
+
+    givenThat(isGuest)(
+      login('account@email.com', 'account-password'), // <-- put in bot's LinkedIn email & password
+      wait(500),
+      saveCookies('linkedin')
+    ),
+
+    // at this point, you are logged in and looking at feed
 
     wait(5000), // tons of stuff loads... no rush
-    toggleMessagingOverlay, // be default, loads in open state
 
-    saveCookies('linkedin'),
-    screenshot(generateTimeStamp()), // filename ie "2020-8-21-13-20.png"
+    givenThat(isLoggedIn)(
+      toggleMessagingOverlay, // be default, loads in open state
+      screenshot(generateTimeStamp()), // filename ie "2020-8-21-13-20.png"
+      
+      // likeAllFrom('Peter Parker', 'Harry Potter'),
+      getFeedPosts(),
+      forAll()(
+        post => ([
+          emptyPipe,
+          log('Post author = ' + post(feedPostAuthorSelector).text())
+        ])
+      )
 
-    likeAllFrom('Peter Parker', 'Harry Potter'),
+    )
+   )
    
-   )(page)
+   // run the bot
+   await linkedin_bot(page)
 
  } catch(error) {
    console.error(error)

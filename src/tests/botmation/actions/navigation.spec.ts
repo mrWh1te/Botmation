@@ -1,11 +1,20 @@
 import { Page } from 'puppeteer'
 
-import { goTo, waitForNavigation, goBack, goForward, reload } from 'botmation/actions/navigation'
+import { goTo, waitForNavigation, goBack, goForward, reload, wait } from 'botmation/actions/navigation'
 import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 import { click } from 'botmation/actions/input'
 
 import { BASE_URL, EXAMPLE_URL } from 'tests/urls'
 import { FORM_SUBMIT_BUTTON_SELECTOR } from 'tests/selectors'
+
+jest.mock('botmation/helpers/navigation', () => {
+  const originalModule = jest.requireActual('botmation/helpers/navigation')
+
+  return {
+    ...originalModule,
+    sleep: jest.fn(() => Promise.resolve())
+  }
+})
 
 /**
  * @description   Navigation BotAction's
@@ -27,6 +36,16 @@ describe('[Botmation] actions/navigation', () => {
 
   beforeAll(async() => {
     await page.goto(BASE_URL, enrichGoToPageOptions())
+  })
+
+  //
+  // sleep() Integration Test
+  it('should call setTimeout with the correct values', async() => {
+    await wait(5003234)(mockPage)
+
+    const mockSleepHelper = require('botmation/helpers/navigation').sleep
+
+    expect(mockSleepHelper).toHaveBeenNthCalledWith(1, 5003234)
   })
 
   //
@@ -84,5 +103,9 @@ describe('[Botmation] actions/navigation', () => {
     ])
 
     await expect(page.title()).resolves.toMatch('Testing: Form Submit Success')
+  })
+
+  afterAll(() => {
+    jest.unmock('botmation/helpers/navigation')
   })
 })

@@ -8,7 +8,7 @@ import { Botmation } from 'botmation'
 // General BotAction's
 import { log } from 'botmation/actions/console'
 import { goTo } from 'botmation/actions/navigation'
-import { screenshot } from 'botmation/actions/files'
+// import { screenshot } from 'botmation/actions/files'
 
 import { $$, pipe } from 'botmation';
 

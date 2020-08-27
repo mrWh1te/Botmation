@@ -12,6 +12,7 @@ import { login, isGuest, isLoggedIn } from 'botmation/sites/linkedin/actions/aut
 import { toggleMessagingOverlay } from 'botmation/sites/linkedin/actions/messaging'
 import { getFeedPosts } from 'botmation/sites/linkedin/actions/feed'
 import { goHome } from 'botmation/sites/linkedin/actions/navigation'
+import { feedPostAuthorSelector } from 'botmation/sites/linkedin/selectors'
 
 // Helper for creating filenames that sort naturally
 const generateTimeStamp = (): string => {
@@ -39,7 +40,7 @@ const generateTimeStamp = (): string => {
    const linkedin_bot = pipe()(
     log('Botmation running'),
 
-    errors('load linked cookies')(
+    errors('load LinkedIn cookies')(
       loadCookies('linkedin')
     ),
 
@@ -64,7 +65,7 @@ const generateTimeStamp = (): string => {
       forAll()(
         post => ([
           emptyPipe,
-          log('Post author = ' + post('.feed-shared-actor__title').text())
+          log('Post author = ' + post(feedPostAuthorSelector).text())
         ])
       )
 

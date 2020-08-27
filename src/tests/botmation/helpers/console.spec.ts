@@ -87,7 +87,12 @@ describe('[Botmation] helpers/console', () => {
     const stringValue = 'a string'
     const numberValue = 5
     const functionValue = () => 0
-    const objectValue = {}
+    const objectValue = {
+      toString: undefined
+    }
+    const objectValueWithToString = {
+      toString: () => 'test-log-pipe-value-object-toString'
+    }
     const trueBooleanValue = true
     const falseBooleanValue = false
 
@@ -117,6 +122,9 @@ describe('[Botmation] helpers/console', () => {
 
     logPipeValue(symbolValue, mockChalkTheme)
     expect(logs[8]).toEqual(' - pipe:   Symbol(symbol-test)')
+
+    logPipeValue(objectValueWithToString, mockChalkTheme)
+    expect(logs[9]).toEqual(' - pipe:   test-log-pipe-value-object-toString')
   })
 
   afterAll(() => {

@@ -5,7 +5,7 @@
  */
 
 import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions'
-import { pipeInjects, getInjectsPipeValue } from '../helpers/pipe'
+import { pipeInjects, getInjectsPipeValue, removePipe, wrapValueInPipe } from '../helpers/pipe'
 import { pipeActionOrActions, pipe } from './assembly-lines'
 import { logWarning } from '../helpers/console'
 
@@ -92,6 +92,62 @@ export const forAll =
             }
           }
         }
+      }
+
+/**
+ * 
+ */
+export type Dictionary2<V = any> = {
+  [key: string]: V 
+}
+/**
+ * Dictionaries are non-null objects with at least one key/value
+ * @param value 
+ */
+export const isDictionary2 = <I = any>(value: any): value is Dictionary2<I> => 
+  typeof value === 'object' && value !== null && Object.keys(value).length > 0
+
+/**
+ * 
+ * @param collection 
+ */
+export const forAll2 =
+  <I = any>(collection?: I[] | Dictionary2<I>) =>
+    (botActionOrActionsFactory: (...args: [I, I[]|Dictionary2<I>, number|string]) => BotAction<any>[] | BotAction<any>): BotAction =>
+      async(page, ...injects) => {
+        // the collection can be passed in via higher-order params or Pipe object value
+        // higher-order params trump Pipe object value
+        if (!collection) {
+          collection = getInjectsPipeValue(injects)
+        }
+
+        if (!collection) {
+          logWarning('Utilities forAll() missing collection')
+          collection = []
+        }
+
+        if (Array.isArray(collection)) {
+          for(let i = 0; i < collection.length; i++) {
+            // Update Pipe value for each iteration
+            injects = removePipe(injects)
+            injects.push(wrapValueInPipe([collection[i], collection, i]))
+
+            // Run cb
+            await pipeActionOrActions(botActionOrActionsFactory(collection[i], collection, i))(page, ...injects)
+          }
+        } 
+        
+        if (isDictionary2<I>(collection)) {
+          for (const [key, value] of Object.entries(collection)) {
+            // Update Pipe value for each iteration
+            injects = removePipe(injects)
+            injects.push(wrapValueInPipe([value, collection, key]))
+
+            // Run cb
+            await pipeActionOrActions(botActionOrActionsFactory(value, collection, key))(page, ...injects)
+          }
+        }
+        
       }
 
 /**

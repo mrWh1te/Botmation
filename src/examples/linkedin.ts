@@ -57,7 +57,7 @@ const generateTimeStamp = (): string => {
     wait(5000), // tons of stuff loads... no rush
 
     givenThat(isLoggedIn)(
-      toggleMessagingOverlay, // be default, loads in open state
+      toggleMessagingOverlay, // by default, Messaging Overlay loads in open state
       screenshot(generateTimeStamp()), // filename ie "2020-8-21-13-20.png"
       
       // likeAllFrom('Peter Parker', 'Harry Potter'),

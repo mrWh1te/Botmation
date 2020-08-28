@@ -1,7 +1,7 @@
 {
   "name": "botmation",
   "version": "2.1.0",
-  "description": "A TypeScript library for using Puppeteer with a declarative syntax in composing web crawler automation",
+  "description": "A simple TypeScript framework for building composable web bots declaratively with Puppeteer",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "homepage": "https://botmation.dev",

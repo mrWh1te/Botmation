@@ -31,17 +31,20 @@ export const htmlParser = (htmlParser: Function) =>
  * @param htmlSelector 
  */
 export const $ = <R = CheerioStatic>(htmlSelector: string, higherOrderHTMLParser?: Function): ScraperBotAction<R> => 
-  async(page, injectedHTMLParser) => {
+  async(page, ...injects) => {
     let parser: Function
 
-    if (!higherOrderHTMLParser) {
+    // Future support piping the HTML selector with higher-order overriding
+    const [,injectedHTMLParser] = unpipeInjects(injects, 1)
+
+    if (higherOrderHTMLParser) {
+      parser = higherOrderHTMLParser
+    } else {
       if (injectedHTMLParser) {
         parser = injectedHTMLParser
       } else {
         parser = cheerio.load
       }
-    } else {
-      parser = higherOrderHTMLParser
     }
 
     const scrapedHTML = await page.evaluate(getElementOuterHTML, htmlSelector)

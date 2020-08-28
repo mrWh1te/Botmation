@@ -8,7 +8,8 @@ import {
   type,
   log,
   getLocalStorageItem,
-  map
+  map,
+  errors
 } from '../../..'
 
 /**
@@ -49,12 +50,14 @@ export const isLoggedIn: ConditionalBotAction = pipe()(
  */
 export const login = (emailOrPhone: string, password: string): BotAction =>
   chain(
-    goTo('https://www.linkedin.com/login'),
-    click('form input[id="username"]'),
-    type(emailOrPhone),
-    click('form input[id="password"]'),
-    type(password),
-    click('form button[type="submit"]'),
-    waitForNavigation,
-    log('LinkedIn Login Complete')
+    errors('LinkedIn login()')(
+      goTo('https://www.linkedin.com/login'),
+      click('form input[id="username"]'),
+      type(emailOrPhone),
+      click('form input[id="password"]'),
+      type(password),
+      click('form button[type="submit"]'),
+      waitForNavigation,
+      log('LinkedIn Login Complete')
+    )
   )

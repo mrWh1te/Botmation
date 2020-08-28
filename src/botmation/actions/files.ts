@@ -4,6 +4,7 @@ import { inject } from "./inject"
 import { errors } from "./errors"
 import { forAll } from "./utilities"
 import { goTo } from "./navigation"
+import { unpipeInjects } from "botmation/helpers/pipe"
 
 /**
  * @description    Higher-order BotAction to inject an enriched "BotFileOptions" from an optional provided Partial of one
@@ -23,9 +24,11 @@ export const files = (fileOptions?: Partial<BotFileOptions>) =>
  * @param fileName name of the file to save the PNG as
  */
 export const screenshot = (fileName: string, botFileOptions?: Partial<BotFileOptions>): BotFilesAction => 
-  async (page, options) => {
-    // botFileOptions' values overwrite injected ones in `options`
-    const hydratedOptions = enrichBotFileOptionsWithDefaults({...options, ...botFileOptions})
+  async (page, ...injects) => {
+    const [,injectedOptions] = unpipeInjects(injects, 1)
+
+    // botFileOptions is higher order param that overwrites injected options
+    const hydratedOptions = enrichBotFileOptionsWithDefaults({...injectedOptions, ...botFileOptions})
 
     const fileUrl = getFileUrl(hydratedOptions.screenshots_directory, hydratedOptions, fileName) + '.png'
     await page.screenshot({path: fileUrl})
@@ -54,10 +57,13 @@ export const screenshotAll = (urls: string[], botFileOptions?: Partial<BotFileOp
  * @note          Launching the browser without headless (headless: false) breaks this
  *                See https://github.com/puppeteer/puppeteer/issues/1829
  */
-export const savePDF = (fileName: string, botFileOptions?: Partial<BotFileOptions>): BotFilesAction => async(page, options) => {
-  const hydratedOptions = enrichBotFileOptionsWithDefaults({...options, ...botFileOptions})
+export const savePDF = (fileName: string, botFileOptions?: Partial<BotFileOptions>): BotFilesAction => 
+  async(page, ...injects) => {
+    const [,injectedOptions] = unpipeInjects(injects, 1)
 
-  const fileUrl = getFileUrl(hydratedOptions.pdfs_directory, hydratedOptions, fileName) + '.pdf'
+    const hydratedOptions = enrichBotFileOptionsWithDefaults({...injectedOptions, ...botFileOptions})
 
-  await page.pdf({path: fileUrl, format: 'A4'})
-}
+    const fileUrl = getFileUrl(hydratedOptions.pdfs_directory, hydratedOptions, fileName) + '.pdf'
+
+    await page.pdf({path: fileUrl, format: 'A4'})
+  }

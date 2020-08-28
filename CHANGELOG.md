@@ -25,6 +25,7 @@ New Docs Site published with updated README's for better distribution.
  - Assembling BotAction's via `Factories` replaced with `Assembly Lines`
 
 ### Performance Improvements
+ - Assembled BotAction's of length 1 resolves faster
 
 ### Breaking Changes
  - All uses of `BotActionsChainFactory()` is replaced with `chain()` BotAction

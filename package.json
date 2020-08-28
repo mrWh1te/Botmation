@@ -1,6 +1,6 @@
 {
   "name": "botmation",
-  "version": "2.1.1",
+  "version": "2.1.0",
   "description": "A simple TypeScript framework for building composable web bots declaratively with Puppeteer",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",

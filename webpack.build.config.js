@@ -45,12 +45,7 @@ module.exports = {
   target: 'node',
   output: {
     path: path.resolve(__dirname, 'build'),
-    filename: (chunkData) => {
-      switch(chunkData.chunk.name) {
-        default:
-          return '[name].js';
-      }
-    },
+    filename: () => '[name].js',
     libraryTarget: 'umd',
     library: 'botmation',
     umdNamedDefine: true

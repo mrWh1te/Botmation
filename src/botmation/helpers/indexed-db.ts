@@ -35,7 +35,7 @@ export function setIndexedDBStoreValue(databaseName: string, databaseVersion: nu
         db.transaction(storeName, 'readwrite')
           .objectStore(storeName)
           .put(value, key)
-          .onsuccess = function(this, ev) {
+          .onsuccess = function(this) {
             db.close()
             return resolve()
           }
@@ -70,7 +70,7 @@ export function getIndexedDBStoreValue(databaseName: string, databaseVersion: nu
           .objectStore(storeName)
           .get(key)
   
-          tx.onsuccess = function(this: IDBRequest<any>, ev: Event) {
+          tx.onsuccess = function(this: IDBRequest<any>) {
             const result = this.result // If key isn't found, the result resolved is undefined
             db.close()
             return resolve(result)

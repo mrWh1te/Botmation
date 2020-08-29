@@ -41,7 +41,7 @@ describe('[Botmation] actions/indexed-db', () => {
 
   it('indexedDBStore()() should set the first few injects as BotIndexedDBInjects from higher order params', async() => {
     const injectsWithoutPipe = [25, 'hi', 'World']
-    let mockPage = {} as any as Page
+    mockPage = {} as any as Page
 
     await indexedDBStore(higherOrderDatabaseName, higherOrderStoreName, higherOrderDatabaseVersion)()(mockPage)
     await indexedDBStore(higherOrderDatabaseName, higherOrderStoreName, higherOrderDatabaseVersion)()(mockPage, ...injectsWithoutPipe)

@@ -40,9 +40,9 @@ export const log = <R = void>(message?: string): BotAction<R> => async (page, ..
  *                Forwards any Pipe value received by returning it
  * @param message 
  */
-export const warning = <R = void>(warning?: string): BotAction<R> => async (page, ...injects) => {
-  if (warning) {
-    logWarning(warning)
+export const warning = <R = void>(warningMessage?: string): BotAction<R> => async (page, ...injects) => {
+  if (warningMessage) {
+    logWarning(warningMessage)
   }
 
   if (injectsHavePipe(injects)) {
@@ -58,9 +58,9 @@ export const warning = <R = void>(warning?: string): BotAction<R> => async (page
  *                Forwards any Pipe value received by returning it
  * @param message 
  */
-export const error = <R = void>(error?: string): BotAction<R> => async (page, ...injects) => {
-  if (error) {
-    logError(error)
+export const error = <R = void>(errorMessage?: string): BotAction<R> => async (page, ...injects) => {
+  if (errorMessage) {
+    logError(errorMessage)
   }
 
   if (injectsHavePipe(injects)) {

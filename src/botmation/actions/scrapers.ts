@@ -11,17 +11,16 @@ import { errors } from '../actions/errors'
 import { getElementOuterHTML, getElementsOuterHTML } from '../helpers/scrapers'
 import { unpipeInjects } from '../helpers/pipe'
 import { pipe } from './assembly-lines'
-import { logMessage } from 'botmation/helpers/console'
 
 /**
  * @description   Inject htmlParser for ScraperBotAction's
  *                
- * @param htmlParser 
+ * @param htmlParserFunction 
  */
-export const htmlParser = (htmlParser: Function) =>
+export const htmlParser = (htmlParserFunction: Function) =>
   (...actions: BotAction[]): BotAction => 
     pipe()(
-      inject(htmlParser)(
+      inject(htmlParserFunction)(
         errors('htmlParser()()')(...actions)
       )
     )

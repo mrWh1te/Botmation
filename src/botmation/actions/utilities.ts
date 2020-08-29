@@ -5,9 +5,10 @@
  */
 
 import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions'
-import { pipeInjects, getInjectsPipeValue } from '../helpers/pipe'
+import { pipeInjects, getInjectsPipeValue, removePipe, wrapValueInPipe } from '../helpers/pipe'
 import { pipeActionOrActions, pipe } from './assembly-lines'
 import { logWarning } from '../helpers/console'
+import { Collection, isDictionary } from '../types/objects'
 
 /**
  * @description Higher Order BotAction that accepts a ConditionalBotAction (pipeable, that returns a boolean) and based on what boolean it resolves,
@@ -27,11 +28,22 @@ export const givenThat =
 
 /**
  * @future support piping in the `collection`
- * @description   A forEach method to loop a collection of (array or object with key/value pairs), to run a loop of piped actions with each iteration of the collection
+ * @description   A forEach method to loop a collection (array or object's key/value pairs) with assembled BotActions in a pipe
  * 
  *                Special BotAction that can take an array of stuff or an object of key value pairs (dictionary)
  *                to iterate over while applying the closure (botActionOrActionsFactory) as provided
  *                The closure's purpose is simply to return a BotAction or BotAction[]
+ * 
+ *                The collection can be passed in via higher-order param or as Pipe value. If both are provided, higher-order param is used.
+ * 
+ *                The callback's returned BotAction(s) are called with the three params matching the forEach() callback syntax
+ *                  value, index, array
+ * 
+ *                Since this function supports Dictionaries too, the "index" is casted into a string
+ *                  value, key, collection
+ * 
+ *                When the returned BotAction(s) are ran in a Pipe, the same callback params are wrapped in an array then injected as the Pipe object's value
+ *                  [value, key, collection]
  * 
  *                The original use-case for this concept, was to be able to re-apply a script on multiple websites via a loop
  *                I've seen multiple examples online, of people using Puppeteer to write a script of actions then loop through a list of websites
@@ -47,7 +59,7 @@ export const givenThat =
  * 
  * @example    with a dictionary as the collection, we can iterate key/value pairs in our BotAction's setup ie fill a form with keys being form input selectors and values being what its typed in each
  *  forAll({id: 'google.com', someOtherKey: 'apple.com'})(
- *    (key, siteName) => ([
+ *    (siteName, key) => ([
  *      goTo('http://' + siteName)
  *      screenshot(key + siteName + '-homepage')
  *    ])
@@ -58,37 +70,42 @@ export const givenThat =
  *    (siteName) => goTo('http://' + siteName)
  *  )
  */
-export interface Dictionary {
-  [key: string]: any // key/value pairs
-}
 export const forAll =
-  (collection?: any[] | Dictionary) =>
-    (botActionOrActionsFactory: (...args: any[]) => BotAction<any>[] | BotAction<any>): BotAction =>
+  (collection?: Collection) =>
+    // cb params = iterated value, iterated index/key (casted as string), collection
+    (botActionOrActionsFactory: (...args: [any, string, Collection]) => BotAction<any>[] | BotAction<any>): BotAction =>
       async(page, ...injects) => {
         // the collection can be passed in via higher-order params or Pipe object value
-        // higher-order params trump Pipe object value
+        // higher-order params trump Pipe object value        
         if (!collection) {
           collection = getInjectsPipeValue(injects)
         }
 
         if (!collection) {
           logWarning('Utilities forAll() missing collection')
-          collection = []
+          return
         }
 
-        /* istanbul ignore else  */
         if (Array.isArray(collection)) {
-          // Array
-          for(let i = 0; i < collection.length; i++) {
-            await pipeActionOrActions(botActionOrActionsFactory(collection[i]))(page, ...injects)
-          }
+          for(let index = 0; index < collection.length; index++) {
+            // Update Pipe value for each iteration
+            injects = removePipe(injects)
+            injects.push(wrapValueInPipe([collection[index], index+'', collection])) // for now, all collection keys are cast to "string" for a single type
 
+            // Run cb
+            await pipeActionOrActions(botActionOrActionsFactory(collection[index], index+'', collection))(page, ...injects)
+          }
         } else {
-          // coded for testing coverage bug creating false negative on this branch
-          if (typeof collection === 'object' && collection !== null) {
-            // Dictionary
+          // in case Pipe object value is not a dictionary
+          /* istanbul ignore next */ // line is covered... false positive?
+          if (isDictionary(collection)) {
             for (const [key, value] of Object.entries(collection)) {
-              await pipeActionOrActions(botActionOrActionsFactory(key, value))(page, ...injects)
+              // Update Pipe value for each iteration
+              injects = removePipe(injects)
+              injects.push(wrapValueInPipe([value, collection, key]))
+  
+              // Run cb
+              await pipeActionOrActions(botActionOrActionsFactory(value, key, collection))(page, ...injects)
             }
           }
         }

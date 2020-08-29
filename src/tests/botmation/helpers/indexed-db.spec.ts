@@ -1,7 +1,6 @@
 require('fake-indexeddb/auto') // mock IndexedDB (all in memory)
 
 import { setIndexedDBStoreValue, getIndexedDBStoreValue } from 'botmation/helpers/indexed-db'
-import { rejects } from 'assert'
 
 /**
  * @description   IndexedDB Helpers
@@ -53,7 +52,7 @@ describe('[Botmation] helpers/indexed-db', () => {
         db.transaction(databaseStoreName, 'readwrite')
           .objectStore(databaseStoreName)
           .put('test-1-value', 'test-1-key')
-          .onsuccess = function(this: IDBRequest<any>, ev: Event) {
+          .onsuccess = function(this: IDBRequest<any>) {
             db.close()
             return resolve()
           }
@@ -86,7 +85,7 @@ describe('[Botmation] helpers/indexed-db', () => {
         db.transaction(databaseStoreName, 'readwrite')
           .objectStore(databaseStoreName)
           .put('test-2-value', 'test-2-key')
-          .onsuccess = function(this: IDBRequest<any>, ev: Event) {
+          .onsuccess = function(this: IDBRequest<any>) {
             db.close()
             return resolve()
           }
@@ -114,7 +113,7 @@ describe('[Botmation] helpers/indexed-db', () => {
       request.onsuccess = function(this, ev) {
         const db = this.result
 
-        db.onerror = function(this, ev) {
+        db.onerror = function(this) {
           db.close()
           return reject('IndexedDB Request DB.onerror()')
         }
@@ -122,7 +121,7 @@ describe('[Botmation] helpers/indexed-db', () => {
         db.transaction(databaseStoreName, 'readwrite')
           .objectStore(databaseStoreName)
           .put('test-3-value', 'test-3-key')
-          .onsuccess = function(this, ev) {
+          .onsuccess = function(this) {
             db.close()
             return resolve()
           }
@@ -150,7 +149,7 @@ describe('[Botmation] helpers/indexed-db', () => {
       request.onsuccess = function(this, ev) {
         const db = this.result
 
-        db.onerror = function(this, ev) {
+        db.onerror = function(this) {
           db.close()
           return reject('IndexedDB Request DB.onerror()')
         }
@@ -158,7 +157,7 @@ describe('[Botmation] helpers/indexed-db', () => {
         db.transaction(databaseStoreName, 'readwrite')
           .objectStore(databaseStoreName)
           .put('test-3-value', 'test-3-key')
-          .onsuccess = function(this, ev) {
+          .onsuccess = function(this) {
             db.close()
             return resolve()
           }
@@ -191,7 +190,7 @@ describe('[Botmation] helpers/indexed-db', () => {
         db.transaction(databaseStoreName, 'readwrite')
           .objectStore(databaseStoreName)
           .put('test-2-value', 'test-2-key')
-          .onsuccess = function(this: IDBRequest<any>, ev: Event) {
+          .onsuccess = function(this: IDBRequest<any>) {
             db.close()
             return resolve()
           }
@@ -219,7 +218,7 @@ describe('[Botmation] helpers/indexed-db', () => {
       request.onsuccess = function(this, ev) {
         const db = this.result
 
-        db.onerror = function(this, ev) {
+        db.onerror = function(this) {
           db.close()
           return reject('IndexedDB Request DB.onerror()')
         }
@@ -227,7 +226,7 @@ describe('[Botmation] helpers/indexed-db', () => {
         db.transaction(databaseStoreName, 'readwrite')
           .objectStore(databaseStoreName)
           .put('test-3-value', 'test-3-key')
-          .onsuccess = function(this, ev) {
+          .onsuccess = function(this) {
             db.close()
             return resolve()
           }
@@ -263,7 +262,7 @@ describe('[Botmation] helpers/indexed-db', () => {
         db.transaction(databaseStoreName, 'readwrite')
           .objectStore(databaseStoreName)
           .put('test-1-value', 'test-1-key')
-          .onsuccess = function(this: IDBRequest<any>, ev: Event) {
+          .onsuccess = function(this: IDBRequest<any>) {
             db.close()
             return resolve()
           }

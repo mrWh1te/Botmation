@@ -1,4 +1,4 @@
-import { isObjectWithKey, isObjectWithValue } from 'botmation/types/objects'
+import { isObjectWithKey, isObjectWithValue, isDictionary } from 'botmation/types/objects'
 
 /**
  * @description   Generic Object Types to Help
@@ -12,7 +12,7 @@ describe('[Botmation] types/objects', () => {
 
   //
   // Unit Tests
-  it('isObjectWithKey() returns boolean if the provided param is an Object with a property `key` whose value\'s type is string', () => {
+  it('isObjectWithKey() returns boolean true if the provided param is an Object with a property `key` whose value\'s type is string', () => {
     const objectWithKeyString = {key: 'hi'}
     const objectWithKeyEmptyString = {key: ''}
 
@@ -30,7 +30,7 @@ describe('[Botmation] types/objects', () => {
     expect(isObjectWithKey(undefinedValue)).toEqual(false)
   })
 
-  it('isObjectWithValue() returns boolean if the provided param is an Object with a property `value` (type any)', () => {
+  it('isObjectWithValue() returns boolean true if the provided param is an Object with a property `value` (type any)', () => {
     const objectWithValueString = {value: 'hi'}
     const objectWithValueEmptyString = {value: ''}
 
@@ -44,6 +44,29 @@ describe('[Botmation] types/objects', () => {
     expect(isObjectWithValue(objectWithoutValue)).toEqual(false)
     expect(isObjectWithValue(notObject)).toEqual(false)
     expect(isObjectWithValue(undefinedValue)).toEqual(false)
+  })
+
+  it('isDictionary() returns boolean true if the provided param is a Dictionary type', () => {
+    const nullObject = null
+    const array = ['hello', 'world']
+    const func = () => 4
+
+    const dictionary1 = {
+      length: 5,
+      foo: 'bar'
+    }
+    const dictionary2 = {
+      foo: 'bar',
+      hello: 'world',
+      ailubasdf: 'aoihnasdf'
+    }
+
+    expect(isDictionary(nullObject)).toEqual(false)
+    expect(isDictionary(func)).toEqual(false)
+    expect(isDictionary(array)).toEqual(false)
+
+    expect(isDictionary(dictionary1)).toEqual(true)
+    expect(isDictionary(dictionary2)).toEqual(true)
   })
 
 })

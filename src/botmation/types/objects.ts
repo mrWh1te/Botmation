@@ -27,3 +27,22 @@ export const isObjectWithValue = (data: any): data is {value: any} => {
 
   return typeof data === 'object' && data.value !== undefined
 }
+
+/**
+ * Basic Hash-Map type
+ */
+export type Dictionary<V = any> = {
+  [key: string]: V 
+}
+
+/**
+ * Dictionaries are non-null objects with at least one key/value
+ * @param value 
+ */
+export const isDictionary = <V = any>(value: any): value is Dictionary<V> => 
+  typeof value === 'object' && value !== null && !Array.isArray(value) && Object.keys(value).every(key => typeof key === 'string')
+
+/**
+ * Array or Dictionary
+ */
+export type Collection<V = any> = Array<V>|Dictionary<V>

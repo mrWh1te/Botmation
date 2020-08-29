@@ -7,6 +7,7 @@ import { goTo } from 'botmation/actions/navigation'
 
 import { BASE_URL } from 'tests/urls'
 import { BotAction } from 'botmation/interfaces'
+import { Dictionary } from 'botmation'
 
 jest.mock('botmation/helpers/console', () => {
   return {
@@ -118,7 +119,7 @@ describe('[Botmation] actions/utilities', () => {
   })
 
   it('should call the list of Actions for each key->value pair in the object provided', async() => {
-    const keyValuePairs = {
+    const keyValuePairs: Dictionary = {
       'form input[name="username"]': 'example username',
       'form input[name="password"]': 'example password'
     }
@@ -127,7 +128,7 @@ describe('[Botmation] actions/utilities', () => {
     // whose keys are html selectors for form inputs, and the values are strings to type in
     // so it would be one data structure for doing form input[type=text], in one succinct format
     await forAll(keyValuePairs)(
-      (elementSelector, copyToType) => ([
+      (copyToType, elementSelector) => ([
         click(elementSelector),
         type(copyToType)
       ])
@@ -148,7 +149,7 @@ describe('[Botmation] actions/utilities', () => {
     } as any as Page
 
     await forAll()(
-      (elementSelector, copyToType) => ([
+      (copyToType, elementSelector) => ([
         click(elementSelector),
         type(copyToType)
       ])
@@ -163,9 +164,9 @@ describe('[Botmation] actions/utilities', () => {
 
   it('should recognize null is an object not to iterate', async() => {
     await forAll()(
-      (elementSelector, copyToType) => ([
-        click(elementSelector),
-        type(copyToType)
+      (iteratedPiece) => ([
+        click(iteratedPiece),
+        type(iteratedPiece)
       ])
     )(mockPage, {brand:'Pipe', value: null})
     

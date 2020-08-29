@@ -26,16 +26,14 @@ export const chain =
       // but, could that be desirable? A new kind of assembly line, similar to chain but carries a Pipe through (1 case ignoring BotAction returns, the other piping those return values)
       if (injectsHavePipe(injects)) {
         // remove pipe
-        if (actions.length === 0) {}
-        else if(actions.length === 1) {
+        if(actions.length === 1) {
           await actions[0](page, ...injects.splice(0, injects.length - 1))
         } else {
           await chainRunner(...actions)(page, ...injects.splice(0, injects.length - 1))
         }
       } else {
         // run regularly in a chain, no need to remove a pipe (last inject)
-        if (actions.length === 0) {}
-        else if(actions.length === 1) {
+        if(actions.length === 1) {
           await actions[0](page, ...injects)
         } else {
           await chainRunner(...actions)(page, ...injects)
@@ -99,8 +97,7 @@ export const assemblyLine =
           }
         } else {
           // running a chain
-          if (actions.length === 0) {}
-          else if (actions.length === 1) {
+          if (actions.length === 1) {
             await actions[0](page, ...injects)
           } else {
             await chainRunner(...actions)(page, ...injects)
@@ -151,21 +148,21 @@ export const pipeRunner =
   (...actions: BotAction<PipeValue|void>[]): BotAction<PipeValue<R>> =>
     async(page, ...injects) => {
       // Possible for last inject to be the piped value
-      let pipe: Pipe = createEmptyPipe()
+      let pipeObject: Pipe = createEmptyPipe()
 
       // in case we are used in a chain, injects won't have a pipe at the end
       if (injectsHavePipe(injects)) {
-        pipe = getInjectsPipeOrEmptyPipe<P>(injects)
+        pipeObject = getInjectsPipeOrEmptyPipe<P>(injects)
         injects = injects.slice(0, injects.length - 1)
       }
 
       // let piped // pipe's are closed chain-links, so nothing pipeable comes in, so data is grabbed in a pipe and shared down stream a pipe, and returns
       for(const action of actions) {
-        const nextPipeValueOrUndefined: PipeValue|void = await action(page, ...injects, pipe) // typing.. botaction's async return can be void, but given how promises must resolve(), the value is actually undefined
+        const nextPipeValueOrUndefined: PipeValue|void = await action(page, ...injects, pipeObject) // typing.. botaction's async return can be void, but given how promises must resolve(), the value is actually undefined
 
         // Bot Actions return the value removed from the pipe, and BotActionsPipe wraps it for injecting
-        pipe = wrapValueInPipe(nextPipeValueOrUndefined as PipeValue|undefined)
+        pipeObject = wrapValueInPipe(nextPipeValueOrUndefined as PipeValue|undefined)
       }
 
-      return pipe.value as any as PipeValue<R>
+      return pipeObject.value as any as PipeValue<R>
     }    

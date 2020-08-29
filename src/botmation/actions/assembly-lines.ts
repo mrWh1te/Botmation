@@ -8,11 +8,6 @@ import {
 } from "../helpers/pipe"
 import { PipeValue } from "../types/pipe-value"
 
-//
-// These functions resolve the actions (aka run them), in order received, like on an assembly line, 1 action at a time - going down the conveyer belt
-//
-
-
 /**
  * @description     chain() BotAction for running a chain of BotAction's safely and optimized
  *                  If it receives a Pipe in the injects, it will strip it out. It does not return values.

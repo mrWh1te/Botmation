@@ -15,24 +15,53 @@ import { AbortLineSignal, isAbortLineSignal } from "../types/abort-signal"
  * @param actions 
  */
 export const chain =
-  (...actions: BotAction[]): BotAction =>
+  (...actions: BotAction<void|AbortLineSignal>[]): BotAction<void|AbortLineSignal> =>
     async(page, ...injects) => {
       // pipe support for running a chain inside a pipe as a real chain
       // otherwise, the injects will naturally carry the pipe through the whole chain of actions in the last inject
       // but, could that be desirable? A new kind of assembly line, similar to chain but carries a Pipe through (1 case ignoring BotAction returns, the other piping those return values)
       if (injectsHavePipe(injects)) {
-        // remove pipe
         if(actions.length === 1) {
-          await actions[0](page, ...injects.splice(0, injects.length - 1))
+          const returnValue = await actions[0](page, ...injects.splice(0, injects.length - 1)) // remove pipe
+
+          if (isAbortLineSignal(returnValue)) {
+            if (returnValue.assembledLines > 1) {
+              return {
+                ...returnValue,
+                assembledLines: returnValue.assembledLines - 1
+              }
+            } else if (returnValue.assembledLines === 0) {
+              return returnValue
+            }
+          }
         } else {
-          await chainRunner(...actions)(page, ...injects.splice(0, injects.length - 1))
+          const returnValue = await chainRunner(...actions)(page, ...injects.splice(0, injects.length - 1)) // remove pipe
+
+          if (isAbortLineSignal(returnValue)) {
+            return returnValue
+          } 
         }
       } else {
         // run regularly in a chain, no need to remove a pipe (last inject)
         if(actions.length === 1) {
-          await actions[0](page, ...injects)
+          const returnValue = await actions[0](page, ...injects)
+
+          if (isAbortLineSignal(returnValue)) {
+            if (returnValue.assembledLines > 1) {
+              return {
+                ...returnValue,
+                assembledLines: returnValue.assembledLines - 1
+              }
+            } else if (returnValue.assembledLines === 0) {
+              return returnValue
+            }
+          }
         } else {
-          await chainRunner(...actions)(page, ...injects)
+          const returnValue = await chainRunner(...actions)(page, ...injects)
+
+          if (isAbortLineSignal(returnValue)) {
+            return returnValue
+          }
         }
       }
     }

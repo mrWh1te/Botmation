@@ -188,25 +188,41 @@ export const chainRunner =
  * @param actions 
  */  
 export const pipeRunner = 
-  <R extends PipeValue = PipeValue, P extends PipeValue = PipeValue>
-  (...actions: BotAction<PipeValue|void>[]): BotAction<PipeValue<R>> =>
+  (...actions: BotAction<PipeValue|void|AbortLineSignal>[]): BotAction<PipeValue|AbortLineSignal|undefined> =>
     async(page, ...injects) => {
       // Possible for last inject to be the piped value
       let pipeObject: Pipe = createEmptyPipe()
 
       // in case we are used in a chain, injects won't have a pipe at the end
       if (injectsHavePipe(injects)) {
-        pipeObject = getInjectsPipeOrEmptyPipe<P>(injects)
+        pipeObject = getInjectsPipeOrEmptyPipe(injects)
         injects = injects.slice(0, injects.length - 1)
       }
 
       // let piped // pipe's are closed chain-links, so nothing pipeable comes in, so data is grabbed in a pipe and shared down stream a pipe, and returns
       for(const action of actions) {
-        const nextPipeValueOrUndefined: PipeValue|void = await action(page, ...injects, pipeObject) // typing.. botaction's async return can be void, but given how promises must resolve(), the value is actually undefined
+        const nextPipeValueOrUndefined: AbortLineSignal|PipeValue|void = await action(page, ...injects, pipeObject) // typing.. botaction's async return can be void, but given how promises must resolve(), the value is actually undefined
+
+        if (isAbortLineSignal(nextPipeValueOrUndefined)) {
+          if (nextPipeValueOrUndefined.assembledLines === 1) {
+            return nextPipeValueOrUndefined.pipeValue // abort this line only and return the pipeValue (which may be undefined)
+          } 
+          if (nextPipeValueOrUndefined.assembledLines === 0) {
+            return nextPipeValueOrUndefined // pass this signal up all the way, to abort all assembled lines
+          } 
+          /* istanbul ignore next */ // fix false negative in coverage report
+          if (nextPipeValueOrUndefined.assembledLines > 1) {
+            // aborting a specific number of lines
+            return {
+              ...nextPipeValueOrUndefined,
+              assembledLines: nextPipeValueOrUndefined.assembledLines - 1 // aborted this line, decrease count for the next
+            }
+          }
+        }
 
         // Bot Actions return the value removed from the pipe, and BotActionsPipe wraps it for injecting
         pipeObject = wrapValueInPipe(nextPipeValueOrUndefined as PipeValue|undefined)
       }
 
-      return pipeObject.value as any as PipeValue<R>
+      return pipeObject.value
     }    

@@ -1,7 +1,8 @@
 import { Page } from 'puppeteer'
 import { chainRunner, pipeRunner, pipeActionOrActions, chain, pipe, assemblyLine } from 'botmation/actions/assembly-lines'
 import { abort } from 'botmation/actions/abort'
-import { AbortLineSignal } from 'botmation'
+import { AbortLineSignal } from 'botmation/types/abort-signal'
+import { createEmptyPipe } from 'botmation/helpers/pipe'
 
 /**
  * @description   Assembly-Lines BotAction's
@@ -115,6 +116,61 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(mockPipeAction3).toHaveBeenNthCalledWith(2, {}, {brand: 'Pipe', value: 'hello'})
     expect(mockPipeAction1).toHaveBeenNthCalledWith(2, {}, {brand: 'Pipe', value: 'world'})
     expect(pipeRunnerResult2).toBeUndefined()
+  })
+
+  it('pipeRunner() supports the AbortLineSignal', async() => {
+    const mockPipeAction1 = jest.fn(() => Promise.resolve())
+    const mockPipeAction2 = jest.fn(() => Promise.resolve())
+    const mockPipeAction3 = jest.fn(() => Promise.resolve())
+
+    // Safe default test - abort only 1 line of assembly
+    const abortOnlyThisLine = await pipeRunner(
+      mockPipeAction1, mockPipeAction2, abort(), mockPipeAction3
+    )(mockPage)
+
+    // abort multiple # lines of assembly
+    const abortMultipleLines = await pipeRunner(
+      mockPipeAction1, mockPipeAction2, abort(7), mockPipeAction3
+    )(mockPage)
+
+    // abort all lines of assembly
+    const abortAllLines = await pipeRunner(
+      mockPipeAction1, mockPipeAction2, abort(0), mockPipeAction3
+    )(mockPage)
+
+    const emptyPipeObject = createEmptyPipe()
+
+    expect(mockPipeAction1).toHaveBeenNthCalledWith(1, {}, emptyPipeObject)
+    expect(mockPipeAction2).toHaveBeenNthCalledWith(1, {}, emptyPipeObject)
+    expect(mockPipeAction3).not.toHaveBeenCalled()
+
+    expect(mockPipeAction1).toHaveBeenNthCalledWith(2, {}, emptyPipeObject)
+    expect(mockPipeAction2).toHaveBeenNthCalledWith(2, {}, emptyPipeObject)
+    expect(mockPipeAction3).not.toHaveBeenCalled()
+
+    expect(mockPipeAction1).toHaveBeenNthCalledWith(3, {}, emptyPipeObject)
+    expect(mockPipeAction2).toHaveBeenNthCalledWith(3, {}, emptyPipeObject)
+    expect(mockPipeAction3).not.toHaveBeenCalled()
+
+    expect(abortOnlyThisLine).toBeUndefined() 
+    expect(abortMultipleLines).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 6 // 1 less
+    })
+    expect(abortAllLines).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+    
+    // funky test
+    const mockPipeAction = jest.fn(() => Promise.resolve('947'))
+
+    const funkyTest = await pipeRunner(
+      () => Promise.resolve('may the funk me with you' as any as AbortLineSignal),
+      mockPipeAction
+    )(mockPage)
+
+    expect(funkyTest).toEqual('947')
   })
 
   it('pipeActionOrActions() should run the given action or actions efficiently in a pipe', async() => {

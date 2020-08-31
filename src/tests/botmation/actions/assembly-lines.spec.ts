@@ -533,6 +533,123 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(mockAction3).toHaveBeenNthCalledWith(5, {}, 1, 3, 3, 7, {brand: 'Pipe', value: 'bananas'})
   })
 
+  it('pipe() supports the AbortLineSignal', async() => {
+    //
+    // one action, no higher-order pipe
+    const oneActionAbort1LineNoPipeValue = await pipe()(
+      abort(1)
+    )(mockPage)
+    const oneActionAbort1LinePipeValue = await pipe()(
+      abort(1, 'pipe-value-1')
+    )(mockPage)
+
+    const infiniteAbort1Action = await pipe()(
+      abort(0)
+    )(mockPage)
+
+    const multipleAborts1Action = await pipe()(
+      abort(5)
+    )(mockPage)
+
+    expect(oneActionAbort1LineNoPipeValue).toEqual(undefined)
+    expect(oneActionAbort1LinePipeValue).toEqual('pipe-value-1')
+
+    expect(infiniteAbort1Action).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+    expect(multipleAborts1Action).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 4
+    })
+
+    //
+    // one action, with higher-order pipe via injects
+    const emptyPipeObject = createEmptyPipe()
+    const oneActionAbort1LineWithHigherOrderPipe = await pipe()(
+      abort()
+    )(mockPage, emptyPipeObject)
+    const oneActionAbort1LineWithHigherOrderPipeWithPipeValue = await pipe()(
+      abort(1, 'pipe-value-10')
+    )(mockPage, emptyPipeObject)
+
+    const oneActionAbortInfinite = await pipe()(
+      abort(0)
+    )(mockPage, emptyPipeObject)
+
+    const oneActionMultipleAbort = await pipe()(
+      abort(5)
+    )(mockPage, emptyPipeObject)
+
+    expect(oneActionAbort1LineWithHigherOrderPipe).toBeUndefined()
+    expect(oneActionAbort1LineWithHigherOrderPipeWithPipeValue).toEqual('pipe-value-10')
+
+    expect(oneActionAbortInfinite).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+
+    expect(oneActionMultipleAbort).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 4
+    })
+
+    //
+    // multiple actions, no higher-order pipe
+    const mockPipeAction1 = jest.fn(() => Promise.resolve())
+    const mockPipeAction2 = jest.fn(() => Promise.resolve())
+    const mockPipeAction3 = jest.fn(() => Promise.resolve())
+
+    const multipleActionsThenAbortNoPipeValue = await pipe()(
+      mockPipeAction1, mockPipeAction2, abort(), mockPipeAction3
+    )(mockPage)
+
+    expect(mockPipeAction1).toHaveBeenNthCalledWith(1, {}, {brand: 'Pipe'})
+    expect(mockPipeAction2).toHaveBeenNthCalledWith(1, {}, {brand: 'Pipe'})
+    expect(mockPipeAction3).not.toHaveBeenCalled()
+
+    expect(multipleActionsThenAbortNoPipeValue).toBeUndefined()
+
+    const multipleActionsThenAbortWithPipeValue = await pipe()(
+      mockPipeAction1, mockPipeAction2, abort(1, 'pipe-value-2'), mockPipeAction3
+    )(mockPage)
+
+    expect(mockPipeAction1).toHaveBeenNthCalledWith(2, {}, {brand: 'Pipe'})
+    expect(mockPipeAction2).toHaveBeenNthCalledWith(2, {}, {brand: 'Pipe'})
+    expect(mockPipeAction3).not.toHaveBeenCalled()
+
+    expect(multipleActionsThenAbortWithPipeValue).toEqual('pipe-value-2')
+
+    const multipleActionsInfiniteAbortWithPipeValue = await pipe()(
+      mockPipeAction1, mockPipeAction2, abort(0, 'pipe-value-3'), mockPipeAction3
+    )(mockPage)
+
+    expect(mockPipeAction1).toHaveBeenNthCalledWith(3, {}, {brand: 'Pipe'})
+    expect(mockPipeAction2).toHaveBeenNthCalledWith(3, {}, {brand: 'Pipe'})
+    expect(mockPipeAction3).not.toHaveBeenCalled()
+
+    expect(multipleActionsInfiniteAbortWithPipeValue).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0,
+      pipeValue: 'pipe-value-3'
+    })
+
+    const multipleActionsMultipleAbortsWithPipeValue = await pipe()(
+      mockPipeAction1, mockPipeAction2, abort(5, 'pipe-value-3'), mockPipeAction3
+    )(mockPage)
+
+    expect(mockPipeAction1).toHaveBeenNthCalledWith(4, {}, {brand: 'Pipe'})
+    expect(mockPipeAction2).toHaveBeenNthCalledWith(4, {}, {brand: 'Pipe'})
+    expect(mockPipeAction3).not.toHaveBeenCalled()
+
+    expect(multipleActionsMultipleAbortsWithPipeValue).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 4,
+      pipeValue: 'pipe-value-3'
+    })
+
+  })
+
   it('assemblyLine() should efficiently run the actions provided in a returned pipe or non-returned chain, depending if the injects coming in have a Pipe or not with the exception of the higher order forceInPipe flag set to TRUE', async() => {
     const mockAction1 = jest.fn(() => Promise.resolve('mars'))
     const mockAction2 = jest.fn(() => Promise.resolve('saturn'))

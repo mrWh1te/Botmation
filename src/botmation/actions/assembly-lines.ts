@@ -78,24 +78,55 @@ export const pipe =
         if (injectsHavePipe(injects)) {
           if (actions.length === 0) {return undefined}
           if (actions.length === 1) {
+            let returnValue: PipeValue|AbortLineSignal|void
             if (valueToPipe) {
-              return await actions[0](page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe))
+              returnValue = await actions[0](page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe))
             } else {
-              return await actions[0](page, ...injects)
+              returnValue = await actions[0](page, ...injects)
+            }
+
+            if (isAbortLineSignal(returnValue)) {
+              if (returnValue.assembledLines > 1) {
+                return {
+                  ...returnValue,
+                  assembledLines: returnValue.assembledLines - 1
+                }
+              } else if (returnValue.assembledLines === 0) {
+                return returnValue
+              } else {
+                return returnValue.pipeValue
+              }
+            } else {
+              return returnValue
             }
           } else {
             // injects only have a pipe when its ran inside a pipe, so lets return our value to flow with the pipe mechanics
             if (valueToPipe) {
-              return (await pipeRunner(...actions)(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe)))
+              return await pipeRunner(...actions)(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe))
             } else {
-              return (await pipeRunner(...actions)(page, ...injects))
+              return await pipeRunner(...actions)(page, ...injects)
             }
           }
         } else {
           // injects don't have a pipe, so add one
           if (actions.length === 0) {return undefined}
           if (actions.length === 1) {
-            return await actions[0](page, ...injects, wrapValueInPipe(valueToPipe))
+            const returnValue = await actions[0](page, ...injects, wrapValueInPipe(valueToPipe))
+
+            if (isAbortLineSignal(returnValue)) {
+              if (returnValue.assembledLines > 1) {
+                return {
+                  ...returnValue,
+                  assembledLines: returnValue.assembledLines - 1
+                }
+              } else if (returnValue.assembledLines === 0) {
+                return returnValue
+              } else {
+                return returnValue.pipeValue
+              }
+            } else {
+              return returnValue
+            }
           } else {
             return await pipeRunner(...actions)(page, ...injects, wrapValueInPipe(valueToPipe))
           }

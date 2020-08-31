@@ -138,8 +138,13 @@ describe('[Botmation] actions/assembly-lines', () => {
       mockPipeAction1, mockPipeAction2, abort(0), mockPipeAction3
     )(mockPage)
 
-    const emptyPipeObject = createEmptyPipe()
+    // when a pipe line is aborted with AbortLineSignal, the signal's `pipeValue` property will set the return value
+    // if unused, the value `undefined` is returned
+    const abortOnlyThisLineWithPipeValue = await pipeRunner(
+      mockPipeAction1, mockPipeAction2, abort(1, 'this got aborted'), mockPipeAction3
+    )(mockPage)
 
+    const emptyPipeObject = createEmptyPipe()
     expect(mockPipeAction1).toHaveBeenNthCalledWith(1, {}, emptyPipeObject)
     expect(mockPipeAction2).toHaveBeenNthCalledWith(1, {}, emptyPipeObject)
     expect(mockPipeAction3).not.toHaveBeenCalled()
@@ -152,7 +157,11 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(mockPipeAction2).toHaveBeenNthCalledWith(3, {}, emptyPipeObject)
     expect(mockPipeAction3).not.toHaveBeenCalled()
 
-    expect(abortOnlyThisLine).toBeUndefined() 
+    expect(mockPipeAction1).toHaveBeenNthCalledWith(4, {}, emptyPipeObject)
+    expect(mockPipeAction2).toHaveBeenNthCalledWith(4, {}, emptyPipeObject)
+    expect(mockPipeAction3).not.toHaveBeenCalled()
+
+    expect(abortOnlyThisLine).toBeUndefined() // no pipeValue provided, so return value is `undefined`
     expect(abortMultipleLines).toEqual({
       brand: 'Abort_Signal',
       assembledLines: 6 // 1 less
@@ -161,6 +170,7 @@ describe('[Botmation] actions/assembly-lines', () => {
       brand: 'Abort_Signal',
       assembledLines: 0
     })
+    expect(abortOnlyThisLineWithPipeValue).toEqual('this got aborted')
     
     // funky test
     const mockPipeAction = jest.fn(() => Promise.resolve('947'))

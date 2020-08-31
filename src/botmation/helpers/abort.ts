@@ -1,5 +1,5 @@
 import { PipeValue } from "../types/pipe-value"
-import { AbortLineSignal } from "../interfaces/abort-signal"
+import { AbortLineSignal } from "../types/abort-signal"
 
 /**
  * 

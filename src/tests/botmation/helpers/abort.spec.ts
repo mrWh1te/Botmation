@@ -6,7 +6,7 @@ import { createAbortLineSignal } from 'botmation/helpers/abort'
 describe('[Botmation] helpers/abort', () => {
   
   //
-  // Unit Tests
+  // Unit Test
   it('createAbortLineSignal() creates a `AbortLineSignal` object with safe intuitive defaults if no params are provided to set the object\'s values', () => {
     const noParams = createAbortLineSignal()
     const overrideSafeDefaultsWithThoseValues = createAbortLineSignal(1, undefined)

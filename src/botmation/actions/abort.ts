@@ -1,4 +1,5 @@
-import { BotAction, AbortLineSignal } from "../interfaces"
+import { BotAction } from "../interfaces"
+import { AbortLineSignal } from '../types'
 import { PipeValue } from "../types/pipe-value"
 import { createAbortLineSignal } from "../helpers/abort"
 

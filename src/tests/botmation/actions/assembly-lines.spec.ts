@@ -1,5 +1,6 @@
 import { Page } from 'puppeteer'
 import { chainRunner, pipeRunner, pipeActionOrActions, chain, pipe, assemblyLine } from 'botmation/actions/assembly-lines'
+import { abort } from 'botmation/actions/abort'
 
 /**
  * @description   Assembly-Lines BotAction's
@@ -44,6 +45,49 @@ describe('[Botmation] actions/assembly-lines', () => {
 
     expect(testResult1).toBeUndefined()
     expect(testResult2).toBeUndefined()
+  })
+
+  it('chainRunner() supports the Abort Signal', async() => {
+    const mockChainAction1 = jest.fn(() => Promise.resolve())
+    const mockChainAction2 = jest.fn(() => Promise.resolve())
+    const mockChainAction3 = jest.fn(() => Promise.resolve())
+
+    // Safe default test - abort only 1 line of assembly
+    const abortOnlyThisChain = await chainRunner(
+      mockChainAction1, mockChainAction2, abort(), mockChainAction3
+    )(mockPage)
+
+    // abort multiple # lines of assembly
+    const abortMultipleLines = await chainRunner(
+      mockChainAction1, mockChainAction2, abort(3), mockChainAction3
+    )(mockPage)
+
+    // abort all lines of assembly
+    const abortAllLines = await chainRunner(
+      mockChainAction1, mockChainAction2, abort(0), mockChainAction3
+    )(mockPage)
+
+    expect(mockChainAction1).toHaveBeenNthCalledWith(1, {})
+    expect(mockChainAction2).toHaveBeenNthCalledWith(1, {})
+    expect(mockChainAction3).not.toHaveBeenCalled()
+
+    expect(mockChainAction1).toHaveBeenNthCalledWith(2, {})
+    expect(mockChainAction2).toHaveBeenNthCalledWith(2, {})
+    expect(mockChainAction3).not.toHaveBeenCalled()
+
+    expect(mockChainAction1).toHaveBeenNthCalledWith(3, {})
+    expect(mockChainAction2).toHaveBeenNthCalledWith(3, {})
+    expect(mockChainAction3).not.toHaveBeenCalled()
+
+    expect(abortOnlyThisChain).toBeUndefined() 
+    expect(abortMultipleLines).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 2 // 1 less
+    })
+    expect(abortAllLines).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
   })
 
   it('pipeRunner() should return a BotAction that runs a spread array of BotAction\'s, separated with Piping', async() => {

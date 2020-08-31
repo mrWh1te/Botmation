@@ -7,6 +7,7 @@ import {
   createEmptyPipe
 } from "../helpers/pipe"
 import { PipeValue } from "../types/pipe-value"
+import { AbortLineSignal, isAbortLineSignal } from "../types/abort-signal"
 
 /**
  * @description     chain() BotAction for running a chain of BotAction's safely and optimized
@@ -126,10 +127,29 @@ export const pipeActionOrActions =
  * @param actions 
  */    
 export const chainRunner =
-  (...actions: BotAction[]): BotAction =>
+  (...actions: BotAction<void|AbortLineSignal>[]): BotAction<void|AbortLineSignal> =>
     async(page, ...injects) => {
+      let returnValue: any
       for(const action of actions) {
-        await action(page, ...injects)
+        returnValue = await action(page, ...injects)
+
+        if (isAbortLineSignal(returnValue)) {
+          if (returnValue.assembledLines === 1) {
+            break // abort this line only
+          } 
+          if (returnValue.assembledLines === 0) {
+            return returnValue // pass this signal up all the way, to abort all assembled lines
+          } 
+          /* istanbul ignore next */ // fix false negative in coverage report
+          if (returnValue.assembledLines > 1) {
+            // aborting a specific number of lines
+            return {
+              ...returnValue,
+              assembledLines: returnValue.assembledLines - 1 // aborted this line, decrease count for the next
+            }
+          }
+        }
+
       }
     }
 

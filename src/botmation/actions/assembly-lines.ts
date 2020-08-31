@@ -72,8 +72,8 @@ export const chain =
  * @param valueToPipe 
  */
 export const pipe =
-  (valueToPipe?: any) => 
-    (...actions: BotAction<PipeValue|void>[]): BotAction<any> => 
+  (valueToPipe?: PipeValue) => 
+    (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<any> => 
       async(page, ...injects) => {
         if (injectsHavePipe(injects)) {
           if (actions.length === 0) {return undefined}
@@ -92,12 +92,12 @@ export const pipe =
             }
           }
         } else {
-          // injects don't have a pipe, so add one:
+          // injects don't have a pipe, so add one
           if (actions.length === 0) {return undefined}
-          else if (actions.length === 1) {
+          if (actions.length === 1) {
             return await actions[0](page, ...injects, wrapValueInPipe(valueToPipe))
           } else {
-            return (await pipeRunner(...actions)(page, ...injects, wrapValueInPipe(valueToPipe)))
+            return await pipeRunner(...actions)(page, ...injects, wrapValueInPipe(valueToPipe))
           }
         }
       }

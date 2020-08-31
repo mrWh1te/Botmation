@@ -3,6 +3,7 @@ import { Page } from 'puppeteer'
 import { BotFilesInjects } from '../types/bot-files-inject'
 import { BotIndexedDBInjects } from '../types/bot-indexed-db-inject'
 import { ScraperBotInjects } from '../types/scraper-bot-injects'
+import { AbortLineSignal } from '../types/abort-signal'
 
 /**
  * @description    All BotAction Interfaces
@@ -26,7 +27,7 @@ import { ScraperBotInjects } from '../types/scraper-bot-injects'
 /**
  * @description    BotAction is an async Function whose default nature is to return a Promise<void>, but can be set to return a value
  */
-export interface BotAction<R = void, I extends Array<any> = any[]> extends Function {
+export interface BotAction<R = void|AbortLineSignal, I extends Array<any> = any[]> extends Function {
   (page: Page, ...injects: I) : Promise<R>
 }
 
@@ -51,7 +52,7 @@ export interface ConditionalBotAction extends Function {
  * @description    Specifies BotFilesInjects as its injects
  *                 BotFilesInjects are safely injected by the higher order files()() BotAction
  */
-export interface BotFilesAction<R = void> {
+export interface BotFilesAction<R = void|AbortLineSignal> {
   (page: Page, ...injects: BotFilesInjects) : Promise<R>
 }
 

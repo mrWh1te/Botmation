@@ -107,6 +107,29 @@ describe('[Botmation] actions/utilities', () => {
 
     // make sure that mockAction was not called
     expect(mockAction).not.toHaveBeenCalled()
+
+    // conditionalBotAction returning AbortLineSignal handling
+    const mockNeverRanAction = jest.fn(() => Promise.resolve())
+    const conditionAborts1Line: BotAction<boolean> = async () => new Promise(resolve => resolve(createAbortLineSignal() as any as boolean))
+    const conditionAbortsInfiniteLines: BotAction<boolean> = async () => new Promise(resolve => resolve(createAbortLineSignal(0) as any as boolean))
+    const conditionAbortsMultipleLinesWithPipeValue: BotAction<boolean> = async () => new Promise(resolve => resolve(createAbortLineSignal(5, 'some-pipe-value') as any as boolean))
+
+    const aborts1LineResult = await givenThat(conditionAborts1Line)(mockNeverRanAction)(mockPage)
+    const abortsInfiniteLinesResult = await givenThat(conditionAbortsInfiniteLines)(mockNeverRanAction)(mockPage)
+    const abortsMultipleLinesResult = await givenThat(conditionAbortsMultipleLinesWithPipeValue)(mockNeverRanAction)(mockPage)
+
+    expect(mockNeverRanAction).not.toHaveBeenCalled()
+
+    expect(aborts1LineResult).toBeUndefined()
+    expect(abortsInfiniteLinesResult).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+    expect(abortsMultipleLinesResult).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 4,
+      pipeValue: 'some-pipe-value'
+    })
   })
 
   //

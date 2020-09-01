@@ -176,6 +176,16 @@ export const forAsLong =
         let returnValue: PipeValue|AbortLineSignal
         let resolvedCondition = await condition(page, ...pipeInjects(injects))
 
+        if (isAbortLineSignal(resolvedCondition)) {
+          if (resolvedCondition.assembledLines === 1) {
+            return resolvedCondition.pipeValue as AbortLineSignal // to be picked up by pipe-able functions
+          } else if (resolvedCondition.assembledLines === 0) {
+            return resolvedCondition
+          } else {
+            return createAbortLineSignal(resolvedCondition.assembledLines - 1, resolvedCondition.pipeValue)
+          }
+        }
+
         while (resolvedCondition) {
           returnValue = await pipe()(...actions)(page, ...pipeInjects(injects))
 
@@ -187,5 +197,15 @@ export const forAsLong =
           // simulate pipe if needed
           resolvedCondition = false // in case condition rejects
           resolvedCondition = await condition(page, ...pipeInjects(injects)) // use same Pipe as before, unless no Pipe, than add an empty one
+
+          if (isAbortLineSignal(resolvedCondition)) {
+            if (resolvedCondition.assembledLines === 1) {
+              return resolvedCondition.pipeValue as AbortLineSignal // to be picked up by pipe-able functions
+            } else if (resolvedCondition.assembledLines === 0) {
+              return resolvedCondition
+            } else {
+              return createAbortLineSignal(resolvedCondition.assembledLines - 1, resolvedCondition.pipeValue)
+            }
+          }
         }
       }

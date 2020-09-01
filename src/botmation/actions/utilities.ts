@@ -11,6 +11,7 @@ import { logWarning } from '../helpers/console'
 import { Collection, isDictionary } from '../types/objects'
 import { PipeValue } from '../types/pipe-value'
 import { AbortLineSignal, isAbortLineSignal } from '../types/abort-signal'
+import { createAbortLineSignal } from 'botmation/helpers/abort'
 
 /**
  * @description Higher Order BotAction that accepts a ConditionalBotAction (pipeable, that returns a boolean) and based on what boolean it resolves,
@@ -23,8 +24,24 @@ export const givenThat =
   (condition: ConditionalBotAction) => 
     (...actions: BotAction<PipeValue|void|AbortLineSignal>[]): BotAction<void|AbortLineSignal> => 
       async(page, ...injects) => {
-        if (await condition(page, ...pipeInjects(injects))) {
-          return await pipe()(...actions)(page, ...injects)
+        const resolvedConditionValue: AbortLineSignal|boolean = await condition(page, ...pipeInjects(injects))
+
+        if (isAbortLineSignal(resolvedConditionValue)) {
+          if (resolvedConditionValue.assembledLines === 1) {
+            return resolvedConditionValue.pipeValue as AbortLineSignal // to be picked up by pipe-able functions
+          } else if (resolvedConditionValue.assembledLines === 0) {
+            return resolvedConditionValue
+          } else {
+            return createAbortLineSignal(resolvedConditionValue.assembledLines - 1, resolvedConditionValue.pipeValue)
+          }
+        }
+
+        if (resolvedConditionValue) {
+          const returnValue: PipeValue|AbortLineSignal = await pipe()(...actions)(page, ...injects)
+
+          if (isAbortLineSignal(returnValue)) {
+            return returnValue
+          }
         }
       }
 
@@ -133,12 +150,12 @@ export const doWhile =
         while (resolvedCondition) {
           returnValue = await pipe()(...actions)(page, ...injects)
 
+          if (isAbortLineSignal(returnValue)) {
+            return returnValue
+          }
+
           resolvedCondition = false // in case condition rejects, safer
           resolvedCondition = await condition(page, ...pipeInjects(injects)) // use same Pipe from before, but simulate as pipe in case not
-        }
-
-        if (isAbortLineSignal(returnValue)) {
-          return returnValue
         }
       }
 
@@ -154,7 +171,7 @@ export const doWhile =
  */
 export const forAsLong = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction[]): BotAction<void|AbortLineSignal> => 
+    (...actions: BotAction[]): BotAction<any> => 
       async(page, ...injects) => {
         let returnValue: PipeValue|AbortLineSignal
         let resolvedCondition = await condition(page, ...pipeInjects(injects))
@@ -162,12 +179,13 @@ export const forAsLong =
         while (resolvedCondition) {
           returnValue = await pipe()(...actions)(page, ...pipeInjects(injects))
 
+          // AbortLineSignal processed by Pipe, so just return AbortLineSignal
+          if (isAbortLineSignal(returnValue)) {
+            return returnValue
+          }
+
           // simulate pipe if needed
           resolvedCondition = false // in case condition rejects
           resolvedCondition = await condition(page, ...pipeInjects(injects)) // use same Pipe as before, unless no Pipe, than add an empty one
-        }
-
-        if (isAbortLineSignal(returnValue)) {
-          return returnValue
         }
       }

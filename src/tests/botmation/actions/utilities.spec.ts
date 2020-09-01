@@ -7,7 +7,9 @@ import { goTo } from 'botmation/actions/navigation'
 
 import { BASE_URL } from 'tests/urls'
 import { BotAction } from 'botmation/interfaces'
-import { Dictionary } from 'botmation'
+import { Dictionary } from 'botmation/types/objects'
+import { abort } from 'botmation/actions/abort'
+import { createAbortLineSignal } from 'botmation/helpers/abort'
 
 jest.mock('botmation/helpers/console', () => {
   return {
@@ -39,7 +41,7 @@ describe('[Botmation] actions/utilities', () => {
   })
 
   //
-  // givenThat() Unit Test
+  // givenThat() Unit Tests
   it('should resolve the condition and ONLY run the chain of actions if the resolved condition equals TRUE', async() => {
     const conditionResolvingTRUE:BotAction<boolean> = async() => new Promise(resolve => resolve(true))
     const conditionResolvingFALSE:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
@@ -61,6 +63,50 @@ describe('[Botmation] actions/utilities', () => {
 
     expect(mockPage.click).not.toHaveBeenNthCalledWith(2, 'example selector 2')
     expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(2, 'example copy 2')
+  })
+
+  it('givenThat() should pass through the correct AbortLineSignal', async() => {
+    const conditionResolveTrue: BotAction<boolean> = async() => new Promise(resolve => resolve(true))
+    const mockAction = jest.fn(() => Promise.resolve())
+
+    const abortInfinite = await givenThat(conditionResolveTrue)(
+      abort(0), mockAction
+    )(mockPage)
+
+    expect(abortInfinite).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+
+    const abortMultiple = await givenThat(conditionResolveTrue)(
+      abort(5), mockAction
+    )(mockPage)
+
+    expect(abortMultiple).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 4
+    })
+
+    // breaks inside assembly, then returns undefined
+    const abortOneWithPipeValue = await givenThat(conditionResolveTrue)(
+      abort(1), mockAction
+    )(mockPage)
+
+    expect(abortOneWithPipeValue).toBeUndefined()
+
+    // test PipeValue
+    const abortTwoWithPipeValue = await givenThat(conditionResolveTrue)(
+      abort(2, 'test-pipe-value'), mockAction
+    )(mockPage)
+
+    expect(abortTwoWithPipeValue).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 1,
+      pipeValue: 'test-pipe-value'
+    })
+
+    // make sure that mockAction was not called
+    expect(mockAction).not.toHaveBeenCalled()
   })
 
   //
@@ -117,6 +163,19 @@ describe('[Botmation] actions/utilities', () => {
     expect(mockPage.url).toHaveBeenCalledTimes(0)
     expect(mockPage.goto).toHaveBeenCalledTimes(0)
   })
+
+  // TODO once pipeActionOrActions updated to support AbortLineSignal
+  // it('forAll() should pass along the correct AbortLineSignal', async() => {
+  //   const numbers = [1,2,3]
+  //   const mockAction = jest.fn(() => Promise.resolve())
+
+  //   await forAll(numbers)(
+  //     () => ([
+  //       abort(0),
+  //       mockAction
+  //     ])
+  //   )(mockPage)
+  // })
 
   it('should call the list of Actions for each key->value pair in the object provided', async() => {
     const keyValuePairs: Dictionary = {
@@ -227,6 +286,64 @@ describe('[Botmation] actions/utilities', () => {
     expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(5, '2')
   })
 
+  it('doWhile should pass along the correct AbortLineSignal', async() => {
+    const conditionResolveFalse:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
+    const mockAction = jest.fn(() => Promise.resolve())
+
+    const infinityAbort = await doWhile(conditionResolveFalse)(
+      abort(0),
+      mockAction
+    )(mockPage)
+
+    expect(infinityAbort).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+
+    const multipleAbortWithPipeValue = await doWhile(conditionResolveFalse)(
+      abort(5, 'pipe-value-test-4'),
+      mockAction
+    )(mockPage)
+
+    expect(multipleAbortWithPipeValue).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 4,
+      pipeValue: 'pipe-value-test-4'
+    })
+
+    const singleAbort = await doWhile(conditionResolveFalse)(
+      abort(1),
+      mockAction
+    )(mockPage)
+
+    expect(singleAbort).toBeUndefined()
+
+    expect(mockAction).not.toHaveBeenCalled()
+
+    // setup a test where the abort is during a loop iteration, not initial
+    let conditionResolvingCount = 0;
+    const conditionResolvesTrue: BotAction<boolean> = async() => new Promise(resolve => resolve(true))
+    const multiAbortButMultipleLoops = 
+      await doWhile(conditionResolvesTrue)(
+        async() => {
+          // do nothing the first loop, then abort the 2nd iteration
+          if (conditionResolvingCount > 0) {
+            return createAbortLineSignal(3)
+          } else {
+            conditionResolvingCount++
+          }
+        },
+        mockAction
+      )(mockPage)
+
+    expect(multiAbortButMultipleLoops).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 2
+    })
+
+    expect(mockAction).toHaveBeenCalledTimes(1)
+  })
+
   //
   // forAsLong() Unit Test
   it('should check the condition before running the actions in a loop until the condition rejects or resolves FALSE', async() => {
@@ -271,6 +388,79 @@ describe('[Botmation] actions/utilities', () => {
 
     expect(mockPage.click).not.toHaveBeenNthCalledWith(3, '2')
     expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(3, '2')
+  })
+
+  it('forAsLong() should pass along the correct AbortLineSignal', async() => {
+    const conditionResolvesTrue: BotAction<boolean> = async() => new Promise(resolve => resolve(true))
+    const mockAction = jest.fn(() => Promise.resolve())
+
+    const infiniteAbort = await forAsLong(conditionResolvesTrue)(
+      abort(0),
+      mockAction
+    )(mockPage)
+
+    expect(infiniteAbort).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+
+    let iterationCount = 0
+    const conditionResolvesTrueUntil4thIteration: BotAction<boolean> = async() => new Promise(resolve => {
+      if (iterationCount > 2) {
+        return resolve(false)
+      }
+
+      iterationCount++
+      return resolve(true)
+    })
+
+    // this breaks the inner assembled loop, but not the loop itself
+    const runMockAction = jest.fn(() => Promise.resolve())
+    const singleAbort = await forAsLong(conditionResolvesTrueUntil4thIteration)(
+      runMockAction,
+      abort(),
+      mockAction
+    )(mockPage)
+
+    expect(singleAbort).toBeUndefined()
+    expect(runMockAction).toHaveBeenCalledTimes(3)
+    expect(mockAction).not.toHaveBeenCalled()
+
+    //
+    const multiAbortWithPipeValue = await forAsLong(conditionResolvesTrue)(
+      abort(5, 'pizza'),
+      mockAction
+    )(mockPage)
+
+    expect(multiAbortWithPipeValue).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 4,
+      pipeValue: 'pizza'
+    })
+
+    expect(mockAction).not.toHaveBeenCalled()
+
+    // testing abort while deeper in loop iterations
+    let iterationCount2 = 0
+
+    const multipleLoopsThenAbort = await forAsLong(conditionResolvesTrue)(
+      async() => {
+        if (iterationCount2 > 0) {
+          return createAbortLineSignal(3, 'some-pipe-value-to-return')
+        } else {
+          iterationCount2++
+        }
+      },
+      mockAction
+    )(mockPage)
+
+    expect(multipleLoopsThenAbort).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 2,
+      pipeValue: 'some-pipe-value-to-return'
+    })
+
+    expect(mockAction).toHaveBeenCalledTimes(1)
   })
 
   afterAll(() => {

@@ -10,7 +10,7 @@ import { pipeActionOrActions, pipe } from './assembly-lines'
 import { logWarning } from '../helpers/console'
 import { Collection, isDictionary } from '../types/objects'
 import { PipeValue } from '../types/pipe-value'
-import { AbortLineSignal } from '../types/abort-signal'
+import { AbortLineSignal, isAbortLineSignal } from '../types/abort-signal'
 
 /**
  * @description Higher Order BotAction that accepts a ConditionalBotAction (pipeable, that returns a boolean) and based on what boolean it resolves,
@@ -21,7 +21,7 @@ import { AbortLineSignal } from '../types/abort-signal'
  */
 export const givenThat = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction<any>[]): BotAction<void|AbortLineSignal|PipeValue> => 
+    (...actions: BotAction<PipeValue|void|AbortLineSignal>[]): BotAction<void|AbortLineSignal> => 
       async(page, ...injects) => {
         if (await condition(page, ...pipeInjects(injects))) {
           return await pipe()(...actions)(page, ...injects)
@@ -75,7 +75,7 @@ export const givenThat =
 export const forAll =
   (collection?: Collection) =>
     // cb params = iterated value, iterated index/key (casted as string), collection
-    (botActionOrActionsFactory: (...args: [any, string, Collection]) => BotAction<any>[] | BotAction<any>): BotAction<PipeValue|AbortLineSignal|void> =>
+    (botActionOrActionsFactory: (...args: [any, string, Collection]) => BotAction<any>[] | BotAction<any>): BotAction<AbortLineSignal|void> =>
       async(page, ...injects) => {
         // the collection can be passed in via higher-order params or Pipe object value
         // higher-order params trump Pipe object value        
@@ -88,6 +88,8 @@ export const forAll =
           return
         }
 
+        let returnValue: AbortLineSignal|PipeValue
+
         if (Array.isArray(collection)) {
           for(let index = 0; index < collection.length; index++) {
             // Update Pipe value for each iteration
@@ -95,7 +97,7 @@ export const forAll =
             injects.push(wrapValueInPipe([collection[index], index+'', collection])) // for now, all collection keys are cast to "string" for a single type
 
             // Run cb
-            return await pipeActionOrActions(botActionOrActionsFactory(collection[index], index+'', collection))(page, ...injects)
+            returnValue = await pipeActionOrActions(botActionOrActionsFactory(collection[index], index+'', collection))(page, ...injects)
           }
         } else {
           // in case Pipe object value is not a dictionary
@@ -107,9 +109,13 @@ export const forAll =
               injects.push(wrapValueInPipe([value, collection, key]))
   
               // Run cb
-              return await pipeActionOrActions(botActionOrActionsFactory(value, key, collection))(page, ...injects)
+              returnValue = await pipeActionOrActions(botActionOrActionsFactory(value, key, collection))(page, ...injects)
             }
           }
+        }
+
+        if (isAbortLineSignal(returnValue)) {
+          return returnValue
         }
       }
 
@@ -120,7 +126,7 @@ export const forAll =
  */
 export const doWhile = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction<any>[]): BotAction<void|AbortLineSignal|PipeValue> => 
+    (...actions: BotAction<any>[]): BotAction<void|AbortLineSignal> => 
       async(page, ...injects) => {
         let returnValue: PipeValue|AbortLineSignal
         let resolvedCondition = true // doWhile -> run the code, then check the condition on whether or not we should run the code again
@@ -131,7 +137,9 @@ export const doWhile =
           resolvedCondition = await condition(page, ...pipeInjects(injects)) // use same Pipe from before, but simulate as pipe in case not
         }
 
-        return returnValue
+        if (isAbortLineSignal(returnValue)) {
+          return returnValue
+        }
       }
 
 /**
@@ -146,7 +154,7 @@ export const doWhile =
  */
 export const forAsLong = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction[]): BotAction<void|AbortLineSignal|PipeValue> => 
+    (...actions: BotAction[]): BotAction<void|AbortLineSignal> => 
       async(page, ...injects) => {
         let returnValue: PipeValue|AbortLineSignal
         let resolvedCondition = await condition(page, ...pipeInjects(injects))
@@ -159,5 +167,7 @@ export const forAsLong =
           resolvedCondition = await condition(page, ...pipeInjects(injects)) // use same Pipe as before, unless no Pipe, than add an empty one
         }
 
-        return returnValue
+        if (isAbortLineSignal(returnValue)) {
+          return returnValue
+        }
       }

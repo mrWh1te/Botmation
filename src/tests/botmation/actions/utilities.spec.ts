@@ -10,6 +10,7 @@ import { BotAction } from 'botmation/interfaces'
 import { Dictionary } from 'botmation/types/objects'
 import { abort } from 'botmation/actions/abort'
 import { createAbortLineSignal } from 'botmation/helpers/abort'
+import { AbortLineSignal } from 'botmation/types/abort-signal'
 
 jest.mock('botmation/helpers/console', () => {
   return {
@@ -365,6 +366,37 @@ describe('[Botmation] actions/utilities', () => {
     })
 
     expect(mockAction).toHaveBeenCalledTimes(1)
+
+    // abort signal returned by resolving condition tests
+    const conditionResolvesAbortOne: BotAction<AbortLineSignal> = async() => createAbortLineSignal()
+    const mockActionRunOnce = jest.fn(() => Promise.resolve())
+    const conditionAborts = await doWhile(conditionResolvesAbortOne)(
+      mockActionRunOnce
+    )(mockPage)
+
+    expect(conditionAborts).toBeUndefined()
+    expect(mockActionRunOnce).toHaveBeenCalledTimes(1)
+
+    const conditionResolvesAbortInfinite: BotAction<AbortLineSignal> = async() => createAbortLineSignal(0)
+    const conditionAbortsInfinity = await doWhile(conditionResolvesAbortInfinite)(
+      mockActionRunOnce
+    )(mockPage)
+
+    expect(conditionAbortsInfinity).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+
+    const conditionResolvesAbortMultiple: BotAction<AbortLineSignal> = async() => createAbortLineSignal(5, 'pipe-value-22')
+    const conditionAbortsMultiple = await doWhile(conditionResolvesAbortMultiple)(
+      mockActionRunOnce
+    )(mockPage)
+
+    expect(conditionAbortsMultiple).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 4,
+      pipeValue: 'pipe-value-22'
+    })
   })
 
   //

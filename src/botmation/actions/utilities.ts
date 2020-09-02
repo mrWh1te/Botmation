@@ -146,7 +146,7 @@ export const doWhile =
     (...actions: BotAction<any>[]): BotAction<void|AbortLineSignal> => 
       async(page, ...injects) => {
         let returnValue: PipeValue|AbortLineSignal
-        let resolvedCondition = true // doWhile -> run the code, then check the condition on whether or not we should run the code again
+        let resolvedCondition: boolean|AbortLineSignal = true
         while (resolvedCondition) {
           returnValue = await pipe()(...actions)(page, ...injects)
 
@@ -156,6 +156,16 @@ export const doWhile =
 
           resolvedCondition = false // in case condition rejects, safer
           resolvedCondition = await condition(page, ...pipeInjects(injects)) // use same Pipe from before, but simulate as pipe in case not
+
+          if (isAbortLineSignal(resolvedCondition)) {
+            if (resolvedCondition.assembledLines === 1) {
+              return resolvedCondition.pipeValue as AbortLineSignal // to be picked up by pipe-able functions
+            } else if (resolvedCondition.assembledLines === 0) {
+              return resolvedCondition
+            } else {
+              return createAbortLineSignal(resolvedCondition.assembledLines - 1, resolvedCondition.pipeValue)
+            }
+          }
         }
       }
 

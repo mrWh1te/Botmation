@@ -45,7 +45,7 @@ export interface BotActionFactory<A extends Array<any> = any[], B = BotAction> e
  *                Useful in the higher order BotAction `givenThat()()` in providing a BotAction test as to whether or not run the following actions
  */
 export interface ConditionalBotAction extends Function {
-  (page: Page, ...injects: any[]) : Promise<boolean>
+  (page: Page, ...injects: any[]) : Promise<boolean|AbortLineSignal>
 }
 
 /**

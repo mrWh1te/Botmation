@@ -386,6 +386,7 @@ describe('[Botmation] actions/utilities', () => {
       brand: 'Abort_Signal',
       assembledLines: 0
     })
+    expect(mockActionRunOnce).toHaveBeenCalledTimes(2)
 
     const conditionResolvesAbortMultiple: BotAction<AbortLineSignal> = async() => createAbortLineSignal(5, 'pipe-value-22')
     const conditionAbortsMultiple = await doWhile(conditionResolvesAbortMultiple)(
@@ -397,6 +398,7 @@ describe('[Botmation] actions/utilities', () => {
       assembledLines: 4,
       pipeValue: 'pipe-value-22'
     })
+    expect(mockActionRunOnce).toHaveBeenCalledTimes(3)
   })
 
   //
@@ -516,6 +518,110 @@ describe('[Botmation] actions/utilities', () => {
     })
 
     expect(mockAction).toHaveBeenCalledTimes(1)
+
+    // testing abort from conditional bot action
+    const conditionAbortsInfinity: BotAction<AbortLineSignal> = async() => createAbortLineSignal(0)
+    const mockActionNeverRuns = jest.fn(() => Promise.resolve())
+
+    const infiniteConditionAbort = await forAsLong(conditionAbortsInfinity)(
+      mockActionNeverRuns
+    )(mockPage)
+
+    expect(infiniteConditionAbort).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+
+    const conditionAbortsMulti: BotAction<AbortLineSignal> = async() => createAbortLineSignal(5, 'a-pipe-value-to-test-5')
+
+    const multiConditionAbort = await forAsLong(conditionAbortsMulti)(
+      mockActionNeverRuns
+    )(mockPage)
+
+    expect(multiConditionAbort).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 4,
+      pipeValue: 'a-pipe-value-to-test-5'
+    })
+
+    const singleConditionAborts: BotAction<AbortLineSignal> = async() => createAbortLineSignal()
+
+    const singleConditionAbortResult = await forAsLong(singleConditionAborts)(
+      mockActionNeverRuns
+    )(mockPage)
+
+    expect(singleConditionAbortResult).toBeUndefined()
+
+    const singleConditionAbortsWithPipeValue: BotAction<AbortLineSignal> = async() => createAbortLineSignal(1, 'pizza-im-hungry')
+
+    const singleConditionAbortsWithPipeValueResult = await forAsLong(singleConditionAbortsWithPipeValue)(
+      mockActionNeverRuns
+    )(mockPage)
+
+    expect(singleConditionAbortsWithPipeValueResult).toEqual('pizza-im-hungry')
+
+    // condition aborts after 2nd time, or some time after 1st time (different code handles the subsequent checks)
+    let iterationConditionCount = 0
+    const mockActionRuns = jest.fn(() => Promise.resolve())
+    const conditionAbortsOneOnSecondIteration: BotAction<AbortLineSignal|boolean> = async() => new Promise(resolve => {
+      if (iterationConditionCount > 0) {
+        return resolve(createAbortLineSignal(1, 'camping'))
+      } 
+      iterationConditionCount++
+
+      return resolve(true)
+    })
+
+    const conditionAbortsOneOnSecondIterationResult = await forAsLong(conditionAbortsOneOnSecondIteration)(
+      mockActionRuns
+    )(mockPage)
+
+    expect(conditionAbortsOneOnSecondIterationResult).toEqual('camping')
+    expect(mockActionRuns).toHaveBeenCalledTimes(1)
+
+    iterationConditionCount = 0
+
+    const conditionAbortsInfiniteOnSecondIteration: BotAction<AbortLineSignal|boolean> = async() => new Promise(resolve => {
+      if (iterationConditionCount > 0) {
+        return resolve(createAbortLineSignal(0))
+      } 
+      iterationConditionCount++
+
+      return resolve(true)
+    })
+
+    const conditionAbortsInfiniteOnSecondIterationResult = await forAsLong(conditionAbortsInfiniteOnSecondIteration)(
+      mockActionRuns
+    )(mockPage)
+
+    expect(conditionAbortsInfiniteOnSecondIterationResult).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+    expect(mockActionRuns).toHaveBeenCalledTimes(2)
+
+    iterationConditionCount = 0
+
+    const conditionAbortsMultiOnSecondIteration: BotAction<AbortLineSignal|boolean> = async() => new Promise(resolve => {
+      if (iterationConditionCount > 0) {
+        return resolve(createAbortLineSignal(8, 'test-value'))
+      } 
+      iterationConditionCount++
+
+      return resolve(true)
+    })
+
+    const conditionAbortsMultiOnSecondIterationResult = await forAsLong(conditionAbortsMultiOnSecondIteration)(
+      mockActionRuns
+    )(mockPage)
+
+    expect(conditionAbortsMultiOnSecondIterationResult).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 7,
+      pipeValue: 'test-value'
+    })
+    expect(mockActionRuns).toHaveBeenCalledTimes(3)
+
   })
 
   afterAll(() => {

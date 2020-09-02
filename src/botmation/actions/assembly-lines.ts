@@ -148,16 +148,42 @@ export const assemblyLine =
           // running a pipe
           if (actions.length === 0) {return undefined}
           else if (actions.length === 1) {
-            return await actions[0](page, ...pipeInjects(injects))
+            const pipeActionResult = await actions[0](page, ...pipeInjects(injects))
+
+            if (isAbortLineSignal(pipeActionResult)) {
+              if (pipeActionResult.assembledLines === 0) {
+                return pipeActionResult
+              } else if (pipeActionResult.assembledLines === 1) {
+                return pipeActionResult.pipeValue
+              } else {
+                return createAbortLineSignal(pipeActionResult.assembledLines - 1, pipeActionResult.pipeValue)
+              }
+            } else {
+              return pipeActionResult
+            }
           } else {
             return await pipeRunner(...actions)(page, ...pipeInjects(injects))
           }
         } else {
-          // running a chain
+          // while chains dont return pipeValues, this is an assembly line running botactions
+          // in a chain but it's still an assembly line, and without changing anything, you can use this
+          // to still work with the `pipeValue` of an AbortLineSignal, so a step-up from chain in terms of functionality but not quite pipe
+          // with a flag to switch into pipe, which can be great for new dev's, to explore these concepts at their own pace, one step at a time
           if (actions.length === 1) {
-            await actions[0](page, ...injects)
-          } else {
-            await chainRunner(...actions)(page, ...injects)
+            const chainActionResult = await actions[0](page, ...injects)
+
+            // ignore the 1 case since then we would return the pipeValue, but chains..
+            if (isAbortLineSignal(chainActionResult)) {
+              if (chainActionResult.assembledLines === 0) {
+                return chainActionResult
+              } else if (chainActionResult.assembledLines === 1) {
+                return chainActionResult.pipeValue
+              } else {
+                return createAbortLineSignal(chainActionResult.assembledLines - 1, chainActionResult.pipeValue)
+              }
+            }
+          } else if (actions.length > 1) {
+            return await chainRunner(...actions)(page, ...injects)
           }
         }
       }
@@ -201,7 +227,7 @@ export const pipeActionOrActions =
  * @param actions 
  */    
 export const chainRunner =
-  (...actions: BotAction<void|AbortLineSignal>[]): BotAction<void|AbortLineSignal> =>
+  (...actions: BotAction<void|AbortLineSignal>[]): BotAction<void|AbortLineSignal|PipeValue> =>
     async(page, ...injects) => {
       let returnValue: any
       for(const action of actions) {
@@ -209,7 +235,7 @@ export const chainRunner =
 
         if (isAbortLineSignal(returnValue)) {
           if (returnValue.assembledLines === 1) {
-            break // abort this line only
+            return returnValue.pipeValue // this isn't chain, it's chainRunner
           } 
           if (returnValue.assembledLines === 0) {
             return returnValue // pass this signal up all the way, to abort all assembled lines

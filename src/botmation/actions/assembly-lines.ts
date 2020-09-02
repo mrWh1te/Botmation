@@ -8,6 +8,7 @@ import {
 } from "../helpers/pipe"
 import { PipeValue } from "../types/pipe-value"
 import { AbortLineSignal, isAbortLineSignal } from "../types/abort-signal"
+import { createAbortLineSignal } from "botmation/helpers/abort"
 
 /**
  * @description     chain() BotAction for running a chain of BotAction's safely and optimized
@@ -168,12 +169,25 @@ export const assemblyLine =
  * @param actionOrActions Botaction<PipeValue> | BotAction<PipeValue>[]
  */
 export const pipeActionOrActions = 
-  (actionOrActions: BotAction<PipeValue> | BotAction<PipeValue>[]): BotAction<PipeValue|undefined> =>
+  (actionOrActions: BotAction<PipeValue> | BotAction<PipeValue>[]): BotAction<PipeValue|undefined|AbortLineSignal> =>
     async(page, ...injects) => {
       if (Array.isArray(actionOrActions)) {
+        // pipe handles AbortLineSignal for itself and therefore we don't need to evaluate the signal here just return it
         return await pipe()(...actionOrActions)(page, ...injects)
       } else {
-        return await actionOrActions(page, ...pipeInjects(injects)) // simulate pipe
+        const singleActionResult = await actionOrActions(page, ...pipeInjects(injects)) // simulate pipe
+
+        if (isAbortLineSignal(singleActionResult)) {
+          if (singleActionResult.assembledLines === 0) {
+            return singleActionResult
+          } else if (singleActionResult.assembledLines === 1) {
+            return singleActionResult.pipeValue
+          } else {
+            return createAbortLineSignal(singleActionResult.assembledLines - 1, singleActionResult.pipeValue)
+          }
+        } else {
+          return singleActionResult
+        }
       }
     }
 

@@ -271,6 +271,47 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(mockAction).toHaveBeenNthCalledWith(7, {}, 2, 3, 5, 7, 11, {brand: 'Pipe', value: 1337})
   })
 
+  it('pipeActionOrActions() should support the AbortLineSignal', async() => {
+    //
+    // case pipe is given an array of actions
+    //   this is handled by pipe()(), but instead of integrate testing, unit testing to provide more code flexibility
+    const mockActionRuns = jest.fn(() => Promise.resolve('val'))
+    const mockActionDoesntRun = jest.fn(() => Promise.resolve('another val'))
+
+    const actionsResultAbortOne = await pipeActionOrActions([mockActionRuns, abort(), mockActionDoesntRun])(mockPage)
+
+    expect(mockActionRuns).toHaveBeenCalledTimes(1)
+    expect(mockActionDoesntRun).not.toHaveBeenCalled()
+    expect(actionsResultAbortOne).toBeUndefined()
+
+    const actionsResultAbortMultiWithPipeValue = await pipeActionOrActions([mockActionRuns, abort(7, 'dog'), mockActionDoesntRun])(mockPage)
+
+    expect(mockActionRuns).toHaveBeenCalledTimes(2)
+    expect(mockActionDoesntRun).not.toHaveBeenCalled()
+    expect(actionsResultAbortMultiWithPipeValue).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 6,
+      pipeValue: 'dog'
+    })
+
+    //
+    // case pipe is given a single action, not an array, not a spread array just 1 BotAction
+    const actionResultAbortOne = await pipeActionOrActions(abort(1, 'cat'))(mockPage)
+    expect(actionResultAbortOne).toEqual('cat')
+
+    const actionResultAbortMulti = await pipeActionOrActions(abort(9))(mockPage)
+    expect(actionResultAbortMulti).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 8
+    })
+
+    const actionResultAbortInfinity = await pipeActionOrActions(abort(0))(mockPage)
+    expect(actionResultAbortInfinity).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+  })
+
   it('chain() should run the given actions efficiently in a chain, so if the injects coming in has a Pipe, this will strip it', async() => {
     const mockAction1 = jest.fn(() => Promise.resolve())
     const mockAction2 = jest.fn(() => Promise.resolve())

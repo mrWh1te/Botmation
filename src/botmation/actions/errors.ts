@@ -21,7 +21,7 @@ export const errors =
             return await pipe()(...actions)(page, ...injects)
           }
   
-          await chain(...(actions as BotAction[]))(page, ...injects)
+          return await chain(...(actions as BotAction[]))(page, ...injects)
         } catch(error) {
           logError('caught in ' + errorsBlockName)
           console.error(error)

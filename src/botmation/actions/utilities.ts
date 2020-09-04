@@ -5,13 +5,13 @@
  */
 
 import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions'
-import { pipeInjects, getInjectsPipeValue, removePipe, wrapValueInPipe } from '../helpers/pipe'
+import { pipeInjects, getInjectsPipeValue, removePipe, wrapValueInPipe, injectsHavePipe } from '../helpers/pipe'
 import { pipeActionOrActions, pipe } from './assembly-lines'
 import { logWarning } from '../helpers/console'
-import { Collection, isDictionary } from '../types/objects'
+import { Collection, isDictionary, Dictionary } from '../types/objects'
 import { PipeValue } from '../types/pipe-value'
 import { AbortLineSignal, isAbortLineSignal } from '../types/abort-signal'
-import { processAbortLineSignal } from 'botmation/helpers/abort'
+import { processAbortLineSignal } from '../helpers/abort'
 
 /**
  * @description Higher Order BotAction that accepts a ConditionalBotAction (pipeable, that returns a boolean) and based on what boolean it resolves,
@@ -209,4 +209,67 @@ export const forAsLong =
             return processAbortLineSignal(resolvedCondition)
           }
         }
+      }
+
+/**
+ * 
+ * 
+ */
+export type MatchesSignal<V = any> = {
+  brand: 'Matches_Signal',
+  matches: Dictionary<V>,
+  pipeValue?: PipeValue
+}
+
+export const createMatchesSignal = <V = any>(matches: Dictionary<V> = {}, pipeValue?: PipeValue): MatchesSignal<V> => ({
+  brand: 'Matches_Signal',
+  matches,
+  pipeValue
+})
+
+export const hasMatches = (matches: Dictionary): boolean => 
+  Object.keys(matches).length > 0
+
+export const isMatchesSignal = <V = any>(value: any): value is MatchesSignal<V> => 
+  typeof value === 'object' && value !== null && isDictionary<V>(value.matches)
+
+export const pipeCase = 
+  (...valuesToTest: PipeValue[]) =>
+    (...actions: BotAction[]): BotAction<AbortLineSignal|MatchesSignal> => 
+      async(page, ...injects) => {
+        // if any of the values matches the injected pipe object value
+        // then run the assembled actions
+        if (injectsHavePipe(injects)) {
+          const pipeValue = getInjectsPipeValue(injects)
+
+          let matches: Dictionary = {} // key -> values :: index -> value
+          let matchEvaluation: boolean
+
+          valuesToTest.forEach((value, index) => {
+            // using callbacks to test if pipeValue matches criteria
+            if (typeof value === "function") {
+              matchEvaluation = value(pipeValue)
+            } else {
+              matchEvaluation = value === pipeValue
+            }
+
+            if (matchEvaluation) {
+              matches[index] = value
+            }
+          })
+
+          if (Object.keys(matches).length > 0) {
+            const returnValue:PipeValue|AbortLineSignal = await pipe()(...actions)(page, ...injects)
+
+            if (isAbortLineSignal(returnValue)) {
+              return returnValue // processed by pipe()
+            } else {
+              // signal that a case matched
+              return createMatchesSignal(matches, returnValue)
+            }
+          }
+        }
+        
+        // no pipe (nothing to test) or the test resulted in no matches
+        return createMatchesSignal() // empty matches signal (no matches)
       }

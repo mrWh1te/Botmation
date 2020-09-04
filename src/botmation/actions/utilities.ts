@@ -214,8 +214,14 @@ export const forAsLong =
       }
 
 /**
- * 
+ * Similar to givenThat except instead of evaluating a BotAction for TRUE, its testing an array of values against the pipe object value for truthy.
+ * A value can be a function. In this case, the function is treated as a callback, expected to return a truthy expression, is passed in the pipe object's value
  * @param valuesToTest 
+ * @return AbortLineSignal|MatchesSignal
+ *  If no matches are found or matches are found, a MatchesSignal is returned
+ *  It is determined if signal has matches by using hasAtLeastOneMatch() helper
+ *  If assembled BotAction aborts(1), it still returns a MatchesSignal with the matches
+ *  If assembled BotAction aborts(2+), it returns a processed AbortLineSignal
  */
 export const pipeCase = 
   (...valuesToTest: PipeValue[]) =>

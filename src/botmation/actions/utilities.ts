@@ -231,22 +231,20 @@ export const pipeCase =
         // then run the assembled actions
         if (injectsHavePipe(injects)) {
           const pipeValue = getInjectsPipeValue(injects)
-
-          let matches: Dictionary = {} // key -> values :: index -> value
-          let matchEvaluation: boolean
-
-          valuesToTest.forEach((value, index) => {
-            // using callbacks to test if pipeValue matches criteria
-            if (typeof value === "function") {
-              matchEvaluation = value(pipeValue)
+          
+          const matches: Dictionary = valuesToTest.reduce((foundMatches, value, index) => {
+            if (typeof value === 'function') {
+              if (value(pipeValue)) {
+                (foundMatches as Dictionary)[index] = value
+              } 
             } else {
-              matchEvaluation = value === pipeValue
+              if (value === pipeValue) {
+                (foundMatches as Dictionary)[index] = value
+              }
             }
 
-            if (matchEvaluation) {
-              matches[index] = value
-            }
-          })
+            return foundMatches
+          }, {}) as Dictionary
 
           if (Object.keys(matches).length > 0) {
             const returnValue:PipeValue|AbortLineSignal = await pipe()(...actions)(page, ...injects)

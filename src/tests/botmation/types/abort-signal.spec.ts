@@ -1,4 +1,4 @@
-import { isAbortLineSignal, AbortLineSignal } from 'botmation/types/abort-signal'
+import { isAbortLineSignal, AbortLineSignal } from 'botmation/types/abort-line-signal'
 import { wrapValueInPipe } from 'botmation/helpers/pipe'
 
 /**

@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 import { chainRunner, pipeRunner, pipeActionOrActions, chain, pipe, assemblyLine } from 'botmation/actions/assembly-lines'
 import { abort } from 'botmation/actions/abort'
-import { AbortLineSignal } from 'botmation/types/abort-signal'
+import { AbortLineSignal } from 'botmation/types/abort-line-signal'
 import { createEmptyPipe } from 'botmation/helpers/pipe'
 
 /**

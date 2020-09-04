@@ -1,7 +1,7 @@
 import { BotAction } from "../interfaces"
 import { PipeValue } from "../types/pipe-value"
 import { assemblyLine } from "./assembly-lines"
-import { AbortLineSignal } from "../types/abort-signal"
+import { AbortLineSignal } from "../types/abort-line-signal"
 
 /**
  * @description    Higher-order to set the first few injects for wrapped BotAction's

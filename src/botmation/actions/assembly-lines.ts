@@ -7,7 +7,7 @@ import {
   createEmptyPipe
 } from "../helpers/pipe"
 import { PipeValue } from "../types/pipe-value"
-import { AbortLineSignal, isAbortLineSignal } from "../types/abort-signal"
+import { AbortLineSignal, isAbortLineSignal } from "../types/abort-line-signal"
 import { processAbortLineSignal } from "../helpers/abort"
 
 /**

@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 
 import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
-import { givenThat, forAll, doWhile, forAsLong, pipeCase } from 'botmation/actions/utilities'
+import { givenThat, forAll, doWhile, forAsLong } from 'botmation/actions/utilities'
 import { click, type } from 'botmation/actions/input'
 import { goTo } from 'botmation/actions/navigation'
 
@@ -10,9 +10,7 @@ import { BotAction } from 'botmation/interfaces'
 import { Dictionary } from 'botmation/types/objects'
 import { abort } from 'botmation/actions/abort'
 import { createAbortLineSignal } from 'botmation/helpers/abort'
-import { AbortLineSignal } from 'botmation/types/abort-signal'
-import { wrapValueInPipe } from 'botmation/helpers/pipe'
-import { createMatchesSignal } from 'botmation/helpers/matches'
+import { AbortLineSignal } from 'botmation/types/abort-line-signal'
 
 jest.mock('botmation/helpers/console', () => {
   return {
@@ -716,89 +714,6 @@ describe('[Botmation] actions/utilities', () => {
 
     expect(assembledActionAbortsTwoLinesWithPipeValue).toEqual('puppy')
 
-  })
-
-  //
-  // pipeCase() Unit Test
-  it('pipeCase()() should run assembled BotActions only if a value to test matches the pipe object value or if a value is a function then used as callback to evaluate for truthy with pipe object value as function param', async() => {
-    // these mock actions act like log() where they return the pipe object value
-    const mockActionRuns = jest.fn((p, pO) => Promise.resolve(pO.value))
-    const mockActionDoesntRun = jest.fn((p, pO) => Promise.resolve(pO.value))
-
-    // no matches - no injected pipe
-    const noMatchesNoPipe = await pipeCase(4, 6)(
-      mockActionDoesntRun
-    )(mockPage)
-
-    expect(noMatchesNoPipe).toEqual({
-      brand: 'Matches_Signal',
-      matches: {},
-    })
-    expect(mockActionDoesntRun).not.toHaveBeenCalled()
-
-    // no matches - with injected pipe
-    const noMatchesWithPipe = await pipeCase(77, 123)(
-      mockActionDoesntRun
-    )(mockPage, wrapValueInPipe(44))
-
-    expect(noMatchesWithPipe).toEqual({
-      brand: 'Matches_Signal',
-      matches: {},
-    })
-    expect(mockActionDoesntRun).not.toHaveBeenCalled()
-
-    // single numerical match - with injected pipe
-    const singleNumericalMatch = await pipeCase(3, 7, 18)(
-      mockActionRuns
-    )(mockPage, wrapValueInPipe(7))
-
-    expect(singleNumericalMatch).toEqual({
-      brand: 'Matches_Signal',
-      matches: {
-        '1': 7 // index 1, value 7
-      },
-      pipeValue: 7 // mockActionRuns returns pipe object value
-    })
-    expect(mockActionRuns).toHaveBeenCalledTimes(1)
-
-    // multiple matches via functions - with injected pipe
-    const trueForTwoOrFive = (value: number): boolean => value === 2 || value === 5
-    const trueForTwoOrSix = (value: number): boolean => value === 2 || value === 6
-
-    const multiNumericalMatches = await pipeCase(trueForTwoOrFive, trueForTwoOrSix, 2)(
-      mockActionRuns
-    )(mockPage, wrapValueInPipe(2))
-
-    expect(multiNumericalMatches).toEqual({
-      brand: 'Matches_Signal',
-      matches: {
-        0: expect.any(Function),
-        1: expect.any(Function),
-        2: 2
-      },
-      pipeValue: 2 // mockActionRuns returns pipe object value
-    })
-    expect(mockActionRuns).toHaveBeenCalledTimes(2)
-  })
-
-  it('pipeCase() supports the AbortLineSignal similar to givenThat() in which its considered one line to abort', async() => {
-    const abortedInfiniteLine = await pipeCase(10)(
-      abort(0)
-    )(mockPage, wrapValueInPipe(10))
-
-    expect(abortedInfiniteLine).toEqual(createAbortLineSignal(0))
-
-    const abortedSingleLine = await pipeCase(100)(
-      abort(1, 'an aborted pipe value')
-    )(mockPage, wrapValueInPipe(100))
-
-    expect(abortedSingleLine).toEqual(createMatchesSignal({'0': 100}, 'an aborted pipe value'))
-
-    const abortedMultiLine = await pipeCase(1000)(
-      abort(2, 'another aborted pipe value')
-    )(mockPage, wrapValueInPipe(1000))
-
-    expect(abortedMultiLine).toEqual(createAbortLineSignal(1, 'another aborted pipe value'))
   })
 
   //

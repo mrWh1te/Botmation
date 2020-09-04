@@ -186,20 +186,104 @@ describe('[Botmation] actions/utilities', () => {
     expect(mocklogWarning).toHaveBeenNthCalledWith(1, 'Utilities forAll() missing collection')
     expect(mockPage.url).toHaveBeenCalledTimes(0)
     expect(mockPage.goto).toHaveBeenCalledTimes(0)
+
+    // null case
+    const mockActionDoesntRun = jest.fn(() => Promise.resolve())
+
+    const notDictionary = await forAll(null as any as object)(
+      () => mockActionDoesntRun
+    )(mockPage)
+    expect(notDictionary).toBeUndefined()
+    expect(mockActionDoesntRun).not.toHaveBeenCalled()
   })
 
-  // TODO once pipeActionOrActions updated to support AbortLineSignal
-  // it('forAll() should pass along the correct AbortLineSignal', async() => {
-  //   const numbers = [1,2,3]
-  //   const mockAction = jest.fn(() => Promise.resolve())
+  it('forAll() should pass along the correct AbortLineSignal', async() => {
+    //
+    // array
+    const numbers = [1,2,3]
+    const mockActionNeverRuns = jest.fn(() => Promise.resolve())
 
-  //   await forAll(numbers)(
-  //     () => ([
-  //       abort(0),
-  //       mockAction
-  //     ])
-  //   )(mockPage)
-  // })
+    const infiniteAbort = await forAll(numbers)(
+      () => ([
+        abort(0),
+        mockActionNeverRuns
+      ])
+    )(mockPage)
+
+    expect(infiniteAbort).toEqual({brand: 'Abort_Signal', assembledLines: 0})
+    expect(mockActionNeverRuns).not.toHaveBeenCalled()
+
+    const mockActionRuns = jest.fn(() => Promise.resolve())
+    const singleAbort = await forAll(numbers)(
+      () => ([
+        mockActionRuns,
+        abort(1, 'bird'),
+        mockActionNeverRuns
+      ])
+    )(mockPage)
+
+    expect(singleAbort).toBeUndefined()
+    expect(mockActionRuns).toHaveBeenCalledTimes(3)
+    expect(mockActionNeverRuns).not.toHaveBeenCalled()
+
+    const mockActionRunsOnce = jest.fn(() => Promise.resolve())
+    const twoLevelAbortWithPipeValue = await forAll(numbers)(
+      () => ([
+        mockActionRunsOnce,
+        abort(2, 'elephant'),
+        mockActionNeverRuns
+      ])
+    )(mockPage)
+
+    expect(twoLevelAbortWithPipeValue).toEqual('elephant')
+    expect(mockActionRunsOnce).toHaveBeenCalledTimes(1)
+
+    //
+    // object with key/value pairs
+    const keyValues = {
+      username: 'sky',
+      email: 'sky@example.com',
+      home: 'earth',
+      favorite_food: 'pizza',
+      likesAnimals: true
+    }
+
+    const objectInfiniteAbort = await forAll(keyValues)(
+      () => ([
+        abort(0),
+        mockActionNeverRuns
+      ])
+    )(mockPage)
+
+    expect(objectInfiniteAbort).toEqual({brand: 'Abort_Signal', assembledLines: 0})
+    expect(mockActionNeverRuns).not.toHaveBeenCalled()
+
+    const objectMockActionRuns = jest.fn(() => Promise.resolve())
+    const objectSingleAbort = await forAll(keyValues)(
+      () => ([
+        objectMockActionRuns,
+        abort(1, 'bird'),
+        mockActionNeverRuns
+      ])
+    )(mockPage)
+
+    expect(objectSingleAbort).toBeUndefined()
+    expect(objectMockActionRuns).toHaveBeenCalledTimes(5)
+    expect(mockActionNeverRuns).not.toHaveBeenCalled()
+
+    const objectMockActionRunsOnce = jest.fn(() => Promise.resolve())
+    const objectTwoLevelAbortWithPipeValue = await forAll(keyValues)(
+      () => ([
+        objectMockActionRunsOnce,
+        abort(2, 'elephant'),
+        mockActionNeverRuns
+      ])
+    )(mockPage)
+
+    expect(objectTwoLevelAbortWithPipeValue).toEqual('elephant')
+    expect(objectMockActionRunsOnce).toHaveBeenCalledTimes(1)
+    expect(mockActionNeverRuns).not.toHaveBeenCalled()
+  })
 
   it('should call the list of Actions for each key->value pair in the object provided', async() => {
     const keyValuePairs: Dictionary = {
@@ -331,7 +415,7 @@ describe('[Botmation] actions/utilities', () => {
 
     expect(multipleAbortWithPipeValue).toEqual({
       brand: 'Abort_Signal',
-      assembledLines: 4,
+      assembledLines: 3,
       pipeValue: 'pipe-value-test-4'
     })
 
@@ -362,7 +446,7 @@ describe('[Botmation] actions/utilities', () => {
 
     expect(multiAbortButMultipleLoops).toEqual({
       brand: 'Abort_Signal',
-      assembledLines: 2
+      assembledLines: 1
     })
 
     expect(mockAction).toHaveBeenCalledTimes(1)

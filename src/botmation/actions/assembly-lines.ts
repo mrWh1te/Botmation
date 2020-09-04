@@ -8,7 +8,7 @@ import {
 } from "../helpers/pipe"
 import { PipeValue } from "../types/pipe-value"
 import { AbortLineSignal, isAbortLineSignal } from "../types/abort-signal"
-import { createAbortLineSignal } from "botmation/helpers/abort"
+import { processAbortLineSignal } from "../helpers/abort"
 
 /**
  * @description     chain() BotAction for running a chain of BotAction's safely and optimized
@@ -25,15 +25,10 @@ export const chain =
         if(actions.length === 1) {
           const returnValue = await actions[0](page, ...injects.splice(0, injects.length - 1)) // remove pipe
 
-          if (isAbortLineSignal(returnValue)) {
-            if (returnValue.assembledLines > 1) {
-              return {
-                ...returnValue,
-                assembledLines: returnValue.assembledLines - 1
-              }
-            } else if (returnValue.assembledLines === 0) {
-              return returnValue
-            }
+          // by avoding the assembledLines 1 case, processAbortLineSignal() will
+          // by default, only return an AbortLineSignal
+          if (isAbortLineSignal(returnValue) && returnValue.assembledLines !== 1) {
+            return processAbortLineSignal(returnValue) as AbortLineSignal
           }
         } else {
           const returnValue = await chainRunner(...actions)(page, ...injects.splice(0, injects.length - 1)) // remove pipe
@@ -47,15 +42,10 @@ export const chain =
         if(actions.length === 1) {
           const returnValue = await actions[0](page, ...injects)
 
-          if (isAbortLineSignal(returnValue)) {
-            if (returnValue.assembledLines > 1) {
-              return {
-                ...returnValue,
-                assembledLines: returnValue.assembledLines - 1
-              }
-            } else if (returnValue.assembledLines === 0) {
-              return returnValue
-            }
+          // by avoding the assembledLines 1 case, processAbortLineSignal() will
+          // by default, only return an AbortLineSignal
+          if (isAbortLineSignal(returnValue) && returnValue.assembledLines !== 1) {
+            return processAbortLineSignal(returnValue) as AbortLineSignal
           }
         } else {
           const returnValue = await chainRunner(...actions)(page, ...injects)
@@ -87,16 +77,7 @@ export const pipe =
             }
 
             if (isAbortLineSignal(returnValue)) {
-              if (returnValue.assembledLines > 1) {
-                return {
-                  ...returnValue,
-                  assembledLines: returnValue.assembledLines - 1
-                }
-              } else if (returnValue.assembledLines === 0) {
-                return returnValue
-              } else {
-                return returnValue.pipeValue
-              }
+              return processAbortLineSignal(returnValue)
             } else {
               return returnValue
             }
@@ -115,16 +96,7 @@ export const pipe =
             const returnValue = await actions[0](page, ...injects, wrapValueInPipe(valueToPipe))
 
             if (isAbortLineSignal(returnValue)) {
-              if (returnValue.assembledLines > 1) {
-                return {
-                  ...returnValue,
-                  assembledLines: returnValue.assembledLines - 1
-                }
-              } else if (returnValue.assembledLines === 0) {
-                return returnValue
-              } else {
-                return returnValue.pipeValue
-              }
+              return processAbortLineSignal(returnValue)
             } else {
               return returnValue
             }
@@ -151,13 +123,7 @@ export const assemblyLine =
             const pipeActionResult = await actions[0](page, ...pipeInjects(injects))
 
             if (isAbortLineSignal(pipeActionResult)) {
-              if (pipeActionResult.assembledLines === 0) {
-                return pipeActionResult
-              } else if (pipeActionResult.assembledLines === 1) {
-                return pipeActionResult.pipeValue
-              } else {
-                return createAbortLineSignal(pipeActionResult.assembledLines - 1, pipeActionResult.pipeValue)
-              }
+              return processAbortLineSignal(pipeActionResult)
             } else {
               return pipeActionResult
             }
@@ -174,13 +140,7 @@ export const assemblyLine =
 
             // ignore the 1 case since then we would return the pipeValue, but chains..
             if (isAbortLineSignal(chainActionResult)) {
-              if (chainActionResult.assembledLines === 0) {
-                return chainActionResult
-              } else if (chainActionResult.assembledLines === 1) {
-                return chainActionResult.pipeValue
-              } else {
-                return createAbortLineSignal(chainActionResult.assembledLines - 1, chainActionResult.pipeValue)
-              }
+              return processAbortLineSignal(chainActionResult)
             }
           } else if (actions.length > 1) {
             return await chainRunner(...actions)(page, ...injects)
@@ -204,13 +164,7 @@ export const pipeActionOrActions =
         const singleActionResult = await actionOrActions(page, ...pipeInjects(injects)) // simulate pipe
 
         if (isAbortLineSignal(singleActionResult)) {
-          if (singleActionResult.assembledLines === 0) {
-            return singleActionResult
-          } else if (singleActionResult.assembledLines === 1) {
-            return singleActionResult.pipeValue
-          } else {
-            return createAbortLineSignal(singleActionResult.assembledLines - 1, singleActionResult.pipeValue)
-          }
+          return processAbortLineSignal(singleActionResult)
         } else {
           return singleActionResult
         }
@@ -234,22 +188,8 @@ export const chainRunner =
         returnValue = await action(page, ...injects)
 
         if (isAbortLineSignal(returnValue)) {
-          if (returnValue.assembledLines === 1) {
-            return returnValue.pipeValue // this isn't chain, it's chainRunner
-          } 
-          if (returnValue.assembledLines === 0) {
-            return returnValue // pass this signal up all the way, to abort all assembled lines
-          } 
-          /* istanbul ignore next */ // fix false negative in coverage report
-          if (returnValue.assembledLines > 1) {
-            // aborting a specific number of lines
-            return {
-              ...returnValue,
-              assembledLines: returnValue.assembledLines - 1 // aborted this line, decrease count for the next
-            }
-          }
+          return processAbortLineSignal(returnValue)
         }
-
       }
     }
 
@@ -275,20 +215,7 @@ export const pipeRunner =
         const nextPipeValueOrUndefined: AbortLineSignal|PipeValue|void = await action(page, ...injects, pipeObject) // typing.. botaction's async return can be void, but given how promises must resolve(), the value is actually undefined
 
         if (isAbortLineSignal(nextPipeValueOrUndefined)) {
-          if (nextPipeValueOrUndefined.assembledLines === 1) {
-            return nextPipeValueOrUndefined.pipeValue // abort this line only and return the pipeValue (which may be undefined)
-          } 
-          if (nextPipeValueOrUndefined.assembledLines === 0) {
-            return nextPipeValueOrUndefined // pass this signal up all the way, to abort all assembled lines
-          } 
-          /* istanbul ignore next */ // fix false negative in coverage report
-          if (nextPipeValueOrUndefined.assembledLines > 1) {
-            // aborting a specific number of lines
-            return {
-              ...nextPipeValueOrUndefined,
-              assembledLines: nextPipeValueOrUndefined.assembledLines - 1 // aborted this line, decrease count for the next
-            }
-          }
+          return processAbortLineSignal(nextPipeValueOrUndefined)
         }
 
         // Bot Actions return the value removed from the pipe, and BotActionsPipe wraps it for injecting

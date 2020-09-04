@@ -11,7 +11,7 @@ import { logWarning } from '../helpers/console'
 import { Collection, isDictionary } from '../types/objects'
 import { PipeValue } from '../types/pipe-value'
 import { AbortLineSignal, isAbortLineSignal } from '../types/abort-signal'
-import { createAbortLineSignal, processAbortLineSignal } from 'botmation/helpers/abort'
+import { processAbortLineSignal } from 'botmation/helpers/abort'
 
 /**
  * @description Higher Order BotAction that accepts a ConditionalBotAction (pipeable, that returns a boolean) and based on what boolean it resolves,
@@ -27,18 +27,15 @@ export const givenThat =
         const resolvedConditionValue: AbortLineSignal|boolean = await condition(page, ...pipeInjects(injects))
 
         if (isAbortLineSignal(resolvedConditionValue)) {
-          if (resolvedConditionValue.assembledLines === 1) {
-            return resolvedConditionValue.pipeValue // chain will ignore
-          } else if (resolvedConditionValue.assembledLines === 0) {
-            return resolvedConditionValue
-          } else {
-            return createAbortLineSignal(resolvedConditionValue.assembledLines - 1, resolvedConditionValue.pipeValue)
-          }
+          return processAbortLineSignal(resolvedConditionValue)
         }
 
         if (resolvedConditionValue) {
           const returnValue: PipeValue|AbortLineSignal = await pipe()(...actions)(page, ...injects)
 
+          // For consistency, the AbortLineSignal could be processed here, but there is little to gain
+          // from requiring 2 assembledLines to break out of a conditional "if then" block.
+          // Once the then block has been aborted, there is nothing left to run
           if (isAbortLineSignal(returnValue)) {
             return returnValue
           }
@@ -119,13 +116,7 @@ export const forAll =
             // 2 levels of aborting, the assembled line in each iteration
             // and the assembler of that is doing the looping (forAll)
             if (isAbortLineSignal(returnValue)) {
-              if (returnValue.assembledLines === 1) {
-                return returnValue.pipeValue as any as AbortLineSignal // for chain that will ignore this
-              } else if (returnValue.assembledLines === 0) {
-                return returnValue
-              } else {
-                return createAbortLineSignal(returnValue.assembledLines - 1, returnValue.pipeValue)
-              }
+              return processAbortLineSignal(returnValue)
             }
           }
         } else {
@@ -141,13 +132,7 @@ export const forAll =
               returnValue = await pipeActionOrActions(botActionOrActionsFactory(value, key, collection))(page, ...injects)
 
               if (isAbortLineSignal(returnValue)) {
-                if (returnValue.assembledLines === 1) {
-                  return returnValue.pipeValue
-                } else if (returnValue.assembledLines === 0) {
-                  return returnValue
-                } else {
-                  return createAbortLineSignal(returnValue.assembledLines - 1, returnValue.pipeValue)
-                }
+                return processAbortLineSignal(returnValue)
               }
             }
           }
@@ -169,20 +154,14 @@ export const doWhile =
           returnValue = await pipe()(...actions)(page, ...injects)
 
           if (isAbortLineSignal(returnValue)) {
-            return returnValue
+            return processAbortLineSignal(returnValue)
           }
 
           resolvedCondition = false // in case condition rejects, safer
           resolvedCondition = await condition(page, ...pipeInjects(injects)) // use same Pipe from before, but simulate as pipe in case not
 
           if (isAbortLineSignal(resolvedCondition)) {
-            if (resolvedCondition.assembledLines === 1) {
-              return resolvedCondition.pipeValue
-            } else if (resolvedCondition.assembledLines === 0) {
-              return resolvedCondition
-            } else {
-              return createAbortLineSignal(resolvedCondition.assembledLines - 1, resolvedCondition.pipeValue)
-            }
+            return processAbortLineSignal(resolvedCondition)
           }
         }
       }

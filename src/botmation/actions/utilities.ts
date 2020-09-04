@@ -215,10 +215,8 @@ export const forAsLong =
 
 /**
  * 
- * 
+ * @param valuesToTest 
  */
-
-
 export const pipeCase = 
   (...valuesToTest: PipeValue[]) =>
     (...actions: BotAction[]): BotAction<AbortLineSignal|MatchesSignal> => 

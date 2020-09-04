@@ -8,7 +8,7 @@
 [![dependencies Status](https://david-dm.org/mrWh1te/Botmation/status.svg)](https://david-dm.org/mrWh1te/Botmation)
 ![GitHub](https://img.shields.io/github/license/mrWh1te/Botmation)
 
-[Botmation](https://botmation.dev) is a TypeScript library for using [Puppeteer](https://github.com/puppeteer/puppeteer) in a declarative, functional and composable way.
+[Botmation](https://botmation.dev) is a simple TypeScript framework to build web bots with [Puppeteer](https://github.com/puppeteer/puppeteer) in a declarative, functional and composable way.
 
 > “Everything should be made as simple as possible, but no simpler.” - Albert Einstein
 

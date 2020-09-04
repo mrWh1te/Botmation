@@ -109,15 +109,19 @@ describe('[Botmation] Theories', () => {
           pipe()(
             pipe()(
               pipe()(
-                abort(3, 'space')
-              )
-            )
+                abort(3, 'space'),
+                mockActionNeverRuns
+              ),
+              mockActionNeverRuns
+            ),
+            mockActionNeverRuns
           ),
           mockActionRuns // similar to log, it will return the pipeValue from the pipe object
         )
       )
     )(mockPage)
     expect(fewMultiAbortWithPipeValue).toEqual('space')
+    expect(mockActionNeverRuns).not.toHaveBeenCalled()
     expect(mockActionRuns).toHaveBeenNthCalledWith(1, {}, wrapValueInPipe('space')) // (mockPage, pipeObject)
   })
 

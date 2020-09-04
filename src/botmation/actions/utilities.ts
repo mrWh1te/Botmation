@@ -12,6 +12,8 @@ import { Collection, isDictionary, Dictionary } from '../types/objects'
 import { PipeValue } from '../types/pipe-value'
 import { AbortLineSignal, isAbortLineSignal } from '../types/abort-signal'
 import { processAbortLineSignal } from '../helpers/abort'
+import { createMatchesSignal } from '../helpers/matches'
+import { MatchesSignal } from '../types/matches-signal'
 
 /**
  * @description Higher Order BotAction that accepts a ConditionalBotAction (pipeable, that returns a boolean) and based on what boolean it resolves,
@@ -215,23 +217,7 @@ export const forAsLong =
  * 
  * 
  */
-export type MatchesSignal<V = any> = {
-  brand: 'Matches_Signal',
-  matches: Dictionary<V>,
-  pipeValue?: PipeValue
-}
 
-export const createMatchesSignal = <V = any>(matches: Dictionary<V> = {}, pipeValue?: PipeValue): MatchesSignal<V> => ({
-  brand: 'Matches_Signal',
-  matches,
-  pipeValue
-})
-
-export const hasMatches = (matches: Dictionary): boolean => 
-  Object.keys(matches).length > 0
-
-export const isMatchesSignal = <V = any>(value: any): value is MatchesSignal<V> => 
-  typeof value === 'object' && value !== null && isDictionary<V>(value.matches)
 
 export const pipeCase = 
   (...valuesToTest: PipeValue[]) =>

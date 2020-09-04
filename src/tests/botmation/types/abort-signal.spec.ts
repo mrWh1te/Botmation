@@ -8,7 +8,7 @@ describe('[Botmation] types/abort-signal', () => {
 
   //
   // Unit Test
-  it('isAbortLineSignal() returns boolean true if the provided param is an Object that matches the minimum requirements for the AbortLineSignal interface', () => {
+  it('isAbortLineSignal() returns boolean true if the provided param is an Object that matches the minimum requirements for the AbortLineSignal type', () => {
     // pass
     const abortLineSignalObj: AbortLineSignal = {
       brand: 'Abort_Signal',

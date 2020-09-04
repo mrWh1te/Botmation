@@ -12,6 +12,7 @@ export * from './types'
 
 //
 // Actions
+export * from './actions/abort'
 export * from './actions/assembly-lines'
 export * from './actions/console'
 export * from './actions/cookies'
@@ -28,6 +29,7 @@ export * from './actions/utilities'
 
 //
 // Helpers
+export * from './helpers/abort'
 export * from './helpers/console'
 export * from './helpers/files'
 export * from './helpers/indexed-db'
@@ -40,7 +42,7 @@ export * from './helpers/pipe'
 export * from './class'
 
 //
-// Bots 
+// Sites Deprecated, to be published in separate npm package 
 //
 
 //

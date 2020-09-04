@@ -1,5 +1,8 @@
 import { Page } from 'puppeteer'
 import { chainRunner, pipeRunner, pipeActionOrActions, chain, pipe, assemblyLine } from 'botmation/actions/assembly-lines'
+import { abort } from 'botmation/actions/abort'
+import { AbortLineSignal } from 'botmation/types/abort-signal'
+import { createEmptyPipe } from 'botmation/helpers/pipe'
 
 /**
  * @description   Assembly-Lines BotAction's
@@ -46,6 +49,49 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(testResult2).toBeUndefined()
   })
 
+  it('chainRunner() supports the AbortLineSignal', async() => {
+    const mockChainAction1 = jest.fn(() => Promise.resolve())
+    const mockChainAction2 = jest.fn(() => Promise.resolve())
+    const mockChainAction3 = jest.fn(() => Promise.resolve())
+
+    // Safe default test - abort only 1 line of assembly
+    const abortOnlyThisChain = await chainRunner(
+      mockChainAction1, mockChainAction2, abort(1, 'boom'), mockChainAction3
+    )(mockPage)
+
+    // abort multiple # lines of assembly
+    const abortMultipleLines = await chainRunner(
+      mockChainAction1, mockChainAction2, abort(3), mockChainAction3
+    )(mockPage)
+
+    // abort all lines of assembly
+    const abortAllLines = await chainRunner(
+      mockChainAction1, mockChainAction2, abort(0), mockChainAction3
+    )(mockPage)
+
+    expect(mockChainAction1).toHaveBeenNthCalledWith(1, {})
+    expect(mockChainAction2).toHaveBeenNthCalledWith(1, {})
+    expect(mockChainAction3).not.toHaveBeenCalled()
+
+    expect(mockChainAction1).toHaveBeenNthCalledWith(2, {})
+    expect(mockChainAction2).toHaveBeenNthCalledWith(2, {})
+    expect(mockChainAction3).not.toHaveBeenCalled()
+
+    expect(mockChainAction1).toHaveBeenNthCalledWith(3, {})
+    expect(mockChainAction2).toHaveBeenNthCalledWith(3, {})
+    expect(mockChainAction3).not.toHaveBeenCalled()
+
+    expect(abortOnlyThisChain).toEqual('boom') 
+    expect(abortMultipleLines).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 2 // 1 less
+    })
+    expect(abortAllLines).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+  })
+
   it('pipeRunner() should return a BotAction that runs a spread array of BotAction\'s, separated with Piping', async() => {
     const mockPipeAction1 = jest.fn(() => Promise.resolve())
     const mockPipeAction2 = jest.fn(() => Promise.resolve('hello'))
@@ -70,6 +116,71 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(mockPipeAction3).toHaveBeenNthCalledWith(2, {}, {brand: 'Pipe', value: 'hello'})
     expect(mockPipeAction1).toHaveBeenNthCalledWith(2, {}, {brand: 'Pipe', value: 'world'})
     expect(pipeRunnerResult2).toBeUndefined()
+  })
+
+  it('pipeRunner() supports the AbortLineSignal', async() => {
+    const mockPipeAction1 = jest.fn(() => Promise.resolve())
+    const mockPipeAction2 = jest.fn(() => Promise.resolve())
+    const mockPipeAction3 = jest.fn(() => Promise.resolve())
+
+    // Safe default test - abort only 1 line of assembly
+    const abortOnlyThisLine = await pipeRunner(
+      mockPipeAction1, mockPipeAction2, abort(), mockPipeAction3
+    )(mockPage)
+
+    // abort multiple # lines of assembly
+    const abortMultipleLines = await pipeRunner(
+      mockPipeAction1, mockPipeAction2, abort(7), mockPipeAction3
+    )(mockPage)
+
+    // abort all lines of assembly
+    const abortAllLines = await pipeRunner(
+      mockPipeAction1, mockPipeAction2, abort(0), mockPipeAction3
+    )(mockPage)
+
+    // when a pipe line is aborted with AbortLineSignal, the signal's `pipeValue` property will set the return value
+    // if unused, the value `undefined` is returned
+    const abortOnlyThisLineWithPipeValue = await pipeRunner(
+      mockPipeAction1, mockPipeAction2, abort(1, 'this got aborted'), mockPipeAction3
+    )(mockPage)
+
+    const emptyPipeObject = createEmptyPipe()
+    expect(mockPipeAction1).toHaveBeenNthCalledWith(1, {}, emptyPipeObject)
+    expect(mockPipeAction2).toHaveBeenNthCalledWith(1, {}, emptyPipeObject)
+    expect(mockPipeAction3).not.toHaveBeenCalled()
+
+    expect(mockPipeAction1).toHaveBeenNthCalledWith(2, {}, emptyPipeObject)
+    expect(mockPipeAction2).toHaveBeenNthCalledWith(2, {}, emptyPipeObject)
+    expect(mockPipeAction3).not.toHaveBeenCalled()
+
+    expect(mockPipeAction1).toHaveBeenNthCalledWith(3, {}, emptyPipeObject)
+    expect(mockPipeAction2).toHaveBeenNthCalledWith(3, {}, emptyPipeObject)
+    expect(mockPipeAction3).not.toHaveBeenCalled()
+
+    expect(mockPipeAction1).toHaveBeenNthCalledWith(4, {}, emptyPipeObject)
+    expect(mockPipeAction2).toHaveBeenNthCalledWith(4, {}, emptyPipeObject)
+    expect(mockPipeAction3).not.toHaveBeenCalled()
+
+    expect(abortOnlyThisLine).toBeUndefined() // no pipeValue provided, so return value is `undefined`
+    expect(abortMultipleLines).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 6 // 1 less
+    })
+    expect(abortAllLines).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+    expect(abortOnlyThisLineWithPipeValue).toEqual('this got aborted')
+    
+    // funky test
+    const mockPipeAction = jest.fn(() => Promise.resolve('947'))
+
+    const funkyTest = await pipeRunner(
+      () => Promise.resolve('may the funk me with you' as any as AbortLineSignal),
+      mockPipeAction
+    )(mockPage)
+
+    expect(funkyTest).toEqual('947')
   })
 
   it('pipeActionOrActions() should run the given action or actions efficiently in a pipe', async() => {
@@ -160,6 +271,47 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(mockAction).toHaveBeenNthCalledWith(7, {}, 2, 3, 5, 7, 11, {brand: 'Pipe', value: 1337})
   })
 
+  it('pipeActionOrActions() should support the AbortLineSignal', async() => {
+    //
+    // case pipe is given an array of actions
+    //   this is handled by pipe()(), but instead of integrate testing, unit testing to provide more code flexibility
+    const mockActionRuns = jest.fn(() => Promise.resolve('val'))
+    const mockActionDoesntRun = jest.fn(() => Promise.resolve('another val'))
+
+    const actionsResultAbortOne = await pipeActionOrActions([mockActionRuns, abort(), mockActionDoesntRun])(mockPage)
+
+    expect(mockActionRuns).toHaveBeenCalledTimes(1)
+    expect(mockActionDoesntRun).not.toHaveBeenCalled()
+    expect(actionsResultAbortOne).toBeUndefined()
+
+    const actionsResultAbortMultiWithPipeValue = await pipeActionOrActions([mockActionRuns, abort(7, 'dog'), mockActionDoesntRun])(mockPage)
+
+    expect(mockActionRuns).toHaveBeenCalledTimes(2)
+    expect(mockActionDoesntRun).not.toHaveBeenCalled()
+    expect(actionsResultAbortMultiWithPipeValue).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 6,
+      pipeValue: 'dog'
+    })
+
+    //
+    // case pipe is given a single action, not an array, not a spread array just 1 BotAction
+    const actionResultAbortOne = await pipeActionOrActions(abort(1, 'cat'))(mockPage)
+    expect(actionResultAbortOne).toEqual('cat')
+
+    const actionResultAbortMulti = await pipeActionOrActions(abort(9))(mockPage)
+    expect(actionResultAbortMulti).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 8
+    })
+
+    const actionResultAbortInfinity = await pipeActionOrActions(abort(0))(mockPage)
+    expect(actionResultAbortInfinity).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+  })
+
   it('chain() should run the given actions efficiently in a chain, so if the injects coming in has a Pipe, this will strip it', async() => {
     const mockAction1 = jest.fn(() => Promise.resolve())
     const mockAction2 = jest.fn(() => Promise.resolve())
@@ -203,6 +355,147 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(testResult3).toBeUndefined()
     expect(testResult4).toBeUndefined()
     expect(testResult5).toBeUndefined()
+  })
+
+  it('chain() should support the AbortLineSignal', async() => {
+    //
+    // multiple actions - no pipe
+    const mockChainAction1 = jest.fn(() => Promise.resolve())
+    const mockChainAction2 = jest.fn(() => Promise.resolve())
+    const mockChainAction3 = jest.fn(() => Promise.resolve())
+
+    // Safe default test - abort only 1 line of assembly
+    const abortOnlyThisChain = await chain(
+      mockChainAction1, mockChainAction2, abort(), mockChainAction3
+    )(mockPage)
+
+    // abort multiple # lines of assembly
+    const abortMultipleLines = await chain(
+      mockChainAction1, mockChainAction2, abort(3), mockChainAction3
+    )(mockPage)
+
+    // abort all lines of assembly
+    const abortAllLines = await chain(
+      mockChainAction1, mockChainAction2, abort(0), mockChainAction3
+    )(mockPage)
+
+    expect(mockChainAction1).toHaveBeenNthCalledWith(1, {})
+    expect(mockChainAction2).toHaveBeenNthCalledWith(1, {})
+    expect(mockChainAction3).not.toHaveBeenCalled()
+
+    expect(mockChainAction1).toHaveBeenNthCalledWith(2, {})
+    expect(mockChainAction2).toHaveBeenNthCalledWith(2, {})
+    expect(mockChainAction3).not.toHaveBeenCalled()
+
+    expect(mockChainAction1).toHaveBeenNthCalledWith(3, {})
+    expect(mockChainAction2).toHaveBeenNthCalledWith(3, {})
+    expect(mockChainAction3).not.toHaveBeenCalled()
+
+    expect(abortOnlyThisChain).toBeUndefined() 
+    expect(abortMultipleLines).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 2 // 1 less
+    })
+    expect(abortAllLines).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+
+    //
+    // one action
+    const oneActionMultipleAborts = await chain(
+      abort(27)
+    )(mockPage)
+    expect(oneActionMultipleAborts).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 26
+    })
+
+    const oneActionOneAbort = await chain(
+      abort()
+    )(mockPage)
+    expect(oneActionOneAbort).toBeUndefined()
+
+    const oneActionInfiniteAborts = await chain(
+      abort(0)
+    )(mockPage)
+    expect(oneActionInfiniteAborts).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+
+    const funkyTest1 = await chain(
+      () => Promise.resolve('some-value' as any as AbortLineSignal)
+    )(mockPage)
+
+    expect(funkyTest1).toBeUndefined()
+
+    //
+    // multiple actions - with pipe
+    const mockTestPreventedAction2 = jest.fn(() => Promise.resolve())
+
+    const multipleActionMultileAbortsWithPipe = await chain(
+      abort(27), mockTestPreventedAction2
+    )(mockPage, {brand: 'Pipe', value: 'multiple actions test with abort'})
+
+    expect(multipleActionMultileAbortsWithPipe).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 26
+    })
+    expect(mockTestPreventedAction2).not.toHaveBeenCalled()
+
+    const multipleActionInfiniteAbortsWithPipe = await chain(
+      abort(0), mockTestPreventedAction2
+    )(mockPage, {brand: 'Pipe', value: 'multiple actions test with abort'})
+
+    expect(multipleActionInfiniteAbortsWithPipe).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+    expect(mockTestPreventedAction2).not.toHaveBeenCalled()
+
+    const multipleActionOneAbortWithPipe = await chain(
+      abort(), mockTestPreventedAction2
+    )(mockPage, {brand: 'Pipe', value: 'multiple actions test with abort'})
+
+    expect(multipleActionOneAbortWithPipe).toBeUndefined()
+    expect(mockTestPreventedAction2).not.toHaveBeenCalled()
+
+    //
+    // one action - with pipe
+    const mockTestPreventedAction = jest.fn(() => Promise.resolve())
+
+    const oneActionMultileAborts = await chain(
+      abort(27)
+    )(mockPage, {brand: 'Pipe', value: 'test'})
+
+    expect(oneActionMultileAborts).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 26
+    })
+    expect(mockTestPreventedAction).not.toHaveBeenCalled()
+
+    const oneActionInfiniteAbortWithPipe = await chain(
+      abort(0)
+    )(mockPage, {brand: 'Pipe', value: 'test'})
+
+    expect(oneActionInfiniteAbortWithPipe).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+    expect(mockTestPreventedAction).not.toHaveBeenCalled()
+
+    const oneActionOneAbortWithPipe = await chain(
+      abort()
+    )(mockPage, {brand: 'Pipe', value: 'test'})
+
+    expect(oneActionOneAbortWithPipe).toBeUndefined()
+
+    const funkyTest2 = await chain(
+      () => Promise.resolve('some-value' as any as AbortLineSignal)
+    )(mockPage, {brand: 'Pipe', value: 'test'})
+
+    expect(funkyTest2).toBeUndefined()
   })
 
   it('pipe() should run given actions efficiently in a pipe (values returned are Piped into subsequent actions), provide an empty Pipe, if the injects coming in do not have a Pipe and overwrite the initial past in Pipe value if given a value to pipe()', async() => {
@@ -281,6 +574,123 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(mockAction3).toHaveBeenNthCalledWith(5, {}, 1, 3, 3, 7, {brand: 'Pipe', value: 'bananas'})
   })
 
+  it('pipe() supports the AbortLineSignal', async() => {
+    //
+    // one action, no higher-order pipe
+    const oneActionAbort1LineNoPipeValue = await pipe()(
+      abort(1)
+    )(mockPage)
+    const oneActionAbort1LinePipeValue = await pipe()(
+      abort(1, 'pipe-value-1')
+    )(mockPage)
+
+    const infiniteAbort1Action = await pipe()(
+      abort(0)
+    )(mockPage)
+
+    const multipleAborts1Action = await pipe()(
+      abort(5)
+    )(mockPage)
+
+    expect(oneActionAbort1LineNoPipeValue).toEqual(undefined)
+    expect(oneActionAbort1LinePipeValue).toEqual('pipe-value-1')
+
+    expect(infiniteAbort1Action).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+    expect(multipleAborts1Action).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 4
+    })
+
+    //
+    // one action, with higher-order pipe via injects
+    const emptyPipeObject = createEmptyPipe()
+    const oneActionAbort1LineWithHigherOrderPipe = await pipe()(
+      abort()
+    )(mockPage, emptyPipeObject)
+    const oneActionAbort1LineWithHigherOrderPipeWithPipeValue = await pipe()(
+      abort(1, 'pipe-value-10')
+    )(mockPage, emptyPipeObject)
+
+    const oneActionAbortInfinite = await pipe()(
+      abort(0)
+    )(mockPage, emptyPipeObject)
+
+    const oneActionMultipleAbort = await pipe()(
+      abort(5)
+    )(mockPage, emptyPipeObject)
+
+    expect(oneActionAbort1LineWithHigherOrderPipe).toBeUndefined()
+    expect(oneActionAbort1LineWithHigherOrderPipeWithPipeValue).toEqual('pipe-value-10')
+
+    expect(oneActionAbortInfinite).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+
+    expect(oneActionMultipleAbort).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 4
+    })
+
+    //
+    // multiple actions, no higher-order pipe
+    const mockPipeAction1 = jest.fn(() => Promise.resolve())
+    const mockPipeAction2 = jest.fn(() => Promise.resolve())
+    const mockPipeAction3 = jest.fn(() => Promise.resolve())
+
+    const multipleActionsThenAbortNoPipeValue = await pipe()(
+      mockPipeAction1, mockPipeAction2, abort(), mockPipeAction3
+    )(mockPage)
+
+    expect(mockPipeAction1).toHaveBeenNthCalledWith(1, {}, {brand: 'Pipe'})
+    expect(mockPipeAction2).toHaveBeenNthCalledWith(1, {}, {brand: 'Pipe'})
+    expect(mockPipeAction3).not.toHaveBeenCalled()
+
+    expect(multipleActionsThenAbortNoPipeValue).toBeUndefined()
+
+    const multipleActionsThenAbortWithPipeValue = await pipe()(
+      mockPipeAction1, mockPipeAction2, abort(1, 'pipe-value-2'), mockPipeAction3
+    )(mockPage)
+
+    expect(mockPipeAction1).toHaveBeenNthCalledWith(2, {}, {brand: 'Pipe'})
+    expect(mockPipeAction2).toHaveBeenNthCalledWith(2, {}, {brand: 'Pipe'})
+    expect(mockPipeAction3).not.toHaveBeenCalled()
+
+    expect(multipleActionsThenAbortWithPipeValue).toEqual('pipe-value-2')
+
+    const multipleActionsInfiniteAbortWithPipeValue = await pipe()(
+      mockPipeAction1, mockPipeAction2, abort(0, 'pipe-value-3'), mockPipeAction3
+    )(mockPage)
+
+    expect(mockPipeAction1).toHaveBeenNthCalledWith(3, {}, {brand: 'Pipe'})
+    expect(mockPipeAction2).toHaveBeenNthCalledWith(3, {}, {brand: 'Pipe'})
+    expect(mockPipeAction3).not.toHaveBeenCalled()
+
+    expect(multipleActionsInfiniteAbortWithPipeValue).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0,
+      pipeValue: 'pipe-value-3'
+    })
+
+    const multipleActionsMultipleAbortsWithPipeValue = await pipe()(
+      mockPipeAction1, mockPipeAction2, abort(5, 'pipe-value-3'), mockPipeAction3
+    )(mockPage)
+
+    expect(mockPipeAction1).toHaveBeenNthCalledWith(4, {}, {brand: 'Pipe'})
+    expect(mockPipeAction2).toHaveBeenNthCalledWith(4, {}, {brand: 'Pipe'})
+    expect(mockPipeAction3).not.toHaveBeenCalled()
+
+    expect(multipleActionsMultipleAbortsWithPipeValue).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 4,
+      pipeValue: 'pipe-value-3'
+    })
+
+  })
+
   it('assemblyLine() should efficiently run the actions provided in a returned pipe or non-returned chain, depending if the injects coming in have a Pipe or not with the exception of the higher order forceInPipe flag set to TRUE', async() => {
     const mockAction1 = jest.fn(() => Promise.resolve('mars'))
     const mockAction2 = jest.fn(() => Promise.resolve('saturn'))
@@ -337,6 +747,88 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(mockAction1).toHaveBeenNthCalledWith(6, {}, 2, 3, 5, 7, 11)
     expect(mockAction2).toHaveBeenNthCalledWith(3, {}, 2, 3, 5, 7, 11)
     expect(mockAction3).toHaveBeenNthCalledWith(3, {}, 2, 3, 5, 7, 11)
+  })
+
+  it('assemblyLine() should support the AbortLineSignal for both pipes and chains', async() => {
+    const mockActionRuns = jest.fn(() => Promise.resolve())
+    const mockActionDoesntRun = jest.fn(() => Promise.resolve())
+
+    // chain - 1 action
+    const chainAbortInfinity = await assemblyLine()(abort(0))(mockPage)
+    expect(chainAbortInfinity).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+
+    const chainAbortMulti = await assemblyLine()(abort(8))(mockPage)
+    expect(chainAbortMulti).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 7
+    })
+
+    const chainAbortOneWithPipeValue = await assemblyLine()(abort(1, 'hiking'))(mockPage)
+    expect(chainAbortOneWithPipeValue).toEqual('hiking')
+
+    // chain - multiple actions
+    const chainActionsAbortInfinity = await assemblyLine()(mockActionRuns, abort(0), mockActionDoesntRun)(mockPage)
+    expect(chainActionsAbortInfinity).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+    expect(mockActionRuns).toHaveBeenCalledTimes(1)
+    expect(mockActionDoesntRun).not.toHaveBeenCalled()
+
+    const chainActionsAbortMultiWithValue = await assemblyLine()(mockActionRuns, abort(3, 'tree'), mockActionDoesntRun)(mockPage)
+    expect(chainActionsAbortMultiWithValue).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 2,
+      pipeValue: 'tree'
+    })
+    expect(mockActionRuns).toHaveBeenCalledTimes(2)
+    expect(mockActionDoesntRun).not.toHaveBeenCalled()
+
+    const chainActionsAbortOneWithValue = await assemblyLine()(mockActionRuns, abort(1, 'bird'), mockActionDoesntRun)(mockPage)
+    expect(chainActionsAbortOneWithValue).toEqual('bird')
+    expect(mockActionRuns).toHaveBeenCalledTimes(3)
+    expect(mockActionDoesntRun).not.toHaveBeenCalled()
+
+    // pipe - action
+    const pipeAbortInfinity = await assemblyLine(true)(abort(0))(mockPage)
+    expect(pipeAbortInfinity).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+
+    const pipeAbortMulti = await assemblyLine(true)(abort(5))(mockPage)
+    expect(pipeAbortMulti).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 4
+    })
+
+    const pipeAbortOneWithPipeValue = await assemblyLine(true)(abort(1, 'cat'))(mockPage)
+    expect(pipeAbortOneWithPipeValue).toEqual('cat')
+
+    // pipe - multiple actions
+    const pipeActionsAbortInfinity = await assemblyLine(true)(mockActionRuns, abort(0), mockActionDoesntRun)(mockPage)
+    expect(pipeActionsAbortInfinity).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+    expect(mockActionRuns).toHaveBeenCalledTimes(4)
+    expect(mockActionDoesntRun).not.toHaveBeenCalled()
+
+    const pipeActionsAbortMulti = await assemblyLine(true)(mockActionRuns, abort(11), mockActionDoesntRun)(mockPage)
+    expect(pipeActionsAbortMulti).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 10
+    })
+    expect(mockActionRuns).toHaveBeenCalledTimes(5)
+    expect(mockActionDoesntRun).not.toHaveBeenCalled()
+
+    const pipeActionsAbortOneWithPipeValue = await assemblyLine(true)(mockActionRuns, abort(1, 'apple'), mockActionDoesntRun)(mockPage)
+    expect(pipeActionsAbortOneWithPipeValue).toEqual('apple')
+    expect(mockActionRuns).toHaveBeenCalledTimes(6)
+    expect(mockActionDoesntRun).not.toHaveBeenCalled()
   })
 
 })

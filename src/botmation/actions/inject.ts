@@ -1,6 +1,7 @@
 import { BotAction } from "../interfaces"
 import { PipeValue } from "../types/pipe-value"
 import { assemblyLine } from "./assembly-lines"
+import { AbortLineSignal } from "../types/abort-signal"
 
 /**
  * @description    Higher-order to set the first few injects for wrapped BotAction's
@@ -8,6 +9,6 @@ import { assemblyLine } from "./assembly-lines"
  */
 export const inject =
   (...newInjects: any[]) => 
-    (...actions: BotAction<PipeValue|void>[]): BotAction<any> => 
+    (...actions: BotAction<PipeValue|void|AbortLineSignal>[]): BotAction<any> => 
       async(page, ...injects) => 
         await assemblyLine()(...actions)(page, ...newInjects, ...injects)

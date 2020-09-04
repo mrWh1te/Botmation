@@ -7,6 +7,8 @@ import {
   createEmptyPipe
 } from "../helpers/pipe"
 import { PipeValue } from "../types/pipe-value"
+import { AbortLineSignal, isAbortLineSignal } from "../types/abort-signal"
+import { processAbortLineSignal } from "../helpers/abort"
 
 /**
  * @description     chain() BotAction for running a chain of BotAction's safely and optimized
@@ -14,24 +16,43 @@ import { PipeValue } from "../types/pipe-value"
  * @param actions 
  */
 export const chain =
-  (...actions: BotAction[]): BotAction =>
+  (...actions: BotAction<void|AbortLineSignal>[]): BotAction<void|AbortLineSignal> =>
     async(page, ...injects) => {
       // pipe support for running a chain inside a pipe as a real chain
       // otherwise, the injects will naturally carry the pipe through the whole chain of actions in the last inject
       // but, could that be desirable? A new kind of assembly line, similar to chain but carries a Pipe through (1 case ignoring BotAction returns, the other piping those return values)
       if (injectsHavePipe(injects)) {
-        // remove pipe
         if(actions.length === 1) {
-          await actions[0](page, ...injects.splice(0, injects.length - 1))
+          const returnValue = await actions[0](page, ...injects.splice(0, injects.length - 1)) // remove pipe
+
+          // by avoding the assembledLines 1 case, processAbortLineSignal() will
+          // by default, only return an AbortLineSignal
+          if (isAbortLineSignal(returnValue) && returnValue.assembledLines !== 1) {
+            return processAbortLineSignal(returnValue) as AbortLineSignal
+          }
         } else {
-          await chainRunner(...actions)(page, ...injects.splice(0, injects.length - 1))
+          const returnValue = await chainRunner(...actions)(page, ...injects.splice(0, injects.length - 1)) // remove pipe
+
+          if (isAbortLineSignal(returnValue)) {
+            return returnValue
+          } 
         }
       } else {
         // run regularly in a chain, no need to remove a pipe (last inject)
         if(actions.length === 1) {
-          await actions[0](page, ...injects)
+          const returnValue = await actions[0](page, ...injects)
+
+          // by avoding the assembledLines 1 case, processAbortLineSignal() will
+          // by default, only return an AbortLineSignal
+          if (isAbortLineSignal(returnValue) && returnValue.assembledLines !== 1) {
+            return processAbortLineSignal(returnValue) as AbortLineSignal
+          }
         } else {
-          await chainRunner(...actions)(page, ...injects)
+          const returnValue = await chainRunner(...actions)(page, ...injects)
+
+          if (isAbortLineSignal(returnValue)) {
+            return returnValue
+          }
         }
       }
     }
@@ -42,32 +63,45 @@ export const chain =
  * @param valueToPipe 
  */
 export const pipe =
-  (valueToPipe?: any) => 
-    (...actions: BotAction<PipeValue|void>[]): BotAction<any> => 
+  (valueToPipe?: PipeValue) => 
+    (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<any> => 
       async(page, ...injects) => {
         if (injectsHavePipe(injects)) {
           if (actions.length === 0) {return undefined}
           if (actions.length === 1) {
+            let returnValue: PipeValue|AbortLineSignal|void
             if (valueToPipe) {
-              return await actions[0](page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe))
+              returnValue = await actions[0](page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe))
             } else {
-              return await actions[0](page, ...injects)
+              returnValue = await actions[0](page, ...injects)
+            }
+
+            if (isAbortLineSignal(returnValue)) {
+              return processAbortLineSignal(returnValue)
+            } else {
+              return returnValue
             }
           } else {
             // injects only have a pipe when its ran inside a pipe, so lets return our value to flow with the pipe mechanics
             if (valueToPipe) {
-              return (await pipeRunner(...actions)(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe)))
+              return await pipeRunner(...actions)(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe))
             } else {
-              return (await pipeRunner(...actions)(page, ...injects))
+              return await pipeRunner(...actions)(page, ...injects)
             }
           }
         } else {
-          // injects don't have a pipe, so add one:
+          // injects don't have a pipe, so add one
           if (actions.length === 0) {return undefined}
-          else if (actions.length === 1) {
-            return await actions[0](page, ...injects, wrapValueInPipe(valueToPipe))
+          if (actions.length === 1) {
+            const returnValue = await actions[0](page, ...injects, wrapValueInPipe(valueToPipe))
+
+            if (isAbortLineSignal(returnValue)) {
+              return processAbortLineSignal(returnValue)
+            } else {
+              return returnValue
+            }
           } else {
-            return (await pipeRunner(...actions)(page, ...injects, wrapValueInPipe(valueToPipe)))
+            return await pipeRunner(...actions)(page, ...injects, wrapValueInPipe(valueToPipe))
           }
         }
       }
@@ -86,16 +120,30 @@ export const assemblyLine =
           // running a pipe
           if (actions.length === 0) {return undefined}
           else if (actions.length === 1) {
-            return await actions[0](page, ...pipeInjects(injects))
+            const pipeActionResult = await actions[0](page, ...pipeInjects(injects))
+
+            if (isAbortLineSignal(pipeActionResult)) {
+              return processAbortLineSignal(pipeActionResult)
+            } else {
+              return pipeActionResult
+            }
           } else {
             return await pipeRunner(...actions)(page, ...pipeInjects(injects))
           }
         } else {
-          // running a chain
+          // while chains dont return pipeValues, this is an assembly line running botactions
+          // in a chain but it's still an assembly line, and without changing anything, you can use this
+          // to still work with the `pipeValue` of an AbortLineSignal, so a step-up from chain in terms of functionality but not quite pipe
+          // with a flag to switch into pipe, which can be great for new dev's, to explore these concepts at their own pace, one step at a time
           if (actions.length === 1) {
-            await actions[0](page, ...injects)
-          } else {
-            await chainRunner(...actions)(page, ...injects)
+            const chainActionResult = await actions[0](page, ...injects)
+
+            // ignore the 1 case since then we would return the pipeValue, but chains..
+            if (isAbortLineSignal(chainActionResult)) {
+              return processAbortLineSignal(chainActionResult)
+            }
+          } else if (actions.length > 1) {
+            return await chainRunner(...actions)(page, ...injects)
           }
         }
       }
@@ -107,12 +155,19 @@ export const assemblyLine =
  * @param actionOrActions Botaction<PipeValue> | BotAction<PipeValue>[]
  */
 export const pipeActionOrActions = 
-  (actionOrActions: BotAction<PipeValue> | BotAction<PipeValue>[]): BotAction<PipeValue|undefined> =>
+  (actionOrActions: BotAction<PipeValue> | BotAction<PipeValue>[]): BotAction<PipeValue|undefined|AbortLineSignal> =>
     async(page, ...injects) => {
       if (Array.isArray(actionOrActions)) {
+        // pipe handles AbortLineSignal for itself and therefore we don't need to evaluate the signal here just return it
         return await pipe()(...actionOrActions)(page, ...injects)
       } else {
-        return await actionOrActions(page, ...pipeInjects(injects)) // simulate pipe
+        const singleActionResult = await actionOrActions(page, ...pipeInjects(injects)) // simulate pipe
+
+        if (isAbortLineSignal(singleActionResult)) {
+          return processAbortLineSignal(singleActionResult)
+        } else {
+          return singleActionResult
+        }
       }
     }
 
@@ -126,10 +181,15 @@ export const pipeActionOrActions =
  * @param actions 
  */    
 export const chainRunner =
-  (...actions: BotAction[]): BotAction =>
+  (...actions: BotAction<void|AbortLineSignal>[]): BotAction<void|AbortLineSignal|PipeValue> =>
     async(page, ...injects) => {
+      let returnValue: any
       for(const action of actions) {
-        await action(page, ...injects)
+        returnValue = await action(page, ...injects)
+
+        if (isAbortLineSignal(returnValue)) {
+          return processAbortLineSignal(returnValue)
+        }
       }
     }
 
@@ -139,25 +199,28 @@ export const chainRunner =
  * @param actions 
  */  
 export const pipeRunner = 
-  <R extends PipeValue = PipeValue, P extends PipeValue = PipeValue>
-  (...actions: BotAction<PipeValue|void>[]): BotAction<PipeValue<R>> =>
+  (...actions: BotAction<PipeValue|void|AbortLineSignal>[]): BotAction<PipeValue|AbortLineSignal|undefined> =>
     async(page, ...injects) => {
       // Possible for last inject to be the piped value
       let pipeObject: Pipe = createEmptyPipe()
 
       // in case we are used in a chain, injects won't have a pipe at the end
       if (injectsHavePipe(injects)) {
-        pipeObject = getInjectsPipeOrEmptyPipe<P>(injects)
+        pipeObject = getInjectsPipeOrEmptyPipe(injects)
         injects = injects.slice(0, injects.length - 1)
       }
 
       // let piped // pipe's are closed chain-links, so nothing pipeable comes in, so data is grabbed in a pipe and shared down stream a pipe, and returns
       for(const action of actions) {
-        const nextPipeValueOrUndefined: PipeValue|void = await action(page, ...injects, pipeObject) // typing.. botaction's async return can be void, but given how promises must resolve(), the value is actually undefined
+        const nextPipeValueOrUndefined: AbortLineSignal|PipeValue|void = await action(page, ...injects, pipeObject) // typing.. botaction's async return can be void, but given how promises must resolve(), the value is actually undefined
+
+        if (isAbortLineSignal(nextPipeValueOrUndefined)) {
+          return processAbortLineSignal(nextPipeValueOrUndefined)
+        }
 
         // Bot Actions return the value removed from the pipe, and BotActionsPipe wraps it for injecting
         pipeObject = wrapValueInPipe(nextPipeValueOrUndefined as PipeValue|undefined)
       }
 
-      return pipeObject.value as any as PipeValue<R>
+      return pipeObject.value
     }    

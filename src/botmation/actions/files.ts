@@ -4,7 +4,8 @@ import { inject } from "./inject"
 import { errors } from "./errors"
 import { forAll } from "./utilities"
 import { goTo } from "./navigation"
-import { unpipeInjects } from "botmation/helpers/pipe"
+import { unpipeInjects } from "../helpers/pipe"
+import { AbortLineSignal, PipeValue } from "../types"
 
 /**
  * @description    Higher-order BotAction to inject an enriched "BotFileOptions" from an optional provided Partial of one
@@ -13,7 +14,7 @@ import { unpipeInjects } from "botmation/helpers/pipe"
  *                    overwride the botFileOptions through their own function params
  */
 export const files = (fileOptions?: Partial<BotFileOptions>) =>
-  (...actions: BotAction[]): BotAction =>
+  (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<AbortLineSignal|void> =>
     inject(enrichBotFileOptionsWithDefaults(fileOptions))(
       errors('files()()')(...actions)
     )

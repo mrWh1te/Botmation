@@ -5,13 +5,15 @@
  */
 
 import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions'
-import { pipeInjects, getInjectsPipeValue, removePipe, wrapValueInPipe } from '../helpers/pipe'
+import { pipeInjects, getInjectsPipeValue, removePipe, wrapValueInPipe, injectsHavePipe } from '../helpers/pipe'
 import { pipeActionOrActions, pipe } from './assembly-lines'
 import { logWarning } from '../helpers/console'
-import { Collection, isDictionary } from '../types/objects'
+import { Collection, isDictionary, Dictionary } from '../types/objects'
 import { PipeValue } from '../types/pipe-value'
 import { AbortLineSignal, isAbortLineSignal } from '../types/abort-signal'
-import { processAbortLineSignal } from 'botmation/helpers/abort'
+import { processAbortLineSignal } from '../helpers/abort'
+import { createMatchesSignal } from '../helpers/matches'
+import { MatchesSignal } from '../types/matches-signal'
 
 /**
  * @description Higher Order BotAction that accepts a ConditionalBotAction (pipeable, that returns a boolean) and based on what boolean it resolves,
@@ -209,4 +211,55 @@ export const forAsLong =
             return processAbortLineSignal(resolvedCondition)
           }
         }
+      }
+
+/**
+ * Similar to givenThat except instead of evaluating a BotAction for TRUE, its testing an array of values against the pipe object value for truthy.
+ * A value can be a function. In this case, the function is treated as a callback, expected to return a truthy expression, is passed in the pipe object's value
+ * @param valuesToTest 
+ * @return AbortLineSignal|MatchesSignal
+ *  If no matches are found or matches are found, a MatchesSignal is returned
+ *  It is determined if signal has matches by using hasAtLeastOneMatch() helper
+ *  If assembled BotAction aborts(1), it still returns a MatchesSignal with the matches
+ *  If assembled BotAction aborts(2+), it returns a processed AbortLineSignal
+ */
+export const pipeCase = 
+  (...valuesToTest: PipeValue[]) =>
+    (...actions: BotAction[]): BotAction<AbortLineSignal|MatchesSignal> => 
+      async(page, ...injects) => {
+        // if any of the values matches the injected pipe object value
+        // then run the assembled actions
+        if (injectsHavePipe(injects)) {
+          const pipeValue = getInjectsPipeValue(injects)
+
+          let matches: Dictionary = {} // key -> values :: index -> value
+          let matchEvaluation: boolean
+
+          valuesToTest.forEach((value, index) => {
+            // using callbacks to test if pipeValue matches criteria
+            if (typeof value === "function") {
+              matchEvaluation = value(pipeValue)
+            } else {
+              matchEvaluation = value === pipeValue
+            }
+
+            if (matchEvaluation) {
+              matches[index] = value
+            }
+          })
+
+          if (Object.keys(matches).length > 0) {
+            const returnValue:PipeValue|AbortLineSignal = await pipe()(...actions)(page, ...injects)
+
+            if (isAbortLineSignal(returnValue)) {
+              return returnValue // processed by pipe()
+            } else {
+              // signal that a case matched
+              return createMatchesSignal(matches, returnValue)
+            }
+          }
+        }
+        
+        // no pipe (nothing to test) or the test resulted in no matches
+        return createMatchesSignal() // empty matches signal (no matches)
       }

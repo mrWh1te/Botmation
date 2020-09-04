@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 
 import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
-import { givenThat, forAll, doWhile, forAsLong } from 'botmation/actions/utilities'
+import { givenThat, forAll, doWhile, forAsLong, pipeCase } from 'botmation/actions/utilities'
 import { click, type } from 'botmation/actions/input'
 import { goTo } from 'botmation/actions/navigation'
 
@@ -11,6 +11,8 @@ import { Dictionary } from 'botmation/types/objects'
 import { abort } from 'botmation/actions/abort'
 import { createAbortLineSignal } from 'botmation/helpers/abort'
 import { AbortLineSignal } from 'botmation/types/abort-signal'
+import { wrapValueInPipe } from 'botmation/helpers/pipe'
+import { createMatchesSignal } from 'botmation/helpers/matches'
 
 jest.mock('botmation/helpers/console', () => {
   return {
@@ -43,7 +45,7 @@ describe('[Botmation] actions/utilities', () => {
 
   //
   // givenThat() Unit Tests
-  it('should resolve the condition and ONLY run the chain of actions if the resolved condition equals TRUE', async() => {
+  it('givenThat() should resolve the condition and ONLY run the chain of actions if the resolved condition equals TRUE', async() => {
     const conditionResolvingTRUE:BotAction<boolean> = async() => new Promise(resolve => resolve(true))
     const conditionResolvingFALSE:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
 
@@ -135,7 +137,7 @@ describe('[Botmation] actions/utilities', () => {
 
   //
   // forAll() Unit Tests
-  it('should call the list of Actions for each item in the array provided through either higher-order param or Pipe object value', async() => {
+  it('forAll() should call the list of Actions for each item in the array provided through either higher-order param or Pipe object value', async() => {
     const urls = ['example.html', 'example2.html', 'success.html']
 
     await forAll(urls)(
@@ -285,7 +287,7 @@ describe('[Botmation] actions/utilities', () => {
     expect(mockActionNeverRuns).not.toHaveBeenCalled()
   })
 
-  it('should call the list of Actions for each key->value pair in the object provided', async() => {
+  it('forAll() should call the list of Actions for each key->value pair in the object provided', async() => {
     const keyValuePairs: Dictionary = {
       'form input[name="username"]': 'example username',
       'form input[name="password"]': 'example password'
@@ -329,7 +331,7 @@ describe('[Botmation] actions/utilities', () => {
     expect(mockPage.keyboard.type).toHaveBeenNthCalledWith(2, 'example password')
   })
 
-  it('should recognize null is an object not to iterate', async() => {
+  it('forAll() should recognize null is an object not to iterate', async() => {
     await forAll()(
       (iteratedPiece) => ([
         click(iteratedPiece),
@@ -343,7 +345,7 @@ describe('[Botmation] actions/utilities', () => {
 
   //
   // doWhile() Unit Test
-  it('should run the actions then check the condition to run the actions in a loop until the condition rejects or resolves FALSE', async() => {
+  it('doWhile() should run the actions then check the condition to run the actions in a loop until the condition rejects or resolves FALSE', async() => {
     const conditionResolvingFALSE:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
 
     // Main test
@@ -394,7 +396,7 @@ describe('[Botmation] actions/utilities', () => {
     expect(mockPage.keyboard.type).not.toHaveBeenNthCalledWith(5, '2')
   })
 
-  it('doWhile should pass along the correct AbortLineSignal', async() => {
+  it('doWhile() should pass along the correct AbortLineSignal', async() => {
     const conditionResolveFalse:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
     const mockAction = jest.fn(() => Promise.resolve())
 
@@ -487,7 +489,7 @@ describe('[Botmation] actions/utilities', () => {
 
   //
   // forAsLong() Unit Test
-  it('should check the condition before running the actions in a loop until the condition rejects or resolves FALSE', async() => {
+  it('forAsLong() should check the condition before running the actions in a loop until the condition rejects or resolves FALSE', async() => {
     const conditionResolvingFALSE:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
 
     // Main test
@@ -716,6 +718,91 @@ describe('[Botmation] actions/utilities', () => {
 
   })
 
+  //
+  // pipeCase() Unit Test
+  it('pipeCase()() should run assembled BotActions only if a value to test matches the pipe object value or if a value is a function then used as callback to evaluate for truthy with pipe object value as function param', async() => {
+    // these mock actions act like log() where they return the pipe object value
+    const mockActionRuns = jest.fn((p, pO) => Promise.resolve(pO.value))
+    const mockActionDoesntRun = jest.fn((p, pO) => Promise.resolve(pO.value))
+
+    // no matches - no injected pipe
+    const noMatchesNoPipe = await pipeCase(4, 6)(
+      mockActionDoesntRun
+    )(mockPage)
+
+    expect(noMatchesNoPipe).toEqual({
+      brand: 'Matches_Signal',
+      matches: {},
+    })
+    expect(mockActionDoesntRun).not.toHaveBeenCalled()
+
+    // no matches - with injected pipe
+    const noMatchesWithPipe = await pipeCase(77, 123)(
+      mockActionDoesntRun
+    )(mockPage, wrapValueInPipe(44))
+
+    expect(noMatchesWithPipe).toEqual({
+      brand: 'Matches_Signal',
+      matches: {},
+    })
+    expect(mockActionDoesntRun).not.toHaveBeenCalled()
+
+    // single numerical match - with injected pipe
+    const singleNumericalMatch = await pipeCase(3, 7, 18)(
+      mockActionRuns
+    )(mockPage, wrapValueInPipe(7))
+
+    expect(singleNumericalMatch).toEqual({
+      brand: 'Matches_Signal',
+      matches: {
+        '1': 7 // index 1, value 7
+      },
+      pipeValue: 7 // mockActionRuns returns pipe object value
+    })
+    expect(mockActionRuns).toHaveBeenCalledTimes(1)
+
+    // multiple matches via functions - with injected pipe
+    const trueForTwoOrFive = (value: number): boolean => value === 2 || value === 5
+    const trueForTwoOrSix = (value: number): boolean => value === 2 || value === 6
+
+    const multiNumericalMatches = await pipeCase(trueForTwoOrFive, trueForTwoOrSix, 2)(
+      mockActionRuns
+    )(mockPage, wrapValueInPipe(2))
+
+    expect(multiNumericalMatches).toEqual({
+      brand: 'Matches_Signal',
+      matches: {
+        0: expect.any(Function),
+        1: expect.any(Function),
+        2: 2
+      },
+      pipeValue: 2 // mockActionRuns returns pipe object value
+    })
+    expect(mockActionRuns).toHaveBeenCalledTimes(2)
+  })
+
+  it('pipeCase() supports the AbortLineSignal similar to givenThat() in which its considered one line to abort', async() => {
+    const abortedInfiniteLine = await pipeCase(10)(
+      abort(0)
+    )(mockPage, wrapValueInPipe(10))
+
+    expect(abortedInfiniteLine).toEqual(createAbortLineSignal(0))
+
+    const abortedSingleLine = await pipeCase(100)(
+      abort(1, 'an aborted pipe value')
+    )(mockPage, wrapValueInPipe(100))
+
+    expect(abortedSingleLine).toEqual(createMatchesSignal({'0': 100}, 'an aborted pipe value'))
+
+    const abortedMultiLine = await pipeCase(1000)(
+      abort(2, 'another aborted pipe value')
+    )(mockPage, wrapValueInPipe(1000))
+
+    expect(abortedMultiLine).toEqual(createAbortLineSignal(1, 'another aborted pipe value'))
+  })
+
+  //
+  // Clean up
   afterAll(() => {
     jest.unmock('botmation/helpers/console')
   })

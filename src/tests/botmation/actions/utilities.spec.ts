@@ -491,7 +491,7 @@ describe('[Botmation] actions/utilities', () => {
 
     expect(multiAbortWithPipeValue).toEqual({
       brand: 'Abort_Signal',
-      assembledLines: 4,
+      assembledLines: 3,
       pipeValue: 'pizza'
     })
 
@@ -513,7 +513,7 @@ describe('[Botmation] actions/utilities', () => {
 
     expect(multipleLoopsThenAbort).toEqual({
       brand: 'Abort_Signal',
-      assembledLines: 2,
+      assembledLines: 1,
       pipeValue: 'some-pipe-value-to-return'
     })
 
@@ -621,6 +621,14 @@ describe('[Botmation] actions/utilities', () => {
       pipeValue: 'test-value'
     })
     expect(mockActionRuns).toHaveBeenCalledTimes(3)
+
+    // 2 levels necessary to abort from assembled iteration line out of the loop too
+    // 1 level from assembled iteration, breaks the assembled line of the iteration but loop continues
+    const assembledActionAbortsTwoLinesWithPipeValue = await forAsLong(conditionResolvesTrue)(
+      abort(2, 'puppy')
+    )(mockPage)
+
+    expect(assembledActionAbortsTwoLinesWithPipeValue).toEqual('puppy')
 
   })
 

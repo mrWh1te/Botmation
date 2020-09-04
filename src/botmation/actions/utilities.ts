@@ -11,7 +11,7 @@ import { logWarning } from '../helpers/console'
 import { Collection, isDictionary } from '../types/objects'
 import { PipeValue } from '../types/pipe-value'
 import { AbortLineSignal, isAbortLineSignal } from '../types/abort-signal'
-import { createAbortLineSignal } from 'botmation/helpers/abort'
+import { createAbortLineSignal, processAbortLineSignal } from 'botmation/helpers/abort'
 
 /**
  * @description Higher Order BotAction that accepts a ConditionalBotAction (pipeable, that returns a boolean) and based on what boolean it resolves,
@@ -22,13 +22,13 @@ import { createAbortLineSignal } from 'botmation/helpers/abort'
  */
 export const givenThat = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction<PipeValue|void|AbortLineSignal>[]): BotAction<void|AbortLineSignal> => 
+    (...actions: BotAction<PipeValue|void|AbortLineSignal>[]): BotAction<any> => 
       async(page, ...injects) => {
         const resolvedConditionValue: AbortLineSignal|boolean = await condition(page, ...pipeInjects(injects))
 
         if (isAbortLineSignal(resolvedConditionValue)) {
           if (resolvedConditionValue.assembledLines === 1) {
-            return resolvedConditionValue.pipeValue as AbortLineSignal // to be picked up by pipe-able functions
+            return resolvedConditionValue.pipeValue // chain will ignore
           } else if (resolvedConditionValue.assembledLines === 0) {
             return resolvedConditionValue
           } else {
@@ -92,7 +92,7 @@ export const givenThat =
 export const forAll =
   (collection?: Collection) =>
     // cb params = iterated value, iterated index/key (casted as string), collection
-    (botActionOrActionsFactory: (...args: [any, string, Collection]) => BotAction<any>[] | BotAction<any>): BotAction<AbortLineSignal|void> =>
+    (botActionOrActionsFactory: (...args: [any, string, Collection]) => BotAction<any>[] | BotAction<any>): BotAction<any> =>
       async(page, ...injects) => {
         // the collection can be passed in via higher-order params or Pipe object value
         // higher-order params trump Pipe object value        
@@ -115,6 +115,18 @@ export const forAll =
 
             // Run cb
             returnValue = await pipeActionOrActions(botActionOrActionsFactory(collection[index], index+'', collection))(page, ...injects)
+
+            // 2 levels of aborting, the assembled line in each iteration
+            // and the assembler of that is doing the looping (forAll)
+            if (isAbortLineSignal(returnValue)) {
+              if (returnValue.assembledLines === 1) {
+                return returnValue.pipeValue as any as AbortLineSignal // for chain that will ignore this
+              } else if (returnValue.assembledLines === 0) {
+                return returnValue
+              } else {
+                return createAbortLineSignal(returnValue.assembledLines - 1, returnValue.pipeValue)
+              }
+            }
           }
         } else {
           // in case Pipe object value is not a dictionary
@@ -127,12 +139,18 @@ export const forAll =
   
               // Run cb
               returnValue = await pipeActionOrActions(botActionOrActionsFactory(value, key, collection))(page, ...injects)
+
+              if (isAbortLineSignal(returnValue)) {
+                if (returnValue.assembledLines === 1) {
+                  return returnValue.pipeValue
+                } else if (returnValue.assembledLines === 0) {
+                  return returnValue
+                } else {
+                  return createAbortLineSignal(returnValue.assembledLines - 1, returnValue.pipeValue)
+                }
+              }
             }
           }
-        }
-
-        if (isAbortLineSignal(returnValue)) {
-          return returnValue
         }
       }
 
@@ -143,7 +161,7 @@ export const forAll =
  */
 export const doWhile = 
   (condition: ConditionalBotAction) => 
-    (...actions: BotAction<any>[]): BotAction<void|AbortLineSignal> => 
+    (...actions: BotAction<any>[]): BotAction<any> => 
       async(page, ...injects) => {
         let returnValue: PipeValue|AbortLineSignal
         let resolvedCondition: boolean|AbortLineSignal = true
@@ -159,7 +177,7 @@ export const doWhile =
 
           if (isAbortLineSignal(resolvedCondition)) {
             if (resolvedCondition.assembledLines === 1) {
-              return resolvedCondition.pipeValue as AbortLineSignal // to be picked up by pipe-able functions
+              return resolvedCondition.pipeValue
             } else if (resolvedCondition.assembledLines === 0) {
               return resolvedCondition
             } else {
@@ -186,36 +204,30 @@ export const forAsLong =
         let returnValue: PipeValue|AbortLineSignal
         let resolvedCondition = await condition(page, ...pipeInjects(injects))
 
+        // 1 line of assembly for the condition
         if (isAbortLineSignal(resolvedCondition)) {
-          if (resolvedCondition.assembledLines === 1) {
-            return resolvedCondition.pipeValue as AbortLineSignal // to be picked up by pipe-able functions
-          } else if (resolvedCondition.assembledLines === 0) {
-            return resolvedCondition
-          } else {
-            return createAbortLineSignal(resolvedCondition.assembledLines - 1, resolvedCondition.pipeValue)
-          }
+          return processAbortLineSignal(resolvedCondition)
         }
 
         while (resolvedCondition) {
+          // these are sub-lines, to abort out of forAsLong() from a BotAction assembled here
+          // it requires either AbortLineSignal assembledLines > 1 or === 0
+          // else assembledLines = 1 will break the assembled line, but not the loop (granular control)
           returnValue = await pipe()(...actions)(page, ...pipeInjects(injects))
 
-          // AbortLineSignal processed by Pipe, so just return AbortLineSignal
+          // 2 levels of assembly here, so it's possible the AbortLineSignal aborted the pipe above
+          // and will then abort this BotAction (the loop) too (and possibly further.. going up)
           if (isAbortLineSignal(returnValue)) {
-            return returnValue
+            return processAbortLineSignal(returnValue)
           }
 
           // simulate pipe if needed
           resolvedCondition = false // in case condition rejects
           resolvedCondition = await condition(page, ...pipeInjects(injects)) // use same Pipe as before, unless no Pipe, than add an empty one
 
+          // 1 line of assembly for condition
           if (isAbortLineSignal(resolvedCondition)) {
-            if (resolvedCondition.assembledLines === 1) {
-              return resolvedCondition.pipeValue as AbortLineSignal // to be picked up by pipe-able functions
-            } else if (resolvedCondition.assembledLines === 0) {
-              return resolvedCondition
-            } else {
-              return createAbortLineSignal(resolvedCondition.assembledLines - 1, resolvedCondition.pipeValue)
-            }
+            return processAbortLineSignal(resolvedCondition)
           }
         }
       }

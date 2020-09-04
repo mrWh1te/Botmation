@@ -1,4 +1,4 @@
-import { createAbortLineSignal } from 'botmation/helpers/abort'
+import { createAbortLineSignal, processAbortLineSignal } from 'botmation/helpers/abort'
 
 /**
  * @description   Abort Helpers
@@ -39,6 +39,34 @@ describe('[Botmation] helpers/abort', () => {
       brand: 'Abort_Signal',
       assembledLines: 10
     })
+  })
+
+  it('processAbortLineSignal() will returna new AbortLineSignal object as if processed for default 1 line of assembly and for overriden special cases of multi-aborting', () => {
+    const abortLineSignalInfinity = createAbortLineSignal(0)
+    expect(processAbortLineSignal(abortLineSignalInfinity))
+      .toEqual({brand: 'Abort_Signal', assembledLines: 0})
+
+    const abortLineSignalOne = createAbortLineSignal(1, 'kitty')
+    expect(processAbortLineSignal(abortLineSignalOne))
+      .toEqual('kitty')
+
+    const abortLineSignalMulti = createAbortLineSignal(7)
+    expect(processAbortLineSignal(abortLineSignalMulti))
+      .toEqual({brand: 'Abort_Signal', assembledLines: 6})
+
+    const abortLineSignalMultiReduceMulti = createAbortLineSignal(7)
+    expect(processAbortLineSignal(abortLineSignalMultiReduceMulti, 3))
+      .toEqual({brand: 'Abort_Signal', assembledLines: 4})
+
+    // in this case, we are trying to reduce the assembledLines by a value greater than what exists
+    // leading to a negative number, this abortlinesignal helpers try to avoid this from using absolute value to this case:
+    const abortLineSignalMultiFewReduceMultiMore = createAbortLineSignal(4, 'puppy')
+    expect(processAbortLineSignal(abortLineSignalMultiFewReduceMultiMore, 9))
+      .toEqual('puppy') // return pipeValue when negative so if no pipeValue then undefined
+
+    const abortLineSignalMultiFewReduceMultiMoreNoPipe = createAbortLineSignal(3)
+    expect(processAbortLineSignal(abortLineSignalMultiFewReduceMultiMoreNoPipe, 8))
+      .toBeUndefined() // return pipeValue when negative so if no pipeValue then undefined
   })
 
 })

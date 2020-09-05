@@ -4,11 +4,14 @@ import {
   pipeInjects,
   wrapValueInPipe,
   getInjectsPipeOrEmptyPipe,
-  createEmptyPipe
+  createEmptyPipe,
+  getInjectsPipeValue
 } from "../helpers/pipe"
 import { PipeValue } from "../types/pipe-value"
 import { AbortLineSignal, isAbortLineSignal } from "../types/abort-line-signal"
 import { processAbortLineSignal } from "../helpers/abort"
+import { isMatchesSignal } from "botmation/types/matches-signal"
+import { hasAtLeastOneMatch } from "botmation/helpers/matches"
 
 /**
  * @description     chain() BotAction for running a chain of BotAction's safely and optimized
@@ -104,6 +107,70 @@ export const pipe =
             return await pipeRunner(...actions)(page, ...injects, wrapValueInPipe(valueToPipe))
           }
         }
+      }
+
+/**
+ * 
+ * @param toPipe 
+ */
+export const switchPipe = 
+  (toPipe?: BotAction | Exclude<PipeValue, Function>) => 
+    (...actions: BotAction[]): BotAction<any[]|AbortLineSignal|PipeValue> =>
+      async(page, ...injects) => {
+        // fallback is injects pipe value
+        if (!toPipe) {
+          toPipe = getInjectsPipeValue(injects)
+        }
+
+        // if function, it's an async BotAction function
+        // resolve it to Pipe the resolved value
+        if (typeof toPipe === 'function') {
+          if(injectsHavePipe(injects)) {
+            toPipe = await toPipe(page, ...injects)
+          } else {
+            // simulate pipe
+            toPipe = await toPipe(page, ...injects, createEmptyPipe())
+          }
+        }
+
+        // remove pipe from injects if there is one to set the one for all actions
+        if (injectsHavePipe(injects)) {
+          injects = injects.slice(0, injects.length - 1)
+        }
+
+        // inject toPipe wrapped in a pipe object
+        injects.push(wrapValueInPipe(toPipe))
+
+        // run the assembled BotAction's with the same Pipe object
+        let atLeastOneCaseMatched = false
+        const actionResults = []
+        for(const action of actions) {
+          const resolvedActionResult = await action(page, ...injects)
+
+          if (isMatchesSignal(resolvedActionResult) && hasAtLeastOneMatch(resolvedActionResult)) {
+            atLeastOneCaseMatched = true
+          } else if (isAbortLineSignal(resolvedActionResult)) {
+            // switchPipe has unique AbortLineSignal behavior where it takes at least one succesful case()() to reduce
+            // the necessary count to abort out
+            const processedAbortSignal = processAbortLineSignal(resolvedActionResult)
+          
+            // takes abort(1) to abort out of switchPipe if at least one case has matched
+            if (atLeastOneCaseMatched) {
+              return processedAbortSignal
+            } else {
+              // otherwise it takes at least abort(2) to abort out of the case matching test & line of botaction's
+              if (isAbortLineSignal(processedAbortSignal)) {
+                return processAbortLineSignal(processedAbortSignal) 
+              } else {
+                actionResults.push(processedAbortSignal)
+              }
+            }
+          } else {
+            actionResults.push(resolvedActionResult)
+          }
+        }
+
+        return actionResults
       }
 
 /**

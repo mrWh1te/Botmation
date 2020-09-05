@@ -4,11 +4,14 @@ import {
   pipeInjects,
   wrapValueInPipe,
   getInjectsPipeOrEmptyPipe,
-  createEmptyPipe
+  createEmptyPipe,
+  getInjectsPipeValue
 } from "../helpers/pipe"
 import { PipeValue } from "../types/pipe-value"
-import { AbortLineSignal, isAbortLineSignal } from "../types/abort-signal"
+import { AbortLineSignal, isAbortLineSignal } from "../types/abort-line-signal"
 import { processAbortLineSignal } from "../helpers/abort"
+import { isMatchesSignal, MatchesSignal } from "botmation/types/matches-signal"
+import { hasAtLeastOneMatch } from "botmation/helpers/matches"
 
 /**
  * @description     chain() BotAction for running a chain of BotAction's safely and optimized
@@ -104,6 +107,81 @@ export const pipe =
             return await pipeRunner(...actions)(page, ...injects, wrapValueInPipe(valueToPipe))
           }
         }
+      }
+
+/**
+ * switchPipe is similar to Pipe in that is supports piping, EXCEPT every assembled BotAction gets the same pipe object
+ * Before each assembled BotAction is ran, the pipe is switched back to whatever is set `toPipe`
+ * `toPipe` is optional and can be provided by an injected pipe object value (if nothing provided, default is undefined)
+ * 
+ *  AbortLineSignal default abort(1) is ignored until a MatchesSignal is returned by an assembled BotAction, marking that at least one Case has ran
+ *    to break that, you can abort(2+) 
+ *  This is to support the classic switch/case/break flow where its switchPipe/pipeCase/abort
+ *    Therefore, if a pipeCase() does run, its returning MatcheSignal will be recognized by switchPipe and then lower the required abort count by 1
+ * @param toPipe BotAction to resolve and inject as a wrapped Pipe object in EACH assembled BotAction
+ */
+export const switchPipe = 
+  (toPipe?: BotAction | Exclude<PipeValue, Function>) => 
+    (...actions: BotAction<PipeValue|AbortLineSignal|MatchesSignal|void>[]): BotAction<any[]|AbortLineSignal|PipeValue> =>
+      async(page, ...injects) => {
+        // fallback is injects pipe value
+        if (!toPipe) {
+          toPipe = getInjectsPipeValue(injects)
+        }
+
+        // if function, it's an async BotAction function
+        // resolve it to Pipe the resolved value
+        if (typeof toPipe === 'function') {
+          if(injectsHavePipe(injects)) {
+            toPipe = await toPipe(page, ...injects)
+          } else {
+            // simulate pipe
+            toPipe = await toPipe(page, ...injects, createEmptyPipe())
+          }
+
+          if (isAbortLineSignal(toPipe)) {
+            return processAbortLineSignal(toPipe)
+          }
+        }
+
+        // remove pipe from injects if there is one to set the one for all actions
+        if (injectsHavePipe(injects)) {
+          injects = injects.slice(0, injects.length - 1)
+        }
+
+        // inject toPipe wrapped in a pipe object
+        injects.push(wrapValueInPipe(toPipe))
+
+        // run the assembled BotAction's with the same Pipe object
+        let atLeastOneCaseMatched = false
+        const actionsResults = []
+        for(const action of actions) {
+          const resolvedActionResult = await action(page, ...injects)
+
+          if (isMatchesSignal(resolvedActionResult) && hasAtLeastOneMatch(resolvedActionResult)) {
+            atLeastOneCaseMatched = true
+          } else if (isAbortLineSignal(resolvedActionResult)) {
+            // switchPipe has unique AbortLineSignal behavior where it takes at least one succesful case()() to reduce
+            // the necessary count to abort out
+            const processedAbortSignal = processAbortLineSignal(resolvedActionResult)
+          
+            // takes abort(1) to abort out of switchPipe if at least one case has matched
+            if (atLeastOneCaseMatched) {
+              return processedAbortSignal
+            } else {
+              // otherwise it takes at least abort(2) to abort out of the case matching test & line of botaction's
+              if (isAbortLineSignal(processedAbortSignal)) {
+                return processAbortLineSignal(processedAbortSignal) 
+              } else {
+                actionsResults.push(processedAbortSignal)
+              }
+            }
+          } else {
+            actionsResults.push(resolvedActionResult)
+          }
+        }
+
+        return actionsResults
       }
 
 /**

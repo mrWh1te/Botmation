@@ -1,8 +1,10 @@
 import { Page } from 'puppeteer'
-import { chainRunner, pipeRunner, pipeActionOrActions, chain, pipe, assemblyLine } from 'botmation/actions/assembly-lines'
+import { chainRunner, pipeRunner, pipeActionOrActions, chain, pipe, assemblyLine, switchPipe } from 'botmation/actions/assembly-lines'
 import { abort } from 'botmation/actions/abort'
-import { AbortLineSignal } from 'botmation/types/abort-signal'
-import { createEmptyPipe } from 'botmation/helpers/pipe'
+import { AbortLineSignal } from 'botmation/types/abort-line-signal'
+import { createEmptyPipe, wrapValueInPipe } from 'botmation/helpers/pipe'
+import { createAbortLineSignal } from 'botmation/helpers/abort'
+import { pipeCase } from 'botmation/actions/pipe'
 
 /**
  * @description   Assembly-Lines BotAction's
@@ -831,4 +833,96 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(mockActionDoesntRun).not.toHaveBeenCalled()
   })
 
+  it('switchPipe() should pipe in the same value for every assembled BotAction while supporting a BotAction to resolve in a pipe, as the value to be piped in to every assembled BotAction', async() => {
+    const mockActionReturnsTwo = jest.fn(() => Promise.resolve(2))
+    const mockActionPassThrough = jest.fn((p, pO) => Promise.resolve(pO.value))
+
+    // toPipe is a PipeValue
+    const toPipeValue = await switchPipe(77)(
+      mockActionReturnsTwo,
+      mockActionPassThrough
+    )(mockPage)
+
+    expect(toPipeValue).toEqual([2, 77])
+    expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(1, {}, wrapValueInPipe(77))
+    expect(mockActionPassThrough).toHaveBeenNthCalledWith(1, {}, wrapValueInPipe(77))
+
+    // toPipe does not exist, PipeValue is obtained from injects (and if missing, it's undefined)
+    const toPipeValueFromInjectsPipeObject = await switchPipe()(
+      mockActionReturnsTwo,
+      mockActionPassThrough
+    )(mockPage, wrapValueInPipe(55))
+
+    expect(toPipeValueFromInjectsPipeObject).toEqual([2, 55])
+    expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(2, {}, wrapValueInPipe(55))
+    expect(mockActionPassThrough).toHaveBeenNthCalledWith(2, {}, wrapValueInPipe(55))
+
+    // toPipe is a mock BotAction, injects don't have pipe objects
+    const mockToPipeAction = jest.fn(() => Promise.resolve(99))
+
+    const toPipeIsBotAction = await switchPipe(mockToPipeAction)(
+      mockActionPassThrough,
+      mockActionReturnsTwo
+    )(mockPage)
+
+    expect(toPipeIsBotAction).toEqual([99, 2])
+    expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
+    expect(mockActionPassThrough).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
+    expect(mockToPipeAction).toHaveBeenNthCalledWith(1, {}, createEmptyPipe())
+
+    // toPipe is a mock BotAction and injects have Pipe object
+    const toPipeIsBotActionWithInjectedPipeValue = await switchPipe(mockToPipeAction)(
+      mockActionReturnsTwo,
+      mockActionPassThrough,
+      mockActionReturnsTwo
+    )(mockPage, {brand: 'Pipe', value: 200})
+
+    expect(toPipeIsBotActionWithInjectedPipeValue).toEqual([2, 99, 2])
+    expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
+    expect(mockActionPassThrough).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
+    expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(4, {}, wrapValueInPipe(99))
+    expect(mockToPipeAction).toHaveBeenNthCalledWith(2, {}, wrapValueInPipe(200))
+  })
+
+  it('switchPipe() supports AbortLineSignal with special behavior where the assembledLines required to abort out of the BotAction is dependent on a MatchesSignal having at least 1 match', async() => {
+    const mockActionReturnsFive = jest.fn(() => Promise.resolve(5))
+    const mockActionPassThrough = jest.fn((p, pO) => Promise.resolve(pO.value))
+
+    // toPipe is a BotAction that aborts
+    const toPipeBotActionAborts = await switchPipe(abort(1, 'an abort value'))()(mockPage)
+    expect(toPipeBotActionAborts).toEqual('an abort value')
+
+    // toPipe is Value with assembled BotAction that aborts(1) without a matching case
+    const toPipeValueAbortOne = await switchPipe(8000)(
+      mockActionReturnsFive,
+      abort(1, 'another abort value')
+    )(mockPage)
+
+    expect(toPipeValueAbortOne).toEqual([5, 'another abort value']) // no case matching, takes 2
+    expect(mockActionReturnsFive).toHaveBeenNthCalledWith(1, {}, wrapValueInPipe(8000))
+
+    // toPipe is value with assembled BotAction that aborts(2+) without matching case
+    const toPipeValueAbortMulti = await switchPipe(10000)(
+      mockActionPassThrough,
+      abort(7, 'aborted pipe value to check')
+    )(mockPage)
+
+    expect(toPipeValueAbortMulti).toEqual(createAbortLineSignal(5, 'aborted pipe value to check'))
+
+    // toPipe is value with assembled BotAction that aborts(1) BUT with matching case so aborts entirely
+    const mockActionDoesntRun = jest.fn(() => Promise.resolve())
+    const toPipeValueAbortOneWithMatchingCase = await switchPipe(300)(
+      abort(), // no matching case, so the following still runs
+      pipeCase(300)(
+        mockActionReturnsFive,
+        mockActionPassThrough
+      ),
+      mockActionReturnsFive,
+      abort(1, 'the case was 300'),
+      mockActionDoesntRun
+    )(mockPage)
+
+    expect(toPipeValueAbortOneWithMatchingCase).toEqual('the case was 300')
+    expect(mockActionDoesntRun).not.toHaveBeenCalled()
+  })
 })

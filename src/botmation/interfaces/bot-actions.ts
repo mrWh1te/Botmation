@@ -3,7 +3,7 @@ import { Page } from 'puppeteer'
 import { BotFilesInjects } from '../types/bot-files-inject'
 import { BotIndexedDBInjects } from '../types/bot-indexed-db-inject'
 import { ScraperBotInjects } from '../types/scraper-bot-injects'
-import { AbortLineSignal } from '../types/abort-signal'
+import { AbortLineSignal } from '../types/abort-line-signal'
 
 /**
  * @description    All BotAction Interfaces

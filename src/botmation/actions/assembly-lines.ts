@@ -110,8 +110,15 @@ export const pipe =
       }
 
 /**
+ * switchPipe is similar to Pipe in that is supports piping, EXCEPT every assembled BotAction gets the same pipe object
+ * Before each assembled BotAction is ran, the pipe is switched back to whatever is set `toPipe`
+ * `toPipe` is optional and can be provided by an injected pipe object value (if nothing provided, default is undefined)
  * 
- * @param toPipe 
+ *  AbortLineSignal default abort(1) is ignored until a MatchesSignal is returned by an assembled BotAction, marking that at least one Case has ran
+ *    to break that, you can abort(2+) 
+ *  This is to support the classic switch/case/break flow where its switchPipe/pipeCase/abort
+ *    Therefore, if a pipeCase() does run, its returning MatcheSignal will be recognized by switchPipe and then lower the required abort count by 1
+ * @param toPipe BotAction to resolve and inject as a wrapped Pipe object in EACH assembled BotAction
  */
 export const switchPipe = 
   (toPipe?: BotAction | Exclude<PipeValue, Function>) => 

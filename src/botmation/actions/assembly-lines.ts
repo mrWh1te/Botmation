@@ -143,7 +143,7 @@ export const switchPipe =
 
         // run the assembled BotAction's with the same Pipe object
         let atLeastOneCaseMatched = false
-        const actionResults = []
+        const actionsResults = []
         for(const action of actions) {
           const resolvedActionResult = await action(page, ...injects)
 
@@ -162,15 +162,15 @@ export const switchPipe =
               if (isAbortLineSignal(processedAbortSignal)) {
                 return processAbortLineSignal(processedAbortSignal) 
               } else {
-                actionResults.push(processedAbortSignal)
+                actionsResults.push(processedAbortSignal)
               }
             }
           } else {
-            actionResults.push(resolvedActionResult)
+            actionsResults.push(resolvedActionResult)
           }
         }
 
-        return actionResults
+        return actionsResults
       }
 
 /**

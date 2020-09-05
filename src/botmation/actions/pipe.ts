@@ -49,15 +49,15 @@ export const pipeCase =
         // if any of the values matches the injected pipe object value
         // then run the assembled actions
         if (injectsHavePipe(injects)) {
-          const pipeValue = getInjectsPipeValue(injects)
+          const pipeObjectValue = getInjectsPipeValue(injects)
           
           const matches: Dictionary = valuesToTest.reduce((foundMatches, value, index) => {
             if (typeof value === 'function') {
-              if (value(pipeValue)) {
+              if (value(pipeObjectValue)) {
                 (foundMatches as Dictionary)[index] = value
               } 
             } else {
-              if (value === pipeValue) {
+              if (value === pipeObjectValue) {
                 (foundMatches as Dictionary)[index] = value
               }
             }

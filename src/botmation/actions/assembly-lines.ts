@@ -10,7 +10,7 @@ import {
 import { PipeValue } from "../types/pipe-value"
 import { AbortLineSignal, isAbortLineSignal } from "../types/abort-line-signal"
 import { processAbortLineSignal } from "../helpers/abort"
-import { isMatchesSignal } from "botmation/types/matches-signal"
+import { isMatchesSignal, MatchesSignal } from "botmation/types/matches-signal"
 import { hasAtLeastOneMatch } from "botmation/helpers/matches"
 
 /**
@@ -115,7 +115,7 @@ export const pipe =
  */
 export const switchPipe = 
   (toPipe?: BotAction | Exclude<PipeValue, Function>) => 
-    (...actions: BotAction[]): BotAction<any[]|AbortLineSignal|PipeValue> =>
+    (...actions: BotAction<PipeValue|AbortLineSignal|MatchesSignal|void>[]): BotAction<any[]|AbortLineSignal|PipeValue> =>
       async(page, ...injects) => {
         // fallback is injects pipe value
         if (!toPipe) {
@@ -130,6 +130,10 @@ export const switchPipe =
           } else {
             // simulate pipe
             toPipe = await toPipe(page, ...injects, createEmptyPipe())
+          }
+
+          if (isAbortLineSignal(toPipe)) {
+            return processAbortLineSignal(toPipe)
           }
         }
 

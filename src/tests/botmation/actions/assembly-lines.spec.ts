@@ -884,6 +884,23 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(mockToPipeAction).toHaveBeenNthCalledWith(2, {}, wrapValueInPipe(200))
   })
 
+  it('switchPipe() returns an array of results representing a 1:1 relationship with the assembled BotActions unless fully aborted out', async() => {
+    const mockAction1 = jest.fn(() => Promise.resolve('mercury'))
+    const mockAction2 = jest.fn(() => Promise.resolve('venus'))
+    const mockAction3 = jest.fn(() => Promise.resolve('earth'))
+    const mockAction4 = jest.fn(() => Promise.resolve('mars'))
+    const mockActionDoesntRun = jest.fn(() => Promise.resolve('no'))
+
+    await switchPipe(42)(
+      mockAction1,
+      mockAction2,
+      pipeCase(42)(
+        mockAction3
+      ),
+      mockAction4
+    )(mockPage)
+  })
+
   it('switchPipe() supports AbortLineSignal with special behavior where the assembledLines required to abort out of the BotAction is dependent on a MatchesSignal having at least 1 match', async() => {
     const mockActionReturnsFive = jest.fn(() => Promise.resolve(5))
     const mockActionPassThrough = jest.fn((p, pO) => Promise.resolve(pO.value))

@@ -158,8 +158,12 @@ export const switchPipe =
         for(const action of actions) {
           const resolvedActionResult = await action(page, ...injects)
 
+          // resolvedActionResult can be of 3 things
+          // 1. MatchesSignal 2. AbortLineSignal 3. PipeValue
+          // switchPipe will return (if not aborted) an array of all the resolved results of each BotAction assembled in the switchPipe()() 2nd call
           if (isMatchesSignal(resolvedActionResult) && hasAtLeastOneMatch(resolvedActionResult)) {
             atLeastOneCaseMatched = true
+            actionsResults.push(resolvedActionResult)
           } else if (isAbortLineSignal(resolvedActionResult)) {
             // switchPipe has unique AbortLineSignal behavior where it takes at least one succesful case()() to reduce
             // the necessary count to abort out
@@ -167,7 +171,14 @@ export const switchPipe =
           
             // takes abort(1) to abort out of switchPipe if at least one case has matched
             if (atLeastOneCaseMatched) {
-              return processedAbortSignal
+              if (isAbortLineSignal(processAbortLineSignal)) {
+                // greater than (1) so fully abort
+                return processedAbortSignal
+              } else {
+                // abort(1)
+                actionsResults.push(processAbortLineSignal)
+                return actionsResults
+              }
             } else {
               // otherwise it takes at least abort(2) to abort out of the case matching test & line of botaction's
               if (isAbortLineSignal(processedAbortSignal)) {
@@ -179,6 +190,7 @@ export const switchPipe =
           } else {
             actionsResults.push(resolvedActionResult)
           }
+          
         }
 
         return actionsResults

@@ -3,6 +3,8 @@ import { chainRunner, pipeRunner, pipeActionOrActions, chain, pipe, assemblyLine
 import { abort } from 'botmation/actions/abort'
 import { AbortLineSignal } from 'botmation/types/abort-line-signal'
 import { createEmptyPipe, wrapValueInPipe } from 'botmation/helpers/pipe'
+import { createAbortLineSignal } from 'botmation/helpers/abort'
+import { pipeCase } from 'botmation/actions/pipe'
 
 /**
  * @description   Assembly-Lines BotAction's
@@ -886,7 +888,41 @@ describe('[Botmation] actions/assembly-lines', () => {
     const mockActionReturnsFive = jest.fn(() => Promise.resolve(5))
     const mockActionPassThrough = jest.fn((p, pO) => Promise.resolve(pO.value))
 
+    // toPipe is a BotAction that aborts
     const toPipeBotActionAborts = await switchPipe(abort(1, 'an abort value'))()(mockPage)
     expect(toPipeBotActionAborts).toEqual('an abort value')
+
+    // toPipe is Value with assembled BotAction that aborts(1) without a matching case
+    const toPipeValueAbortOne = await switchPipe(8000)(
+      mockActionReturnsFive,
+      abort(1, 'another abort value')
+    )(mockPage)
+
+    expect(toPipeValueAbortOne).toEqual([5, 'another abort value']) // no case matching, takes 2
+    expect(mockActionReturnsFive).toHaveBeenNthCalledWith(1, {}, wrapValueInPipe(8000))
+
+    // toPipe is value with assembled BotAction that aborts(2+) without matching case
+    const toPipeValueAbortMulti = await switchPipe(10000)(
+      mockActionPassThrough,
+      abort(7, 'aborted pipe value to check')
+    )(mockPage)
+
+    expect(toPipeValueAbortMulti).toEqual(createAbortLineSignal(5, 'aborted pipe value to check'))
+
+    // toPipe is value with assembled BotAction that aborts(1) BUT with matching case so aborts entirely
+    const mockActionDoesntRun = jest.fn(() => Promise.resolve())
+    const toPipeValueAbortOneWithMatchingCase = await switchPipe(300)(
+      abort(), // no matching case, so the following still runs
+      pipeCase(300)(
+        mockActionReturnsFive,
+        mockActionPassThrough
+      ),
+      mockActionReturnsFive,
+      abort(1, 'the case was 300'),
+      mockActionDoesntRun
+    )(mockPage)
+
+    expect(toPipeValueAbortOneWithMatchingCase).toEqual('the case was 300')
+    expect(mockActionDoesntRun).not.toHaveBeenCalled()
   })
 })

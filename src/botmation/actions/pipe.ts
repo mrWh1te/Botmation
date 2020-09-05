@@ -44,7 +44,7 @@ export const emptyPipe: BotAction = async () => undefined
  */
 export const pipeCase = 
   (...valuesToTest: PipeValue[]) =>
-    (...actions: BotAction[]): BotAction<AbortLineSignal|MatchesSignal> => 
+    (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<AbortLineSignal|MatchesSignal> => 
       async(page, ...injects) => {
         // if any of the values matches the injected pipe object value
         // then run the assembled actions

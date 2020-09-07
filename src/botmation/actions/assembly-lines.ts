@@ -177,6 +177,7 @@ export const switchPipe =
               resolvedActionResult = processAbortLineSignal(resolvedActionResult)
             }
 
+            // switchPipe abort behavior
             if (!isAbortLineSignal(resolvedActionResult)) {
               // special case of "0" where the assembledLines was processed from 1->0 which returns the pipeValue
               // don't break the line, simply append abortLineSignal.pipeValue to array
@@ -185,8 +186,9 @@ export const switchPipe =
               actionsResults.push(resolvedActionResult.pipeValue)
               return actionsResults
             } else {
-              // assembledLines 2+
-              return createAbortLineSignal(resolvedActionResult.assembledLines - 1, resolvedActionResult.pipeValue)
+              // assembledLines 2+ - breaks line and breaks returning array functionality
+              // hence returned a processed abort line signal
+              return processAbortLineSignal(resolvedActionResult)
             }
           } else {
             // normal BotAction so add the result to the array to return later

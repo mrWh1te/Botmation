@@ -80,3 +80,50 @@ export const pipeCase =
         // no pipe (nothing to test) or the test resulted in no matches
         return createMatchesSignal() // empty matches signal (no matches)
       }
+
+/**
+ * runs assembled actions ONLY if ALL cases pass otherwise it breaks the case checking and immediately returns an empty MatchesSignal
+ * it's like if (case && case && case ...)
+ * @param valuesToTest 
+ */
+export const pipeCases = 
+  (...valuesToTest: PipeValue[]) =>
+    (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<AbortLineSignal|MatchesSignal> => 
+      async(page, ...injects) => {
+        // if any of the values matches the injected pipe object value
+        // then run the assembled actions
+        if (injectsHavePipe(injects)) {
+          const pipeObjectValue = getInjectsPipeValue(injects)
+          
+          const matches: Dictionary = {}
+          for (const [i, value] of valuesToTest.entries()) {
+            if (typeof value === 'function') {
+              if (value(pipeObjectValue)) {
+                matches[i] = value
+              } else {
+                break
+              }
+            } else {
+              if (value === pipeObjectValue) {
+                matches[i] = value
+              } else {
+                break
+              }
+            }
+          }
+
+          // only run assembled BotAction's if ALL cases pass
+          if (Object.keys(matches).length === valuesToTest.length) {
+            const returnValue:PipeValue|AbortLineSignal = await pipe()(...actions)(page, ...injects)
+
+            if (isAbortLineSignal(returnValue)) {
+              return returnValue // processed by pipe()
+            } else {
+              // signal that All cases matched
+              return createMatchesSignal(matches, returnValue)
+            }
+          }
+        }
+        
+        return createMatchesSignal() // empty matches signal (not ALL matched or none)
+      }

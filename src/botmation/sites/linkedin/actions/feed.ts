@@ -9,8 +9,13 @@ import {
   errors,
   map
 } from '../../..'
+import { switchPipe } from '../../../actions/assembly-lines'
+import { pipeCase, pipeCases } from '../../../actions/pipe'
+import { abort } from '../../../actions/abort'
+
 import { goToFeed } from './navigation'
 import { feedPostsSelector, feedPostAuthorSelector } from '../selectors'
+
 
 /**
  * Returns an array of CheerioStatic HTML elements representing the Feed's posts
@@ -36,10 +41,10 @@ export const getFeedPosts = (filterPromotedContent: boolean = true): BotAction<C
  * @param post 
  * @param peopleNames 
  */
-export const postIsAuthoredByAPerson = (post: CheerioStatic, ...peopleNames: string[]): ConditionalBotAction => 
-  async() => 
+// export const postIsAuthoredByAPerson = (post: CheerioStatic, ...peopleNames: string[]): ConditionalBotAction => 
+  // async() => 
     // if the CheerioStatic post has close matching in author text box a name from peopleNames list, then TRUE else FALSE
-    peopleNames.some(name => name.toLowerCase() === post(feedPostAuthorSelector).text().toLowerCase())
+    // peopleNames.some(name => name.toLowerCase() === post(feedPostAuthorSelector).text().toLowerCase())
     // TODO add helpers for fuzzy text matching using nGrams(3) -> trigrams with like 80% threshold and higher-order params override (ie for 100%)
     //    that way, adding/removing nicknames, middle initials, etc will not break script
     // use https://www.npmjs.com/package/trigram-utils asDictionary(), build unique list of key's, and see how much overlaps
@@ -71,14 +76,26 @@ export const like = (post: CheerioStatic): BotAction =>
  *  Maybe an exit condition by date? Stop going once posts are X days old
  * @param peopleNames 
  */
+const postIsUserArticle = (post: CheerioStatic): boolean => {
+  // todo html for markers of user post then return bool
+  return false
+}
+const postIsAuthoredByAPerson = (...peoleNames: string[]) => (post: CheerioStatic): boolean => {
+  // todo html for 
+  return false
+}
+
 export const likeAllFrom = (...peopleNames: string[]): BotAction => 
   pipe()(
     getFeedPosts(),
     forAll()(
-      post => givenThat(postIsAuthoredByAPerson(post, ...peopleNames))(
-        // scroll to post necessary to click off page link? ie click anchor link (new scrollTo() "navigation" BotAction?)
-        // the feature, auto-scroll, was added to `page.click()` but in a later Puppeteer version, irc
-        like(post)
+      post => switchPipe(post)(
+        pipeCases(postIsUserArticle, postIsAuthoredByAPerson(...peopleNames))(
+          // scroll to post necessary to click off page link? ie click anchor link (new scrollTo() "navigation" BotAction?)
+          // the feature, auto-scroll, was added to `page.click()` but in a later Puppeteer version, irc
+          like(post)
+        ),
+        abort()
       )
     )
   )

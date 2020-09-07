@@ -1,16 +1,14 @@
 import { 
-  ConditionalBotAction, 
   BotAction, 
   pipe, 
   $$, 
   forAll, 
-  givenThat, 
   click,
   errors,
   map
 } from '../../..'
 import { switchPipe } from '../../../actions/assembly-lines'
-import { pipeCase, pipeCases } from '../../../actions/pipe'
+import { pipeCases } from '../../../actions/pipe'
 import { abort } from '../../../actions/abort'
 
 import { goToFeed } from './navigation'
@@ -95,7 +93,11 @@ export const likeAllFrom = (...peopleNames: string[]): BotAction =>
           // the feature, auto-scroll, was added to `page.click()` but in a later Puppeteer version, irc
           like(post)
         ),
-        abort()
+        abort(),
+        // pipeCases(postIsUserComment, commentIsAuthoredByAPerson(...peopleNames))(
+        //   likeComment(post)
+        // ),
+        // abort()
       )
     )
   )

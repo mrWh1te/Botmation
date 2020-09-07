@@ -5,6 +5,7 @@ import { AbortLineSignal } from 'botmation/types/abort-line-signal'
 import { createEmptyPipe, wrapValueInPipe } from 'botmation/helpers/pipe'
 import { createAbortLineSignal } from 'botmation/helpers/abort'
 import { pipeCase } from 'botmation/actions/pipe'
+import { createMatchesSignal } from 'botmation/helpers/matches'
 
 /**
  * @description   Assembly-Lines BotAction's
@@ -884,45 +885,150 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(mockToPipeAction).toHaveBeenNthCalledWith(2, {}, wrapValueInPipe(200))
   })
 
-  it('switchPipe() supports AbortLineSignal with special behavior where the assembledLines required to abort out of the BotAction is dependent on a MatchesSignal having at least 1 match', async() => {
-    const mockActionReturnsFive = jest.fn(() => Promise.resolve(5))
-    const mockActionPassThrough = jest.fn((p, pO) => Promise.resolve(pO.value))
+  it('switchPipe() returns an array of results representing a 1:1 relationship with the assembled BotActions unless fully aborted out', async() => {
+    const mockAction1 = jest.fn(() => Promise.resolve('mercury'))
+    const mockAction2 = jest.fn(() => Promise.resolve('venus'))
+    const mockAction3 = jest.fn(() => Promise.resolve('earth'))
+    const mockAction4 = jest.fn(() => Promise.resolve('mars'))
+    const mockActionDoesntRun = jest.fn(() => Promise.resolve('no'))
 
-    // toPipe is a BotAction that aborts
-    const toPipeBotActionAborts = await switchPipe(abort(1, 'an abort value'))()(mockPage)
-    expect(toPipeBotActionAborts).toEqual('an abort value')
-
-    // toPipe is Value with assembled BotAction that aborts(1) without a matching case
-    const toPipeValueAbortOne = await switchPipe(8000)(
-      mockActionReturnsFive,
-      abort(1, 'another abort value')
-    )(mockPage)
-
-    expect(toPipeValueAbortOne).toEqual([5, 'another abort value']) // no case matching, takes 2
-    expect(mockActionReturnsFive).toHaveBeenNthCalledWith(1, {}, wrapValueInPipe(8000))
-
-    // toPipe is value with assembled BotAction that aborts(2+) without matching case
-    const toPipeValueAbortMulti = await switchPipe(10000)(
-      mockActionPassThrough,
-      abort(7, 'aborted pipe value to check')
-    )(mockPage)
-
-    expect(toPipeValueAbortMulti).toEqual(createAbortLineSignal(5, 'aborted pipe value to check'))
-
-    // toPipe is value with assembled BotAction that aborts(1) BUT with matching case so aborts entirely
-    const mockActionDoesntRun = jest.fn(() => Promise.resolve())
-    const toPipeValueAbortOneWithMatchingCase = await switchPipe(300)(
-      abort(), // no matching case, so the following still runs
-      pipeCase(300)(
-        mockActionReturnsFive,
-        mockActionPassThrough
+    const results1 = await switchPipe(42)(
+      mockAction1,
+      mockAction2,
+      pipeCase(42)(
+        mockAction3
       ),
-      mockActionReturnsFive,
-      abort(1, 'the case was 300'),
-      mockActionDoesntRun
+      mockAction4,
+      pipeCase(37)(
+        mockActionDoesntRun
+      ),
+      abort()
     )(mockPage)
 
-    expect(toPipeValueAbortOneWithMatchingCase).toEqual('the case was 300')
-    expect(mockActionDoesntRun).not.toHaveBeenCalled()
+    expect(results1).toEqual([
+      'mercury',
+      'venus',
+      createMatchesSignal({'0': 42}, 'earth'),
+      'mars',
+      createMatchesSignal(), // no matches so no ran code so returned pipeValue 
+      undefined // breaks line but doesnt break array return so get abort pipeValue
+    ])
+  })
+
+  /**
+   * switchPipe abort behavior
+   *
+   *   if an assembled botaction returns an infinite AbortLineSignal(0) then return that
+
+   *      otherwise, if no case matches, process a returned AbortLineSignal by 1 assembledLines (subtract 1 from assembledLines)
+
+   *      then for either no case matches or has matches, upon abortline signal do the following:
+
+   *      0 = dont break line, append abortLineSignal.pipeValue to return array
+   *      1 = break line, append abortLineSignal.pipeValue to return array then return array
+   *      2+ = dont return array, but return an AbortLineSignal( 1+ ) // reduce count by 1
+   * 
+   *   if toPipe BotAction returns an abort signal, process it and abort normally
+   */
+  it('switchPipe() supports AbortLineSignal with unique behavior', async() => {
+    const mockActionReturnsFive = jest.fn(() => Promise.resolve(5))
+
+    // no case matches - AbortLineSignal(0) - break like and return infinity abortline signal
+    const passThroughInfinityAbortsignal = await switchPipe()(
+      abort(0),
+      mockActionReturnsFive
+    )(mockPage)
+    expect(passThroughInfinityAbortsignal).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+    expect(mockActionReturnsFive).not.toHaveBeenCalled()
+
+    // no case matches - AbortLineSignal 1 = dont break line, append abortLineSignal.pipeValue to return array
+    const abortLineOneNoCaseMatches = await switchPipe()(
+      abort(1, 'abort-1-pipe-value'),
+      mockActionReturnsFive
+    )(mockPage)
+    expect(abortLineOneNoCaseMatches).toEqual(['abort-1-pipe-value', 5])
+    expect(mockActionReturnsFive).toHaveBeenNthCalledWith(1, {}, createEmptyPipe())
+
+    // no case matches - AbortLineSignal 2 = break line, append aLS.pipeValue to array and return that array
+    const abortLineTwoNoCaseMatches = await switchPipe()(
+      mockActionReturnsFive,
+      abort(2, 'abort-2-pipe-value'),
+      mockActionReturnsFive
+    )(mockPage)
+    expect(abortLineTwoNoCaseMatches).toEqual([5, 'abort-2-pipe-value'])
+    expect(mockActionReturnsFive).toHaveBeenCalledTimes(2)
+    expect(mockActionReturnsFive).not.toHaveBeenCalledTimes(3)
+
+    // no case matches - AbortLineSignal 3+ = break line, but dont return array, instead return processed AbortLineSignal (reduce count by 1)
+    const abortLineThreeNoCaseMatches = await switchPipe()(
+      mockActionReturnsFive,
+      abort(3, 'abort-3-pipe-value'),
+      mockActionReturnsFive
+    )(mockPage)
+    expect(abortLineThreeNoCaseMatches).toEqual(createAbortLineSignal(1, 'abort-3-pipe-value')) // 1 to break line return array, 2+ to break line and return abortlinesignal instead of array - hence minus 2
+    expect(mockActionReturnsFive).toHaveBeenCalledTimes(3)
+    expect(mockActionReturnsFive).not.toHaveBeenCalledTimes(4)
+
+    //
+    // case matches - abortlinesignal(0) break line and return abortlinesignal infinity instead of array
+    const passThroughInfinityAbortSignalWithMatches = await switchPipe(10)(
+      pipeCase(10)(
+        mockActionReturnsFive
+      ),
+      abort(0),
+      mockActionReturnsFive
+    )(mockPage)
+    expect(passThroughInfinityAbortSignalWithMatches).toEqual({
+      brand: 'Abort_Signal',
+      assembledLines: 0
+    })
+    expect(mockActionReturnsFive).toHaveBeenCalledTimes(4)
+    expect(mockActionReturnsFive).not.toHaveBeenCalledTimes(5)
+
+    // case matches - abortlinesignal(1) = break line, append abortLineSignal.pipeValue to return array then return array
+    const abortLineOneWithCaseMatches = await switchPipe(10)(
+      pipeCase(10)(
+        mockActionReturnsFive
+      ),
+      abort(1, 'a-pipe-1-value-O_O'),
+      mockActionReturnsFive
+    )(mockPage)
+    expect(abortLineOneWithCaseMatches).toEqual([
+      createMatchesSignal({'0': 10}, 5),
+      'a-pipe-1-value-O_O'
+    ])
+    expect(mockActionReturnsFive).toHaveBeenCalledTimes(5)
+    expect(mockActionReturnsFive).not.toHaveBeenCalledTimes(6)
+
+    // case matches - abortlinesignal(2) = dont return array, but return an AbortLineSignal( 1+ ) // reduce count by 1
+    const abortLineTwoWithCaseMatches = await switchPipe(10)(
+      pipeCase(10)(
+        mockActionReturnsFive
+      ),
+      abort(2, 'a-pipe-2-value-O_O'),
+      mockActionReturnsFive
+    )(mockPage)
+    expect(abortLineTwoWithCaseMatches).toEqual(createAbortLineSignal(1, 'a-pipe-2-value-O_O'))
+    expect(mockActionReturnsFive).toHaveBeenCalledTimes(6)
+    expect(mockActionReturnsFive).not.toHaveBeenCalledTimes(7)
+
+    //
+    // toPipe botaction aborts
+    const mockActionNeverRuns = jest.fn(() => Promise.resolve())
+
+    const toPipeAbortsInfinity = await switchPipe(abort(0))(mockActionNeverRuns)(mockPage)
+    expect(toPipeAbortsInfinity).toEqual(createAbortLineSignal(0))
+    expect(mockActionNeverRuns).not.toHaveBeenCalled()
+
+    const toPipeAbortsOne = await switchPipe(abort(1, 'a-value'))(mockActionNeverRuns)(mockPage)
+    expect(toPipeAbortsOne).toEqual('a-value')
+    expect(mockActionNeverRuns).not.toHaveBeenCalled()
+
+    const toPipeAbortsTwo = await switchPipe(abort(2, 'a-2-value'))(mockActionNeverRuns)(mockPage)
+    expect(toPipeAbortsTwo).toEqual(createAbortLineSignal(1, 'a-2-value'))
+    expect(mockActionNeverRuns).not.toHaveBeenCalled()
   })
 })

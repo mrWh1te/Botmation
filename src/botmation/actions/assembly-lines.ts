@@ -9,7 +9,7 @@ import {
 } from "../helpers/pipe"
 import { PipeValue } from "../types/pipe-value"
 import { AbortLineSignal, isAbortLineSignal } from "../types/abort-line-signal"
-import { processAbortLineSignal } from "../helpers/abort"
+import { processAbortLineSignal, createAbortLineSignal } from "../helpers/abort"
 import { isMatchesSignal, MatchesSignal } from "botmation/types/matches-signal"
 import { hasAtLeastOneMatch } from "botmation/helpers/matches"
 
@@ -153,41 +153,43 @@ export const switchPipe =
         injects.push(wrapValueInPipe(toPipe))
 
         // run the assembled BotAction's with the same Pipe object
-        let atLeastOneCaseMatched = false
+        let hasAtLeastOneCaseMatch = false
         const actionsResults = []
+
         for(const action of actions) {
-          const resolvedActionResult = await action(page, ...injects)
+          let resolvedActionResult = await action(page, ...injects)
 
           // resolvedActionResult can be of 3 things
           // 1. MatchesSignal 2. AbortLineSignal 3. PipeValue
           // switchPipe will return (if not aborted) an array of all the resolved results of each BotAction assembled in the switchPipe()() 2nd call
           if (isMatchesSignal(resolvedActionResult) && hasAtLeastOneMatch(resolvedActionResult)) {
-            atLeastOneCaseMatched = true
+            hasAtLeastOneCaseMatch = true
             actionsResults.push(resolvedActionResult)
           } else if (isAbortLineSignal(resolvedActionResult)) {
-            // switchPipe has unique AbortLineSignal behavior where it takes at least one succesful case()() to reduce
-            // the necessary count to abort out
-            const processedAbortSignal = processAbortLineSignal(resolvedActionResult)
-          
-            // takes abort(1) to abort out of switchPipe if at least one case has matched
-            if (atLeastOneCaseMatched) {
-              if (isAbortLineSignal(processAbortLineSignal)) {
-                // greater than (1) so fully abort
-                return processedAbortSignal
-              } else {
-                // abort(1)
-                actionsResults.push(processAbortLineSignal)
-                return actionsResults
-              }
+            // infinity signal breaks function, and returns upward
+            if (resolvedActionResult.assembledLines === 0) {
+              return resolvedActionResult
+            }
+
+            // if no case matches, reduce abortLineSignal.assembledLines count by 1
+            // to prevent aborting without a case match ie abort(1)
+            if (!hasAtLeastOneCaseMatch) {
+              resolvedActionResult = processAbortLineSignal(resolvedActionResult)
+            }
+
+            if (!isAbortLineSignal(resolvedActionResult)) {
+              // special case of "0" where the assembledLines was processed from 1->0 which returns the pipeValue
+              // don't break the line, simply append abortLineSignal.pipeValue to array
+              actionsResults.push(resolvedActionResult)
+            } else if (resolvedActionResult.assembledLines === 1) {
+              actionsResults.push(resolvedActionResult.pipeValue)
+              return actionsResults
             } else {
-              // otherwise it takes at least abort(2) to abort out of the case matching test & line of botaction's
-              if (isAbortLineSignal(processedAbortSignal)) {
-                return processAbortLineSignal(processedAbortSignal) 
-              } else {
-                actionsResults.push(processedAbortSignal)
-              }
+              // assembledLines 2+
+              return createAbortLineSignal(resolvedActionResult.assembledLines - 1, resolvedActionResult.pipeValue)
             }
           } else {
+            // normal BotAction so add the result to the array to return later
             actionsResults.push(resolvedActionResult)
           }
           

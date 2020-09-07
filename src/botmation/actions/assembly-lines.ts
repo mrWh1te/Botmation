@@ -9,7 +9,7 @@ import {
 } from "../helpers/pipe"
 import { PipeValue } from "../types/pipe-value"
 import { AbortLineSignal, isAbortLineSignal } from "../types/abort-line-signal"
-import { processAbortLineSignal, createAbortLineSignal } from "../helpers/abort"
+import { processAbortLineSignal } from "../helpers/abort"
 import { isMatchesSignal, MatchesSignal } from "botmation/types/matches-signal"
 import { hasAtLeastOneMatch } from "botmation/helpers/matches"
 

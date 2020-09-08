@@ -97,10 +97,10 @@ describe('[Botmation] actions/pipe', () => {
 
   it('pipeCase() supports the AbortLineSignal similar to givenThat() in which its considered one line to abort', async() => {
     const abortedInfiniteLine = await pipeCase(10)(
-      abort(0)
+      abort(0, 'infinite')
     )(mockPage, wrapValueInPipe(10))
 
-    expect(abortedInfiniteLine).toEqual(createAbortLineSignal(0))
+    expect(abortedInfiniteLine).toEqual(createAbortLineSignal(0, 'infinite'))
 
     const abortedSingleLine = await pipeCase(100)(
       abort(1, 'an aborted pipe value')
@@ -108,11 +108,17 @@ describe('[Botmation] actions/pipe', () => {
 
     expect(abortedSingleLine).toEqual(createCasesSignal({'0': 100}, true, 'an aborted pipe value'))
 
-    const abortedMultiLine = await pipeCase(1000)(
+    const abortedTwoLine = await pipeCase(1000)(
       abort(2, 'another aborted pipe value')
     )(mockPage, wrapValueInPipe(1000))
 
-    expect(abortedMultiLine).toEqual(createAbortLineSignal(1, 'another aborted pipe value'))
+    expect(abortedTwoLine).toEqual('another aborted pipe value') // breaks line, and breaks the casesignal returning flow to return a processed (again) AbortLineSignal (therefore abortLineSignal.pipeValue)
+
+    const abortedMultiLine = await pipeCase(1000)(
+      abort(3, 'another aborted pipe value 5')
+    )(mockPage, wrapValueInPipe(1000))
+
+    expect(abortedMultiLine).toEqual(createAbortLineSignal(1, 'another aborted pipe value 5'))
   })
 
   //
@@ -176,5 +182,49 @@ describe('[Botmation] actions/pipe', () => {
       pipeValue: 2 // mockActionRuns returns pipe object value
     })
     expect(mockActionPassThrough).toHaveBeenCalledTimes(1)
+
+    // function matching where was is false-like to break the loop preventing following botactions from running
+    const multiMatchesFunctionFalse = await pipeCases(trueForTwoOrTen, trueForTwoOrFive, trueForTwoOrSix, 2)(
+      mockActionPassThrough // does not get called, so same called times as before
+    )(mockPage, wrapValueInPipe(10))
+
+    expect(multiMatchesFunctionFalse).toEqual({
+      brand: 'Cases_Signal',
+      matches: {
+        0: expect.any(Function),
+      },
+      conditionPass: false
+    })
+    expect(mockActionPassThrough).toHaveBeenCalledTimes(1)
+  })
+
+  it('pipeCases()() supports AbortLineSignal in assembled BotActions with aborting behavior, 1 line of assembledLines to abort assembled lines but still return CasesSignal and 2+ assembledLines of aborting to fully abort out of the function', async() => {
+    const mockActionNotRun = jest.fn(() => Promise.resolve())
+
+    const abortLineOne = await pipeCases(100)(
+      abort(1, 'pipe-value-1'),
+      mockActionNotRun
+    )(mockPage, wrapValueInPipe(100))
+
+    expect(mockActionNotRun).not.toHaveBeenCalled()
+    expect(abortLineOne).toEqual(createCasesSignal({0: 100}, true, 'pipe-value-1'))
+    
+    const abortLineTwo = await pipeCases(100)(
+      abort(2, 'pipe-value-to-check')
+    )(mockPage, wrapValueInPipe(100))
+
+    expect(abortLineTwo).toEqual('pipe-value-to-check')
+
+    const abortLineThree = await pipeCases(100)(
+      abort(3, 'pipe-value-3')
+    )(mockPage, wrapValueInPipe(100))
+
+    expect(abortLineThree).toEqual(createAbortLineSignal(1, 'pipe-value-3'))
+
+    const abortInfinity = await pipeCases(100)(
+      abort(0, 'infinity')
+    )(mockPage, wrapValueInPipe(100))
+
+    expect(abortInfinity).toEqual(createAbortLineSignal(0, 'infinity'))
   })
 })

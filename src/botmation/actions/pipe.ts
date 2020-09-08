@@ -5,6 +5,7 @@ import { CasesSignal } from "../types/cases-signal"
 import { AbortLineSignal, Dictionary, isAbortLineSignal } from "../types"
 import { pipe } from "./assembly-lines"
 import { createCasesSignal } from "../helpers/cases"
+import { processAbortLineSignal } from "botmation/helpers/abort"
 
 //
 // BotAction's Focused on Piping
@@ -39,12 +40,13 @@ export const emptyPipe: BotAction = async () => undefined
  * @return AbortLineSignal|MatchesSignal
  *  If no matches are found or matches are found, a MatchesSignal is returned
  *  It is determined if signal has matches by using hasAtLeastOneMatch() helper
- *  If assembled BotAction aborts(1), it still returns a MatchesSignal with the matches
- *  If assembled BotAction aborts(2+), it returns a processed AbortLineSignal
+ *  If assembled BotAction aborts(1), it breaks line & returns a MatchesSignal with the matches
+ *  If assembled BotAction aborts(2), it breaks line & returns AbortLineSignal.pipeValue
+ *  If assembled BotAction aborts(3+), it returns AbortLineSignal(2-)
  */
 export const pipeCase = 
   (...valuesToTest: PipeValue[]) =>
-    (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<AbortLineSignal|CasesSignal> => 
+    (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<PipeValue|AbortLineSignal|CasesSignal> => 
       async(page, ...injects) => {
         // if any of the values matches the injected pipe object value
         // then run the assembled actions
@@ -69,7 +71,7 @@ export const pipeCase =
             const returnValue:PipeValue|AbortLineSignal = await pipe()(...actions)(page, ...injects)
 
             if (isAbortLineSignal(returnValue)) {
-              return returnValue // processed by pipe()
+              return processAbortLineSignal(returnValue)
             } else {
               // signal that a case matched
               return createCasesSignal(matches, true, returnValue)
@@ -84,11 +86,12 @@ export const pipeCase =
 /**
  * runs assembled actions ONLY if ALL cases pass otherwise it breaks the case checking and immediately returns an empty MatchesSignal
  * it's like if (case && case && case ...)
+ * Same AbortLineSignal behavior as pipeCase()()
  * @param valuesToTest 
  */
 export const pipeCases = 
   (...valuesToTest: PipeValue[]) =>
-    (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<AbortLineSignal|CasesSignal> => 
+    (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<PipeValue|AbortLineSignal|CasesSignal> => 
       async(page, ...injects) => {
         // if any of the values matches the injected pipe object value
         // then run the assembled actions
@@ -118,7 +121,8 @@ export const pipeCases =
             const returnValue:PipeValue|AbortLineSignal = await pipe()(...actions)(page, ...injects)
 
             if (isAbortLineSignal(returnValue)) {
-              return returnValue // processed by pipe()
+              return processAbortLineSignal(returnValue) // processed by pipe() to abort the line
+                                                         // processed a 2nd time to abort the returning CasesSignal feature
             } else {
               // signal that All cases matched
               return createCasesSignal(matches, true, returnValue)

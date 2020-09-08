@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { map, pipeValue, emptyPipe, pipeCase } from 'botmation/actions/pipe'
+import { map, pipeValue, emptyPipe, pipeCase, pipeCases } from 'botmation/actions/pipe'
 import { createAbortLineSignal } from 'botmation/helpers/abort'
 import { wrapValueInPipe } from 'botmation/helpers/pipe'
 import { abort } from 'botmation/actions/abort'
@@ -41,7 +41,7 @@ describe('[Botmation] actions/pipe', () => {
   })
 
   //
-  // pipeCase() Unit Test
+  // pipeCase() Unit Test || || || (at least one case passes)
   it('pipeCase()() should run assembled BotActions only if a value to test matches the pipe object value or if a value is a function then used as callback to evaluate for truthy with pipe object value as function param', async() => {
     // these mock actions act like log() where they return the pipe object value
     const mockActionRuns = jest.fn((p, pO) => Promise.resolve(pO.value))
@@ -113,5 +113,68 @@ describe('[Botmation] actions/pipe', () => {
     )(mockPage, wrapValueInPipe(1000))
 
     expect(abortedMultiLine).toEqual(createAbortLineSignal(1, 'another aborted pipe value'))
+  })
+
+  //
+  // pipeCases() Unit Test && && && (all cases must pass)
+  it('pipeCases()() should run assembled BotActions only if ALL values tested against the pipe object value are equal or if a value is a function then used as callback to evaluate for truthy with pipe object value as function param', async() => {
+    // these mock actions act like log() where they return the pipe object value
+    const mockActionPassThrough = jest.fn((p, pO) => Promise.resolve(pO.value))
+    const mockActionDoesntRun = jest.fn(() => Promise.resolve())
+
+    // no matches - no injected pipe
+    const noMatchesNoPipe = await pipeCases(4, 6)(
+      mockActionDoesntRun
+    )(mockPage)
+
+    expect(noMatchesNoPipe).toEqual(createCasesSignal())
+    expect(mockActionDoesntRun).not.toHaveBeenCalled()
+
+    // no matches - with injected pipe
+    const noMatchesWithPipe = await pipeCases(77, 123)(
+      mockActionDoesntRun
+    )(mockPage, wrapValueInPipe(44))
+
+    expect(noMatchesWithPipe).toEqual(createCasesSignal())
+    expect(mockActionDoesntRun).not.toHaveBeenCalled()
+
+    // single numerical match - with injected pipe
+    const singleNumericalMatchButDoesntGetToo = await pipeCases(3, 7, 18)(
+      mockActionPassThrough
+    )(mockPage, wrapValueInPipe(7))
+
+    expect(singleNumericalMatchButDoesntGetToo).toEqual(createCasesSignal())
+    expect(mockActionPassThrough).toHaveBeenCalledTimes(0)
+
+    const singleNumericalMatchThenBreak = await pipeCases(7, 3, 18)(
+      mockActionPassThrough
+    )(mockPage, wrapValueInPipe(7))
+
+    expect(singleNumericalMatchThenBreak).toEqual(createCasesSignal({
+      0: 7 // index 0, value 7
+    }, false)) // no pipe value since the assembled botactions did not run
+    expect(mockActionPassThrough).toHaveBeenCalledTimes(0)
+
+    // all matches via functions - with injected pipe
+    const trueForTwoOrTen = (value: number): boolean => value === 2 || value === 10
+    const trueForTwoOrFive = (value: number): boolean => value === 2 || value === 5
+    const trueForTwoOrSix = (value: number): boolean => value === 2 || value === 6
+
+    const multiNumericalMatches = await pipeCases(trueForTwoOrTen, trueForTwoOrFive, trueForTwoOrSix, 2)(
+      mockActionPassThrough
+    )(mockPage, wrapValueInPipe(2))
+
+    expect(multiNumericalMatches).toEqual({
+      brand: 'Cases_Signal',
+      matches: {
+        0: expect.any(Function),
+        1: expect.any(Function),
+        2: expect.any(Function),
+        3: 2
+      },
+      conditionPass: true,
+      pipeValue: 2 // mockActionRuns returns pipe object value
+    })
+    expect(mockActionPassThrough).toHaveBeenCalledTimes(1)
   })
 })

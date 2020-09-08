@@ -10,8 +10,7 @@ import {
 import { PipeValue } from "../types/pipe-value"
 import { AbortLineSignal, isAbortLineSignal } from "../types/abort-line-signal"
 import { processAbortLineSignal } from "../helpers/abort"
-import { isMatchesSignal, MatchesSignal } from "botmation/types/matches-signal"
-import { hasAtLeastOneMatch } from "botmation/helpers/matches"
+import { isCasesSignal, CasesSignal } from "../types/cases-signal"
 
 /**
  * @description     chain() BotAction for running a chain of BotAction's safely and optimized
@@ -122,7 +121,7 @@ export const pipe =
  */
 export const switchPipe = 
   (toPipe?: BotAction | Exclude<PipeValue, Function>) => 
-    (...actions: BotAction<PipeValue|AbortLineSignal|MatchesSignal|void>[]): BotAction<any[]|AbortLineSignal|PipeValue> =>
+    (...actions: BotAction<PipeValue|AbortLineSignal|CasesSignal|void>[]): BotAction<any[]|AbortLineSignal|PipeValue> =>
       async(page, ...injects) => {
         // fallback is injects pipe value
         if (!toPipe) {
@@ -162,7 +161,7 @@ export const switchPipe =
           // resolvedActionResult can be of 3 things
           // 1. MatchesSignal 2. AbortLineSignal 3. PipeValue
           // switchPipe will return (if not aborted) an array of all the resolved results of each BotAction assembled in the switchPipe()() 2nd call
-          if (isMatchesSignal(resolvedActionResult) && hasAtLeastOneMatch(resolvedActionResult)) {
+          if (isCasesSignal(resolvedActionResult) && resolvedActionResult.conditionPass) {
             hasAtLeastOneCaseMatch = true
             actionsResults.push(resolvedActionResult)
           } else if (isAbortLineSignal(resolvedActionResult)) {

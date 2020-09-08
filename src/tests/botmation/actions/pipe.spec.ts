@@ -4,7 +4,7 @@ import { map, pipeValue, emptyPipe, pipeCase } from 'botmation/actions/pipe'
 import { createAbortLineSignal } from 'botmation/helpers/abort'
 import { wrapValueInPipe } from 'botmation/helpers/pipe'
 import { abort } from 'botmation/actions/abort'
-import { createMatchesSignal } from 'botmation/helpers/matches'
+import { createCasesSignal } from 'botmation/helpers/cases'
 
 /**
  * @description   Pipe BotAction's
@@ -52,10 +52,7 @@ describe('[Botmation] actions/pipe', () => {
       mockActionDoesntRun
     )(mockPage)
 
-    expect(noMatchesNoPipe).toEqual({
-      brand: 'Matches_Signal',
-      matches: {},
-    })
+    expect(noMatchesNoPipe).toEqual(createCasesSignal())
     expect(mockActionDoesntRun).not.toHaveBeenCalled()
 
     // no matches - with injected pipe
@@ -63,10 +60,7 @@ describe('[Botmation] actions/pipe', () => {
       mockActionDoesntRun
     )(mockPage, wrapValueInPipe(44))
 
-    expect(noMatchesWithPipe).toEqual({
-      brand: 'Matches_Signal',
-      matches: {},
-    })
+    expect(noMatchesWithPipe).toEqual(createCasesSignal())
     expect(mockActionDoesntRun).not.toHaveBeenCalled()
 
     // single numerical match - with injected pipe
@@ -74,13 +68,9 @@ describe('[Botmation] actions/pipe', () => {
       mockActionRuns
     )(mockPage, wrapValueInPipe(7))
 
-    expect(singleNumericalMatch).toEqual({
-      brand: 'Matches_Signal',
-      matches: {
-        '1': 7 // index 1, value 7
-      },
-      pipeValue: 7 // mockActionRuns returns pipe object value
-    })
+    expect(singleNumericalMatch).toEqual(createCasesSignal({
+      '1': 7 // index 1, value 7
+    }, true, 7))
     expect(mockActionRuns).toHaveBeenCalledTimes(1)
 
     // multiple matches via functions - with injected pipe
@@ -93,12 +83,13 @@ describe('[Botmation] actions/pipe', () => {
     )(mockPage, wrapValueInPipe(2))
 
     expect(multiNumericalMatches).toEqual({
-      brand: 'Matches_Signal',
+      brand: 'Cases_Signal',
       matches: {
         1: expect.any(Function),
         2: expect.any(Function),
         3: 2
       },
+      conditionPass: true,
       pipeValue: 2 // mockActionRuns returns pipe object value
     })
     expect(mockActionRuns).toHaveBeenCalledTimes(2)
@@ -115,7 +106,7 @@ describe('[Botmation] actions/pipe', () => {
       abort(1, 'an aborted pipe value')
     )(mockPage, wrapValueInPipe(100))
 
-    expect(abortedSingleLine).toEqual(createMatchesSignal({'0': 100}, 'an aborted pipe value'))
+    expect(abortedSingleLine).toEqual(createCasesSignal({'0': 100}, true, 'an aborted pipe value'))
 
     const abortedMultiLine = await pipeCase(1000)(
       abort(2, 'another aborted pipe value')

@@ -5,7 +5,7 @@ import { AbortLineSignal } from 'botmation/types/abort-line-signal'
 import { createEmptyPipe, wrapValueInPipe } from 'botmation/helpers/pipe'
 import { createAbortLineSignal } from 'botmation/helpers/abort'
 import { pipeCase } from 'botmation/actions/pipe'
-import { createMatchesSignal } from 'botmation/helpers/matches'
+import { createCasesSignal } from 'botmation/helpers/cases'
 
 /**
  * @description   Assembly-Lines BotAction's
@@ -908,9 +908,9 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(results1).toEqual([
       'mercury',
       'venus',
-      createMatchesSignal({'0': 42}, 'earth'),
+      createCasesSignal({'0': 42}, true, 'earth'),
       'mars',
-      createMatchesSignal(), // no matches so no ran code so returned pipeValue 
+      createCasesSignal(), // no matches so no ran code so returned pipeValue 
       undefined // breaks line but doesnt break array return so get abort pipeValue
     ])
   })
@@ -997,7 +997,7 @@ describe('[Botmation] actions/assembly-lines', () => {
       mockActionReturnsFive
     )(mockPage)
     expect(abortLineOneWithCaseMatches).toEqual([
-      createMatchesSignal({'0': 10}, 5),
+      createCasesSignal({'0': 10}, true, 5),
       'a-pipe-1-value-O_O'
     ])
     expect(mockActionReturnsFive).toHaveBeenCalledTimes(5)

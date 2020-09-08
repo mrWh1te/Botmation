@@ -1,10 +1,10 @@
 import { BotAction } from "../interfaces"
 import { PipeValue } from "../types/pipe-value"
 import { getInjectsPipeValue, injectsHavePipe } from "../helpers/pipe"
-import { MatchesSignal } from "../types/matches-signal"
+import { CasesSignal } from "../types/cases-signal"
 import { AbortLineSignal, Dictionary, isAbortLineSignal } from "../types"
 import { pipe } from "./assembly-lines"
-import { createMatchesSignal } from "../helpers/matches"
+import { createCasesSignal } from "../helpers/cases"
 
 //
 // BotAction's Focused on Piping
@@ -44,7 +44,7 @@ export const emptyPipe: BotAction = async () => undefined
  */
 export const pipeCase = 
   (...valuesToTest: PipeValue[]) =>
-    (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<AbortLineSignal|MatchesSignal> => 
+    (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<AbortLineSignal|CasesSignal> => 
       async(page, ...injects) => {
         // if any of the values matches the injected pipe object value
         // then run the assembled actions
@@ -72,13 +72,13 @@ export const pipeCase =
               return returnValue // processed by pipe()
             } else {
               // signal that a case matched
-              return createMatchesSignal(matches, returnValue)
+              return createCasesSignal(matches, true, returnValue)
             }
           }
         }
         
         // no pipe (nothing to test) or the test resulted in no matches
-        return createMatchesSignal() // empty matches signal (no matches)
+        return createCasesSignal() // empty matches signal (no matches)
       }
 
 /**
@@ -88,14 +88,15 @@ export const pipeCase =
  */
 export const pipeCases = 
   (...valuesToTest: PipeValue[]) =>
-    (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<AbortLineSignal|MatchesSignal> => 
+    (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<AbortLineSignal|CasesSignal> => 
       async(page, ...injects) => {
         // if any of the values matches the injected pipe object value
         // then run the assembled actions
+        const matches: Dictionary = {}
+
         if (injectsHavePipe(injects)) {
           const pipeObjectValue = getInjectsPipeValue(injects)
           
-          const matches: Dictionary = {}
           for (const [i, value] of valuesToTest.entries()) {
             if (typeof value === 'function') {
               if (value(pipeObjectValue)) {
@@ -120,10 +121,10 @@ export const pipeCases =
               return returnValue // processed by pipe()
             } else {
               // signal that All cases matched
-              return createMatchesSignal(matches, returnValue)
+              return createCasesSignal(matches, true, returnValue)
             }
           }
         }
         
-        return createMatchesSignal() // empty matches signal (not ALL matched or none)
+        return createCasesSignal(matches) // partial matches signal with conditionPass false
       }

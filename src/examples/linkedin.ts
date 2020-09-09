@@ -51,8 +51,6 @@ const generateTimeStamp = (): string => {
       saveCookies('linkedin')
     ),
 
-    // at this point, you are logged in and looking at feed
-
     wait(5000), // tons of stuff loads... no rush
 
     givenThat(isLoggedIn)(

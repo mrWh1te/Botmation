@@ -1,7 +1,8 @@
 import { DirectNavigationOptions, NavigationOptions } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-actions'
-import { enrichGoToPageOptions, sleep } from '../helpers/navigation'
+import { enrichGoToPageOptions, sleep, scrollToElement } from '../helpers/navigation'
+import { chain } from './assembly-lines'
 
 /**
  * @description   Go to url provided in the current page
@@ -63,3 +64,13 @@ export const waitForNavigation: BotAction = async(page) => {
 export const wait = (milliseconds: number): BotAction => async() => {
   await sleep(milliseconds)
 } 
+
+/**
+ * 
+ * @param htmlSelector 
+ */
+export const scrollTo = (htmlSelector: string): BotAction => 
+  chain(
+    async(page) => page.evaluate(scrollToElement, htmlSelector),
+    wait(2500) // wait for scroll to complete
+  )

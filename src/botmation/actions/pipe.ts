@@ -76,6 +76,8 @@ export const pipeCase =
               // signal that a case matched
               return createCasesSignal(matches, true, returnValue)
             }
+          } else {
+            return createCasesSignal(matches, false, pipeObjectValue) // pass through original pipe object as CasesSignal.pipeValue
           }
         }
         

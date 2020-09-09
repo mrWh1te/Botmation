@@ -858,31 +858,34 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(2, {}, wrapValueInPipe(55))
     expect(mockActionPassThrough).toHaveBeenNthCalledWith(2, {}, wrapValueInPipe(55))
 
+    // to support piping a function as a value, the BotAction as a value was removed
+    // since it can be ran before in a pipe then have its value piped into switchPipe()
+
     // toPipe is a mock BotAction, injects don't have pipe objects
-    const mockToPipeAction = jest.fn(() => Promise.resolve(99))
+    // const mockToPipeAction = jest.fn(() => Promise.resolve(99))
 
-    const toPipeIsBotAction = await switchPipe(mockToPipeAction)(
-      mockActionPassThrough,
-      mockActionReturnsTwo
-    )(mockPage)
+    // const toPipeIsBotAction = await switchPipe(mockToPipeAction)(
+    //   mockActionPassThrough,
+    //   mockActionReturnsTwo
+    // )(mockPage)
 
-    expect(toPipeIsBotAction).toEqual([99, 2])
-    expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
-    expect(mockActionPassThrough).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
-    expect(mockToPipeAction).toHaveBeenNthCalledWith(1, {}, createEmptyPipe())
+    // expect(toPipeIsBotAction).toEqual([99, 2])
+    // expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
+    // expect(mockActionPassThrough).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
+    // expect(mockToPipeAction).toHaveBeenNthCalledWith(1, {}, createEmptyPipe())
 
     // toPipe is a mock BotAction and injects have Pipe object
-    const toPipeIsBotActionWithInjectedPipeValue = await switchPipe(mockToPipeAction)(
-      mockActionReturnsTwo,
-      mockActionPassThrough,
-      mockActionReturnsTwo
-    )(mockPage, {brand: 'Pipe', value: 200})
+    // const toPipeIsBotActionWithInjectedPipeValue = await switchPipe(mockToPipeAction)(
+    //   mockActionReturnsTwo,
+    //   mockActionPassThrough,
+    //   mockActionReturnsTwo
+    // )(mockPage, {brand: 'Pipe', value: 200})
 
-    expect(toPipeIsBotActionWithInjectedPipeValue).toEqual([2, 99, 2])
-    expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
-    expect(mockActionPassThrough).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
-    expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(4, {}, wrapValueInPipe(99))
-    expect(mockToPipeAction).toHaveBeenNthCalledWith(2, {}, wrapValueInPipe(200))
+    // expect(toPipeIsBotActionWithInjectedPipeValue).toEqual([2, 99, 2])
+    // expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
+    // expect(mockActionPassThrough).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
+    // expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(4, {}, wrapValueInPipe(99))
+    // expect(mockToPipeAction).toHaveBeenNthCalledWith(2, {}, wrapValueInPipe(200))
   })
 
   it('switchPipe() returns an array of results representing a 1:1 relationship with the assembled BotActions unless fully aborted out', async() => {

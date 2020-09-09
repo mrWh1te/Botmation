@@ -120,27 +120,12 @@ export const pipe =
  * @param toPipe BotAction to resolve and inject as a wrapped Pipe object in EACH assembled BotAction
  */
 export const switchPipe = 
-  (toPipe?: BotAction | Exclude<PipeValue, Function>) => 
+  (toPipe?: PipeValue) => 
     (...actions: BotAction<PipeValue|AbortLineSignal|CasesSignal|void>[]): BotAction<any[]|AbortLineSignal|PipeValue> =>
       async(page, ...injects) => {
         // fallback is injects pipe value
         if (!toPipe) {
           toPipe = getInjectsPipeValue(injects)
-        }
-
-        // if function, it's an async BotAction function
-        // resolve it to Pipe the resolved value
-        if (typeof toPipe === 'function') {
-          if(injectsHavePipe(injects)) {
-            toPipe = await toPipe(page, ...injects)
-          } else {
-            // simulate pipe
-            toPipe = await toPipe(page, ...injects, createEmptyPipe())
-          }
-
-          if (isAbortLineSignal(toPipe)) {
-            return processAbortLineSignal(toPipe)
-          }
         }
 
         // remove pipe from injects if there is one to set the one for all actions

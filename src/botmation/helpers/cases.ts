@@ -12,3 +12,10 @@ export const createCasesSignal = <V = any>(matches: Dictionary<V> = {}, conditio
   matches,
   pipeValue
 })
+
+/**
+ * 
+ * @param casesSignal 
+ */
+export const casesSignalToPipeValue = (casesSignal: CasesSignal): PipeValue => 
+  casesSignal.pipeValue

@@ -8,29 +8,44 @@ import {
   map
 } from '../../..'
 import { switchPipe } from '../../../actions/assembly-lines'
-import { pipeCases, pipeCase, emptyPipe } from '../../../actions/pipe'
+import { pipeCase, emptyPipe } from '../../../actions/pipe'
 import { abort } from '../../../actions/abort'
 
-import { goToFeed } from './navigation'
 import { feedPostsSelector, feedPostAuthorSelector } from '../selectors'
-import { log } from 'botmation/actions/console'
-import { ConditionalCallback } from 'botmation/types/callbacks'
-import { logMessage } from 'botmation/helpers/console'
-import { isCasesSignal, CasesSignal } from 'botmation/types/cases'
-import { PipeValue } from 'botmation/types'
-import { casesSignalToPipeValue } from 'botmation/helpers/cases'
-import { scrollTo } from 'botmation/actions/navigation'
-import { $ } from 'botmation/actions/scrapers'
+import { log } from '../../../actions/console'
+import { ConditionalCallback } from '../../../types/callbacks'
+import { casesSignalToPipeValue } from '../../../helpers/cases'
+import { scrollTo } from '../../../actions/navigation'
+import { $ } from '../../../actions/scrapers'
 
 
 /**
  * Returns an array of CheerioStatic HTML elements representing the Feed's posts
  */
-export const getFeedPosts: BotAction<CheerioStatic[]> =
-  pipe()(
-    goToFeed,
-    $$(feedPostsSelector)
-  )  
+export const scrapeFeedPosts: BotAction<CheerioStatic[]> = $$(feedPostsSelector)
+
+/**
+ * 
+ * @param postDataId 
+ */
+export const scrapeFeedPost = (postDataId: string): BotAction<CheerioStatic> =>
+  $('.application-outlet .feed-outlet [role="main"] [data-id="'+ postDataId + '"]')
+
+/**
+ * If the post hasn't been populated (waits loading), then scroll to it to trigger lazy loading then scrape it to return the hydrated version of it
+ * @param post 
+ */
+export const ifPostNotLoadedTriggerLoadingThenScrape = (post: CheerioStatic): BotAction<CheerioStatic> =>
+  // linkedin lazily loads off screen posts, so check beforehand, and if not loaded, scroll to it, then scrape it again
+  pipe(post)(
+    errors('LinkedIn triggerLazyLoadingThenScrapePost()')(
+      pipeCase(postHasntFullyLoadedYet)(
+        scrollTo('.application-outlet .feed-outlet [role="main"] [data-id="'+ post('[data-id]').attr('data-id') + '"]'),
+        scrapeFeedPost(post('[data-id]').attr('data-id') + '')
+      ),
+      map(casesSignalToPipeValue) // if pipeCase doesn't run, it returns CasesSignal with original pipeValue otherwise it returns CasesSignal with new pipeValue from resolved inner pipe
+    )
+  )
 
 /**
  * Clicks the "Like" button inside the provided Post, if the Like button hasn't been pressed
@@ -57,8 +72,6 @@ export const likeArticle = (post: CheerioStatic): BotAction =>
  */
 const postIsUserArticle: ConditionalCallback<CheerioStatic> = (post: CheerioStatic) => {
   const sharedActorFeedSupplementaryInfo = post('.feed-shared-actor__supplementary-actor-info').text().trim().toLowerCase()
-
-  // console.log('postIsUserArticle? ' + sharedActorFeedSupplementaryInfo)
 
   return sharedActorFeedSupplementaryInfo.includes('1st') || sharedActorFeedSupplementaryInfo.includes('following')
 }
@@ -121,6 +134,10 @@ const postIsUserInteraction: ConditionalCallback<CheerioStatic> = (post: Cheerio
          feedPostSiblingText.includes('commented on this')
 }
 
+/**
+ * 
+ * @param post 
+ */
 const postHasntFullyLoadedYet: ConditionalCallback<CheerioStatic> = (post: CheerioStatic) => {
   // linkedin cleverly loads its posts lazily, with DOM rendering in mind, which maintains a smoother scrolling UX
   // Example (some spacing trimmed):
@@ -138,17 +155,11 @@ const postHasntFullyLoadedYet: ConditionalCallback<CheerioStatic> = (post: Cheer
  */
 export const likeArticlesFrom = (...peopleNames: string[]): BotAction => 
   pipe()(
-    getFeedPosts,
+    scrapeFeedPosts,
     forAll()(
       post => pipe(post)(
-        // linkedin lazily loads off screen posts, so check beforehand, and if not loaded, scroll to it, then scrape it again
-        pipeCase(postHasntFullyLoadedYet)(
-          scrollTo('.application-outlet .feed-outlet [role="main"] [data-id="'+ post('[data-id]').attr('data-id') + '"]'),
-          $('.application-outlet .feed-outlet [role="main"] [data-id="'+ post('[data-id]').attr('data-id') + '"]')
-        ),
-        map(casesSignalToPipeValue), // if pipeCase doesn't run, it returns CasesSignal with original pipeValue otherwise it returns CasesSignal with new pipeValue from ran inner pipe
+        ifPostNotLoadedTriggerLoadingThenScrape(post),
         switchPipe()(
-          // no abort, this runs for each case where the post hasn't been lazily loaded yet
           pipeCase(postIsPromotion)(
             map((promotionPost: CheerioStatic) => promotionPost('[data-id]').attr('data-id')),
             log('Promoted Content')
@@ -161,33 +172,24 @@ export const likeArticlesFrom = (...peopleNames: string[]): BotAction =>
           abort(),
           pipeCase(postIsUserInteraction)(
             map((userInteractionPost: CheerioStatic) => userInteractionPost('[data-id]').attr('data-id')),
-            log(`A followed User's Interaction (ie like, comment, etc)`)
+            log(`Followed User's Interaction (ie like, comment, etc)`)
           ),
           abort(),
-          // pipeCases(postIsUserArticle, postIsAuthoredByAPerson(...peopleNames))(
           pipeCase(postIsUserArticle)(
-            // scroll to post necessary to click off page link? ie click anchor link (new scrollTo() "navigation" BotAction?)
-            // the feature, auto-scroll, was added to `page.click()` but in a later Puppeteer version, irc
-
             pipeCase(postIsAuthoredByAPerson(...peopleNames))(
+              // scroll to post necessary to click off page link? ie use scrollTo() "navigation" BotAction
+              // the feature, auto-scroll, was added to `page.click()` in later Puppeteer version, irc
               likeArticle(post),
               log('User Article "liked"')
             ),
-
             emptyPipe,
             log('User Article')
-
           ),
           abort(),
-          // pipeCases(postIsUserComment, commentIsAuthoredByAPerson(...peopleNames))(
-          //   likeComment(post)
-          // ),
-          // abort()
-
           // default case to run if we got here by not aborting
           pipe()(
-            map((unknownPost: CheerioStatic) => unknownPost('[data-id]').text()),
-            log('unmatched case')
+            map((unhandledPost: CheerioStatic) => unhandledPost('[data-id]').text()),
+            log('Unhandled Post Case')
           )
         )
       )

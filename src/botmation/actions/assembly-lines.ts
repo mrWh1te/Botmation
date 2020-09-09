@@ -10,8 +10,7 @@ import {
 import { PipeValue } from "../types/pipe-value"
 import { AbortLineSignal, isAbortLineSignal } from "../types/abort-line-signal"
 import { processAbortLineSignal } from "../helpers/abort"
-import { isMatchesSignal, MatchesSignal } from "botmation/types/matches-signal"
-import { hasAtLeastOneMatch } from "botmation/helpers/matches"
+import { isCasesSignal, CasesSignal } from "../types/cases"
 
 /**
  * @description     chain() BotAction for running a chain of BotAction's safely and optimized
@@ -121,27 +120,12 @@ export const pipe =
  * @param toPipe BotAction to resolve and inject as a wrapped Pipe object in EACH assembled BotAction
  */
 export const switchPipe = 
-  (toPipe?: BotAction | Exclude<PipeValue, Function>) => 
-    (...actions: BotAction<PipeValue|AbortLineSignal|MatchesSignal|void>[]): BotAction<any[]|AbortLineSignal|PipeValue> =>
+  (toPipe?: PipeValue) => 
+    (...actions: BotAction<PipeValue|AbortLineSignal|CasesSignal|void>[]): BotAction<any[]|AbortLineSignal|PipeValue> =>
       async(page, ...injects) => {
         // fallback is injects pipe value
         if (!toPipe) {
           toPipe = getInjectsPipeValue(injects)
-        }
-
-        // if function, it's an async BotAction function
-        // resolve it to Pipe the resolved value
-        if (typeof toPipe === 'function') {
-          if(injectsHavePipe(injects)) {
-            toPipe = await toPipe(page, ...injects)
-          } else {
-            // simulate pipe
-            toPipe = await toPipe(page, ...injects, createEmptyPipe())
-          }
-
-          if (isAbortLineSignal(toPipe)) {
-            return processAbortLineSignal(toPipe)
-          }
         }
 
         // remove pipe from injects if there is one to set the one for all actions
@@ -162,7 +146,7 @@ export const switchPipe =
           // resolvedActionResult can be of 3 things
           // 1. MatchesSignal 2. AbortLineSignal 3. PipeValue
           // switchPipe will return (if not aborted) an array of all the resolved results of each BotAction assembled in the switchPipe()() 2nd call
-          if (isMatchesSignal(resolvedActionResult) && hasAtLeastOneMatch(resolvedActionResult)) {
+          if (isCasesSignal(resolvedActionResult) && resolvedActionResult.conditionPass) {
             hasAtLeastOneCaseMatch = true
             actionsResults.push(resolvedActionResult)
           } else if (isAbortLineSignal(resolvedActionResult)) {

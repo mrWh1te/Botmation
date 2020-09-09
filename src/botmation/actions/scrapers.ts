@@ -2,6 +2,7 @@
  * BotAction's dedicated to scraping web pages
  */
 
+import { EvaluateFn } from 'puppeteer'
 import * as cheerio from 'cheerio'
 
 import { BotAction, ScraperBotAction } from '../interfaces/bot-actions'
@@ -78,3 +79,10 @@ export const $$ = <R = CheerioStatic[]>(htmlSelector: string, higherOrderHTMLPar
     return cheerioEls as any as R
   }
 
+/**
+ * Evaluate functions inside the `page` context
+ * @param functionToEvaluate 
+ * @param functionParams 
+ */
+export const evaluate = (functionToEvaluate: EvaluateFn<any>, ...functionParams: any[]): BotAction<any> => 
+  async(page) => await page.evaluate(functionToEvaluate, ...functionParams)

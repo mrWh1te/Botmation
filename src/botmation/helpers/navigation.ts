@@ -16,3 +16,11 @@ export const enrichGoToPageOptions = (overloadDefaultOptions: Partial<DirectNavi
  */
 export const sleep = async(milliseconds: number): Promise<NodeJS.Timeout> =>
   new Promise(resolve => setTimeout(resolve, milliseconds))
+
+/**
+ * 
+ * @param htmlSelector 
+ */
+export const scrollToElement = (htmlSelector: string) => 
+  document.querySelector(htmlSelector)?.scrollIntoView({behavior: 'smooth'})
+

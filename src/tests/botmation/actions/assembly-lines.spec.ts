@@ -5,7 +5,7 @@ import { AbortLineSignal } from 'botmation/types/abort-line-signal'
 import { createEmptyPipe, wrapValueInPipe } from 'botmation/helpers/pipe'
 import { createAbortLineSignal } from 'botmation/helpers/abort'
 import { pipeCase } from 'botmation/actions/pipe'
-import { createMatchesSignal } from 'botmation/helpers/matches'
+import { createCasesSignal } from 'botmation/helpers/cases'
 
 /**
  * @description   Assembly-Lines BotAction's
@@ -858,31 +858,34 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(2, {}, wrapValueInPipe(55))
     expect(mockActionPassThrough).toHaveBeenNthCalledWith(2, {}, wrapValueInPipe(55))
 
+    // to support piping a function as a value, the BotAction as a value was removed
+    // since it can be ran before in a pipe then have its value piped into switchPipe()
+
     // toPipe is a mock BotAction, injects don't have pipe objects
-    const mockToPipeAction = jest.fn(() => Promise.resolve(99))
+    // const mockToPipeAction = jest.fn(() => Promise.resolve(99))
 
-    const toPipeIsBotAction = await switchPipe(mockToPipeAction)(
-      mockActionPassThrough,
-      mockActionReturnsTwo
-    )(mockPage)
+    // const toPipeIsBotAction = await switchPipe(mockToPipeAction)(
+    //   mockActionPassThrough,
+    //   mockActionReturnsTwo
+    // )(mockPage)
 
-    expect(toPipeIsBotAction).toEqual([99, 2])
-    expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
-    expect(mockActionPassThrough).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
-    expect(mockToPipeAction).toHaveBeenNthCalledWith(1, {}, createEmptyPipe())
+    // expect(toPipeIsBotAction).toEqual([99, 2])
+    // expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
+    // expect(mockActionPassThrough).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
+    // expect(mockToPipeAction).toHaveBeenNthCalledWith(1, {}, createEmptyPipe())
 
     // toPipe is a mock BotAction and injects have Pipe object
-    const toPipeIsBotActionWithInjectedPipeValue = await switchPipe(mockToPipeAction)(
-      mockActionReturnsTwo,
-      mockActionPassThrough,
-      mockActionReturnsTwo
-    )(mockPage, {brand: 'Pipe', value: 200})
+    // const toPipeIsBotActionWithInjectedPipeValue = await switchPipe(mockToPipeAction)(
+    //   mockActionReturnsTwo,
+    //   mockActionPassThrough,
+    //   mockActionReturnsTwo
+    // )(mockPage, {brand: 'Pipe', value: 200})
 
-    expect(toPipeIsBotActionWithInjectedPipeValue).toEqual([2, 99, 2])
-    expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
-    expect(mockActionPassThrough).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
-    expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(4, {}, wrapValueInPipe(99))
-    expect(mockToPipeAction).toHaveBeenNthCalledWith(2, {}, wrapValueInPipe(200))
+    // expect(toPipeIsBotActionWithInjectedPipeValue).toEqual([2, 99, 2])
+    // expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
+    // expect(mockActionPassThrough).toHaveBeenNthCalledWith(3, {}, wrapValueInPipe(99))
+    // expect(mockActionReturnsTwo).toHaveBeenNthCalledWith(4, {}, wrapValueInPipe(99))
+    // expect(mockToPipeAction).toHaveBeenNthCalledWith(2, {}, wrapValueInPipe(200))
   })
 
   it('switchPipe() returns an array of results representing a 1:1 relationship with the assembled BotActions unless fully aborted out', async() => {
@@ -908,9 +911,9 @@ describe('[Botmation] actions/assembly-lines', () => {
     expect(results1).toEqual([
       'mercury',
       'venus',
-      createMatchesSignal({'0': 42}, 'earth'),
+      createCasesSignal({'0': 42}, true, 'earth'),
       'mars',
-      createMatchesSignal(), // no matches so no ran code so returned pipeValue 
+      createCasesSignal({}, false, 42), // no matches so no ran code so returned pipeValue 
       undefined // breaks line but doesnt break array return so get abort pipeValue
     ])
   })
@@ -997,7 +1000,7 @@ describe('[Botmation] actions/assembly-lines', () => {
       mockActionReturnsFive
     )(mockPage)
     expect(abortLineOneWithCaseMatches).toEqual([
-      createMatchesSignal({'0': 10}, 5),
+      createCasesSignal({'0': 10}, true, 5),
       'a-pipe-1-value-O_O'
     ])
     expect(mockActionReturnsFive).toHaveBeenCalledTimes(5)
@@ -1017,18 +1020,21 @@ describe('[Botmation] actions/assembly-lines', () => {
 
     //
     // toPipe botaction aborts
-    const mockActionNeverRuns = jest.fn(() => Promise.resolve())
+    // toPipe as a BotAction was removed to support the passing in of a function
+    //    if you need to pipe in the resolved value of a BotAction into a switchPipe, just run the BotAction 
+    //    before this one, while wrapping the two in a pipe()()
+    // const mockActionNeverRuns = jest.fn(() => Promise.resolve())
 
-    const toPipeAbortsInfinity = await switchPipe(abort(0))(mockActionNeverRuns)(mockPage)
-    expect(toPipeAbortsInfinity).toEqual(createAbortLineSignal(0))
-    expect(mockActionNeverRuns).not.toHaveBeenCalled()
+    // const toPipeAbortsInfinity = await switchPipe(abort(0))(mockActionNeverRuns)(mockPage)
+    // expect(toPipeAbortsInfinity).toEqual(createAbortLineSignal(0))
+    // expect(mockActionNeverRuns).not.toHaveBeenCalled()
 
-    const toPipeAbortsOne = await switchPipe(abort(1, 'a-value'))(mockActionNeverRuns)(mockPage)
-    expect(toPipeAbortsOne).toEqual('a-value')
-    expect(mockActionNeverRuns).not.toHaveBeenCalled()
+    // const toPipeAbortsOne = await switchPipe(abort(1, 'a-value'))(mockActionNeverRuns)(mockPage)
+    // expect(toPipeAbortsOne).toEqual('a-value')
+    // expect(mockActionNeverRuns).not.toHaveBeenCalled()
 
-    const toPipeAbortsTwo = await switchPipe(abort(2, 'a-2-value'))(mockActionNeverRuns)(mockPage)
-    expect(toPipeAbortsTwo).toEqual(createAbortLineSignal(1, 'a-2-value'))
-    expect(mockActionNeverRuns).not.toHaveBeenCalled()
+    // const toPipeAbortsTwo = await switchPipe(abort(2, 'a-2-value'))(mockActionNeverRuns)(mockPage)
+    // expect(toPipeAbortsTwo).toEqual(createAbortLineSignal(1, 'a-2-value'))
+    // expect(mockActionNeverRuns).not.toHaveBeenCalled()
   })
 })

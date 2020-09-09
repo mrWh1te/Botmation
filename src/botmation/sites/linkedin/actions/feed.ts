@@ -1,50 +1,58 @@
 import { 
-  ConditionalBotAction, 
   BotAction, 
   pipe, 
   $$, 
   forAll, 
-  givenThat, 
   click,
   errors,
   map
 } from '../../..'
-import { goToFeed } from './navigation'
+import { switchPipe } from '../../../actions/assembly-lines'
+import { pipeCase, emptyPipe } from '../../../actions/pipe'
+import { abort } from '../../../actions/abort'
+
 import { feedPostsSelector, feedPostAuthorSelector } from '../selectors'
+import { log } from '../../../actions/console'
+import { casesSignalToPipeValue } from '../../../helpers/cases'
+import { scrollTo } from '../../../actions/navigation'
+import { $ } from '../../../actions/scrapers'
+import { 
+  postHasntFullyLoadedYet,
+  postIsPromotion,
+  postIsJobPostings,
+  postIsUserInteraction,
+  postIsUserArticle,
+  postIsAuthoredByAPerson
+} from '../helpers/feed'
+
 
 /**
  * Returns an array of CheerioStatic HTML elements representing the Feed's posts
- * @param filterPromotedContent optional, default is TRUE to remove posts from scraped feed if they are "Promoted"
  */
-export const getFeedPosts = (filterPromotedContent: boolean = true): BotAction<CheerioStatic[]> =>
-  pipe()(
-    goToFeed,
-    $$(feedPostsSelector),
-    map((cheerioPosts: CheerioStatic[]) => {
-      if (!filterPromotedContent) {
-        return cheerioPosts
-      }
-
-      return cheerioPosts.filter(post => post('.feed-shared-actor__sub-description').text().toLowerCase() !== 'promoted')
-    })
-  )
+export const scrapeFeedPosts: BotAction<CheerioStatic[]> = $$(feedPostsSelector)
 
 /**
- * Returns TRUE if at least one person name closely matches the author name of the provided Post, otherwise FALSE
- * @future This function is coupled with the getFeedPosts. 
- *         It would be nice to rely on ie Post.id as param to then find that "Like" button in page to click. In order to, de-couple this function
- * @param post 
- * @param peopleNames 
+ * 
+ * @param postDataId 
  */
-export const postIsAuthoredByAPerson = (post: CheerioStatic, ...peopleNames: string[]): ConditionalBotAction => 
-  async() => 
-    // if the CheerioStatic post has close matching in author text box a name from peopleNames list, then TRUE else FALSE
-    peopleNames.some(name => name.toLowerCase() === post(feedPostAuthorSelector).text().toLowerCase())
-    // TODO add helpers for fuzzy text matching using nGrams(3) -> trigrams with like 80% threshold and higher-order params override (ie for 100%)
-    //    that way, adding/removing nicknames, middle initials, etc will not break script
-    // use https://www.npmjs.com/package/trigram-utils asDictionary(), build unique list of key's, and see how much overlaps
-    // don't forget to buffer the strings with spaces (1 before and 1 after to increase matching potential slightly, since this is a few words instead of a sentence(s))
-  
+export const scrapeFeedPost = (postDataId: string): BotAction<CheerioStatic> =>
+  $('.application-outlet .feed-outlet [role="main"] [data-id="'+ postDataId + '"]')
+
+/**
+ * If the post hasn't been populated (waits loading), then scroll to it to trigger lazy loading then scrape it to return the hydrated version of it
+ * @param post 
+ */
+export const ifPostNotLoadedTriggerLoadingThenScrape = (post: CheerioStatic): BotAction<CheerioStatic> =>
+  // linkedin lazily loads off screen posts, so check beforehand, and if not loaded, scroll to it, then scrape it again
+  pipe(post)(
+    errors('LinkedIn triggerLazyLoadingThenScrapePost()')(
+      pipeCase(postHasntFullyLoadedYet)(
+        scrollTo('.application-outlet .feed-outlet [role="main"] [data-id="'+ post('[data-id]').attr('data-id') + '"]'),
+        scrapeFeedPost(post('[data-id]').attr('data-id') + '')
+      ),
+      map(casesSignalToPipeValue) // if pipeCase doesn't run, it returns CasesSignal with original pipeValue otherwise it returns CasesSignal with new pipeValue from resolved inner pipe
+    )
+  )
 
 /**
  * Clicks the "Like" button inside the provided Post, if the Like button hasn't been pressed
@@ -54,7 +62,7 @@ export const postIsAuthoredByAPerson = (post: CheerioStatic, ...peopleNames: str
  *         It would be nice to rely on ie Post.id as param to then find that "Like" button in page to click. In order to, de-couple this function
  * @param post 
  */
-export const like = (post: CheerioStatic): BotAction =>
+export const likeArticle = (post: CheerioStatic): BotAction =>
   // Puppeteer.page.click() returned promise will reject if the selector isn't found
   //    so if button is Pressed, it will reject since the aria-label value will not match
   errors('LinkedIn like() - Could not Like Post: Either already Liked or button not found')(
@@ -63,22 +71,50 @@ export const like = (post: CheerioStatic): BotAction =>
 
   // be cool if errors had the ability to be provided a BotAction to run in a simulated pipe and returned on error
   //    so here, we can return ie a value signaling we did not like it because it was already liked
-  
 
 /**
- * @description Clicks the "Like" button for every Post presently loaded in your feed (not including future lazily loaded, as triggered by scrolling near bottom), filtered by author name
- * Does not load in lazily loaded "pages" of feed (on scroll), therefore would need to add a forAsLong()() to get a new list of feed posts, scroll/liking to the end, etc with this function on each "page"
- *  Maybe an exit condition by date? Stop going once posts are X days old
+ * @description   Demonstration of what's currently possible, this function goes beyond the scope of its name, but to give an idea on how something more complex could be handled
  * @param peopleNames 
  */
-export const likeAllFrom = (...peopleNames: string[]): BotAction => 
+export const likeArticlesFrom = (...peopleNames: string[]): BotAction => 
   pipe()(
-    getFeedPosts(),
+    scrapeFeedPosts,
     forAll()(
-      post => givenThat(postIsAuthoredByAPerson(post, ...peopleNames))(
-        // scroll to post necessary to click off page link? ie click anchor link (new scrollTo() "navigation" BotAction?)
-        // the feature, auto-scroll, was added to `page.click()` but in a later Puppeteer version, irc
-        like(post)
+      post => pipe(post)(
+        ifPostNotLoadedTriggerLoadingThenScrape(post),
+        switchPipe()(
+          pipeCase(postIsPromotion)(
+            map((promotionPost: CheerioStatic) => promotionPost('[data-id]').attr('data-id')),
+            log('Promoted Content')
+          ),
+          abort(),
+          pipeCase(postIsJobPostings)(
+            map((jobPostingsPost: CheerioStatic) => jobPostingsPost('[data-id]').attr('data-id')),
+            log('Job Postings')
+          ),
+          abort(),
+          pipeCase(postIsUserInteraction)(
+            map((userInteractionPost: CheerioStatic) => userInteractionPost('[data-id]').attr('data-id')),
+            log(`Followed User's Interaction (ie like, comment, etc)`)
+          ),
+          abort(),
+          pipeCase(postIsUserArticle)(
+            pipeCase(postIsAuthoredByAPerson(...peopleNames))(
+              // scroll to post necessary to click off page link? ie use scrollTo() "navigation" BotAction
+              // the feature, auto-scroll, was added to `page.click()` in later Puppeteer version, irc
+              likeArticle(post),
+              log('User Article "liked"')
+            ),
+            emptyPipe,
+            log('User Article')
+          ),
+          abort(),
+          // default case to run if we got here by not aborting
+          pipe()(
+            map((unhandledPost: CheerioStatic) => unhandledPost('[data-id]').text()),
+            log('Unhandled Post Case')
+          )
+        )
       )
     )
   )

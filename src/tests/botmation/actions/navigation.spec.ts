@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { goTo, waitForNavigation, goBack, goForward, reload, wait } from 'botmation/actions/navigation'
+import { goTo, waitForNavigation, goBack, goForward, reload, wait, scrollTo } from 'botmation/actions/navigation'
 import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 import { click } from 'botmation/actions/input'
 
@@ -12,7 +12,8 @@ jest.mock('botmation/helpers/navigation', () => {
 
   return {
     ...originalModule,
-    sleep: jest.fn(() => Promise.resolve())
+    sleep: jest.fn(() => Promise.resolve()),
+    scrollToElement: jest.fn(() => {})
   }
 })
 
@@ -30,14 +31,17 @@ describe('[Botmation] actions/navigation', () => {
       waitForNavigation: jest.fn(),
       goBack: jest.fn(),
       goForward: jest.fn(),
-      reload: jest.fn()
+      reload: jest.fn(),
+      evaluate: jest.fn((fn, ...params) => {
+        fn(...params)
+        return Promise.resolve()
+      })
     } as any as Page
   })
 
   beforeAll(async() => {
     await page.goto(BASE_URL, enrichGoToPageOptions())
   })
-
   //
   // sleep() Integration Test
   it('should call setTimeout with the correct values', async() => {
@@ -105,6 +109,21 @@ describe('[Botmation] actions/navigation', () => {
     await expect(page.title()).resolves.toMatch('Testing: Form Submit Success')
   })
 
+  //
+  // scrollTo() integration
+  it('scrollTo() should call scrollToElement() inside the puppeteer page based on a html selector', async() => {
+    await scrollTo('some-element-far-away')(mockPage)
+
+    const {
+      scrollToElement: mockScrollToElement,
+      sleep: mockSleep
+    } = require('botmation/helpers/navigation')
+
+    expect(mockScrollToElement).toHaveBeenNthCalledWith(1, 'some-element-far-away')
+    expect(mockSleep).toHaveBeenNthCalledWith(2, 2500)
+  })
+
+  // clean up
   afterAll(() => {
     jest.unmock('botmation/helpers/navigation')
   })

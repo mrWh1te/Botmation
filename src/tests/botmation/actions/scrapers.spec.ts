@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 
 import { BASE_URL } from 'tests/urls'
-import { $, $$, htmlParser } from 'botmation/actions/scrapers'
+import { $, $$, htmlParser, evaluate } from 'botmation/actions/scrapers'
 
 // Mock inject()()
 jest.mock('botmation/actions/inject', () => {
@@ -84,6 +84,19 @@ describe('[Botmation] actions/scraping', () => {
     expect(mockInjectMethod).toHaveBeenNthCalledWith(1, expect.any(Function))
   })
 
+  it('evaluate() should call the function with the params provided via the Puppeteer page.evaluate() method', async() => {
+    mockPage = {
+      evaluate: jest.fn((fn, ...params) => fn(...params))
+    } as any as Page
+    
+    const mockEvaluateFunction = jest.fn()
+    const mockParams = [5, 'testing', {sunshine: true}]
+
+    await evaluate(mockEvaluateFunction, ...mockParams)(mockPage)
+
+    expect(mockEvaluateFunction).toHaveBeenNthCalledWith(1, 5, 'testing', {sunshine: true})
+  })
+
   //
   // Unit-Tests
   it('Should scrape joke (2 paragraph elements) and 1 home link (anchor element) and grab their text', async() => {
@@ -102,6 +115,7 @@ describe('[Botmation] actions/scraping', () => {
     expect(homeLink('a').text()).toEqual('Home Link')
   })
 
+  // clean up
   afterAll(() => {
     jest.unmock('botmation/actions/inject')
   })

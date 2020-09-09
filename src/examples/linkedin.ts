@@ -2,17 +2,15 @@ import puppeteer from 'puppeteer'
 
 // General BotAction's
 import { log } from 'botmation/actions/console'
-// import { goTo } from 'botmation/actions/navigation'
-import { screenshot } from 'botmation/actions/files'
+// import { screenshot } from 'botmation/actions/files'
 import { loadCookies } from 'botmation/actions/cookies'
 
 // More advanced BotAction's
-import { pipe, saveCookies, wait, errors, givenThat, forAll, emptyPipe } from 'botmation'
+import { pipe, saveCookies, wait, errors, givenThat } from 'botmation'
 import { login, isGuest, isLoggedIn } from 'botmation/sites/linkedin/actions/auth'
 import { toggleMessagingOverlay } from 'botmation/sites/linkedin/actions/messaging'
-import { getFeedPosts } from 'botmation/sites/linkedin/actions/feed'
+import { likeArticlesFrom } from 'botmation/sites/linkedin/actions/feed'
 import { goHome } from 'botmation/sites/linkedin/actions/navigation'
-import { feedPostAuthorSelector } from 'botmation/sites/linkedin/selectors'
 
 // Helper for creating filenames that sort naturally
 const generateTimeStamp = (): string => {
@@ -33,7 +31,7 @@ const generateTimeStamp = (): string => {
  let browser: puppeteer.Browser
 
  try {
-   browser = await puppeteer.launch({headless: true})
+   browser = await puppeteer.launch({headless: false})
    const pages = await browser.pages()
    const page = pages.length === 0 ? await browser.newPage() : pages[0]
    
@@ -52,23 +50,13 @@ const generateTimeStamp = (): string => {
       saveCookies('linkedin')
     ),
 
-    // at this point, you are logged in and looking at feed
-
     wait(5000), // tons of stuff loads... no rush
 
     givenThat(isLoggedIn)(
       toggleMessagingOverlay, // by default, Messaging Overlay loads in open state
-      screenshot(generateTimeStamp()), // filename ie "2020-8-21-13-20.png"
+      // screenshot(generateTimeStamp()), // filename ie "2020-8-21-13-20.png"
       
-      // likeAllFrom('Peter Parker', 'Harry Potter'),
-      getFeedPosts(),
-      forAll()(
-        post => ([
-          emptyPipe,
-          log('Post author = ' + post(feedPostAuthorSelector).text())
-        ])
-      )
-
+      likeArticlesFrom('Peter Parker', 'Harry Potter')
     )
    )
    

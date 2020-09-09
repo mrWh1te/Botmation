@@ -15,7 +15,6 @@ import { goToFeed } from './navigation'
 import { feedPostsSelector, feedPostAuthorSelector } from '../selectors'
 import { log } from 'botmation/actions/console'
 import { ConditionalCallback } from 'botmation/types/callbacks'
-import { logMessage } from 'botmation/helpers/console'
 
 
 /**
@@ -26,18 +25,7 @@ export const getFeedPosts: BotAction<Cheerio[]> =
     goToFeed,
     $$(feedPostsSelector),
     map((posts: CheerioStatic[]) => posts.map(post => post('[data-id]'))) // select 1st element with data-id attribute
-  )
-
-
-// export const postIsAuthoredByAPerson = (post: CheerioStatic, ...peopleNames: string[]): ConditionalBotAction => 
-  // async() => 
-    // if the CheerioStatic post has close matching in author text box a name from peopleNames list, then TRUE else FALSE
-    // peopleNames.some(name => name.toLowerCase() === post(feedPostAuthorSelector).text().toLowerCase())
-    // TODO add helpers for fuzzy text matching using nGrams(3) -> trigrams with like 80% threshold and higher-order params override (ie for 100%)
-    //    that way, adding/removing nicknames, middle initials, etc will not break script
-    // use https://www.npmjs.com/package/trigram-utils asDictionary(), build unique list of key's, and see how much overlaps
-    // don't forget to buffer the strings with spaces (1 before and 1 after to increase matching potential slightly, since this is a few words instead of a sentence(s))
-  
+  )  
 
 /**
  * Clicks the "Like" button inside the provided Post, if the Like button hasn't been pressed
@@ -132,24 +120,24 @@ export const likeArticlesFrom = (...peopleNames: string[]): BotAction =>
     forAll()(
       post => switchPipe(post)(
         pipeCase(postIsPromotion)(
-          map((post: Cheerio) => post.attr('data-id')),
+          map((promotionPost: Cheerio) => promotionPost.attr('data-id')),
           log('Promoted Content')
         ),
         abort(),
         pipeCase(postIsJobPostings)(
-          map((post: Cheerio) => post.attr('data-id')),
+          map((jobPostingsPost: Cheerio) => jobPostingsPost.attr('data-id')),
           log('Job Postings')
         ),
         abort(),
         pipeCase(postIsUserInteraction)(
-          map((post: Cheerio) => post.attr('data-id')),
+          map((userInteractionPost: Cheerio) => userInteractionPost.attr('data-id')),
           log(`A followed User's Like`)
         ),
         abort(),
         pipeCases(postIsUserArticle, postIsAuthoredByAPerson(...peopleNames))(
           // scroll to post necessary to click off page link? ie click anchor link (new scrollTo() "navigation" BotAction?)
           // the feature, auto-scroll, was added to `page.click()` but in a later Puppeteer version, irc
-          map((post: Cheerio) => post.attr('data-id')),
+          map((userArticlePost: Cheerio) => userArticlePost.attr('data-id')),
           log('post article found -> pseudo like()')
           // like(post)
         ),
@@ -161,7 +149,7 @@ export const likeArticlesFrom = (...peopleNames: string[]): BotAction =>
 
         // default case to run if we got here by not aborting
         pipe()(
-          map((post: Cheerio) => post.attr('data-id')),
+          map((unknownPost: Cheerio) => unknownPost.attr('data-id')),
           log('unmatched case')
         )
       )

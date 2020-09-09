@@ -22,4 +22,5 @@ export const sleep = async(milliseconds: number): Promise<NodeJS.Timeout> =>
  * @param htmlSelector 
  */
 export const scrollToElement = (htmlSelector: string) => 
-  document.querySelector(htmlSelector)?.scrollIntoView({behavior: "smooth"})
+  document.querySelector(htmlSelector)?.scrollIntoView({behavior: 'smooth'})
+

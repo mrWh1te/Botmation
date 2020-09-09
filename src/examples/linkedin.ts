@@ -2,7 +2,6 @@ import puppeteer from 'puppeteer'
 
 // General BotAction's
 import { log } from 'botmation/actions/console'
-// import { goTo } from 'botmation/actions/navigation'
 // import { screenshot } from 'botmation/actions/files'
 import { loadCookies } from 'botmation/actions/cookies'
 

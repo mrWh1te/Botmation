@@ -12,7 +12,6 @@ import { errors } from '../actions/errors'
 import { getElementOuterHTML, getElementsOuterHTML } from '../helpers/scrapers'
 import { unpipeInjects } from '../helpers/pipe'
 import { pipe } from './assembly-lines'
-import { PipeValue } from '../types/pipe-value'
 
 /**
  * @description   Inject htmlParser for ScraperBotAction's

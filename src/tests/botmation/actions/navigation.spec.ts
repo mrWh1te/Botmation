@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 
 import { goTo, waitForNavigation, goBack, goForward, reload, wait, scrollTo } from 'botmation/actions/navigation'
-import { enrichGoToPageOptions, scrollToElement } from 'botmation/helpers/navigation'
+import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 import { click } from 'botmation/actions/input'
 
 import { BASE_URL, EXAMPLE_URL } from 'tests/urls'

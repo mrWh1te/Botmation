@@ -90,9 +90,9 @@ describe('[Botmation] actions/scraping', () => {
     } as any as Page
     
     const mockEvaluateFunction = jest.fn()
-    const params = [5, 'testing', {sunshine: true}]
+    const mockParams = [5, 'testing', {sunshine: true}]
 
-    await evaluate(mockEvaluateFunction, ...params)(mockPage)
+    await evaluate(mockEvaluateFunction, ...mockParams)(mockPage)
 
     expect(mockEvaluateFunction).toHaveBeenNthCalledWith(1, 5, 'testing', {sunshine: true})
   })

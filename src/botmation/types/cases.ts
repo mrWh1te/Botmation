@@ -26,6 +26,6 @@ export const isCasesSignal = <V = any>(value: any): value is CasesSignal<V> =>
   isDictionary<V>(value.matches)
 
 /**
- * values that represent cases to test against a pipe value
+ * @description Value to test against a pipe value for equality or callback truthy
  */
-export type CaseValues = Exclude<PipeValue, Function>|ConditionalCallback
+export type CaseValue = Exclude<PipeValue, Function>|ConditionalCallback

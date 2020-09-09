@@ -3,8 +3,7 @@ import { AbortLineSignal } from '../types'
 import { PipeValue } from "../types/pipe-value"
 import { createAbortLineSignal } from "../helpers/abort"
 import { pipeCase } from "./pipe"
-import { ConditionalCallback } from "../types/callbacks"
-import { CasesSignal } from "../types/cases"
+import { CasesSignal, CaseValue } from "../types/cases"
 
 /**
  * BotAction to return an AbortLineSignal to be processed by an assembler for an effect of aborting assembled lines (including parent(s) if specified a number greater than 1 or 0 for all)
@@ -23,7 +22,7 @@ export const abort = (assembledLines = 1, pipeValue?: PipeValue): BotAction<Abor
  * @param abortPipeValue 
  * @param assembledLines 
  */
-export const abortPipe = (value: PipeValue|ConditionalCallback, abortPipeValue: PipeValue = undefined, assembledLines: number = 1): BotAction<AbortLineSignal|PipeValue|CasesSignal> => 
+export const abortPipe = (value: CaseValue, abortPipeValue: PipeValue = undefined, assembledLines: number = 1): BotAction<AbortLineSignal|PipeValue|CasesSignal> => 
   pipeCase(value)(
     abort(assembledLines + 2, abortPipeValue)
   ) // returns AbortLineSignal(1, abortPipeValue?) if value(pipeValue) is truthy || value === pipeValue

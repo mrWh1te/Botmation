@@ -1,12 +1,11 @@
 import { BotAction } from "../interfaces"
 import { PipeValue } from "../types/pipe-value"
 import { getInjectsPipeValue, injectsHavePipe } from "../helpers/pipe"
-import { CasesSignal, CaseValues } from "../types/cases"
+import { CasesSignal, CaseValue } from "../types/cases"
 import { AbortLineSignal, Dictionary, isAbortLineSignal } from "../types"
 import { pipe } from "./assembly-lines"
 import { createCasesSignal } from "../helpers/cases"
 import { processAbortLineSignal } from "../helpers/abort"
-import { abort } from "./abort"
 
 //
 // BotAction's Focused on Piping
@@ -45,7 +44,7 @@ export const emptyPipe: BotAction = async () => undefined
  *  If assembled BotAction aborts(3+), it returns AbortLineSignal(2-)
  */
 export const pipeCase = 
-  (...valuesToTest: CaseValues[]) =>
+  (...valuesToTest: CaseValue[]) =>
     (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<PipeValue|AbortLineSignal|CasesSignal> => 
       async(page, ...injects) => {
         // if any of the values matches the injected pipe object value
@@ -90,7 +89,7 @@ export const pipeCase =
  * @param valuesToTest 
  */
 export const pipeCases = 
-  (...valuesToTest: CaseValues[]) =>
+  (...valuesToTest: CaseValue[]) =>
     (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<PipeValue|AbortLineSignal|CasesSignal> => 
       async(page, ...injects) => {
         // if any of the values matches the injected pipe object value

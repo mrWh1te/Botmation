@@ -23,7 +23,7 @@ export const abort = (assembledLines = 1, pipeValue?: PipeValue): BotAction<Abor
  * @param abortPipeValue 
  * @param assembledLines 
  */
-export const pipeAbort = (value: PipeValue|ConditionalCallback, abortPipeValue: PipeValue = undefined, assembledLines: number = 1): BotAction<AbortLineSignal|PipeValue|CasesSignal> => 
+export const abortPipe = (value: PipeValue|ConditionalCallback, abortPipeValue: PipeValue = undefined, assembledLines: number = 1): BotAction<AbortLineSignal|PipeValue|CasesSignal> => 
   pipeCase(value)(
     abort(assembledLines + 2, abortPipeValue)
   ) // returns AbortLineSignal(1, abortPipeValue?) if value(pipeValue) is truthy || value === pipeValue

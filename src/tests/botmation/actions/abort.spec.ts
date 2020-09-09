@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { abort, pipeAbort } from 'botmation/actions/abort'
+import { abort, abortPipe } from 'botmation/actions/abort'
 import { createCasesSignal } from 'botmation/helpers/cases'
 import { createEmptyPipe, wrapValueInPipe } from 'botmation/helpers/pipe'
 
@@ -45,16 +45,16 @@ describe('[Botmation] actions/abort', () => {
 
     const {createAbortLineSignal} = jest.requireActual('botmation/helpers/abort')
 
-    const pipeAborted = await pipeAbort(conditionalCBTrue, 'pipe-value')(mockPage, createEmptyPipe())
+    const pipeAborted = await abortPipe(conditionalCBTrue, 'pipe-value')(mockPage, createEmptyPipe())
     expect(pipeAborted).toEqual(createAbortLineSignal(1, 'pipe-value'))
 
-    const pipeDoesNotAbort = await pipeAbort(conditionalCBFalse)(mockPage, wrapValueInPipe('pipe-value-2'))
+    const pipeDoesNotAbort = await abortPipe(conditionalCBFalse)(mockPage, wrapValueInPipe('pipe-value-2'))
     expect(pipeDoesNotAbort).toEqual(createCasesSignal())
 
-    const pipeAbortedNumericCase = await pipeAbort(100, 'it was 100')(mockPage, wrapValueInPipe(100))
+    const pipeAbortedNumericCase = await abortPipe(100, 'it was 100')(mockPage, wrapValueInPipe(100))
     expect(pipeAbortedNumericCase).toEqual(createAbortLineSignal(1, 'it was 100'))
 
-    const pipeNotAbortNumericCase = await pipeAbort(100, 'it was 100')(mockPage, wrapValueInPipe(10))
+    const pipeNotAbortNumericCase = await abortPipe(100, 'it was 100')(mockPage, wrapValueInPipe(10))
     expect(pipeNotAbortNumericCase).toEqual(createCasesSignal())
   })
 

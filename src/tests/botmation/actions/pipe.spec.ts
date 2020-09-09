@@ -60,7 +60,7 @@ describe('[Botmation] actions/pipe', () => {
       mockActionDoesntRun
     )(mockPage, wrapValueInPipe(44))
 
-    expect(noMatchesWithPipe).toEqual(createCasesSignal())
+    expect(noMatchesWithPipe).toEqual(createCasesSignal({}, false, 44))
     expect(mockActionDoesntRun).not.toHaveBeenCalled()
 
     // single numerical match - with injected pipe

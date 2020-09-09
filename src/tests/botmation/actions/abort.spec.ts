@@ -49,13 +49,13 @@ describe('[Botmation] actions/abort', () => {
     expect(pipeAborted).toEqual(createAbortLineSignal(1, 'pipe-value'))
 
     const pipeDoesNotAbort = await abortPipe(conditionalCBFalse)(mockPage, wrapValueInPipe('pipe-value-2'))
-    expect(pipeDoesNotAbort).toEqual(createCasesSignal())
+    expect(pipeDoesNotAbort).toEqual(createCasesSignal({}, false, 'pipe-value-2'))
 
     const pipeAbortedNumericCase = await abortPipe(100, 'it was 100')(mockPage, wrapValueInPipe(100))
     expect(pipeAbortedNumericCase).toEqual(createAbortLineSignal(1, 'it was 100'))
 
     const pipeNotAbortNumericCase = await abortPipe(100, 'it was 100')(mockPage, wrapValueInPipe(10))
-    expect(pipeNotAbortNumericCase).toEqual(createCasesSignal())
+    expect(pipeNotAbortNumericCase).toEqual(createCasesSignal({}, false, 10))
   })
 
   // Clean up

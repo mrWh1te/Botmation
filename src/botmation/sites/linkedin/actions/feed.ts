@@ -40,7 +40,7 @@ export const getFeedPosts: BotAction<CheerioStatic[]> =
  *         It would be nice to rely on ie Post.id as param to then find that "Like" button in page to click. In order to, de-couple this function
  * @param post 
  */
-export const like = (post: CheerioStatic): BotAction =>
+export const likeArticle = (post: CheerioStatic): BotAction =>
   // Puppeteer.page.click() returned promise will reject if the selector isn't found
   //    so if button is Pressed, it will reject since the aria-label value will not match
   errors('LinkedIn like() - Could not Like Post: Either already Liked or button not found')(
@@ -141,6 +141,7 @@ export const likeArticlesFrom = (...peopleNames: string[]): BotAction =>
     getFeedPosts,
     forAll()(
       post => pipe(post)(
+        // linkedin lazily loads off screen posts, so check beforehand, and if not loaded, scroll to it, then scrape it again
         pipeCase(postHasntFullyLoadedYet)(
           scrollTo('.application-outlet .feed-outlet [role="main"] [data-id="'+ post('[data-id]').attr('data-id') + '"]'),
           $('.application-outlet .feed-outlet [role="main"] [data-id="'+ post('[data-id]').attr('data-id') + '"]')
@@ -164,12 +165,18 @@ export const likeArticlesFrom = (...peopleNames: string[]): BotAction =>
           ),
           abort(),
           // pipeCases(postIsUserArticle, postIsAuthoredByAPerson(...peopleNames))(
-          pipeCases(postIsUserArticle)(
+          pipeCase(postIsUserArticle)(
             // scroll to post necessary to click off page link? ie click anchor link (new scrollTo() "navigation" BotAction?)
             // the feature, auto-scroll, was added to `page.click()` but in a later Puppeteer version, irc
-            map((userArticlePost: CheerioStatic) => userArticlePost('[data-id]').attr('data-id')),
+
+            pipeCase(postIsAuthoredByAPerson(...peopleNames))(
+              likeArticle(post),
+              log('User Article "liked"')
+            ),
+
+            emptyPipe,
             log('User Article')
-            // like(post)
+
           ),
           abort(),
           // pipeCases(postIsUserComment, commentIsAuthoredByAPerson(...peopleNames))(

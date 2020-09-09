@@ -141,7 +141,7 @@ describe('[Botmation] actions/pipe', () => {
       mockActionDoesntRun
     )(mockPage, wrapValueInPipe(44))
 
-    expect(noMatchesWithPipe).toEqual(createCasesSignal())
+    expect(noMatchesWithPipe).toEqual(createCasesSignal({}, false, 44))
     expect(mockActionDoesntRun).not.toHaveBeenCalled()
 
     // single numerical match - with injected pipe
@@ -149,7 +149,7 @@ describe('[Botmation] actions/pipe', () => {
       mockActionPassThrough
     )(mockPage, wrapValueInPipe(7))
 
-    expect(singleNumericalMatchButDoesntGetToo).toEqual(createCasesSignal())
+    expect(singleNumericalMatchButDoesntGetToo).toEqual(createCasesSignal({}, false, 7))
     expect(mockActionPassThrough).toHaveBeenCalledTimes(0)
 
     const singleNumericalMatchThenBreak = await pipeCases(7, 3, 18)(
@@ -158,7 +158,7 @@ describe('[Botmation] actions/pipe', () => {
 
     expect(singleNumericalMatchThenBreak).toEqual(createCasesSignal({
       0: 7 // index 0, value 7
-    }, false)) // no pipe value since the assembled botactions did not run
+    }, false, 7)) // no pipe value since the assembled botactions did not run
     expect(mockActionPassThrough).toHaveBeenCalledTimes(0)
 
     // all matches via functions - with injected pipe
@@ -193,7 +193,8 @@ describe('[Botmation] actions/pipe', () => {
       matches: {
         0: expect.any(Function),
       },
-      conditionPass: false
+      conditionPass: false,
+      pipeValue: 10
     })
     expect(mockActionPassThrough).toHaveBeenCalledTimes(1)
   })

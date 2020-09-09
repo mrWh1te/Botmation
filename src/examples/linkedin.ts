@@ -3,16 +3,15 @@ import puppeteer from 'puppeteer'
 // General BotAction's
 import { log } from 'botmation/actions/console'
 // import { goTo } from 'botmation/actions/navigation'
-import { screenshot } from 'botmation/actions/files'
+// import { screenshot } from 'botmation/actions/files'
 import { loadCookies } from 'botmation/actions/cookies'
 
 // More advanced BotAction's
-import { pipe, saveCookies, wait, errors, givenThat, forAll, emptyPipe } from 'botmation'
+import { pipe, saveCookies, wait, errors, givenThat } from 'botmation'
 import { login, isGuest, isLoggedIn } from 'botmation/sites/linkedin/actions/auth'
 import { toggleMessagingOverlay } from 'botmation/sites/linkedin/actions/messaging'
-import { getFeedPosts } from 'botmation/sites/linkedin/actions/feed'
+import { likeArticlesFrom } from 'botmation/sites/linkedin/actions/feed'
 import { goHome } from 'botmation/sites/linkedin/actions/navigation'
-import { feedPostAuthorSelector } from 'botmation/sites/linkedin/selectors'
 
 // Helper for creating filenames that sort naturally
 const generateTimeStamp = (): string => {
@@ -33,7 +32,7 @@ const generateTimeStamp = (): string => {
  let browser: puppeteer.Browser
 
  try {
-   browser = await puppeteer.launch({headless: true})
+   browser = await puppeteer.launch({headless: false})
    const pages = await browser.pages()
    const page = pages.length === 0 ? await browser.newPage() : pages[0]
    
@@ -47,7 +46,7 @@ const generateTimeStamp = (): string => {
     goHome,
 
     givenThat(isGuest)(
-      login('account@email.com', 'account-password'), // <-- put in bot's LinkedIn email & password
+      login('lage.michael@gmail.com', 'M1CHAE1.l2'), // <-- put in bot's LinkedIn email & password
       wait(500),
       saveCookies('linkedin')
     ),
@@ -58,17 +57,9 @@ const generateTimeStamp = (): string => {
 
     givenThat(isLoggedIn)(
       toggleMessagingOverlay, // by default, Messaging Overlay loads in open state
-      screenshot(generateTimeStamp()), // filename ie "2020-8-21-13-20.png"
+      // screenshot(generateTimeStamp()), // filename ie "2020-8-21-13-20.png"
       
-      // likeAllFrom('Peter Parker', 'Harry Potter'),
-      getFeedPosts(),
-      forAll()(
-        post => ([
-          emptyPipe,
-          log('Post author = ' + post(feedPostAuthorSelector).text())
-        ])
-      )
-
+      likeArticlesFrom('Peter Parker', 'Harry Potter')
     )
    )
    

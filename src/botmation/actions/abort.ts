@@ -18,9 +18,9 @@ export const abort = (assembledLines = 1, pipeValue?: PipeValue): BotAction<Abor
 /**
  * Return an AbortLineSignal of 1 assembledLine if the value provided equals the pipe value or the value provided is a callback function when given the pipe value returns true
  * cb gets the pipeValue. If cb returns true, then abort the pipe line
- * @param value 
- * @param abortPipeValue 
- * @param assembledLines 
+ * @param value the value to test against the pipeValue for equality unless function then call function with value and if function returns truthy then Abort
+ * @param abortPipeValue the pipeValue of the AbortLineSignal returned
+ * @param assembledLines the assembledLines of the AbortLineSignal returned
  */
 export const abortPipe = (value: CaseValue, abortPipeValue: PipeValue = undefined, assembledLines: number = 1): BotAction<AbortLineSignal|PipeValue|CasesSignal> => 
   pipeCase(value)(

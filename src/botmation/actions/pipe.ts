@@ -16,6 +16,7 @@ import { processAbortLineSignal } from "../helpers/abort"
  * @description    Mapper function for Mapping Piped Values to whatever you want through a function
  *                 If the Pipe is missing from the `injects`, undefined will be past into the mapFunction, like an empty Pipe
  * @param mapFunction pure function to change the piped value to something else
+ * Rename pipeMap ?
  */
 export const map = <R = any>(mapFunction: (pipedValue: any) => R): BotAction<R> => 
   async (page, ...injects) => 

@@ -1,5 +1,6 @@
 import { Dictionary, isDictionary } from "./objects"
 import { PipeValue } from "./pipe-value"
+import { ConditionalCallback } from "./callbacks"
 
 /**
  * A particular kind of return object for BotAction's that signal the results of an evaluated condition 
@@ -23,3 +24,8 @@ export const isCasesSignal = <V = any>(value: any): value is CasesSignal<V> =>
   value.brand === 'Cases_Signal' && 
   typeof value.conditionPass === 'boolean' && 
   isDictionary<V>(value.matches)
+
+/**
+ * values that represent cases to test against a pipe value
+ */
+export type CaseValues = Exclude<PipeValue, Function>|ConditionalCallback

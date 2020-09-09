@@ -1,5 +1,5 @@
 import { Dictionary, PipeValue } from "../types"
-import { CasesSignal } from "../types/cases-signal"
+import { CasesSignal } from "../types/cases"
 
 /**
  * Create a CasesSignal object with safe defaults for no params provided (default is no matches, pipe value undefined, and conditionPass false)

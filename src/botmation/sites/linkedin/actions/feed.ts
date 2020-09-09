@@ -23,7 +23,7 @@ export const getFeedPosts = (filterPromotedContent: boolean = true): BotAction<C
   pipe()(
     goToFeed,
     $$(feedPostsSelector),
-    map((cheerioPosts: CheerioStatic[]) => {
+    map<CheerioStatic[]>((cheerioPosts: CheerioStatic[]) => {
       if (!filterPromotedContent) {
         return cheerioPosts
       }
@@ -98,6 +98,21 @@ export const likeAllFrom = (...peopleNames: string[]): BotAction =>
         //   likeComment(post)
         // ),
         // abort()
+      )
+    )
+  )
+
+export const likeArticlesFrom = (...peopleNames: string[]): BotAction => 
+  pipe()(
+    getFeedPosts(),
+    forAll()(
+      post => pipe(post)(
+        // filter for promoted content 
+        pipeCases(postIsUserArticle, postIsAuthoredByAPerson(...peopleNames))(
+          // scroll to post necessary to click off page link? ie click anchor link (new scrollTo() "navigation" BotAction?)
+          // the feature, auto-scroll, was added to `page.click()` but in a later Puppeteer version, irc
+          like(post)
+        )
       )
     )
   )

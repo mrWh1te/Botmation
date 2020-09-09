@@ -10,7 +10,7 @@ import {
 import { PipeValue } from "../types/pipe-value"
 import { AbortLineSignal, isAbortLineSignal } from "../types/abort-line-signal"
 import { processAbortLineSignal } from "../helpers/abort"
-import { isCasesSignal, CasesSignal } from "../types/cases-signal"
+import { isCasesSignal, CasesSignal } from "../types/cases"
 
 /**
  * @description     chain() BotAction for running a chain of BotAction's safely and optimized

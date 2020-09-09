@@ -1,11 +1,12 @@
 import { BotAction } from "../interfaces"
 import { PipeValue } from "../types/pipe-value"
 import { getInjectsPipeValue, injectsHavePipe } from "../helpers/pipe"
-import { CasesSignal } from "../types/cases-signal"
+import { CasesSignal, CaseValues } from "../types/cases"
 import { AbortLineSignal, Dictionary, isAbortLineSignal } from "../types"
 import { pipe } from "./assembly-lines"
 import { createCasesSignal } from "../helpers/cases"
-import { processAbortLineSignal } from "botmation/helpers/abort"
+import { processAbortLineSignal } from "../helpers/abort"
+import { abort } from "./abort"
 
 //
 // BotAction's Focused on Piping
@@ -17,10 +18,9 @@ import { processAbortLineSignal } from "botmation/helpers/abort"
  *                 If the Pipe is missing from the `injects`, undefined will be past into the mapFunction, like an empty Pipe
  * @param mapFunction pure function to change the piped value to something else
  */
-export const map = <R extends PipeValue = PipeValue>(mapFunction: (pipedValue: any) => R): BotAction<R> => 
+export const map = <R = any>(mapFunction: (pipedValue: any) => R): BotAction<R> => 
   async (page, ...injects) => 
     mapFunction(getInjectsPipeValue(injects))
-    
 
 /**
  * @description   Sets the Pipe's value for the next BotAction
@@ -45,7 +45,7 @@ export const emptyPipe: BotAction = async () => undefined
  *  If assembled BotAction aborts(3+), it returns AbortLineSignal(2-)
  */
 export const pipeCase = 
-  (...valuesToTest: PipeValue[]) =>
+  (...valuesToTest: CaseValues[]) =>
     (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<PipeValue|AbortLineSignal|CasesSignal> => 
       async(page, ...injects) => {
         // if any of the values matches the injected pipe object value
@@ -90,7 +90,7 @@ export const pipeCase =
  * @param valuesToTest 
  */
 export const pipeCases = 
-  (...valuesToTest: PipeValue[]) =>
+  (...valuesToTest: CaseValues[]) =>
     (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<PipeValue|AbortLineSignal|CasesSignal> => 
       async(page, ...injects) => {
         // if any of the values matches the injected pipe object value
@@ -132,3 +132,4 @@ export const pipeCases =
         
         return createCasesSignal(matches) // partial matches signal with conditionPass false
       }
+

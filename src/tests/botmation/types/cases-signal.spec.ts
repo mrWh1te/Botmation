@@ -1,4 +1,4 @@
-import { CasesSignal, isCasesSignal } from 'botmation/types/cases-signal'
+import { CasesSignal, isCasesSignal } from 'botmation/types/cases'
 import { wrapValueInPipe } from 'botmation/helpers/pipe'
 
 /**

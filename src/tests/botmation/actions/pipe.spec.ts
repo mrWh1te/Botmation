@@ -227,4 +227,5 @@ describe('[Botmation] actions/pipe', () => {
 
     expect(abortInfinity).toEqual(createAbortLineSignal(0, 'infinity'))
   })
+
 })

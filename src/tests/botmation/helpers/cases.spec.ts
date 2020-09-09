@@ -1,4 +1,4 @@
-import { createCasesSignal } from 'botmation/helpers/cases'
+import { createCasesSignal, casesSignalToPipeValue } from 'botmation/helpers/cases'
 
 /**
  * @description   Cases Helpers
@@ -51,6 +51,19 @@ describe('[Botmation] helpers/cases', () => {
       conditionPass: true
     })
 
+  })
+
+  it('casesSignalToPipeValue() safely returns a CasesSignal pipeValue property even if not given a CasesSignal', () => {
+    const undefinedValue = casesSignalToPipeValue(undefined)
+    const nullValue = casesSignalToPipeValue(null)
+    const casesSignalNoPipeValue = casesSignalToPipeValue(createCasesSignal())
+    const casesSignalWithPipeValue = casesSignalToPipeValue(createCasesSignal({}, false, 'pipe-value-to-confirm'))
+
+    expect(undefinedValue).toBeUndefined()
+    expect(nullValue).toBeUndefined()
+    
+    expect(casesSignalNoPipeValue).toBeUndefined()
+    expect(casesSignalWithPipeValue).toEqual('pipe-value-to-confirm')
   })
 
 })

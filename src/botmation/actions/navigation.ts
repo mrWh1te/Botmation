@@ -71,6 +71,7 @@ export const wait = (milliseconds: number): BotAction => async() => {
  */
 export const scrollTo = (htmlSelector: string): BotAction => 
   chain(
-    async(page) => page.evaluate(scrollToElement, htmlSelector),
+    // todo evaluate(function, ...params) BotAction
+    async(page) => await page.evaluate(scrollToElement, htmlSelector),
     wait(2500) // wait for scroll to complete
   )

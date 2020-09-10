@@ -81,7 +81,7 @@ export const $$ = <R = CheerioStatic[]>(htmlSelector: string, higherOrderHTMLPar
 
 /**
  * Evaluate functions inside the `page` context
- * @param functionToEvaluate 
+ * @param functionToEvaluate
  * @param functionParams 
  */
 export const evaluate = (functionToEvaluate: EvaluateFn<any>, ...functionParams: any[]): BotAction<any> => 

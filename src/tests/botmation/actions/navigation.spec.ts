@@ -121,6 +121,11 @@ describe('[Botmation] actions/navigation', () => {
 
     expect(mockScrollToElement).toHaveBeenNthCalledWith(1, 'some-element-far-away')
     expect(mockSleep).toHaveBeenNthCalledWith(2, 2500)
+
+    await scrollTo('some-element-far-far-away', 5000)(mockPage)
+
+    expect(mockScrollToElement).toHaveBeenNthCalledWith(2, 'some-element-far-far-away')
+    expect(mockSleep).toHaveBeenNthCalledWith(3, 5000)
   })
 
   // clean up

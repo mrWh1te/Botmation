@@ -21,7 +21,7 @@ import {
   postIsPromotion,
   postIsJobPostings,
   postIsUserInteraction,
-  postIsUserArticle,
+  postIsUserPost,
   postIsAuthoredByAPerson
 } from '../helpers/feed'
 
@@ -62,7 +62,7 @@ export const ifPostNotLoadedTriggerLoadingThenScrape = (post: CheerioStatic): Bo
  *         It would be nice to rely on ie Post.id as param to then find that "Like" button in page to click. In order to, de-couple this function
  * @param post 
  */
-export const likeArticle = (post: CheerioStatic): BotAction =>
+export const likeUserPost = (post: CheerioStatic): BotAction =>
   // Puppeteer.page.click() returned promise will reject if the selector isn't found
   //    so if button is Pressed, it will reject since the aria-label value will not match
   errors('LinkedIn like() - Could not Like Post: Either already Liked or button not found')(
@@ -76,7 +76,7 @@ export const likeArticle = (post: CheerioStatic): BotAction =>
  * @description   Demonstration of what's currently possible, this function goes beyond the scope of its name, but to give an idea on how something more complex could be handled
  * @param peopleNames 
  */
-export const likeArticlesFrom = (...peopleNames: string[]): BotAction => 
+export const likeUserPostsFrom = (...peopleNames: string[]): BotAction => 
   pipe()(
     scrapeFeedPosts,
     forAll()(
@@ -98,11 +98,11 @@ export const likeArticlesFrom = (...peopleNames: string[]): BotAction =>
             log(`Followed User's Interaction (ie like, comment, etc)`)
           ),
           abort(),
-          pipeCase(postIsUserArticle)(
+          pipeCase(postIsUserPost)(
             pipeCase(postIsAuthoredByAPerson(...peopleNames))(
               // scroll to post necessary to click off page link? ie use scrollTo() "navigation" BotAction
               // the feature, auto-scroll, was added to `page.click()` in later Puppeteer version, irc
-              likeArticle(post),
+              likeUserPost(post),
               log('User Article "liked"')
             ),
             emptyPipe,

@@ -5,7 +5,7 @@ import { feedPostAuthorSelector } from '../selectors'
  * User articles are posts created by users you're either connected too directly (1st) or are following
  * @param peopleNames 
  */
-export const postIsUserArticle: ConditionalCallback<CheerioStatic> = (post: CheerioStatic) => {
+export const postIsUserPost: ConditionalCallback<CheerioStatic> = (post: CheerioStatic) => {
   const sharedActorFeedSupplementaryInfo = post('.feed-shared-actor__supplementary-actor-info').text().trim().toLowerCase()
 
   return sharedActorFeedSupplementaryInfo.includes('1st') || sharedActorFeedSupplementaryInfo.includes('following')

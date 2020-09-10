@@ -9,7 +9,7 @@ import { loadCookies } from 'botmation/actions/cookies'
 import { pipe, saveCookies, wait, errors, givenThat } from 'botmation'
 import { login, isGuest, isLoggedIn } from 'botmation/sites/linkedin/actions/auth'
 import { toggleMessagingOverlay } from 'botmation/sites/linkedin/actions/messaging'
-import { likeArticlesFrom } from 'botmation/sites/linkedin/actions/feed'
+import { likeUserPostsFrom } from 'botmation/sites/linkedin/actions/feed'
 import { goHome, goToFeed } from 'botmation/sites/linkedin/actions/navigation'
 
 // Helper for creating filenames that sort naturally
@@ -58,7 +58,7 @@ const generateTimeStamp = (): string => {
       toggleMessagingOverlay, // by default, Messaging Overlay loads in open state
       // screenshot(generateTimeStamp()), // filename ie "2020-8-21-13-20.png"
       
-      likeArticlesFrom('Peter Parker', 'Harry Potter')
+      likeUserPostsFrom('Peter Parker', 'Harry Potter')
     )
    )
    

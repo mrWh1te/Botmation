@@ -10,7 +10,7 @@ import { pipe, saveCookies, wait, errors, givenThat } from 'botmation'
 import { login, isGuest, isLoggedIn } from 'botmation/sites/linkedin/actions/auth'
 import { toggleMessagingOverlay } from 'botmation/sites/linkedin/actions/messaging'
 import { likeArticlesFrom } from 'botmation/sites/linkedin/actions/feed'
-import { goHome } from 'botmation/sites/linkedin/actions/navigation'
+import { goHome, goToFeed } from 'botmation/sites/linkedin/actions/navigation'
 
 // Helper for creating filenames that sort naturally
 const generateTimeStamp = (): string => {
@@ -53,6 +53,8 @@ const generateTimeStamp = (): string => {
     wait(5000), // tons of stuff loads... no rush
 
     givenThat(isLoggedIn)(
+      goToFeed,
+      
       toggleMessagingOverlay, // by default, Messaging Overlay loads in open state
       // screenshot(generateTimeStamp()), // filename ie "2020-8-21-13-20.png"
       

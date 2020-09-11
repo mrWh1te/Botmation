@@ -37,10 +37,10 @@ export const emptyPipe: BotAction = async () => undefined
  * Similar to givenThat except instead of evaluating a BotAction for TRUE, its testing an array of values against the pipe object value for truthy.
  * A value can be a function. In this case, the function is treated as a callback, expected to return a truthy expression, is passed in the pipe object's value
  * @param valuesToTest 
- * @return AbortLineSignal|MatchesSignal
- *  If no matches are found or matches are found, a MatchesSignal is returned
+ * @return AbortLineSignal|CasesSignal
+ *  If no matches are found or matches are found, a CasesSignal is returned
  *  It is determined if signal has matches by using hasAtLeastOneMatch() helper
- *  If assembled BotAction aborts(1), it breaks line & returns a MatchesSignal with the matches
+ *  If assembled BotAction aborts(1), it breaks line & returns a CasesSignal with the matches
  *  If assembled BotAction aborts(2), it breaks line & returns AbortLineSignal.pipeValue
  *  If assembled BotAction aborts(3+), it returns AbortLineSignal(2-)
  */
@@ -86,7 +86,7 @@ export const pipeCase =
       }
 
 /**
- * runs assembled actions ONLY if ALL cases pass otherwise it breaks the case checking and immediately returns an empty MatchesSignal
+ * runs assembled actions ONLY if ALL cases pass otherwise it breaks the case checking and immediately returns an empty CasesSignal
  * it's like if (case && case && case ...)
  * Same AbortLineSignal behavior as pipeCase()()
  * @param valuesToTest 

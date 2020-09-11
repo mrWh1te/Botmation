@@ -39,13 +39,13 @@ export const scrapeFeedPost = (postDataId: string): BotAction<CheerioStatic> =>
   $('.application-outlet .feed-outlet [role="main"] [data-id="'+ postDataId + '"]')
 
 /**
- * If the post hasn't been populated (waits loading), then scroll to it to trigger lazy loading then scrape it to return the hydrated version of it
+ * If the post hasn't been populated (waits loading), then scroll to it to cause lazy loading then scrape it to return the hydrated version of it
  * @param post 
  */
-export const ifPostNotLoadedTriggerLoadingThenScrape = (post: CheerioStatic): BotAction<CheerioStatic> =>
+export const ifPostNotLoadedCauseLoadingThenScrape = (post: CheerioStatic): BotAction<CheerioStatic> =>
   // linkedin lazily loads off screen posts, so check beforehand, and if not loaded, scroll to it, then scrape it again
   pipe(post)(
-    errors('LinkedIn triggerLazyLoadingThenScrapePost()')(
+    errors('LinkedIn causeLazyLoadingThenScrapePost()')(
       pipeCase(postHasntFullyLoadedYet)(
         scrollTo('.application-outlet .feed-outlet [role="main"] [data-id="'+ post('[data-id]').attr('data-id') + '"]'),
         scrapeFeedPost(post('[data-id]').attr('data-id') + '')
@@ -81,7 +81,7 @@ export const likeUserPostsFrom = (...peopleNames: string[]): BotAction =>
     scrapeFeedPosts,
     forAll()(
       post => pipe(post)(
-        ifPostNotLoadedTriggerLoadingThenScrape(post),
+        ifPostNotLoadedCauseLoadingThenScrape(post),
         switchPipe()(
           pipeCase(postIsPromotion)(
             map((promotionPost: CheerioStatic) => promotionPost('[data-id]').attr('data-id')),

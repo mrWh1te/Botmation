@@ -113,7 +113,7 @@ export const pipe =
  * Before each assembled BotAction is ran, the pipe is switched back to whatever is set `toPipe`
  * `toPipe` is optional and can be provided by an injected pipe object value (if nothing provided, default is undefined)
  * 
- *  AbortLineSignal default abort(1) is ignored until a MatchesSignal is returned by an assembled BotAction, marking that at least one Case has ran
+ *  AbortLineSignal default abort(1) is ignored until a CasesSignal is returned by an assembled BotAction, marking that at least one Case has ran
  *    to break that, you can abort(2+) 
  *  This is to support the classic switch/case/break flow where its switchPipe/pipeCase/abort
  *    Therefore, if a pipeCase() does run, its returning MatcheSignal will be recognized by switchPipe and then lower the required abort count by 1
@@ -144,7 +144,7 @@ export const switchPipe =
           let resolvedActionResult = await action(page, ...injects)
 
           // resolvedActionResult can be of 3 things
-          // 1. MatchesSignal 2. AbortLineSignal 3. PipeValue
+          // 1. CasesSignal 2. AbortLineSignal 3. PipeValue
           // switchPipe will return (if not aborted) an array of all the resolved results of each BotAction assembled in the switchPipe()() 2nd call
           if (isCasesSignal(resolvedActionResult) && resolvedActionResult.conditionPass) {
             hasAtLeastOneCaseMatch = true

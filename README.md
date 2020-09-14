@@ -17,21 +17,19 @@ Why choose Botmation?
 
 <img alt="Baby Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/baby_bot.PNG" width="125" align="right">
 
-It empowers Puppeteer code with a simple pattern that maximizes code readability, reusability and testability.
+It empowers Puppeteer code with a simple pattern to maximize your code readability, reusability and testability.
 
 It has a compositional design with safe defaults for building bots with less code.
 
-It encourages learning at your own pace, to inspire an appreciation for the possibilities of Functional programming.
+It encourages a learn at your own pace approach to exploring the possibilities of Functional programming.
 
-It has 100% library code test coverage.
+It has 100% source code test coverage.
 
 # Introduction
 
 [Botmation](https://botmation.dev) is simple functional framework for [Puppeteer](https://github.com/puppeteer/puppeteer) to build online Bots in a composable, testable, and declarative way. It provides a simple pattern focused on a single type of function called `BotAction`. 
 
 `BotAction`'s handle almost everything from simple tasks in crawling and scraping the web to logging in & automating your social media. They are composable. They make assembling Bots easy, declarative, and simple.
-
-You can compose new `BotAction`'s from ones provided or build your own from scratch, then mix them up.
 
 The possibilities are endless!
 
@@ -69,10 +67,12 @@ After intalling through `npm`, import any `BotAction` from the main module:
 import { chain, goTo, screenshot } from 'botmation'
 ```
 
-As of v2.0.x, there are 12 groups of `BotAction` to compose with: 
+As of v2.1.x, there are 14 groups of `BotAction` to compose from: 
 
 <img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="200" align="right" style="position: relative;top: 30px;">
 
+ - [abort](https://www.botmation.dev/api/abort)
+    - abort an assembly of `BotAction`'s
  - [assembly-line](https://www.botmation.dev/api/assembly-lines)
     - compose and run `BotAction`'s in lines
  - [console](https://www.botmation.dev/api/console)
@@ -93,6 +93,10 @@ As of v2.0.x, there are 12 groups of `BotAction` to compose with:
     - read/write/delete from a page's Local Storage
  - [navigation](https://www.botmation.dev/api/navigation)
     - change the page's URL, wait for form submissions to change page URL, back, forward, refresh
+ - [pipe](https://www.botmation.dev/api/pipe)
+    - functions specific to Piping
+ - [scrapers](https://www.botmation.dev/api/scrapers)
+    - scrape HTML documents with an HTML parser and evaluate JavaScript inside a Page
  - [utilities](https://www.botmation.dev/api/utilties)
     - handle more complex logic patterns ie if statements and for loops
 
@@ -105,6 +109,7 @@ In the `./src/examples` [directory](/src/examples) of this repo (excluded from t
  - [Generate Screenshots](/src/examples/screenshots.ts)
  - [Save a PDF](/src/examples/pdf.ts)
  - [Instagram Login](/src/examples/instagram.ts)
+ - [LinkedIn Like Feed Posts](/src/examples/linkedin.ts)
 
 # Dev Notes
 

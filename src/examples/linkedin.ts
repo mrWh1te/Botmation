@@ -2,15 +2,15 @@ import puppeteer from 'puppeteer'
 
 // General BotAction's
 import { log } from 'botmation/actions/console'
-// import { screenshot } from 'botmation/actions/files'
+import { screenshot } from 'botmation/actions/files'
 import { loadCookies } from 'botmation/actions/cookies'
 
 // More advanced BotAction's
 import { pipe, saveCookies, wait, errors, givenThat } from 'botmation'
 import { login, isGuest, isLoggedIn } from 'botmation/sites/linkedin/actions/auth'
 import { toggleMessagingOverlay } from 'botmation/sites/linkedin/actions/messaging'
-import { likeArticlesFrom } from 'botmation/sites/linkedin/actions/feed'
-import { goHome } from 'botmation/sites/linkedin/actions/navigation'
+import { likeUserPostsFrom } from 'botmation/sites/linkedin/actions/feed'
+import { goHome, goToFeed } from 'botmation/sites/linkedin/actions/navigation'
 
 // Helper for creating filenames that sort naturally
 const generateTimeStamp = (): string => {
@@ -53,10 +53,12 @@ const generateTimeStamp = (): string => {
     wait(5000), // tons of stuff loads... no rush
 
     givenThat(isLoggedIn)(
-      toggleMessagingOverlay, // by default, Messaging Overlay loads in open state
-      // screenshot(generateTimeStamp()), // filename ie "2020-8-21-13-20.png"
+      goToFeed,
       
-      likeArticlesFrom('Peter Parker', 'Harry Potter')
+      toggleMessagingOverlay, // by default, Messaging Overlay loads in open state
+      screenshot(generateTimeStamp()), // filename ie "2020-8-21-13-20.png"
+      
+      likeUserPostsFrom('Peter Parker', 'Harry Potter')
     )
    )
    

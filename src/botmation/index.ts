@@ -30,12 +30,14 @@ export * from './actions/utilities'
 //
 // Helpers
 export * from './helpers/abort'
+export * from './helpers/cases'
 export * from './helpers/console'
 export * from './helpers/files'
 export * from './helpers/indexed-db'
 export * from './helpers/local-storage'
 export * from './helpers/navigation'
 export * from './helpers/pipe'
+export * from './helpers/scrapers'
 
 //
 // Class

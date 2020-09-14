@@ -4,7 +4,7 @@ import { BotFilesAction } from '../interfaces/bot-actions'
 import { enrichBotFileOptionsWithDefaults } from '../helpers/files'
 import { BotFileOptions } from '../interfaces'
 import { getFileUrl } from '../helpers/files'
-import { unpipeInjects } from 'botmation/helpers/pipe'
+import { unpipeInjects } from '../helpers/pipe'
 
 /**
  * @description   Parse page's cookies and save them as JSON in a local file

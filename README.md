@@ -17,11 +17,11 @@ Why choose Botmation?
 
 <img alt="Baby Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/baby_bot.PNG" width="125" align="right">
 
-It empowers Puppeteer code with a simple pattern that maximizes code readability, reusability and testability.
+It empowers Puppeteer code with a simple pattern to maximize your code readability, reusability and testability.
 
 It has a compositional design with safe defaults for building bots with less code.
 
-It encourages a learn at your own pace approach to begin exploring the possibilities of Functional programming.
+It encourages a learn at your own pace approach to exploring the possibilities of Functional programming.
 
 It has 100% source code test coverage.
 
@@ -30,8 +30,6 @@ It has 100% source code test coverage.
 [Botmation](https://botmation.dev) is simple functional framework for [Puppeteer](https://github.com/puppeteer/puppeteer) to build online Bots in a composable, testable, and declarative way. It provides a simple pattern focused on a single type of function called `BotAction`. 
 
 `BotAction`'s handle almost everything from simple tasks in crawling and scraping the web to logging in & automating your social media. They are composable. They make assembling Bots easy, declarative, and simple.
-
-You can compose new `BotAction`'s from ones provided or build your own from scratch, then mix them up.
 
 The possibilities are endless!
 

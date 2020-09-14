@@ -8,50 +8,53 @@ const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 var nodeExternals = require('webpack-node-externals');
 
+const localSrcBotmationDir = 'src/botmation/';
+const sitesInstagramDir = 'sites/instagram/';
+
 module.exports = {
   entry: {
     //
     // Class & Assembly-Lines
-    'index': path.resolve(__dirname, 'src/botmation/index.ts'), // barrel
+    'index': path.resolve(__dirname, localSrcBotmationDir, 'index.ts'), // barrel
     //
     // Interfaces & Types
-    'interfaces': path.resolve(__dirname, 'src/botmation/interfaces/index.ts'), // barrel
-    'types': path.resolve(__dirname, 'src/botmation/types/index.ts'), // barrel
+    'interfaces': path.resolve(__dirname, localSrcBotmationDir, 'interfaces/index.ts'), // barrel
+    'types': path.resolve(__dirname, localSrcBotmationDir, 'types/index.ts'), // barrel
     //
     // Actions
-    'actions/abort': path.resolve(__dirname, 'src/botmation/actions/abort.ts'),
-    'actions/assembly-lines': path.resolve(__dirname, 'src/botmation/actions/assembly-lines.ts'),
-    'actions/console': path.resolve(__dirname, 'src/botmation/actions/console.ts'),
-    'actions/cookies': path.resolve(__dirname, 'src/botmation/actions/cookies.ts'),
-    'actions/errors': path.resolve(__dirname, 'src/botmation/actions/errors.ts'),
-    'actions/files': path.resolve(__dirname, 'src/botmation/actions/files.ts'),
-    'actions/indexed-db': path.resolve(__dirname, 'src/botmation/actions/indexed-db.ts'),
-    'actions/input': path.resolve(__dirname, 'src/botmation/actions/input.ts'),
-    'actions/local-storage': path.resolve(__dirname, 'src/botmation/actions/local-storage.ts'),
-    'actions/navigation': path.resolve(__dirname, 'src/botmation/actions/navigation.ts'),
-    'actions/pipe': path.resolve(__dirname, 'src/botmation/actions/pipe.ts'),
-    'actions/scrapers': path.resolve(__dirname, 'src/botmation/actions/scrapers.ts'),
-    'actions/utilities': path.resolve(__dirname, 'src/botmation/actions/utilities.ts'),
+    'actions/abort': path.resolve(__dirname, localSrcBotmationDir, 'actions/abort.ts'),
+    'actions/assembly-lines': path.resolve(__dirname, localSrcBotmationDir, 'actions/assembly-lines.ts'),
+    'actions/console': path.resolve(__dirname, localSrcBotmationDir, 'actions/console.ts'),
+    'actions/cookies': path.resolve(__dirname, localSrcBotmationDir, 'actions/cookies.ts'),
+    'actions/errors': path.resolve(__dirname, localSrcBotmationDir, 'actions/errors.ts'),
+    'actions/files': path.resolve(__dirname, localSrcBotmationDir, 'actions/files.ts'),
+    'actions/indexed-db': path.resolve(__dirname, localSrcBotmationDir, 'actions/indexed-db.ts'),
+    'actions/input': path.resolve(__dirname, localSrcBotmationDir, 'actions/input.ts'),
+    'actions/local-storage': path.resolve(__dirname, localSrcBotmationDir, 'actions/local-storage.ts'),
+    'actions/navigation': path.resolve(__dirname, localSrcBotmationDir, 'actions/navigation.ts'),
+    'actions/pipe': path.resolve(__dirname, localSrcBotmationDir, 'actions/pipe.ts'),
+    'actions/scrapers': path.resolve(__dirname, localSrcBotmationDir, 'actions/scrapers.ts'),
+    'actions/utilities': path.resolve(__dirname, localSrcBotmationDir, 'actions/utilities.ts'),
     // 
     // Helpers
-    'helpers/abort': path.resolve(__dirname, 'src/botmation/helpers/abort.ts'),
-    'helpers/cases': path.resolve(__dirname, 'src/botmation/helpers/cases.ts'),
-    'helpers/console': path.resolve(__dirname, 'src/botmation/helpers/console.ts'),
-    'helpers/files': path.resolve(__dirname, 'src/botmation/helpers/files.ts'),
-    'helpers/indexed-db': path.resolve(__dirname, 'src/botmation/helpers/indexed-db.ts'),
-    'helpers/local-storage': path.resolve(__dirname, 'src/botmation/helpers/local-storage.ts'),
-    'helpers/navigation': path.resolve(__dirname, 'src/botmation/helpers/navigation.ts'),
-    'helpers/pipe': path.resolve(__dirname, 'src/botmation/helpers/pipe.ts'),
-    'helpers/scrapers': path.resolve(__dirname, 'src/botmation/helpers/scrapers.ts'),
+    'helpers/abort': path.resolve(__dirname, localSrcBotmationDir, 'helpers/abort.ts'),
+    'helpers/cases': path.resolve(__dirname, localSrcBotmationDir, 'helpers/cases.ts'),
+    'helpers/console': path.resolve(__dirname, localSrcBotmationDir, 'helpers/console.ts'),
+    'helpers/files': path.resolve(__dirname, localSrcBotmationDir, 'helpers/files.ts'),
+    'helpers/indexed-db': path.resolve(__dirname, localSrcBotmationDir, 'helpers/indexed-db.ts'),
+    'helpers/local-storage': path.resolve(__dirname, localSrcBotmationDir, 'helpers/local-storage.ts'),
+    'helpers/navigation': path.resolve(__dirname, localSrcBotmationDir, 'helpers/navigation.ts'),
+    'helpers/pipe': path.resolve(__dirname, localSrcBotmationDir, 'helpers/pipe.ts'),
+    'helpers/scrapers': path.resolve(__dirname, localSrcBotmationDir, 'helpers/scrapers.ts'),
     //
     // Site Specific
     // Instagram
-    'sites/instagram/selectors': path.resolve(__dirname, 'src/botmation/sites/instagram/selectors.ts'),
-    'sites/instagram/actions/auth': path.resolve(__dirname, 'src/botmation/sites/instagram/actions/auth.ts'),
-    'sites/instagram/actions/modals': path.resolve(__dirname, 'src/botmation/sites/instagram/actions/modals.ts'),
-    'sites/instagram/constants/modals': path.resolve(__dirname, 'src/botmation/sites/instagram/constants/modals.ts'),
-    'sites/instagram/constants/urls': path.resolve(__dirname, 'src/botmation/sites/instagram/constants/urls.ts'),
-    'sites/instagram/helpers/urls': path.resolve(__dirname, 'src/botmation/sites/instagram/helpers/urls.ts'),
+    'sites/instagram/selectors': path.resolve(__dirname, localSrcBotmationDir, sitesInstagramDir, 'selectors.ts'),
+    'sites/instagram/actions/auth': path.resolve(__dirname, localSrcBotmationDir, sitesInstagramDir, 'actions/auth.ts'),
+    'sites/instagram/actions/modals': path.resolve(__dirname, localSrcBotmationDir, sitesInstagramDir, 'actions/modals.ts'),
+    'sites/instagram/constants/modals': path.resolve(__dirname, localSrcBotmationDir, sitesInstagramDir, 'constants/modals.ts'),
+    'sites/instagram/constants/urls': path.resolve(__dirname, localSrcBotmationDir, sitesInstagramDir, 'constants/urls.ts'),
+    'sites/instagram/helpers/urls': path.resolve(__dirname, localSrcBotmationDir, sitesInstagramDir, 'helpers/urls.ts'),
   },
   module: {
     rules: [

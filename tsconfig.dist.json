@@ -11,7 +11,8 @@
     "baseUrl": "./src",
     "sourceMap": true,
     "esModuleInterop": true,
-    "declaration": true
+    "declaration": true,
+    "downlevelIteration": true
   },
   "exclude": [
     "node_modules",

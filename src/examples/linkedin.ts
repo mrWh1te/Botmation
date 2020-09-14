@@ -2,7 +2,7 @@ import puppeteer from 'puppeteer'
 
 // General BotAction's
 import { log } from 'botmation/actions/console'
-// import { screenshot } from 'botmation/actions/files'
+import { screenshot } from 'botmation/actions/files'
 import { loadCookies } from 'botmation/actions/cookies'
 
 // More advanced BotAction's
@@ -56,7 +56,7 @@ const generateTimeStamp = (): string => {
       goToFeed,
       
       toggleMessagingOverlay, // by default, Messaging Overlay loads in open state
-      // screenshot(generateTimeStamp()), // filename ie "2020-8-21-13-20.png"
+      screenshot(generateTimeStamp()), // filename ie "2020-8-21-13-20.png"
       
       likeUserPostsFrom('Peter Parker', 'Harry Potter')
     )

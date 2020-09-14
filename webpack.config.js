@@ -19,6 +19,7 @@ module.exports = {
     'types': path.resolve(__dirname, 'src/botmation/types/index.ts'), // barrel
     //
     // Actions
+    'actions/abort': path.resolve(__dirname, 'src/botmation/actions/abort.ts'),
     'actions/assembly-lines': path.resolve(__dirname, 'src/botmation/actions/assembly-lines.ts'),
     'actions/console': path.resolve(__dirname, 'src/botmation/actions/console.ts'),
     'actions/cookies': path.resolve(__dirname, 'src/botmation/actions/cookies.ts'),
@@ -29,16 +30,19 @@ module.exports = {
     'actions/local-storage': path.resolve(__dirname, 'src/botmation/actions/local-storage.ts'),
     'actions/navigation': path.resolve(__dirname, 'src/botmation/actions/navigation.ts'),
     'actions/pipe': path.resolve(__dirname, 'src/botmation/actions/pipe.ts'),
+    'actions/scrapers': path.resolve(__dirname, 'src/botmation/actions/scrapers.ts'),
     'actions/utilities': path.resolve(__dirname, 'src/botmation/actions/utilities.ts'),
     // 
     // Helpers
+    'helpers/abort': path.resolve(__dirname, 'src/botmation/helpers/abort.ts'),
+    'helpers/cases': path.resolve(__dirname, 'src/botmation/helpers/cases.ts'),
     'helpers/console': path.resolve(__dirname, 'src/botmation/helpers/console.ts'),
     'helpers/files': path.resolve(__dirname, 'src/botmation/helpers/files.ts'),
     'helpers/indexed-db': path.resolve(__dirname, 'src/botmation/helpers/indexed-db.ts'),
     'helpers/local-storage': path.resolve(__dirname, 'src/botmation/helpers/local-storage.ts'),
     'helpers/navigation': path.resolve(__dirname, 'src/botmation/helpers/navigation.ts'),
     'helpers/pipe': path.resolve(__dirname, 'src/botmation/helpers/pipe.ts'),
-    'helpers/utilities': path.resolve(__dirname, 'src/botmation/helpers/utilities.ts'),
+    'helpers/scrapers': path.resolve(__dirname, 'src/botmation/helpers/scrapers.ts'),
     //
     // Site Specific
     // Instagram

@@ -23,9 +23,9 @@
     "examples/pdf": "node build/examples/screenshots.js",
     "examples/linkedin": "node build/examples/linkedin.js",
     "jest-test": "jest --runInBand",
-    "jest-test-report-coverage": "npm run test -- --coverage",
+    "jest-test-with-coverage": "jest --runInBand --coverage",
     "localtestsite": "http-server src/tests/server",
-    "test": "concurrently -k -s first \"npm:localtestsite\" \"npm:jest-test\""
+    "test": "concurrently -k -s first \"npm:localtestsite\" \"npm:jest-test-with-coverage\""
   },
   "keywords": [
     "social",

@@ -23,10 +23,9 @@
     "examples/pdf": "node build/examples/screenshots.js",
     "examples/linkedin": "node build/examples/linkedin.js",
     "jest-test": "jest --runInBand",
-    "jest-test-report-coverage": "npm run test -- --coverage && bash <(curl -s https://codecov.io/bash)",
+    "jest-test-report-coverage": "npm run test -- --coverage",
     "localtestsite": "http-server src/tests/server",
-    "test": "concurrently -k -s first \"npm:localtestsite\" \"npm:jest-test\"",
-    "test-report-coverage": "concurrently -k -s first \"npm:localtestsite\" \"npm:jest-test-report-coverage\""
+    "test": "concurrently -k -s first \"npm:localtestsite\" \"npm:jest-test\""
   },
   "keywords": [
     "social",

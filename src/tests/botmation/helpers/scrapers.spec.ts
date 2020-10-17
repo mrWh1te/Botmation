@@ -26,10 +26,10 @@ const mockQuerySelectorAll = (timesRan = 0) => () => {
 Object.defineProperty(global, 'document', { 
   value: {
     querySelector: mockQuerySelector(),
-    querySelectorAll: mockQuerySelectorAll()
+    querySelectorAll: mockQuerySelectorAll(),
+    addEventListener: () => {}
   }
 })
-
 
 /**
  * @description   Scrapers Helpers

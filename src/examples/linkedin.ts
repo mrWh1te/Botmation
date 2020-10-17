@@ -45,7 +45,7 @@ const generateTimeStamp = (): string => {
     goHome,
 
     givenThat(isGuest)(
-      login('account@email.com', 'account-password'), // <-- put in bot's LinkedIn email & password
+      login('account-email', 'account-password'), // <-- put in bot's LinkedIn email & password
       wait(500),
       saveCookies('linkedin')
     ),

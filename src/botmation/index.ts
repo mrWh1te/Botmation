@@ -40,10 +40,6 @@ export * from './helpers/pipe'
 export * from './helpers/scrapers'
 
 //
-// Class
-export * from './class'
-
-//
 // Sites Deprecated, to be published in separate npm package 
 //
 

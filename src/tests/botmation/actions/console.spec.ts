@@ -1,4 +1,5 @@
 import { log, warning, error } from 'botmation/actions/console'
+import puppeteer from 'puppeteer'
 
 /**
  * @description   Console BotAction's
@@ -6,18 +7,29 @@ import { log, warning, error } from 'botmation/actions/console'
  * @note          These messages are logged to the Node console, not the Puppeteer Page console, unless they are evaluated inside a Puppeteer Page (ie how IndexedDB is interacted with)
  */
 describe('[Botmation] actions/console', () => {
+  let browser: puppeteer.Browser
+  let page: puppeteer.Page
+
   let logs: any[]
   const originalConsoleLog = console.log
 
-  beforeAll(() => {
+  beforeAll(async() => {
     // We can do Integration instead, by jest.fn() the log, then checking we call it with params
     console.log = function() {
       logs.push([].slice.call(arguments))
     }
+
+    browser = await puppeteer.launch()
   })  
 
-  beforeEach(() => {
+  beforeEach(async() => {
     logs = []
+
+    page = await browser.newPage()
+  })
+
+  afterEach(async () => {
+    await page.close()
   })
 
   //
@@ -107,8 +119,10 @@ describe('[Botmation] actions/console', () => {
     expect(pipeValueReturned).toEqual(55)
   })
 
-  afterAll(() => {
+  afterAll(async() => {
     console.log = originalConsoleLog
+
+    await browser.close()
   })
 
 })

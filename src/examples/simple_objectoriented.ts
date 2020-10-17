@@ -2,14 +2,37 @@
  * @description  Simple Example Script
  */
 import puppeteer from 'puppeteer'
-import { Botmation } from 'botmation'
 
 // General BotAction's
+import { chain } from 'botmation/actions/assembly-lines'
+import { click, type } from 'botmation/actions/input'
 import { log } from 'botmation/actions/console'
-import { goTo } from 'botmation/actions/navigation'
+import { goTo, waitForNavigation } from 'botmation/actions/navigation'
 import { screenshot } from 'botmation/actions/files'
 
 import { logError } from 'botmation/helpers/console'
+
+class ExampleSiteBot {
+  private page: puppeteer.Page;
+  constructor(page: puppeteer.Page) {
+    this.page = page;
+  }
+  public async login(username: string, password: string) {
+    await chain(
+      goTo('http://example.com/login.html'),
+      click('form input[name="username"]'),
+      type(username),
+      click('form input[name="password"]'),
+      type(password),
+      click('form button[type="submit"]'),
+      waitForNavigation,
+      log('Login Complete')
+    )(this.page);
+  }
+  public async takeAPhoto(fileName: string) {
+    await screenshot(fileName)(this.page);
+  }
+}
 
 (async () => {
   let browser: puppeteer.Browser
@@ -17,33 +40,18 @@ import { logError } from 'botmation/helpers/console'
   try {
     // Get the browser from Puppeteer
     browser = await puppeteer.launch({headless: false}) // {headless: false} shows the browser, {headless: true} hides the browser during execution
-
-    // We can use Botmation's static asyncConstructor method to grab a page, from the provided browser, for the bot
-    const bot = await Botmation.asyncConstructor(browser)
-
-    // Run the chain of actions
-    await bot.actions(
-      log('Bot running'),
-      goTo('https://google.com'),
-      screenshot('google-homepage'),
-      log('Screenshot (Google) taken')
-    )
-    
-    // close the page when you're done
-    await bot.closePage()
-
-    // Simple example on using the constructor, not the static async "constructor" method
     const page = await browser.newPage()
 
-    const bot2 = new Botmation(page)
+    const bot = new ExampleSiteBot(page)
 
-    await bot2.actions(
-      log('Bot2 running'),
-      goTo('https://apple.com'),
-      screenshot('apple-homepage'),
-      log('Screenshot (Apple) taken')
-    )
+    // Run the bot
+    await bot.login('username', 'password')
+    await bot.takeAPhoto('home-page')
+    
+    // close the page when you're done
+    await page.close()
 
+    
     // Done
     await browser.close()
   } catch (error) {

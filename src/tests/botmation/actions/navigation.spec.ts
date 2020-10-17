@@ -1,11 +1,11 @@
-import { Page } from 'puppeteer'
-
 import { goTo, waitForNavigation, goBack, goForward, reload, wait, scrollTo } from 'botmation/actions/navigation'
 import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 import { click } from 'botmation/actions/input'
 
 import { BASE_URL, EXAMPLE_URL } from 'tests/urls'
 import { FORM_SUBMIT_BUTTON_SELECTOR } from 'tests/selectors'
+
+import puppeteer from 'puppeteer'
 
 jest.mock('botmation/helpers/navigation', () => {
   const originalModule = jest.requireActual('botmation/helpers/navigation')
@@ -22,7 +22,10 @@ jest.mock('botmation/helpers/navigation', () => {
  *                The factory methods here return BotAction's for the bots to input into the page as User
  */
 describe('[Botmation] actions/navigation', () => {
-  let mockPage: Page
+  let browser: puppeteer.Browser
+  let page: puppeteer.Page
+
+  let mockPage: puppeteer.Page
 
   beforeEach(() => {
     mockPage = {
@@ -36,12 +39,13 @@ describe('[Botmation] actions/navigation', () => {
         fn(...params)
         return Promise.resolve()
       })
-    } as any as Page
+    } as any as puppeteer.Page
   })
 
   beforeAll(async() => {
-    await page.goto(BASE_URL, enrichGoToPageOptions())
+    browser = await puppeteer.launch()
   })
+
   //
   // sleep() Integration Test
   it('should call setTimeout with the correct values', async() => {
@@ -95,21 +99,6 @@ describe('[Botmation] actions/navigation', () => {
   })
 
   //
-  // Unit test for both actions. Moving forward, we can rely more in Integration tests for some of these
-  it('should go to example page, submit form, wait for navigation, then be on the success page', async() => {
-    await goTo(EXAMPLE_URL)(page)
-
-    // do both at the same time, so we wait for navigation to complete based on the form, 
-    // and not after it's already done, which was stalling the test
-    await Promise.all([
-      click(FORM_SUBMIT_BUTTON_SELECTOR)(page),
-      waitForNavigation(page)
-    ])
-
-    await expect(page.title()).resolves.toMatch('Testing: Form Submit Success')
-  })
-
-  //
   // scrollTo() integration
   it('scrollTo() should call scrollToElement() inside the puppeteer page based on a html selector', async() => {
     await scrollTo('some-element-far-away')(mockPage)
@@ -128,8 +117,30 @@ describe('[Botmation] actions/navigation', () => {
     expect(mockSleep).toHaveBeenNthCalledWith(3, 5000)
   })
 
+  //
+  // Unit test for both actions. Moving forward, we can rely more in Integration tests for some of these
+  it('should go to example page, submit form, wait for navigation, then be on the success page', async() => {
+    page = await browser.newPage()
+    await page.goto(BASE_URL, enrichGoToPageOptions())
+
+    await goTo(EXAMPLE_URL)(page)
+
+    // do both at the same time, so we wait for navigation to complete based on the form, 
+    // and not after it's already done, which was stalling the test
+    await Promise.all([
+      click(FORM_SUBMIT_BUTTON_SELECTOR)(page),
+      waitForNavigation(page)
+    ])
+
+    const pageTitle = await page.title()
+    expect(pageTitle).toMatch('Testing: Form Submit Success')
+
+    await page.close()
+  })
+
   // clean up
-  afterAll(() => {
+  afterAll(async() => {
+    await browser.close()
     jest.unmock('botmation/helpers/navigation')
   })
 })

@@ -5,20 +5,36 @@ import { createAbortLineSignal } from 'botmation/helpers/abort'
 import { wrapValueInPipe } from 'botmation/helpers/pipe'
 import { abort } from 'botmation/actions/abort'
 import { createCasesSignal } from 'botmation/helpers/cases'
+import { BASE_URL } from '../../urls'
+
+import puppeteer from 'puppeteer'
 
 /**
  * @description   Pipe BotAction's
  */
 describe('[Botmation] actions/pipe', () => {
+  let browser: puppeteer.Browser
+  let page: puppeteer.Page
 
   let mockPage: Page
+
+  beforeAll(async() => {
+    browser = await puppeteer.launch()
+  })
 
   beforeEach(() => {
     mockPage = {} as any as Page
   })
 
+  afterAll(async() => {
+    await browser.close()
+  })
+
   // Basic Unit Tests
   it('map() should run a function against the Pipe value then return the new value', async() => {
+    page = await browser.newPage()
+    await page.goto(BASE_URL)
+
     const testMapFunction = jest.fn()
     await map(testMapFunction)(page, {brand: 'Pipe'})
     expect(testMapFunction).toHaveBeenCalledTimes(1)
@@ -29,6 +45,8 @@ describe('[Botmation] actions/pipe', () => {
     await expect(map<number>(multiplyNumberByTwo)({} as Page, {brand: 'Pipe', value: 5})).resolves.toEqual(10)
     await expect(map<number>(multiplyNumberByTwo)({} as Page, {brand: 'Pipe'})).resolves.toEqual(NaN)
     await expect(map<number>(multiplyNumberByTwo)({} as Page)).resolves.toEqual(NaN)
+
+    await page.close()
   })
 
   it('pipeValue() should return the value given', async() => {

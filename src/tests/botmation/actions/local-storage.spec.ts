@@ -8,10 +8,15 @@ import {
   getLocalStorageItem
 } from 'botmation/actions/local-storage'
 
+import puppeteer from 'puppeteer'
+
 /**
  * @description   Local-Storage BotAction's
  */
 describe('[Botmation] actions/local-storage', () => {
+  let browser: puppeteer.Browser
+  let page: puppeteer.Page
+  
   let mockPage: Page
 
   // Function sources for the key & value support both higher-order param and Pipe.value
@@ -21,10 +26,18 @@ describe('[Botmation] actions/local-storage', () => {
   const injectedPipeParamKey = 'pipe-key'
   const injectedPipeParamValue = 'pipe-value'
 
+  beforeAll(async() => {
+    browser = await puppeteer.launch()
+  })
+
   beforeEach(() => {
     mockPage = {
       evaluate: jest.fn()
     } as any as Page
+  })
+
+  afterAll(async() => {
+    await browser.close()
   })
 
   //
@@ -125,6 +138,7 @@ describe('[Botmation] actions/local-storage', () => {
   //   to confirm we are calling the correct Functions. The integration tests above dont have a way to check which anonymous functions ran.., this e2e helps confirm they are called
   it('should set a few key/value pairs, get the values by key, remove a key/value pair, fail safely in trying to get that key/value and clear all key/value pairs', async() => {
     // Puppeteer page, load some URL
+    page = await browser.newPage()
     await page.goto(BASE_URL)
 
     // 1. Create some key/value pairs in Local Storage
@@ -150,5 +164,7 @@ describe('[Botmation] actions/local-storage', () => {
     await expect(getLocalStorageItem('key-1')(page)).resolves.toEqual(null)
     await expect(getLocalStorageItem('key-2')(page)).resolves.toEqual(null)
     await expect(getLocalStorageItem('key-3')(page)).resolves.toEqual(null)
+
+    await page.close()
   })
 })

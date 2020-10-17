@@ -1,5 +1,4 @@
 module.exports = {
-  preset: 'jest-puppeteer',
   transform: {"\\.ts$": ['ts-jest']},
   moduleNameMapper: {
     '^botmation/(.*)$': '<rootDir>/src/botmation/$1',

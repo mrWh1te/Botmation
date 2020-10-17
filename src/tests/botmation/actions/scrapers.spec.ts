@@ -1,4 +1,4 @@
-import { Page } from 'puppeteer'
+import puppeteer from 'puppeteer'
 
 import { BASE_URL } from 'tests/urls'
 import { $, $$, htmlParser, evaluate } from 'botmation/actions/scrapers'
@@ -29,7 +29,8 @@ const mockQuerySelectorAll = (timesRan = 0) => (d: any) => {
 Object.defineProperty(global, 'document', { 
   value: {
     querySelector: mockQuerySelector(),
-    querySelectorAll: mockQuerySelectorAll()
+    querySelectorAll: mockQuerySelectorAll(),
+    addEventListener: () => {}
   }
 })
 
@@ -37,12 +38,19 @@ Object.defineProperty(global, 'document', {
  * @description   Scraping BotAction's
  */
 describe('[Botmation] actions/scraping', () => {
-  let mockPage: Page
+  let browser: puppeteer.Browser
+  let page: puppeteer.Page
+  
+  let mockPage: puppeteer.Page
+
+  beforeAll(async() => {
+    browser = await puppeteer.launch()
+  })
 
   beforeEach(() => {
     mockPage = {
       evaluate: jest.fn(() => []) // for $$ integration test
-    } as any as Page
+    } as any as puppeteer.Page
   })
 
   //
@@ -50,7 +58,7 @@ describe('[Botmation] actions/scraping', () => {
   it('$() should call Page.evaluate() with a helper function and the correct html selector', async() => {
     mockPage = {
       evaluate: jest.fn((f, i) => f(i))
-    } as any as Page
+    } as any as puppeteer.Page
 
     await $('test-1')(mockPage, (d:any) => d) // mock html parser
     await $('test-1-1', (d:any) => d)(mockPage)
@@ -87,7 +95,7 @@ describe('[Botmation] actions/scraping', () => {
   it('evaluate() should call the function with the params provided via the Puppeteer page.evaluate() method', async() => {
     mockPage = {
       evaluate: jest.fn((fn, ...params) => fn(...params))
-    } as any as Page
+    } as any as puppeteer.Page
     
     const mockEvaluateFunction = jest.fn()
     const mockParams = [5, 'testing', {sunshine: true}]
@@ -101,6 +109,7 @@ describe('[Botmation] actions/scraping', () => {
   // Unit-Tests
   it('Should scrape joke (2 paragraph elements) and 1 home link (anchor element) and grab their text', async() => {
     // setup test
+    page = await browser.newPage()
     await page.goto(BASE_URL)
 
     // run tests
@@ -113,10 +122,13 @@ describe('[Botmation] actions/scraping', () => {
     expect(jokeLines[1]('p').text()).toEqual('So he walks up to the tables, and asks, "May I join you?"')
 
     expect(homeLink('a').text()).toEqual('Home Link')
+
+    await page.close()
   })
 
   // clean up
-  afterAll(() => {
+  afterAll(async() => {
     jest.unmock('botmation/actions/inject')
+    await browser.close()
   })
 })

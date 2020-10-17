@@ -1,12 +1,10 @@
 import { Page } from 'puppeteer'
 import { promises as fs, Stats } from 'fs'
 
-import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 import { getFileUrl } from 'botmation/helpers/files'
 import { saveCookies, loadCookies } from 'botmation/actions/cookies'
 import { BotFileOptions } from 'botmation/interfaces/bot-file-options'
 
-import { BASE_URL } from 'tests/urls'
 import { wrapValueInPipe } from 'botmation/helpers/pipe'
 
 /**
@@ -41,11 +39,7 @@ describe('[Botmation] actions/cookies', () => {
     cookies: jest.fn(() => COOKIES_JSON),
     setCookie: jest.fn()
   } as any as Page
-
-  beforeAll(async() => {
-    await page.goto(BASE_URL, enrichGoToPageOptions())
-  })
-
+  
   //
   // saveCookies() Unit/Integration Test
   it('should call puppeteer\'s page cookies() method then create a JSON file of that data in the Cookies directory', async() => {

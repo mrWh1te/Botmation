@@ -20,6 +20,7 @@ const mockQuerySelector = mockQuerySelectorFactory()
 Object.defineProperty(global, 'document', { 
   value: {
     querySelector: mockQuerySelector,
+    addEventListener: () => {}
   }
 })
 

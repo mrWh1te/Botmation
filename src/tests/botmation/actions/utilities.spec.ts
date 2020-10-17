@@ -5,7 +5,6 @@ import { givenThat, forAll, doWhile, forAsLong } from 'botmation/actions/utiliti
 import { click, type } from 'botmation/actions/input'
 import { goTo } from 'botmation/actions/navigation'
 
-import { BASE_URL } from 'tests/urls'
 import { BotAction } from 'botmation/interfaces'
 import { Dictionary } from 'botmation/types/objects'
 import { abort } from 'botmation/actions/abort'
@@ -25,10 +24,6 @@ jest.mock('botmation/helpers/console', () => {
 describe('[Botmation] actions/utilities', () => {
 
   let mockPage: Page
-
-  beforeAll(async() => {
-    await page.goto(BASE_URL, enrichGoToPageOptions())
-  })
 
   beforeEach(() => {
     mockPage = {

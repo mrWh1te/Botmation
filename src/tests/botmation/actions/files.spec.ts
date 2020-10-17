@@ -9,6 +9,8 @@ import { getFileUrl, enrichBotFileOptionsWithDefaults } from 'botmation/helpers/
 import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 import { botFileOptions } from 'tests/mocks/bot-file-options'
 
+import puppeteer from 'puppeteer'
+
 // Mock the Injects Module so when files() imports it
 // we can test how injects() is called within files()
 // particularly interested in the first param, an enriched BotFileOptions
@@ -27,6 +29,8 @@ jest.mock('botmation/actions/inject', () => {
  * @description   Files BotAction
  */
 describe('[Botmation] actions/files', () => {
+  let browser: puppeteer.Browser
+  let page: puppeteer.Page
 
   const SCREENSHOT_FILENAME = 'test-screenshot-1'
   const PDF_FILENAME = 'test-pdf-1'
@@ -43,7 +47,16 @@ describe('[Botmation] actions/files', () => {
   })
 
   beforeAll(async() => {
+    browser = await puppeteer.launch()
+  })
+
+  beforeEach(async() => {
+    page = await browser.newPage()
     await page.goto(BASE_URL, enrichGoToPageOptions())
+  })
+
+  afterEach(async () => {
+    await page.close()
   })
   
   //
@@ -136,6 +149,8 @@ describe('[Botmation] actions/files', () => {
   //
   // Clean up
   afterAll(async() => {
+    await browser.close()
+
     // unmock the module for other tests
     jest.unmock('botmation/actions/inject')
 

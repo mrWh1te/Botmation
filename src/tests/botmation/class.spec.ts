@@ -1,5 +1,5 @@
-import 'expect-puppeteer'
-import { Page, Browser } from 'puppeteer'
+// import 'expect-puppeteer'
+import puppeteer from 'puppeteer'
 
 import { enrichGoToPageOptions } from 'botmation/helpers/navigation'
 import { click, type } from 'botmation/actions/input'
@@ -13,9 +13,24 @@ import { FORM_TEXT_INPUT_SELECTOR, FORM_SUBMIT_BUTTON_SELECTOR } from '../select
  * @description   Test the Botmation class
  */
 describe('[Botmation] class', () => {
+  let browser: puppeteer.Browser
+  let page: puppeteer.Page
+
+  beforeAll(async() => {
+    browser = await puppeteer.launch()
+  })
 
   beforeEach(async() => {
+    page = await browser.newPage()
     await page.goto(BASE_URL, enrichGoToPageOptions())
+  })
+
+  afterEach(async() => {
+    await page.close()
+  })
+
+  afterAll(async() => {
+    await browser.close()
   })
 
   //
@@ -36,14 +51,14 @@ describe('[Botmation] class', () => {
     /// this mocked use-case is for when the browser provided has no tabs open
     const mockPage = {
       click: jest.fn()
-    } as any as Page
+    } as any as puppeteer.Page
     const mockPages = [] as any // no pages 
     // the async constructor method's purpose is to get the page (tab) from the browser
     // so if none, it needs to create it, then use it
     const mockBrowser = {
       pages: jest.fn(() => mockPages),
       newPage: jest.fn(() => mockPage)
-    } as any as Browser
+    } as any as puppeteer.Browser
     
     // when browser has no pages, it creates one to use
     const bot = await Botmation.asyncConstructor(mockBrowser)
@@ -59,7 +74,7 @@ describe('[Botmation] class', () => {
     // When browser has pages, it uses the first one
     const mockBrowserHasPages = {
       pages: jest.fn(() => ['page1', 'page2', 'page3'])
-    } as any as Browser
+    } as any as puppeteer.Browser
     const bot2 = await Botmation.asyncConstructor(mockBrowserHasPages)
     expect(bot2.getPage()).toEqual('page1')
   })
@@ -88,7 +103,7 @@ describe('[Botmation] class', () => {
     // Change bot's page with mock page
     const mockPage = {
         click: jest.fn()
-    } as any as Page
+    } as any as puppeteer.Page
     
     // what we are testing
     bot.setPage(mockPage)
@@ -101,14 +116,14 @@ describe('[Botmation] class', () => {
     expect(mockPage.click).toHaveBeenNthCalledWith(1, 'mock selector')
 
     // test the get
-    bot.setPage(1337 as any as Page)
+    bot.setPage(1337 as any as puppeteer.Page)
     expect(bot.getPage()).toEqual(1337)
   })
 
   //
   // set injects
   it('should have a mutator method for setting the injects (optional stuff for devs to add for custom bot actions) that are injected into the bot actions', async() => {
-    const mockPage = {} as any as Page
+    const mockPage = {} as any as puppeteer.Page
     const inject1 = jest.fn()
 
     const bot = new Botmation(mockPage)
@@ -118,7 +133,7 @@ describe('[Botmation] class', () => {
     expect(inject1).toHaveBeenCalled()
 
     await bot.actions(
-        (page: Page, ...injects: any[]) => new Promise<void>(resolve => {
+        (page: puppeteer.Page, ...injects: any[]) => new Promise<void>(resolve => {
             injects[0]()
             return resolve()
         })
@@ -132,7 +147,7 @@ describe('[Botmation] class', () => {
   it('should have a method to close the page the bot is crawling on, which is the tab in the browser', async() => {
       const mockPage = {
           close: jest.fn()
-      } as any as Page
+      } as any as puppeteer.Page
 
       const bot = new Botmation(mockPage)
 
@@ -142,7 +157,7 @@ describe('[Botmation] class', () => {
       expect(mockPage.close).toHaveBeenCalled()
 
       // we only run close if the page is defined
-      bot.setPage(undefined as any as Page)
+      bot.setPage(undefined as any as puppeteer.Page)
       await bot.closePage()
 
       expect(mockPage.close).not.toHaveBeenNthCalledWith(2)

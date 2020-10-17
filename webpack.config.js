@@ -34,12 +34,8 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: (chunkData) => {
-      switch(chunkData.chunk.name) {
-        case 'index':
-        default:
-          return '[name].js';
-      }
+    filename: () => {
+      return '[name].js';
     },
     libraryTarget: 'umd',
     library: 'botmation',

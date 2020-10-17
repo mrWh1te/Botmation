@@ -3,8 +3,7 @@
  */
 import puppeteer from 'puppeteer'
 
-import { Botmation } from 'botmation'
-
+import { chain } from 'botmation/actions/assembly-lines'
 import { log } from 'botmation/actions/console'
 import { goTo } from 'botmation/actions/navigation'
 import { savePDF } from 'botmation/actions/files'
@@ -23,10 +22,10 @@ import { logError } from 'botmation/helpers/console'
     let browser: puppeteer.Browser
 
     browser = await puppeteer.launch({headless: true}) // headless: false breaks PDF saving!!! see https://github.com/puppeteer/puppeteer/issues/1829
-    const bot = await Botmation.asyncConstructor(browser)
+    const page = await browser.newPage()
 
     // Bot's automations
-    await bot.actions(
+    await chain(
       log('Botmation running'),
      
       //  with special note about headless requirements
@@ -34,7 +33,7 @@ import { logError } from 'botmation/helpers/console'
       goTo('https://github.com/'),
       savePDF('github-homepage'),
       log('PDF saved')
-    )
+    )(page)
     
     await browser.close()
   } catch(error) {

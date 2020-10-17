@@ -3,9 +3,8 @@
  */
 import puppeteer from 'puppeteer'
 
-import { Botmation } from 'botmation'
-
 // General BotAction's
+import { chain } from 'botmation/actions/assembly-lines'
 import { log } from 'botmation/actions/console'
 import { goTo } from 'botmation/actions/navigation'
 // import { screenshot } from 'botmation/actions/files'
@@ -22,12 +21,10 @@ import { logError } from 'botmation/helpers/console'
   try {
     // Launch Puppeteer to grab the Browser it manages
     browser = await puppeteer.launch({headless: false})
-
-    // Start up the Instagram bot to run in the Puppeteer Browser
-    const googleBot = await Botmation.asyncConstructor(browser)
+    const page = await browser.newPage()
 
     // Actions run in sequence
-    await googleBot.actions(
+    await chain(
       // log('Botmation running'),
       // goTo('https://google.com'),
       // screenshot('google-homepage'),
@@ -37,7 +34,7 @@ import { logError } from 'botmation/helpers/console'
         $$('section p'),
         log()
       )
-    )
+    )(page)
     
   } catch (error) {
     logError(error)

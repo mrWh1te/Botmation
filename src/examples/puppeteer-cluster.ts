@@ -6,9 +6,6 @@ import { goTo } from 'botmation/actions/navigation'
 import { screenshot } from 'botmation/actions/files'
 import { log } from 'botmation/actions/console'
 
-// Class for injecting the page
-import { Botmation } from 'botmation'
-
 // Purely functional approach
 import { chain } from 'botmation/actions/assembly-lines'
 import { logError } from 'botmation/helpers/console'
@@ -25,28 +22,8 @@ import { logError } from 'botmation/helpers/console'
         //    But, they each can do their own unique set of actions, navigating, interacting with their own sites
         // This library supports 2 approaches, Object Oriented 
         //
-
-        const githubBot = async ({ page, data: url }: {page: Page, data: any}) => {
-            // Imperative OO approach
-            const bot = new Botmation(page)
     
-            await bot.actions(
-                goTo(url),
-                screenshot(url.replace(/[^a-zA-Z]/g, '_')),
-                log('screenshot of ' + url + ' saved')
-            )
-        }
-    
-        const typescriptBot = async ({ page, data: url }: {page: Page, data: any}) => 
-            // Imperative OO approach, on 1 line
-            await (new Botmation(page)).actions( // if you're not doing the above functional way, you could rename Botmation to Bot in the import using 'as'
-                goTo(url),
-                screenshot(url.replace(/[^a-zA-Z]/g, '_')),
-                log('screenshot of ' + url + ' saved')
-            )
-    
-        const nodeJsBot = async ({ page, data: url }: {page: Page, data: any}) => 
-            // Functional approach
+        const screenshotBot = async ({ page, data: url }: {page: Page, data: any}) => 
             await chain(
                 goTo(url),
                 screenshot(url.replace(/[^a-zA-Z]/g, '_')),
@@ -58,9 +35,9 @@ import { logError } from 'botmation/helpers/console'
         //
     
         // Run the bots
-        cluster.queue('https://nodejs.org/', nodeJsBot)
-        cluster.queue('https://github.com/', githubBot)
-        cluster.queue('https://www.typescriptlang.org/', typescriptBot)
+        cluster.queue('https://nodejs.org/', screenshotBot)
+        cluster.queue('https://github.com/', screenshotBot)
+        cluster.queue('https://www.typescriptlang.org/', screenshotBot)
     
         // Wait for it to finish up
         await cluster.idle()

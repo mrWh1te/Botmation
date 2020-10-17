@@ -3,9 +3,8 @@
  */
 import puppeteer from 'puppeteer'
 
-import { Botmation } from 'botmation'
-
 // General BotAction's
+import { chain } from 'botmation/actions/assembly-lines'
 import { log } from 'botmation/actions/console'
 import { forAll } from 'botmation/actions/utilities'
 import { goTo } from 'botmation/actions/navigation'
@@ -32,10 +31,10 @@ import { errors } from 'botmation/actions/errors'
   // Wrap in try/catch, because the bot will throw on Errors requiring dev attention
   try {
     browser = await puppeteer.launch({headless: false})
-    const bot = await Botmation.asyncConstructor(browser)
+    const page = await browser.newPage()
 
     // Bot's automations
-    await bot.actions(
+    await chain(
       log('Botmation running'),
 
       // Taking screenshots of many sites 
@@ -65,7 +64,7 @@ import { errors } from 'botmation/actions/errors'
     
       log('Done taking screenshots'),
 
-    )
+    )(page)
     
   } catch (error) {
     logError(error)

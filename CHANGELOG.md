@@ -1,3 +1,10 @@
+## [v3.0.0](https://github.com/mrWh1te/Botmation/releases/tag/3.0.0)
+
+Working with latest Puppeteer version 5.
+
+### Features
+ - Resolved a blocking issue with E2E testing
+ - Slimmer package size (Unpacked 2.57MB -> 450kB)
 
 ## [v2.0.1](https://github.com/mrWh1te/Botmation/releases/tag/2.0.1)
 

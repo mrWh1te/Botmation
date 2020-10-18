@@ -17,9 +17,9 @@ Why choose Botmation?
 
 <img alt="Baby Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/baby_bot.PNG" width="125" align="right">
 
-It empowers Puppeteer code with a simple pattern to maximize your code readability, reusability and testability.
+It empowers Puppeteer code with a simple pattern to maximize code readability, reusability and testability.
 
-It has a compositional design with safe defaults for building bots with less code.
+Its compositional design comes pre-built with safe defaults for building bots with less code.
 
 It encourages a learn at your own pace approach to exploring the possibilities of Functional programming.
 
@@ -27,9 +27,9 @@ It has 100% source code test coverage.
 
 # Introduction
 
-[Botmation](https://botmation.dev) is simple functional framework for [Puppeteer](https://github.com/puppeteer/puppeteer) to build online Bots in a composable, testable, and declarative way. It provides a simple pattern focused on a single type of function called `BotAction`. 
+[Botmation](https://botmation.dev) is simple declarative framework for [Puppeteer](https://github.com/puppeteer/puppeteer), to build web bots in a composable way. It provides a simple pattern focused on a single type of function called `BotAction`. 
 
-`BotAction`'s handle almost everything from simple tasks in crawling and scraping the web to logging in & automating your social media. They are composable. They make assembling Bots easy, declarative, and simple.
+`BotAction`'s handle everything from simple tasks in crawling and scraping the web to logging in & automating your social media. They are composable. They make assembling Bots easy, declarative, and simple.
 
 The possibilities are endless!
 
@@ -44,15 +44,12 @@ Install
 
 Install Botmation with `npm` and save it as a dependency:
 
-    npm install -s botmation
+    npm install --save botmation
 
-If you're just getting started, install `puppeteer` latest v2 & `@types/puppeteer` v3.0.0:
+If you're just getting started, install `puppeteer` & `@types/puppeteer`:
 
-    npm install -s puppeteer@">=2.0.0 <3.0.0" @types/puppeteer@3.0.0
-
-While `Botmation` source code works with Puppeteer version 3, 4, and 5, the E2E testing has a bug that is limiting the packaging, as of this moment.
-
-> If you want to use Botmation with the latest Puppeteer version, for now, clone the repo locally and work from the playground bot. From there you can install the latest `@types/puppeteer` and `puppeteer` packages then build Botmation source code with it. But, be wary, the E2E tests will become rather unstable.
+    npm install --save puppeteer 
+    npm install --save-dev @types/puppeteer
 
 Documentation
 -------------
@@ -67,7 +64,7 @@ After intalling through `npm`, import any `BotAction` from the main module:
 import { chain, goTo, screenshot } from 'botmation'
 ```
 
-As of v2.1.x, there are 14 groups of `BotAction` to compose from: 
+As of v3.x, there are 14 groups of `BotAction` to compose from: 
 
 <img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="200" align="right" style="position: relative;top: 30px;">
 

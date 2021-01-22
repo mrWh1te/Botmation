@@ -40,7 +40,7 @@ export const removeLocalStorageItem =
 
       await page.evaluate(
         removeLocalStorageKeyValue,
-        key ? key : 'missing-key'
+        key ?? 'missing-key'
       )
     }
 
@@ -75,8 +75,8 @@ export const setLocalStorageItem =
 
       await page.evaluate(
         setLocalStorageKeyValue,
-        key ? key : 'missing-key',
-        value ? value : 'missing-value'
+        key ?? 'missing-key',
+        value ?? 'missing-value'
       )
     }
 
@@ -103,7 +103,7 @@ export const getLocalStorageItem =
 
       return await page.evaluate(
         getLocalStorageKeyValue,
-        key ? key : 'missing-key'
+        key ?? 'missing-key'
       )
     }
 

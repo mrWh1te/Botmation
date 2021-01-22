@@ -58,11 +58,11 @@ export const setIndexedDBValue =
 
       await page.evaluate(
         setIndexedDBStoreValue,
-        databaseName ? databaseName : injectDatabaseName ? injectDatabaseName : 'missing-db-name',
-        databaseVersion ? databaseVersion : injectDatabaseVersion ? injectDatabaseVersion : undefined, // grab latest version
-        storeName ? storeName : injectStoreName ? injectStoreName : 'missing-store', 
-        key ? key : 'missing-key',
-        value ? value : 'missing-value'
+        databaseName ? databaseName : injectDatabaseName ?? 'missing-db-name',
+        databaseVersion ? databaseVersion : injectDatabaseVersion ?? undefined, // grab latest version
+        storeName ? storeName : injectStoreName ?? 'missing-store', 
+        key ?? 'missing-key',
+        value ?? 'missing-value'
       )
     }
     
@@ -92,10 +92,10 @@ export const getIndexedDBValue =
 
       return await page.evaluate(
         getIndexedDBStoreValue,
-        databaseName ? databaseName : injectDatabaseName ? injectDatabaseName : 'missing-db-name',
-        databaseVersion ? databaseVersion : injectDatabaseVersion ? injectDatabaseVersion : undefined, // on open, it will grab latest version if undefined
-        storeName ? storeName : injectStoreName ? injectStoreName : 'missing-store',
-        key ? key : 'missing-key'
+        databaseName ? databaseName : injectDatabaseName ?? 'missing-db-name',
+        databaseVersion ? databaseVersion : injectDatabaseVersion ?? undefined, // on open, it will grab latest version if undefined
+        storeName ? storeName : injectStoreName ?? 'missing-store',
+        key ?? 'missing-key'
       ) as PipeValue
     }
 

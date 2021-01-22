@@ -145,7 +145,7 @@ Contributors
 
 ### Code
 
-[Michael Lage](https://github.com/mrWh1te) - [Blog](https://copynpaste.me)
+[Michael Lage](https://github.com/mrWh1te) - [Blog](https://lage.tech)
 
 ### Art
 

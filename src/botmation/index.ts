@@ -38,14 +38,3 @@ export * from './helpers/local-storage'
 export * from './helpers/navigation'
 export * from './helpers/pipe'
 export * from './helpers/scrapers'
-
-//
-// Sites Deprecated, to be published in separate npm package 
-//
-
-//
-// Instagram
-export * from './sites/instagram/selectors'
-export * from './sites/instagram/actions/auth'
-export * from './sites/instagram/actions/modals'
-export * from './sites/instagram/helpers/urls'

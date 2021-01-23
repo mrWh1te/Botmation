@@ -9,11 +9,37 @@ const CopyPlugin = require('copy-webpack-plugin');
 var nodeExternals = require('webpack-node-externals');
 
 const localSrcBotmationDir = 'src/botmation/';
+const botmationSitesDir = 'sites/';
+
+/**
+ * values: 'core' => botmation package
+ *         'instagram' => botmation-instagram package
+ *          ...
+ */
+const npmPackageToBuild = 'core' // or 'instagram', 'linkedin', ... 
+
+
+let entryFileDirectory = localSrcBotmationDir;
+let outputDirectory = 'dist/';
+let libraryName = 'botmation';
+
+switch(npmPackageToBuild) {
+  case 'core':
+    outputDirectory += 'core'
+    break;
+  case 'instagram':
+    outputDirectory += 'instagram'
+    libraryName += '-instagram'
+    entryFileDirectory += botmationSitesDir + 'instagram/'
+    break;
+  default:
+    throw new Error('unrecognized npm package to build')
+}
+
 
 module.exports = {
   entry: {
-    // main bundle barrel
-    'index': path.resolve(__dirname, localSrcBotmationDir, 'index.ts')
+    'index': path.resolve(__dirname, entryFileDirectory, 'index.ts')
   },
   module: {
     rules: [
@@ -22,7 +48,7 @@ module.exports = {
         use: [{
           loader: 'ts-loader',
           options: {
-            configFile: 'tsconfig.dist.json'
+            configFile: 'tsconfig.dist.json' // todo separate one for each npm package or is there a dynamic way?
           }
         }],
         exclude: ['/node_modules']
@@ -33,12 +59,13 @@ module.exports = {
     extensions: [ '.tsx', '.ts', '.js' ],
   },
   output: {
+    // todo separate package output directories? mapped with tsconfig.dist.json out directory
     path: path.resolve(__dirname, 'dist'),
     filename: () => {
       return '[name].js';
     },
     libraryTarget: 'umd',
-    library: 'botmation',
+    library: libraryName,
     umdNamedDefine: true
   },
   target: 'node',
@@ -49,7 +76,7 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [
-      // Copy over and tweak the package.json for npm package
+      // todo new or modified package.json?
       { 
         from: 'package.json', 
         to: 'package.json',
@@ -65,6 +92,7 @@ module.exports = {
           const puppeteerValue = packageJSON.dependencies.puppeteer
           delete packageJSON.dependencies.puppeteer
 
+          // todo dynamically add botmation as peerDependency
           packageJSON.peerDependencies = {
             "puppeteer": puppeteerValue
           }
@@ -79,6 +107,7 @@ module.exports = {
         } 
       },
       { 
+        // todo dynamically choose README.md i.e. sites/instagram/README.md
         from: 'README.md', 
         to: 'README.md',
         toType: 'file'

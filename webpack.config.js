@@ -120,7 +120,7 @@ module.exports = {
         } 
       },
       { 
-        // todo dynamically choose README.md i.e. sites/instagram/README.md
+        // todo dynamically source README.md i.e. sites/instagram/README.md
         from: 'README.md', 
         to: 'README.md',
         toType: 'file'

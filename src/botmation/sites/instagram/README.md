@@ -1,13 +1,7 @@
 botmation-instagram
 -------------------
 
-This package provides BotAction's, helpers, constants and selectors for Instagram's web application. It extends upon the core functionality of [Botmation](https://botmation.dev).
-
-### Getting Started
-
-Botmation is a NodeJS library written in TypeScript. You'll need [node.js](http://nodejs.org/) LTS installed and the TypeScript compiler (`tsc`) installed globally (or have a transpiling code step).
-
-<img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
+This [package](https://www.npmjs.com/package/botmation-instagram) provides BotAction's, helpers, constants and selectors focused on Instagram's web application. It extends upon the core functionality of the TypeScript framework called [Botmation](https://botmation.dev) for building web bots.
 
 #### Install
 
@@ -23,8 +17,4 @@ If you're just getting started, install `botmation`, `puppeteer` & `@types/puppe
 
 ### Documentation
 
-To get started with Botmation, learn about its design and pattern, view API Doc's, see examples, advanced techniques, and a tutorial on approaching these Bot problems, visit the [official Botmation Documentation](https://botmation.dev) site.
-
-### Example
-
- - [Instagram Login](/src/examples/instagram.ts)
+To [get started](https://www.botmation.dev/install) with Botmation, learn about its [design and pattern](https://www.botmation.dev/overview), view [API Doc's](https://www.botmation.dev/api/abort), see [examples](https://www.botmation.dev/examples), [advanced techniques](https://www.botmation.dev/advanced/piping), and a [tutorial](https://www.botmation.dev/advanced/tutorial) on approaching these Bot problems, visit the [official Botmation Documentation](https://botmation.dev) site.

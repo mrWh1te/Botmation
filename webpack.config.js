@@ -22,6 +22,8 @@ const npmPackageToBuild = 'core' // or 'instagram', 'linkedin', ...
 let entryFileDirectory = localSrcBotmationDir;
 let outputDirectory = 'dist/';
 let libraryName = 'botmation';
+let botmation;
+let packageJsonOverrides = {};
 
 switch(npmPackageToBuild) {
   case 'core':
@@ -31,6 +33,13 @@ switch(npmPackageToBuild) {
     outputDirectory += 'instagram'
     libraryName += '-instagram'
     entryFileDirectory += botmationSitesDir + 'instagram/'
+    botmation = '^3.0.0'
+    packageJsonOverrides = {
+      name: 'botmation-instagram',
+      version: '1.0.0',
+      description: 'An extension package for Botmation on Instagram',
+      homepage: 'https://www.botmation.dev/sites/instagram'
+    }
     break;
   default:
     throw new Error('unrecognized npm package to build')
@@ -76,31 +85,35 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [
-      // todo new or modified package.json?
       { 
         from: 'package.json', 
         to: 'package.json',
         toType: 'file',
         transform: (content) => {
-          let packageJSON = JSON.parse(content.toString())
+          let packageJSON = {
+            ...JSON.parse(content.toString()),
+            ...packageJsonOverrides
+          }
 
-          // Distribution setup
           packageJSON.module = './index.js'
           packageJSON.types = './index.d.ts'
 
-          // Move puppeteer dependency to peer
           const puppeteerValue = packageJSON.dependencies.puppeteer
           delete packageJSON.dependencies.puppeteer
-
-          // todo dynamically add botmation as peerDependency
-          packageJSON.peerDependencies = {
-            "puppeteer": puppeteerValue
+          
+          // site specific packages
+          if (npmPackageToBuild !== 'core') {
+            delete packageJSON.dependencies.chalk
+            delete packageJSON.dependencies.cheerio
           }
 
-          // Remove the puppeteer-cluster dependency (not required to use library, it's for an example)
-          delete packageJSON.dependencies['puppeteer-cluster']
+          packageJSON.peerDependencies = {
+            "puppeteer": puppeteerValue,
+            botmation
+          }
 
-          // Get rid of these scripts
+          delete packageJSON.dependencies['puppeteer-cluster']
+          delete packageJSON.devDependencies
           delete packageJSON.scripts
 
           return JSON.stringify(packageJSON)

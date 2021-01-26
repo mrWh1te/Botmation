@@ -24,6 +24,7 @@ let outputDirectory = 'dist/';
 let libraryName = 'botmation';
 let botmation;
 let packageJsonOverrides = {};
+let readmeUrl = 'README.md';
 
 switch(npmPackageToBuild) {
   case 'core':
@@ -40,6 +41,7 @@ switch(npmPackageToBuild) {
       description: 'An extension package for Botmation on Instagram',
       homepage: 'https://www.botmation.dev/sites/instagram'
     }
+    readmeUrl = 'src/botmation/sites/instagram/README.md'
     break;
   default:
     throw new Error('unrecognized npm package to build')
@@ -120,8 +122,7 @@ module.exports = {
         } 
       },
       { 
-        // todo dynamically source README.md i.e. sites/instagram/README.md
-        from: 'README.md', 
+        from: readmeUrl,
         to: 'README.md',
         toType: 'file'
       }

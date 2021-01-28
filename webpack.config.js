@@ -16,8 +16,7 @@ const botmationSitesDir = 'sites/';
  *         'instagram' => botmation-instagram package
  *          ...
  */
-const npmPackageToBuild = 'core' // or 'instagram', 'linkedin', ... 
-
+const npmPackageToBuild = 'core' // or 'instagram', 'linkedin', ...
 
 let entryFileDirectory = localSrcBotmationDir;
 let outputDirectory = 'dist/';
@@ -25,10 +24,13 @@ let libraryName = 'botmation';
 let botmation;
 let packageJsonOverrides = {};
 let readmeUrl = 'README.md';
+let tsConfigFileExt = '';
+let distDirectory = 'dist';
 
 switch(npmPackageToBuild) {
   case 'core':
     outputDirectory += 'core'
+    // distDirectory += 'core';
     break;
   case 'instagram':
     outputDirectory += 'instagram'
@@ -42,6 +44,8 @@ switch(npmPackageToBuild) {
       homepage: 'https://www.botmation.dev/sites/instagram'
     }
     readmeUrl = 'src/botmation/sites/instagram/README.md'
+    tsConfigFileExt = 'instagram.'
+    // distDirectory += 'instagram'
     break;
   default:
     throw new Error('unrecognized npm package to build')
@@ -59,7 +63,7 @@ module.exports = {
         use: [{
           loader: 'ts-loader',
           options: {
-            configFile: 'tsconfig.dist.json' // todo separate one for each npm package or is there a dynamic way?
+            configFile: 'tsconfig.' + tsConfigFileExt + 'dist.json'
           }
         }],
         exclude: ['/node_modules']
@@ -71,7 +75,9 @@ module.exports = {
   },
   output: {
     // todo separate package output directories? mapped with tsconfig.dist.json out directory
-    path: path.resolve(__dirname, 'dist'),
+    // todo determine if can just reuse directory since its just to place the build/module to then publish
+    // todo dynamic CLI flags input ?
+    path: path.resolve(__dirname, distDirectory),
     filename: () => {
       return '[name].js';
     },

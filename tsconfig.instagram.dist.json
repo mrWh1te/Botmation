@@ -19,14 +19,13 @@
     "assets",
     "scripts",
     "dist",
-    "src/examples/**/*",
-    "src/tests/**/*",
-    "src/playground_bot*",
+    "src/examples",
+    "src/tests",
     "jest-puppeteer.config.js",
     "jest.config.js",
     "webpack.config.js"
   ],
   "include": [
-    "src/botmation/**/*"
+    "src/botmation/sites/instagram/**/*"
   ]
 }

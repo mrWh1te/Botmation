@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "allowJs": true,
-    "outDir": "./dist/",
+    "outDir": "./dist/core/",
     "module": "es6",
     "jsx": "react",
     "noImplicitAny": true,

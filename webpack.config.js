@@ -16,7 +16,8 @@ const botmationSitesDir = 'sites/';
  *         'instagram' => botmation-instagram package
  *          ...
  */
-const npmPackageToBuild = 'core' // or 'instagram', 'linkedin', ...
+// todo convert into TS
+const npmPackageToBuild = 'instagram' // or 'instagram', 'linkedin', ...
 
 let entryFileDirectory = localSrcBotmationDir;
 let outputDirectory = 'dist/';
@@ -25,12 +26,12 @@ let botmation;
 let packageJsonOverrides = {};
 let readmeUrl = 'README.md';
 let tsConfigFileExt = '';
-let distDirectory = 'dist';
+let distDirectory = 'dist/';
 
 switch(npmPackageToBuild) {
   case 'core':
     outputDirectory += 'core'
-    // distDirectory += 'core';
+    distDirectory += 'core';
     break;
   case 'instagram':
     outputDirectory += 'instagram'
@@ -45,7 +46,7 @@ switch(npmPackageToBuild) {
     }
     readmeUrl = 'src/botmation/sites/instagram/README.md'
     tsConfigFileExt = 'instagram.'
-    // distDirectory += 'instagram'
+    distDirectory += 'instagram'
     break;
   default:
     throw new Error('unrecognized npm package to build')

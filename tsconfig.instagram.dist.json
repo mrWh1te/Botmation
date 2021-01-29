@@ -24,10 +24,10 @@
     "jest-puppeteer.config.js",
     "jest.config.js",
     "webpack.config.js",
-    "src/botmation/actions/*",
-    "src/botmation/helpers/*",
-    "src/botmation/interfaces/*",
-    "src/botmation/types/*",
+    "src/botmation/actions/**/*",
+    "src/botmation/helpers/**/*",
+    "src/botmation/interfaces/**/*",
+    "src/botmation/types/**/*",
   ],
   "include": [
     "src/botmation/sites/instagram/**/*"

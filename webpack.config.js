@@ -1,6 +1,6 @@
 /**
  * @description   Separated bundles for various parts of the library
- * 
+ *
  *                Creates the npm distribution modules
  */
 
@@ -16,13 +16,14 @@ const botmationSitesDir = 'sites/';
  *         'instagram' => botmation-instagram package
  *          ...
  */
+// todo dynamic CLI flags input ?
 // todo convert into TS
-const npmPackageToBuild = 'instagram' // or 'instagram', 'linkedin', ...
+const npmPackageToBuild = 'instagram' // 'core' | 'instagram' | 'linkedin', ...
 
 let entryFileDirectory = localSrcBotmationDir;
 let outputDirectory = 'dist/';
 let libraryName = 'botmation';
-let botmation;
+let botmationAsPeerDependency;
 let packageJsonOverrides = {};
 let readmeUrl = 'README.md';
 let tsConfigFileExt = '';
@@ -37,7 +38,7 @@ switch(npmPackageToBuild) {
     outputDirectory += 'instagram'
     libraryName += '-instagram'
     entryFileDirectory += botmationSitesDir + 'instagram/'
-    botmation = '^3.0.0'
+    botmationAsPeerDependency = '^3.0.0'
     packageJsonOverrides = {
       name: 'botmation-instagram',
       version: '1.0.0',
@@ -75,9 +76,6 @@ module.exports = {
     extensions: [ '.tsx', '.ts', '.js' ],
   },
   output: {
-    // todo separate package output directories? mapped with tsconfig.dist.json out directory
-    // todo determine if can just reuse directory since its just to place the build/module to then publish
-    // todo dynamic CLI flags input ?
     path: path.resolve(__dirname, distDirectory),
     filename: () => {
       return '[name].js';
@@ -94,8 +92,8 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [
-      { 
-        from: 'package.json', 
+      {
+        from: 'package.json',
         to: 'package.json',
         toType: 'file',
         transform: (content) => {
@@ -109,7 +107,7 @@ module.exports = {
 
           const puppeteerValue = packageJSON.dependencies.puppeteer
           delete packageJSON.dependencies.puppeteer
-          
+
           // site specific packages
           if (npmPackageToBuild !== 'core') {
             delete packageJSON.dependencies.chalk
@@ -117,8 +115,10 @@ module.exports = {
           }
 
           packageJSON.peerDependencies = {
-            "puppeteer": puppeteerValue,
-            botmation
+            "puppeteer": puppeteerValue
+          }
+          if (botmationAsPeerDependency) {
+            packageJSON.peerDependencies.botmation = botmationAsPeerDependency
           }
 
           delete packageJSON.dependencies['puppeteer-cluster']
@@ -126,9 +126,9 @@ module.exports = {
           delete packageJSON.scripts
 
           return JSON.stringify(packageJSON)
-        } 
+        }
       },
-      { 
+      {
         from: readmeUrl,
         to: 'README.md',
         toType: 'file'

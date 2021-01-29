@@ -27,7 +27,7 @@ It has 100% source code test coverage.
 
 # Introduction
 
-[Botmation](https://botmation.dev) is simple declarative framework for [Puppeteer](https://github.com/puppeteer/puppeteer), to build web bots in a composable way. It provides a simple pattern focused on a single type of function called `BotAction`. 
+[Botmation](https://botmation.dev) is simple declarative framework for [Puppeteer](https://github.com/puppeteer/puppeteer), to build web bots in a composable way. It provides a simple pattern focused on a single type of function called `BotAction`.
 
 `BotAction`'s handle everything from simple tasks in crawling and scraping the web to logging in & automating your social media. They are composable. They make assembling Bots easy, declarative, and simple.
 
@@ -48,7 +48,7 @@ Install Botmation with `npm` and save it as a dependency:
 
 If you're just getting started, install `puppeteer` & `@types/puppeteer`:
 
-    npm install --save puppeteer 
+    npm install --save puppeteer
     npm install --save-dev @types/puppeteer
 
 Documentation
@@ -59,12 +59,12 @@ To get started with Botmation, learn about its design and pattern, view API Doc'
 Library Reference
 -----------------
 
-After intalling through `npm`, import any `BotAction` from the main module: 
+After intalling through `npm`, import any `BotAction` from the main module:
 ```javascript
 import { chain, goTo, screenshot } from 'botmation'
 ```
 
-As of v3.x, there are 14 groups of `BotAction` to compose from: 
+As of v3.x, there are 14 groups of `BotAction` to compose from:
 
 <img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="200" align="right" style="position: relative;top: 30px;">
 
@@ -145,7 +145,7 @@ Contributors
 
 ### Code
 
-[Michael Lage](https://github.com/mrWh1te) - [Blog](https://copynpaste.me)
+[Michael Lage](https://github.com/mrWh1te) - [Blog](https://lage.tech)
 
 ### Art
 

@@ -139,5 +139,6 @@ module.exports = {
   node: {
     fs: 'empty'
   },
-  externals: [nodeExternals()]
+  externals: [nodeExternals()] // todo insta package has botmation core code in it. Externalize botmation code from instagram pckg ?
+                               // todo consider moving to mono-repo to manage the package dev & publishing ie Nx
 };

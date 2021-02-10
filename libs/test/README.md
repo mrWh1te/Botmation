@@ -6,6 +6,3 @@ This library was generated with [Nx](https://nx.dev).
 
 Run `nx test test` to execute the unit tests via [Jest](https://jestjs.io).
 
-## Dev notes
-
-Requirement: create from project root directory folders `/assets/cookies`, `/assets/pdfs`, and `/assets/screenshots`

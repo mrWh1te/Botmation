@@ -1,0 +1,28 @@
+pull_request_rules:
+  - name: automatic merge when GitHub branch protection passes
+    conditions:
+      - base=master
+      - label=automerge
+      - -conflict
+    actions:
+      merge:
+        strict: true
+        strict_method: rebase
+        method: squash
+      delete_head_branch:
+        force: false
+  - name: greenkeeper auto-merging pull requests
+    conditions:
+      - base=master
+      - author=greenkeeper[bot]
+      - status-success=Travis CI - Pull Request
+      - status-success=Travis CI - Branch
+      - status-success=greenkeeper/verify
+      - -conflict
+    actions:
+      merge:
+        strict: true
+        strict_method: rebase
+        method: squash
+      delete_head_branch:
+        force: false

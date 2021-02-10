@@ -1,94 +1,145 @@
+<img src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/banner/1556x379v2.png" alt="Botmation Crew" width="474">
 
+[![npm](https://img.shields.io/npm/v/botmation)](https://www.npmjs.com/package/botmation)
+[![Build Status](https://travis-ci.com/mrWh1te/Botmation.svg?branch=master)](https://travis-ci.com/mrWh1te/Botmation)
+[![Known Vulnerabilities](https://snyk.io/test/github/mrWh1te/Botmation/badge.svg?targetFile=package.json)](https://snyk.io/test/github/mrWh1te/Botmation?targetFile=package.json)
+[![codecov](https://img.shields.io/codecov/c/github/mrWh1te/Botmation/master?label=codecov)](https://codecov.io/gh/mrWh1te/Botmation)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mrWh1te_Botmation&metric=alert_status)](https://sonarcloud.io/dashboard?id=mrWh1te_Botmation)
+[![dependencies Status](https://david-dm.org/mrWh1te/Botmation/status.svg)](https://david-dm.org/mrWh1te/Botmation)
+![GitHub](https://img.shields.io/github/license/mrWh1te/Botmation)
 
-# Botmation
+[Botmation](https://botmation.dev) is a simple TypeScript framework to build web bots with [Puppeteer](https://github.com/puppeteer/puppeteer) in a declarative, functional and composable way.
 
-This project was generated using [Nx](https://nx.dev).
+> “Everything should be made as simple as possible, but no simpler.” - Albert Einstein
 
-<p align="center"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
+Why choose Botmation?
+---------------------
 
-🔎 **Nx is a set of Extensible Dev Tools for Monorepos.**
+<img alt="Baby Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/baby_bot.PNG" width="125" align="right">
 
-## Adding capabilities to your workspace
+It empowers Puppeteer code with a simple pattern to maximize code readability, reusability and testability.
 
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
+Its compositional design comes pre-built with safe defaults for building bots with less code.
 
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
+It encourages a learn at your own pace approach to exploring the possibilities of Functional programming.
 
-Below are our core plugins:
+It has 100% source code test coverage.
 
-- [React](https://reactjs.org)
-  - `npm install --save-dev @nrwl/react`
-- Web (no framework frontends)
-  - `npm install --save-dev @nrwl/web`
-- [Angular](https://angular.io)
-  - `npm install --save-dev @nrwl/angular`
-- [Nest](https://nestjs.com)
-  - `npm install --save-dev @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `npm install --save-dev @nrwl/express`
-- [Node](https://nodejs.org)
-  - `npm install --save-dev @nrwl/node`
+# Introduction
 
-There are also many [community plugins](https://nx.dev/nx-community) you could add.
+[Botmation](https://botmation.dev) is simple declarative framework for [Puppeteer](https://github.com/puppeteer/puppeteer), to build web bots in a composable way. It provides a simple pattern focused on a single type of function called `BotAction`. 
 
-## Generate an application
+`BotAction`'s handle everything from simple tasks in crawling and scraping the web to logging in & automating your social media. They are composable. They make assembling Bots easy, declarative, and simple.
 
-Run `nx g @nrwl/react:app my-app` to generate an application.
+The possibilities are endless!
 
-> You can use any of the plugins above to generate applications as well.
+# Getting Started
 
-When using Nx, you can create multiple applications and libraries in the same workspace.
+Botmation is a NodeJS library written in TypeScript. You'll need [node.js](http://nodejs.org/) LTS installed and the TypeScript compiler (`tsc`) installed globally (or have a transpiling code step).
 
-## Generate a library
+<img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
 
-Run `nx g @nrwl/react:lib my-lib` to generate a library.
+Install
+-------
 
-> You can also use any of the plugins above to generate libraries as well.
+To get started, install Botmation's primary package using `npm`:
 
-Libraries are shareable across libraries and applications. They can be imported from `@botmation/mylib`.
+    npm install --save @botmation/core
 
-## Development server
+If you're just getting started, install `puppeteer` & `@types/puppeteer`:
 
-Run `nx serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
+    npm install --save puppeteer 
+    npm install --save-dev @types/puppeteer
 
-## Code scaffolding
+You can install site specific packages with `npm`:
 
-Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
+    npm install --save @botmation/instagram
 
-## Build
+Documentation
+-------------
 
-Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+To get started with Botmation, learn about its design and pattern, view API Doc's, see examples, advanced techniques, and a tutorial on approaching these Bot problems, visit the [official Botmation Documentation](https://botmation.dev) site.
 
-## Running unit tests
+Library Reference
+-----------------
 
-Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
+After intalling through `npm`, import any `BotAction` from the main module: 
+```javascript
+import { chain, goTo, screenshot } from '@botmation/core'
+```
 
-Run `nx affected:test` to execute the unit tests affected by a change.
+As of v3.x, there are 14 groups of `BotAction` to compose from: 
 
-## Running end-to-end tests
+<img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="200" align="right" style="position: relative;top: 30px;">
 
-Run `ng e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
+ - [abort](https://www.botmation.dev/api/abort)
+    - abort an assembly of `BotAction`'s
+ - [assembly-line](https://www.botmation.dev/api/assembly-lines)
+    - compose and run `BotAction`'s in lines
+ - [console](https://www.botmation.dev/api/console)
+    - log messages to the nodeJS console
+ - [cookies](https://www.botmation.dev/api/cookies)
+    - read/write page cookies
+ - [errors](https://www.botmation.dev/api/errors)
+    - try/catch errors in assembly-lines
+ - [files](https://www.botmation.dev/api/files)
+    - write files to local disk ie screenshots, pdf's
+ - [indexed-db](https://www.botmation.dev/api/indexed-db)
+    - read/write to page's IndexedDB
+ - [inject](https://www.botmation.dev/api/inject)
+    - insert new injects into a line of `BotAction`'s
+ - [input](https://www.botmation.dev/api/input)
+    - simulate User input ie typing and clicking with a mouse
+ - [local-storage](https://www.botmation.dev/api/local-storage)
+    - read/write/delete from a page's Local Storage
+ - [navigation](https://www.botmation.dev/api/navigation)
+    - change the page's URL, wait for form submissions to change page URL, back, forward, refresh
+ - [pipe](https://www.botmation.dev/api/pipe)
+    - functions specific to Piping
+ - [scrapers](https://www.botmation.dev/api/scrapers)
+    - scrape HTML documents with an HTML parser and evaluate JavaScript inside a Page
+ - [utilities](https://www.botmation.dev/api/utilties)
+    - handle more complex logic patterns ie if statements and for loops
 
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
+# Dev Notes
 
-## Understand your workspace
+Library Development
+-------------------
 
-Run `nx dep-graph` to see a diagram of the dependencies of your projects.
+First, clone the repo locally, then install the npm dependencies. You can build libraries (`core`, `instagram`, `linkedin`) locally with this command:
+```
+nx build <library name>
+```
 
-## Further help
+<img alt="Orange Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/orange_bot.PNG" width="175" align="right">
 
-Visit the [Nx Documentation](https://nx.dev) to learn more.
+The [playground_bot](/src/playground_bot.ts) is a dedicated spot for trying out new Bot Actions, etc. You can run it's code, after running the build command, with:
 
+```
+npm run playground
+```
 
+Library Testing
+---------------
 
-## ☁ Nx Cloud
+All our testing (e2e, unit, and integration) is done with [Jest](https://jestjs.io/).
 
-### Computation Memoization in the Cloud
+Learn more about the library's testing strategy and coverage with the [Botmation: Tests documentation](/notes/test.md).
 
-<p align="center"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
+Issues & Feature Requests
+-------------------------
 
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
+Open Issues on Github. Please specify if it's a feature request or a bug.
 
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
+When reporting bugs, please provide sample code to recreate the bug, relevant error messages/logs, and any other information that may help.
 
-Visit [Nx Cloud](https://nx.app/) to learn more.
+Contributors
+------------
+
+### Code
+
+[Michael Lage](https://github.com/mrWh1te) - [Blog](https://copynpaste.me)
+
+### Art
+
+[Patrick Capeto](https://www.instagram.com/patrick.capeto/) - [Email](mailto:me@patrickcapeto.com)

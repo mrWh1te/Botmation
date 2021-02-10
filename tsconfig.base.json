@@ -1,0 +1,26 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@botmation/core": ["libs/core/src/index.ts"],
+      "@botmation/instagram": ["libs/instagram/src/index.ts"],
+      "@botmation/test": ["libs/test/src/index.ts"],
+      "@botmation/linkedin": ["libs/linkedin/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

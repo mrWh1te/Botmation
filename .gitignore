@@ -39,4 +39,6 @@ testem.log
 Thumbs.db
 
 # Generated Assets
-/assets
+/assets/cookies
+/assets/pdfs
+/assets/screenshots

@@ -12,14 +12,8 @@ import { logError } from '@botmation/core'
 
 import { login } from '@botmation/instagram'
 
-
-// const test: BotAction = login({username: 'hi', password: 'test'})
-
 (async () => {
   let browser: puppeteer.Browser
-
-  const screenshotThis = screenshot('tdsfgdfgkdfgkidfj4')
-
 
   try {
     // Get the Browser from Puppeteer
@@ -34,8 +28,7 @@ import { login } from '@botmation/instagram'
       log('Bot running'),
       screenshot('before-login'),
       goTo('https://www.instagram.com/accounts/login/'),
-      // screenshot('insta-login'),
-      // screenshotThis,
+      screenshot('insta-login'),
       login({username: 'instagram-username', password: 'instagram-password'}),
       screenshot('after-login'),
       log('Screenshot taken')

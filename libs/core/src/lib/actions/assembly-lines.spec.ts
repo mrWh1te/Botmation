@@ -1,11 +1,11 @@
 import { Page } from 'puppeteer'
-import { chainRunner, pipeRunner, pipeActionOrActions, chain, pipe, assemblyLine, switchPipe } from '@botmation/core'
-import { abort } from '@botmation/core'
-import { AbortLineSignal } from '@botmation/core'
-import { createEmptyPipe, wrapValueInPipe } from '@botmation/core'
-import { createAbortLineSignal } from '@botmation/core'
-import { pipeCase } from '@botmation/core'
-import { createCasesSignal } from '@botmation/core'
+import { chainRunner, pipeRunner, pipeActionOrActions, chain, pipe, assemblyLine, switchPipe } from './assembly-lines'
+import { abort } from './abort'
+import { AbortLineSignal } from './../types/abort-line-signal'
+import { createEmptyPipe, wrapValueInPipe } from './../helpers/pipe'
+import { createAbortLineSignal } from './../helpers/abort'
+import { pipeCase } from './pipe'
+import { createCasesSignal } from './../helpers/cases'
 
 /**
  * @description   Assembly-Lines BotAction's

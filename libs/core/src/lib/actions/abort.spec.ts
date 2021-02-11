@@ -1,8 +1,8 @@
 import { Page } from 'puppeteer'
 
-import { abort, abortPipe } from '@botmation/core'
-import { createCasesSignal } from '@botmation/core'
-import { createEmptyPipe, wrapValueInPipe } from '@botmation/core'
+import { abort, abortPipe } from './abort'
+import { createCasesSignal } from './../helpers/cases'
+import { createEmptyPipe, wrapValueInPipe } from './../helpers/pipe'
 
 jest.mock('../helpers/abort', () => {
   // Require the original module to not be mocked...

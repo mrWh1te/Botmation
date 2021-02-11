@@ -1,4 +1,4 @@
-import { isObjectWithKey, isObjectWithValue, isDictionary } from '@botmation/core'
+import { isObjectWithKey, isObjectWithValue, isDictionary } from './objects'
 
 /**
  * @description   Generic Object Types to Help

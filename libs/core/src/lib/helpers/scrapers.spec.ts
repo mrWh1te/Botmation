@@ -1,4 +1,4 @@
-import { getElementOuterHTML, getElementsOuterHTML } from "@botmation/core"
+import { getElementOuterHTML, getElementsOuterHTML } from "./scrapers"
 
 /**
  * This higher-order function returns a function with scoped data from the higher-order context allowing the function instance to have a kind of state to differentiate the return results based on numebr of times ran to for varying tests

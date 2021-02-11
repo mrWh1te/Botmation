@@ -1,9 +1,8 @@
-import { goTo, waitForNavigation, goBack, goForward, reload, wait, scrollTo } from '@botmation/core'
-import { enrichGoToPageOptions } from '@botmation/core'
-import { click } from '@botmation/core'
+import { goTo, waitForNavigation, goBack, goForward, reload, wait, scrollTo } from './navigation'
+import { enrichGoToPageOptions } from './../helpers/navigation'
+import { click } from './input'
 
-import { BASE_URL, EXAMPLE_URL } from '@botmation/test'
-import { FORM_SUBMIT_BUTTON_SELECTOR } from '@botmation/test'
+import { BASE_URL, EXAMPLE_URL, FORM_SUBMIT_BUTTON_SELECTOR } from '@botmation/test'
 
 import { Page, Browser } from 'puppeteer'
 const puppeteer = require('puppeteer');

@@ -1,4 +1,4 @@
-import { unpipeInjects, getInjectsPipeOrEmptyPipe, createEmptyPipe, wrapValueInPipe, injectsHavePipe, getInjectsPipeValue, pipeInjects } from "@botmation/core"
+import { unpipeInjects, getInjectsPipeOrEmptyPipe, createEmptyPipe, wrapValueInPipe, injectsHavePipe, getInjectsPipeValue, pipeInjects } from "./pipe"
 
 
 /**

@@ -1,4 +1,4 @@
-import { createAbortLineSignal, processAbortLineSignal } from '@botmation/core'
+import { createAbortLineSignal, processAbortLineSignal } from './abort'
 
 /**
  * @description   Abort Helpers

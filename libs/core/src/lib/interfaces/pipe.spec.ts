@@ -1,5 +1,5 @@
-import { isPipe } from '@botmation/core'
-import { createEmptyPipe, wrapValueInPipe } from '@botmation/core'
+import { isPipe } from './../interfaces/pipe'
+import { createEmptyPipe, wrapValueInPipe } from './../helpers/pipe'
 
 /**
  * @description   Pipe related Interfaces

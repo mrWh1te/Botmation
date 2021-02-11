@@ -1,11 +1,11 @@
 import { Page } from 'puppeteer'
 import { promises as fs, Stats } from 'fs'
 
-import { getFileUrl } from '@botmation/core'
-import { saveCookies, loadCookies } from '@botmation/core'
-import { BotFileOptions } from '@botmation/core'
+import { getFileUrl } from './../helpers/files'
+import { saveCookies, loadCookies } from './cookies'
+import { BotFileOptions } from './../interfaces/bot-file-options'
 
-import { wrapValueInPipe } from '@botmation/core'
+import { wrapValueInPipe } from './../helpers/pipe'
 
 /**
  * @description   Cookies BotAction's

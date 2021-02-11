@@ -1,4 +1,4 @@
-import { log, warning, error } from '@botmation/core'
+import { log, warning, error } from './console'
 import { Page, Browser } from 'puppeteer'
 const puppeteer = require('puppeteer');
 

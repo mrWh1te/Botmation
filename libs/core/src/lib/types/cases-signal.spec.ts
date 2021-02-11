@@ -1,5 +1,5 @@
-import { CasesSignal, isCasesSignal } from '@botmation/core'
-import { wrapValueInPipe } from '@botmation/core'
+import { CasesSignal, isCasesSignal } from './cases'
+import { wrapValueInPipe } from './../helpers/pipe'
 
 /**
  * @description   CasesSignal Type guard function

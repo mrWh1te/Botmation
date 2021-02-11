@@ -1,10 +1,10 @@
 
 
 import { promises as fs, Stats } from 'fs'
-import { files, screenshot, screenshotAll, savePDF } from "@botmation/core"
-import { BotFileOptions } from "@botmation/core"
-import { getFileUrl, enrichBotFileOptionsWithDefaults } from '@botmation/core'
-import { enrichGoToPageOptions } from '@botmation/core'
+import { files, screenshot, screenshotAll, savePDF } from "./files"
+import { BotFileOptions } from "./../interfaces/bot-file-options"
+import { getFileUrl, enrichBotFileOptionsWithDefaults } from './../helpers/files'
+import { enrichGoToPageOptions } from './../helpers/navigation'
 
 import { BASE_URL, botFileOptions } from '@botmation/test'
 

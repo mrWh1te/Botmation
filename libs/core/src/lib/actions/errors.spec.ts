@@ -1,7 +1,7 @@
 
 
 import { Page } from "puppeteer"
-import { errors } from "@botmation/core"
+import { errors } from "./errors"
 
 jest.mock('../helpers/console', () => {
   // Require the original module to not be mocked...

@@ -1,4 +1,4 @@
-import { prependSpacing, appendSpacing, logMessage, logWarning, logError, logPipeValue } from '@botmation/core'
+import { prependSpacing, appendSpacing, logMessage, logWarning, logError, logPipeValue } from './console'
 import { mockChalkTheme } from "@botmation/test"
 
 /**

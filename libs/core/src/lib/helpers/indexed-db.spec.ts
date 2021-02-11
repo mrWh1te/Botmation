@@ -1,6 +1,6 @@
 require('fake-indexeddb/auto') // mock IndexedDB (all in memory)
 
-import { setIndexedDBStoreValue, getIndexedDBStoreValue } from '@botmation/core'
+import { setIndexedDBStoreValue, getIndexedDBStoreValue } from './indexed-db'
 
 /**
  * @description   IndexedDB Helpers

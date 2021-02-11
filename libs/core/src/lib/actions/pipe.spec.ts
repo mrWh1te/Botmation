@@ -1,10 +1,10 @@
 import { Page } from 'puppeteer'
 
-import { map, pipeValue, emptyPipe, pipeCase, pipeCases } from '@botmation/core'
-import { createAbortLineSignal } from '@botmation/core'
-import { wrapValueInPipe } from '@botmation/core'
-import { abort } from '@botmation/core'
-import { createCasesSignal } from '@botmation/core'
+import { map, pipeValue, emptyPipe, pipeCase, pipeCases } from './pipe'
+import { createAbortLineSignal } from './../helpers/abort'
+import { wrapValueInPipe } from './../helpers/pipe'
+import { abort } from './abort'
+import { createCasesSignal } from './../helpers/cases'
 import { BASE_URL } from '@botmation/test'
 
 import * as puppeteer from 'puppeteer'

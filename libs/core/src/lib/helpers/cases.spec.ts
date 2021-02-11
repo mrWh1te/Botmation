@@ -1,4 +1,4 @@
-import { createCasesSignal, casesSignalToPipeValue } from '@botmation/core'
+import { createCasesSignal, casesSignalToPipeValue } from './cases'
 
 /**
  * @description   Cases Helpers

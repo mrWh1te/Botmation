@@ -1,15 +1,15 @@
 import { Page } from 'puppeteer'
 
-import { enrichGoToPageOptions } from '@botmation/core'
-import { givenThat, forAll, doWhile, forAsLong } from '@botmation/core'
-import { click, type } from '@botmation/core'
-import { goTo } from '@botmation/core'
+import { enrichGoToPageOptions } from './../helpers/navigation'
+import { givenThat, forAll, doWhile, forAsLong } from './utilities'
+import { click, type } from './input'
+import { goTo } from './navigation'
 
-import { BotAction } from '@botmation/core'
-import { Dictionary } from '@botmation/core'
-import { abort } from '@botmation/core'
-import { createAbortLineSignal } from '@botmation/core'
-import { AbortLineSignal } from '@botmation/core'
+import { BotAction } from './../interfaces/bot-actions'
+import { Dictionary } from './../types/objects'
+import { abort } from './abort'
+import { createAbortLineSignal } from './../helpers/abort'
+import { AbortLineSignal } from './../types/abort-line-signal'
 
 jest.mock('../helpers/console', () => {
   const originalModule = jest.requireActual('../helpers/console')

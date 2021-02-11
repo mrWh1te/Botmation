@@ -1,6 +1,6 @@
 
 
-import { inject } from "@botmation/core"
+import { inject } from "./inject"
 import { Page } from "puppeteer"
 
 // Mock the Assembly-Lines Module so when injects() imports it

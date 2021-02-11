@@ -1,5 +1,5 @@
-import { createFolderURL, getFileUrl, enrichBotFileOptionsWithDefaults } from '@botmation/core'
-import { BotFileOptions } from '@botmation/core'
+import { createFolderURL, getFileUrl, enrichBotFileOptionsWithDefaults } from './files'
+import { BotFileOptions } from './../interfaces/bot-file-options'
 
 /**
  * @description   Helpers: Assets (ie screenshots, cookies)

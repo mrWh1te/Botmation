@@ -1,5 +1,5 @@
-import { isAbortLineSignal, AbortLineSignal } from '@botmation/core'
-import { wrapValueInPipe } from '@botmation/core'
+import { isAbortLineSignal, AbortLineSignal } from './abort-line-signal'
+import { wrapValueInPipe } from './../helpers/pipe'
 
 /**
  * @description   AbortLineSignal Type guard function

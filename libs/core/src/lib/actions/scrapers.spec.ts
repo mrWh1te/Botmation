@@ -2,7 +2,7 @@ import { Page, Browser } from 'puppeteer'
 const puppeteer = require('puppeteer')
 
 import { BASE_URL } from '@botmation/test'
-import { $, $$, htmlParser, evaluate } from '@botmation/core'
+import { $, $$, htmlParser, evaluate } from './scrapers'
 
 // Mock inject()()
 jest.mock('../actions/inject', () => {

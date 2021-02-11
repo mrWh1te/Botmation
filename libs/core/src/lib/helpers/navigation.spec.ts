@@ -1,6 +1,6 @@
 
 import { DirectNavigationOptions } from 'puppeteer'
-import { enrichGoToPageOptions, sleep, scrollToElement } from '@botmation/core'
+import { enrichGoToPageOptions, sleep, scrollToElement } from './navigation'
 
 const mockScrollIntoView = jest.fn()
 const mockQuerySelectorFactory = (timesRan = 0) => jest.fn(() => {

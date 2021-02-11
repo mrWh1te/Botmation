@@ -4,7 +4,7 @@ import {
   removeLocalStorageItem,
   setLocalStorageItem,
   getLocalStorageItem
-} from '@botmation/core'
+} from './local-storage'
 
 const puppeteer = require('puppeteer')
 import { Page, Browser } from 'puppeteer'

@@ -1,5 +1,5 @@
 import { createMockLocalStorage } from '@botmation/test'
-import { setLocalStorageKeyValue, getLocalStorageKeyValue, removeLocalStorageKeyValue, clearLocalStorage } from '@botmation/core'
+import { setLocalStorageKeyValue, getLocalStorageKeyValue, removeLocalStorageKeyValue, clearLocalStorage } from './local-storage'
 
 // Setup Mock Local Storage
 Object.defineProperty(global, 'localStorage', { value: createMockLocalStorage() })

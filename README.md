@@ -63,9 +63,10 @@ To get started with Botmation, learn about its design and pattern, view API Doc'
 Library Reference
 -----------------
 
-After intalling through `npm`, import any `BotAction` from the main module: 
+After intalling through `npm`, import from the respective module i.e. core module:
 ```javascript
 import { chain, goTo, screenshot } from '@botmation/core'
+import { login } from '@botmation/instagram'
 ```
 
 As of v3.x, there are 14 groups of `BotAction` to compose from: 

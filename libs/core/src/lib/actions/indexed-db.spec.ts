@@ -4,7 +4,7 @@ import {
   setIndexedDBValue,
   getIndexedDBValue,
   indexedDBStore
-} from '@botmation/core'
+} from './indexed-db'
 
 const mockInject3rdCall = jest.fn()
 jest.mock('./inject', () => {

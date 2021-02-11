@@ -1,11 +1,11 @@
 import { Page } from "puppeteer"
 
-import { pipe, chain } from "@botmation/core"
-import { inject } from "@botmation/core"
+import { pipe, chain } from "./assembly-lines"
+import { inject } from "./inject"
 
-import { abort } from '@botmation/core'
-import { createAbortLineSignal } from "@botmation/core"
-import { wrapValueInPipe } from "@botmation/core"
+import { abort } from './abort'
+import { createAbortLineSignal } from "./../helpers/abort"
+import { wrapValueInPipe } from "./../helpers/pipe"
 
 /**
  * @description    No module mocking in here

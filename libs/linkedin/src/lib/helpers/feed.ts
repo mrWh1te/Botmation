@@ -1,4 +1,5 @@
 import { ConditionalCallback } from '@botmation/core'
+import * as cheerio from 'cheerio' // necessary for `CheerioStatic` in build
 import { feedPostAuthorSelector } from '../selectors'
 
 /**

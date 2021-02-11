@@ -201,7 +201,8 @@
             "main": "libs/linkedin/src/index.ts",
             "assets": [
               "libs/linkedin/*.md"
-            ]
+            ],
+            "buildableProjectDepsInPackageJsonType": "peerDependencies"
           }
         }
       }

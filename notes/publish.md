@@ -34,3 +34,10 @@ Sync the lib's package.json's `@botmation/core` version with the correct one.
 ### LinkedIn
 
 Sync the lib's package.json's `@botmation/core` version with the correct one.
+
+# Add new Publishable Package
+
+Command to scaffold a new package for an example library called `acme`:
+```bash
+nx g @nrwl/node:library acme --buildable --publishable --importPath=@botmation/acme
+```

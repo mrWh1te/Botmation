@@ -23,6 +23,7 @@
     "bot-instagram": { "tags": [] },
     "bot-linkedin": { "tags": [] },
     "bot-pdf": { "tags": [] },
-    "bot-cluster": { "tags": [] }
+    "bot-cluster": { "tags": [] },
+    "bot-object-oriented": { "tags": [] }
   }
 }

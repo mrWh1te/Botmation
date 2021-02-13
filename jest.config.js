@@ -8,5 +8,6 @@ module.exports = {
     '<rootDir>/apps/bot-linkedin',
     '<rootDir>/apps/bot-pdf',
     '<rootDir>/apps/bot-cluster',
+    '<rootDir>/apps/bot-object-oriented',
   ],
 };

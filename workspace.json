@@ -97,9 +97,7 @@
             "outputPath": "dist/apps/example",
             "main": "apps/example/src/main.ts",
             "tsConfig": "apps/example/tsconfig.app.json",
-            "assets": [
-              "apps/example/src/assets"
-            ]
+            "assets": []
           },
           "configurations": {
             "production": {
@@ -211,5 +209,5 @@
   "cli": {
     "defaultCollection": "@nrwl/node"
   },
-  "defaultProject": "example"
+  "defaultProject": "core"
 }

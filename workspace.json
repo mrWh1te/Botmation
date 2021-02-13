@@ -8,17 +8,11 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/core/**/*.ts"
-            ]
-          }
+          "options": { "lintFilePatterns": ["libs/core/**/*.ts"] }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/core"
-          ],
+          "outputs": ["coverage/libs/core"],
           "options": {
             "jestConfig": "libs/core/jest.config.js",
             "passWithNoTests": true
@@ -26,17 +20,13 @@
         },
         "build": {
           "executor": "@nrwl/node:package",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/libs/core",
             "tsConfig": "libs/core/tsconfig.lib.json",
             "packageJson": "libs/core/package.json",
             "main": "libs/core/src/index.ts",
-            "assets": [
-              "libs/core/*.md"
-            ]
+            "assets": ["libs/core/*.md"]
           }
         }
       }
@@ -48,17 +38,11 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/instagram/**/*.ts"
-            ]
-          }
+          "options": { "lintFilePatterns": ["libs/instagram/**/*.ts"] }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/instagram"
-          ],
+          "outputs": ["coverage/libs/instagram"],
           "options": {
             "jestConfig": "libs/instagram/jest.config.js",
             "passWithNoTests": true
@@ -66,17 +50,13 @@
         },
         "build": {
           "executor": "@nrwl/node:package",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/libs/instagram",
             "tsConfig": "libs/instagram/tsconfig.lib.json",
             "packageJson": "libs/instagram/package.json",
             "main": "libs/instagram/src/index.ts",
-            "assets": [
-              "libs/instagram/*.md"
-            ],
+            "assets": ["libs/instagram/*.md"],
             "buildableProjectDepsInPackageJsonType": "peerDependencies"
           }
         }
@@ -90,9 +70,7 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/apps/example",
             "main": "apps/example/src/main.ts",
@@ -115,50 +93,17 @@
         },
         "serve": {
           "executor": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "example:build"
-          }
+          "options": { "buildTarget": "example:build" }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "apps/example/**/*.ts"
-            ]
-          }
+          "options": { "lintFilePatterns": ["apps/example/**/*.ts"] }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/example"
-          ],
+          "outputs": ["coverage/apps/example"],
           "options": {
             "jestConfig": "apps/example/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "test": {
-      "root": "libs/test",
-      "sourceRoot": "libs/test/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/test/**/*.ts"
-            ]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/test"
-          ],
-          "options": {
-            "jestConfig": "libs/test/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -171,17 +116,11 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/linkedin/**/*.ts"
-            ]
-          }
+          "options": { "lintFilePatterns": ["libs/linkedin/**/*.ts"] }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/linkedin"
-          ],
+          "outputs": ["coverage/libs/linkedin"],
           "options": {
             "jestConfig": "libs/linkedin/jest.config.js",
             "passWithNoTests": true
@@ -189,25 +128,19 @@
         },
         "build": {
           "executor": "@nrwl/node:package",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/libs/linkedin",
             "tsConfig": "libs/linkedin/tsconfig.lib.json",
             "packageJson": "libs/linkedin/package.json",
             "main": "libs/linkedin/src/index.ts",
-            "assets": [
-              "libs/linkedin/*.md"
-            ],
+            "assets": ["libs/linkedin/*.md"],
             "buildableProjectDepsInPackageJsonType": "peerDependencies"
           }
         }
       }
     }
   },
-  "cli": {
-    "defaultCollection": "@nrwl/node"
-  },
+  "cli": { "defaultCollection": "@nrwl/node" },
   "defaultProject": "core"
 }

@@ -6,7 +6,7 @@ import { BotFileOptions } from "./../interfaces/bot-file-options"
 import { getFileUrl, enrichBotFileOptionsWithDefaults } from './../helpers/files'
 import { enrichGoToPageOptions } from './../helpers/navigation'
 
-import { BASE_URL, botFileOptions } from '@botmation/test'
+import { BASE_URL, botFileOptions } from './../mocks'
 
 import { Page, Browser } from 'puppeteer'
 const puppeteer = require('puppeteer');
@@ -136,7 +136,7 @@ describe('[Botmation] actions/files', () => {
   // savePDF() Integration
   it('should call Puppeteer Page.pdf() with correct params', async() => {
     await savePDF('example-pdf-filename')(mockPage, enrichBotFileOptionsWithDefaults({pdfs_directory: 'pdf'}))
-    expect(mockPage.pdf).toHaveBeenNthCalledWith(1, {path: './pdf/example-pdf-filename.pdf', format: 'A4'})
+    expect(mockPage.pdf).toHaveBeenNthCalledWith(1, {path: './pdf/example-pdf-filename.pdf', format: 'a4'})
   })
 
   //

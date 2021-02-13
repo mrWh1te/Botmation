@@ -24,7 +24,7 @@
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "localtestsite": "http-server libs/test/src/lib/server"
+    "localtestsite": "http-server assets/server"
   },
   "private": true,
   "devDependencies": {

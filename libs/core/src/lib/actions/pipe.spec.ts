@@ -5,7 +5,7 @@ import { createAbortLineSignal } from './../helpers/abort'
 import { wrapValueInPipe } from './../helpers/pipe'
 import { abort } from './abort'
 import { createCasesSignal } from './../helpers/cases'
-import { BASE_URL } from '@botmation/test'
+import { BASE_URL } from './../mocks'
 
 import * as puppeteer from 'puppeteer'
 

@@ -1,4 +1,4 @@
-import { BASE_URL } from '@botmation/test'
+import { BASE_URL } from './../mocks'
 import {
   clearAllLocalStorage,
   removeLocalStorageItem,

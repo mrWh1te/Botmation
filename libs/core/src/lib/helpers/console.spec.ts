@@ -1,5 +1,5 @@
 import { prependSpacing, appendSpacing, logMessage, logWarning, logError, logPipeValue } from './console'
-import { mockChalkTheme } from "@botmation/test"
+import { mockChalkTheme } from "./../mocks"
 
 /**
  * @description   Console Helpers

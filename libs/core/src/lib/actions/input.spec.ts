@@ -2,7 +2,7 @@ import { Page, Browser } from 'puppeteer'
 
 import { click, type } from './input'
 
-import { FORM_SUBMIT_BUTTON_SELECTOR, FORM_TEXT_INPUT_SELECTOR, BASE_URL } from '@botmation/test'
+import { FORM_SUBMIT_BUTTON_SELECTOR, FORM_TEXT_INPUT_SELECTOR, BASE_URL } from './../mocks'
 
 const puppeteer = require('puppeteer');
 

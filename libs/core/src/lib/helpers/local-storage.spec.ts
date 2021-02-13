@@ -1,4 +1,4 @@
-import { createMockLocalStorage } from '@botmation/test'
+import { createMockLocalStorage } from './../mocks'
 import { setLocalStorageKeyValue, getLocalStorageKeyValue, removeLocalStorageKeyValue, clearLocalStorage } from './local-storage'
 
 // Setup Mock Local Storage

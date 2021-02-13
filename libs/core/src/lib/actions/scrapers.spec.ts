@@ -1,7 +1,7 @@
 import { Page, Browser } from 'puppeteer'
 const puppeteer = require('puppeteer')
 
-import { BASE_URL } from '@botmation/test'
+import { BASE_URL } from './../mocks'
 import { $, $$, htmlParser, evaluate } from './scrapers'
 
 // Mock inject()()

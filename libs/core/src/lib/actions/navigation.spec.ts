@@ -2,7 +2,7 @@ import { goTo, waitForNavigation, goBack, goForward, reload, wait, scrollTo } fr
 import { enrichGoToPageOptions } from './../helpers/navigation'
 import { click } from './input'
 
-import { BASE_URL, EXAMPLE_URL, FORM_SUBMIT_BUTTON_SELECTOR } from '@botmation/test'
+import { BASE_URL, EXAMPLE_URL, FORM_SUBMIT_BUTTON_SELECTOR } from './../mocks'
 
 import { Page, Browser } from 'puppeteer'
 const puppeteer = require('puppeteer');

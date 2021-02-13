@@ -1,5 +1,5 @@
 
-import { DirectNavigationOptions } from 'puppeteer'
+import { WaitForOptions } from 'puppeteer'
 import { enrichGoToPageOptions, sleep, scrollToElement } from './navigation'
 
 const mockScrollIntoView = jest.fn()
@@ -44,24 +44,24 @@ describe('[Botmation] helpers/navigation', () => {
     expect(mockScrollIntoView).not.toHaveBeenCalledTimes(2)
   })
 
-  it('enrichGoToPageOptions() should take a partial of Puppeteer.DirectNavigationOptions to overload the default values it provides in one as a safe fallback', () => {
-    const directNavigationOptionsEmpty: Partial<DirectNavigationOptions> = {}
-    const directNavigationOptionsWaitUntil: Partial<DirectNavigationOptions> = {waitUntil: 'domcontentloaded'}
+  it('enrichGoToPageOptions() should take a partial of Puppeteer.WaitForOptions to overload the default values it provides in one as a safe fallback', () => {
+    const waitForOptionsEmpty: Partial<WaitForOptions> = {}
+    const waitForOptionsWaitUntil: Partial<WaitForOptions> = {waitUntil: 'domcontentloaded'}
 
-    const enrichDirectNavigationOptionsFromUndefined = enrichGoToPageOptions()
-    const enrichDirectNavigationOptionsFromEmpty = enrichGoToPageOptions(directNavigationOptionsEmpty)
-    const enrichDirectNavigationOptionsFromWaitUntil = enrichGoToPageOptions(directNavigationOptionsWaitUntil)
+    const enrichWaitForOptionsFromUndefined = enrichGoToPageOptions()
+    const enrichWaitForOptionsFromEmpty = enrichGoToPageOptions(waitForOptionsEmpty)
+    const enrichWaitForOptionsFromWaitUntil = enrichGoToPageOptions(waitForOptionsWaitUntil)
 
     // default cases (safe fallbacks)
-    expect(enrichDirectNavigationOptionsFromUndefined).toEqual({
+    expect(enrichWaitForOptionsFromUndefined).toEqual({
       waitUntil: 'networkidle0'
     })
-    expect(enrichDirectNavigationOptionsFromEmpty).toEqual({
+    expect(enrichWaitForOptionsFromEmpty).toEqual({
       waitUntil: 'networkidle0'
     })
 
     // overwriting default
-    expect(enrichDirectNavigationOptionsFromWaitUntil).toEqual({
+    expect(enrichWaitForOptionsFromWaitUntil).toEqual({
       waitUntil: 'domcontentloaded'
     })
   })

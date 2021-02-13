@@ -18,7 +18,6 @@
     "paths": {
       "@botmation/core": ["libs/core/src/index.ts"],
       "@botmation/instagram": ["libs/instagram/src/index.ts"],
-      "@botmation/test": ["libs/test/src/index.ts"],
       "@botmation/linkedin": ["libs/linkedin/src/index.ts"]
     }
   },

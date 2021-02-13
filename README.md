@@ -42,34 +42,30 @@ Botmation is a NodeJS library written in TypeScript. You'll need [node.js](http:
 Install
 -------
 
-To get started, install Botmation's primary package using `npm`:
+To get started, install Botmation's main package with `npm`:
 
     npm install --save @botmation/core
 
-If you're just getting started, install `puppeteer` & `@types/puppeteer`:
+If you're just getting started, install `puppeteer`:
 
     npm install --save puppeteer 
-    npm install --save-dev @types/puppeteer
 
 You can install site specific packages with `npm`:
 
     npm install --save @botmation/instagram
 
-Documentation
--------------
-
-To get started with Botmation, learn about its design and pattern, view API Doc's, see examples, advanced techniques, and a tutorial on approaching these Bot problems, visit the [official Botmation Documentation](https://botmation.dev) site.
-
 Library Reference
 -----------------
 
-After intalling through `npm`, import from the respective module i.e. core module:
+`@botmation/core` is the main package used every-time. It has the foundational functions for building bots. Other packages, like `@botmation/instagram` have specific functions that work with the main ones from Core.
+
+After intalling through `npm`, import functions from their respective packages:
 ```javascript
 import { chain, goTo, screenshot } from '@botmation/core'
 import { login } from '@botmation/instagram'
 ```
 
-As of v3.x, there are 14 groups of `BotAction` to compose from: 
+`@botmation/core` v1 has 14 groups of `BotAction` to choose from: 
 
 <img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="200" align="right" style="position: relative;top: 30px;">
 
@@ -102,37 +98,10 @@ As of v3.x, there are 14 groups of `BotAction` to compose from:
  - [utilities](https://www.botmation.dev/api/utilties)
     - handle more complex logic patterns ie if statements and for loops
 
-# Dev Notes
+Documentation
+-------------
 
-Library Development
--------------------
-
-First, clone the repo locally, then install the npm dependencies. You can build libraries (`core`, `instagram`, `linkedin`) locally with this command:
-```
-nx build <library name>
-```
-
-<img alt="Orange Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/orange_bot.PNG" width="175" align="right">
-
-The [playground_bot](/src/playground_bot.ts) is a dedicated spot for trying out new Bot Actions, etc. You can run it's code, after running the build command, with:
-
-```
-npm run playground
-```
-
-Library Testing
----------------
-
-All our testing (e2e, unit, and integration) is done with [Jest](https://jestjs.io/).
-
-Learn more about the library's testing strategy and coverage with the [Botmation: Tests documentation](/notes/test.md).
-
-Issues & Feature Requests
--------------------------
-
-Open Issues on Github. Please specify if it's a feature request or a bug.
-
-When reporting bugs, please provide sample code to recreate the bug, relevant error messages/logs, and any other information that may help.
+To get a complete picture of Botmation, learn about its design and pattern, view API Doc's, see examples, advanced techniques, and a tutorial on approaching these Bot problems, visit the [official Botmation Documentation](https://botmation.dev) site.
 
 Contributors
 ------------

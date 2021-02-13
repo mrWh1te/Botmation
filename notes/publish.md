@@ -1,22 +1,36 @@
 # Publishing Packages
 
-Libraries `core`, `instagram` and `linkedin` can be built and published.
+Libraries `core`, `instagram` and `linkedin` are built and published.
 
-Publishing isn't fully automated.
-
-## Prep dist
+## Publish Process
 
 Step 1. Build the package i.e. `core`
 
 ```bash
-nx build core --with-deps
+nx build core
 ```
 
+Step 2. Make package specific tweaks (see below)
+
+Step 3. Publish with public access
+```bash
+npm publish dist/libs/core --access public
+```
+[Read more](https://docs.npmjs.com/creating-and-publishing-scoped-public-packages#publishing-scoped-public-packages)
+
+
+## Package Specific Tweaks
 
 ### Core
 
-Puppeteer is a peerDependency.
+Since the other packages are secondary to Core, only Core sets a Peer Dependency for Puppeteer, while the others set Core as their Peer Dependency.
+
+Sync the lib's package.json's `puppeteer` version with the main repo's.
 
 ### Instagram
 
+Sync the lib's package.json's `@botmation/core` version with the correct one.
+
 ### LinkedIn
+
+Sync the lib's package.json's `@botmation/core` version with the correct one.

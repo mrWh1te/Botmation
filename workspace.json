@@ -236,6 +236,63 @@
           }
         }
       }
+    },
+    "bot-linkedin": {
+      "root": "apps/bot-linkedin",
+      "sourceRoot": "apps/bot-linkedin/src",
+      "projectType": "application",
+      "prefix": "bot-linkedin",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/bot-linkedin",
+            "main": "apps/bot-linkedin/src/main.ts",
+            "tsConfig": "apps/bot-linkedin/tsconfig.app.json",
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/bot-linkedin/src/environments/environment.ts",
+                  "with": "apps/bot-linkedin/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "bot-linkedin:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/bot-linkedin/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/bot-linkedin"
+          ],
+          "options": {
+            "jestConfig": "apps/bot-linkedin/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

@@ -20,6 +20,7 @@
     "instagram": { "tags": [] },
     "example": { "tags": [] },
     "linkedin": { "tags": [] },
-    "bot-instagram": { "tags": [] }
+    "bot-instagram": { "tags": [] },
+    "bot-linkedin": { "tags": [] }
   }
 }

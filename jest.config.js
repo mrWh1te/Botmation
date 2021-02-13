@@ -7,5 +7,6 @@ module.exports = {
     '<rootDir>/apps/bot-instagram',
     '<rootDir>/apps/bot-linkedin',
     '<rootDir>/apps/bot-pdf',
+    '<rootDir>/apps/bot-cluster',
   ],
 };

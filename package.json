@@ -55,6 +55,7 @@
     "chalk": "^4.1.0",
     "cheerio": "^0.22.0",
     "puppeteer": "^7.1.0",
+    "puppeteer-cluster": "^0.22.0",
     "tslib": "^2.1.0"
   }
 }

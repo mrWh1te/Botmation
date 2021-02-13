@@ -350,6 +350,63 @@
           }
         }
       }
+    },
+    "bot-cluster": {
+      "root": "apps/bot-cluster",
+      "sourceRoot": "apps/bot-cluster/src",
+      "projectType": "application",
+      "prefix": "bot-cluster",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/bot-cluster",
+            "main": "apps/bot-cluster/src/main.ts",
+            "tsConfig": "apps/bot-cluster/tsconfig.app.json",
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/bot-cluster/src/environments/environment.ts",
+                  "with": "apps/bot-cluster/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "bot-cluster:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/bot-cluster/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/bot-cluster"
+          ],
+          "options": {
+            "jestConfig": "apps/bot-cluster/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

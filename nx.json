@@ -19,6 +19,7 @@
     "core": { "tags": [] },
     "instagram": { "tags": [] },
     "example": { "tags": [] },
-    "linkedin": { "tags": [] }
+    "linkedin": { "tags": [] },
+    "bot-instagram": { "tags": [] }
   }
 }

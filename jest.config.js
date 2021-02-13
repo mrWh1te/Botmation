@@ -4,5 +4,6 @@ module.exports = {
     '<rootDir>/libs/instagram',
     '<rootDir>/apps/example',
     '<rootDir>/libs/linkedin',
+    '<rootDir>/apps/bot-instagram',
   ],
 };

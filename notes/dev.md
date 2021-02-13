@@ -32,3 +32,11 @@ Run `nx serve <app name>` for an app dev server for any example project. The app
 ```bash
 nx serve example
 ```
+
+New Development Server
+----------------------
+
+Add a new application with a new name to setup a new development server. For example, an app called `acme`:
+```bash
+nx g @nrwl/node:application acme
+```

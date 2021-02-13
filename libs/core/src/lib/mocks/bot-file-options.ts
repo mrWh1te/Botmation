@@ -1,7 +1,6 @@
-// todo consolidate mocks into various libs so they can use interfaces otherwise circular dependency that breaks build
-// import { BotFileOptions } from "@botmation/core"
+import { BotFileOptions } from "./../interfaces/bot-file-options"
 
-export const botFileOptions: any = {
+export const botFileOptions: BotFileOptions = {
   screenshots_directory: 'screenshots',
   pdfs_directory: 'pdfs',
   cookies_directory: 'cookies',

@@ -293,6 +293,63 @@
           }
         }
       }
+    },
+    "bot-pdf": {
+      "root": "apps/bot-pdf",
+      "sourceRoot": "apps/bot-pdf/src",
+      "projectType": "application",
+      "prefix": "bot-pdf",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/bot-pdf",
+            "main": "apps/bot-pdf/src/main.ts",
+            "tsConfig": "apps/bot-pdf/tsconfig.app.json",
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/bot-pdf/src/environments/environment.ts",
+                  "with": "apps/bot-pdf/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "bot-pdf:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/bot-pdf/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/bot-pdf"
+          ],
+          "options": {
+            "jestConfig": "apps/bot-pdf/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

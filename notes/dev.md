@@ -1,5 +1,7 @@
 # Dev Notes
 
+> default Nx configuration is set to Node so short-hand syntax will generate a node based app or library
+
 Build Library
 -------------
 
@@ -38,5 +40,5 @@ New Development Server
 
 Add a new application with a new name to setup a new development server. For example, an app called `acme`:
 ```bash
-nx g @nrwl/node:application acme
+nx g app acme
 ```

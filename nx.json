@@ -21,6 +21,7 @@
     "example": { "tags": [] },
     "linkedin": { "tags": [] },
     "bot-instagram": { "tags": [] },
-    "bot-linkedin": { "tags": [] }
+    "bot-linkedin": { "tags": [] },
+    "bot-pdf": { "tags": [] }
   }
 }

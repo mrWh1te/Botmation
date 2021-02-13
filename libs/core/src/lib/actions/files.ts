@@ -24,7 +24,7 @@ export const files = (fileOptions?: Partial<BotFileOptions>) =>
  *                It relies on BotFileOptions, to determine the local directory as to where to save the file
  * @param fileName name of the file to save the PNG as
  */
-export const screenshot = (fileName: string, botFileOptions?: Partial<BotFileOptions>): BotFilesAction => 
+export const screenshot = (fileName: string, botFileOptions?: Partial<BotFileOptions>): BotFilesAction =>
   async (page, ...injects) => {
     const [,injectedOptions] = unpipeInjects(injects, 1)
 
@@ -42,7 +42,7 @@ export const screenshot = (fileName: string, botFileOptions?: Partial<BotFileOpt
  * @example   screenshotAll(['https://google.com', 'https://twitter.com'], {screenshots_directory: 'site-pictures'})
  * @request   add ability like via a closure, to customize the filename for easier reuse in a cycle (like ability to timestamp the file etc)
  */
-export const screenshotAll = (urls: string[], botFileOptions?: Partial<BotFileOptions>): BotFilesAction => 
+export const screenshotAll = (urls: string[], botFileOptions?: Partial<BotFileOptions>): BotFilesAction =>
   forAll(urls)(
     url => ([
       goTo(url),
@@ -53,12 +53,12 @@ export const screenshotAll = (urls: string[], botFileOptions?: Partial<BotFileOp
 
 /**
  * @description    Save webpage as PDF
- * @param fileName 
+ * @param fileName
  * @beta  should we add ability to customize options of pdf() ie `format`, `printBackground` see Puppeteer.PDFOptions (typed)
  * @note          Launching the browser without headless (headless: false) breaks this
  *                See https://github.com/puppeteer/puppeteer/issues/1829
  */
-export const savePDF = (fileName: string, botFileOptions?: Partial<BotFileOptions>): BotFilesAction => 
+export const savePDF = (fileName: string, botFileOptions?: Partial<BotFileOptions>): BotFilesAction =>
   async(page, ...injects) => {
     const [,injectedOptions] = unpipeInjects(injects, 1)
 
@@ -66,5 +66,5 @@ export const savePDF = (fileName: string, botFileOptions?: Partial<BotFileOption
 
     const fileUrl = getFileUrl(hydratedOptions.pdfs_directory, hydratedOptions, fileName) + '.pdf'
 
-    await page.pdf({path: fileUrl, format: 'A4'})
+    await page.pdf({path: fileUrl, format: 'a4'})
   }

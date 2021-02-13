@@ -1,4 +1,4 @@
-import { DirectNavigationOptions, NavigationOptions } from 'puppeteer'
+import { WaitForOptions } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-actions'
 import { enrichGoToPageOptions, sleep, scrollToElement } from '../helpers/navigation'
@@ -7,11 +7,11 @@ import { evaluate } from './scrapers'
 
 /**
  * @description   Go to url provided in the current page
- *                Can customize behavior with a Partial of Puppeteer's DirectNavigationOptions
+ *                Can customize behavior with a Partial of Puppeteer's WaitForOptions
  *                If the URL given to navigate too is the same as the existing one, it will skip navigation and log a warning
  * @param url
  */
-export const goTo = (url: string, goToOptions?: Partial<DirectNavigationOptions>): BotAction =>
+export const goTo = (url: string, goToOptions?: Partial<WaitForOptions>): BotAction =>
   async(page) => {
     goToOptions = enrichGoToPageOptions(goToOptions)
 
@@ -27,7 +27,7 @@ export const goTo = (url: string, goToOptions?: Partial<DirectNavigationOptions>
  * @description   Go back one page like hitting the "Back" button in a Browser
  * @param options
  */
-export const goBack = (options?: NavigationOptions): BotAction =>
+export const goBack = (options?: WaitForOptions): BotAction =>
   async(page) => {
     await page.goBack(options)
   }
@@ -36,7 +36,7 @@ export const goBack = (options?: NavigationOptions): BotAction =>
  * @description   Go forward one page like hitting the "Forward" button in a Browser
  * @param options
  */
-export const goForward = (options?: NavigationOptions): BotAction =>
+export const goForward = (options?: WaitForOptions): BotAction =>
   async(page) => {
     await page.goForward(options)
   }
@@ -45,7 +45,7 @@ export const goForward = (options?: NavigationOptions): BotAction =>
  * @description   Reload current page. In case of multiple redirects, the navigation will resolve with the response of the last redirect.
  * @param options
  */
-export const reload = (options?: NavigationOptions): BotAction =>
+export const reload = (options?: WaitForOptions): BotAction =>
   async(page) => {
     await page.reload(options)
   }

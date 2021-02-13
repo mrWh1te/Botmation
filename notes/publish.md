@@ -12,13 +12,10 @@ Step 1. Build the package i.e. `core`
 nx build core --with-deps
 ```
 
-Step 2. Terminal into dist directory of built package
-
-Step 3. Tweaks
-
-Go into the dist directory of the library built and update the `package.json` file accordingly:
 
 ### Core
+
+Puppeteer is a peerDependency.
 
 ### Instagram
 

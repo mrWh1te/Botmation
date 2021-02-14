@@ -9,7 +9,7 @@
 
 # Introduction
 
-[Botmation](https://botmation.dev) is simple declarative framework for building bots in TypeScript using [Puppeteer](https://github.com/puppeteer/puppeteer). It follows a simple, composable pattern focused on a single type of function called a BotAction. 
+[Botmation](https://botmation.dev) is a simple declarative framework for building bots in TypeScript using [Puppeteer](https://github.com/puppeteer/puppeteer). It follows a simple, composable pattern focused on a single type of function called a BotAction. 
 
 BotActions do everything, from simple tasks in crawling and scraping the web, to logging in & automating social media. They are composable, so they are easily assembled.
 

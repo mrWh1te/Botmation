@@ -7,7 +7,13 @@
 [![dependencies Status](https://david-dm.org/mrWh1te/Botmation/status.svg)](https://david-dm.org/mrWh1te/Botmation)
 ![GitHub](https://img.shields.io/github/license/mrWh1te/Botmation)
 
-[Botmation](https://botmation.dev) is a simple TypeScript framework to build web bots with [Puppeteer](https://github.com/puppeteer/puppeteer) in a declarative, functional and composable way.
+# Introduction
+
+[Botmation](https://botmation.dev) is simple declarative framework for [Puppeteer](https://github.com/puppeteer/puppeteer), to build web bots in a composable way. It follows a simple pattern focused on a single type of function called a BotAction. 
+
+BotActions handle everything from simple tasks in crawling and scraping the web to logging in & automating your social media. They are composable. They make assembling Bots easy, declarative, and simple.
+
+The possibilities are endless!
 
 > “Everything should be made as simple as possible, but no simpler.” - Albert Einstein
 
@@ -23,14 +29,6 @@ Its compositional design comes pre-built with safe defaults for building bots wi
 It encourages a learn at your own pace approach to exploring the possibilities of Functional programming.
 
 It has 100% source code test coverage.
-
-# Introduction
-
-[Botmation](https://botmation.dev) is simple declarative framework for [Puppeteer](https://github.com/puppeteer/puppeteer), to build web bots in a composable way. It provides a simple pattern focused on a single type of function called `BotAction`. 
-
-`BotAction`'s handle everything from simple tasks in crawling and scraping the web to logging in & automating your social media. They are composable. They make assembling Bots easy, declarative, and simple.
-
-The possibilities are endless!
 
 # Getting Started
 
@@ -49,7 +47,7 @@ If you're just getting started, install `puppeteer`:
 
     npm install --save puppeteer 
 
-You can install any other [@botmation packages](https://www.npmjs.com/org/botmation) like site specific packages with `npm`:
+You can install any other [@botmation packages](https://www.npmjs.com/org/botmation) to extend upon the available functionality:
 
     npm install --save @botmation/instagram
 

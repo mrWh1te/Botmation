@@ -28,7 +28,7 @@ Its compositional design comes pre-built with safe defaults for building bots wi
 
 It encourages a learn at your own pace approach to exploring the possibilities of Functional programming.
 
-It has 100% source code test coverage.
+Its Core library has 100% test coverage.
 
 # Getting Started
 

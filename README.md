@@ -1,6 +1,5 @@
 <img src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/banner/1556x379v2.png" alt="Botmation Crew" width="474">
 
-[![npm](https://img.shields.io/npm/v/botmation)](https://www.npmjs.com/package/botmation)
 [![Build Status](https://travis-ci.com/mrWh1te/Botmation.svg?branch=master)](https://travis-ci.com/mrWh1te/Botmation)
 [![Known Vulnerabilities](https://snyk.io/test/github/mrWh1te/Botmation/badge.svg?targetFile=package.json)](https://snyk.io/test/github/mrWh1te/Botmation?targetFile=package.json)
 [![codecov](https://img.shields.io/codecov/c/github/mrWh1te/Botmation/master?label=codecov)](https://codecov.io/gh/mrWh1te/Botmation)
@@ -50,7 +49,7 @@ If you're just getting started, install `puppeteer`:
 
     npm install --save puppeteer 
 
-You can install site specific packages with `npm`:
+You can install any other [@botmation packages](https://www.npmjs.com/org/botmation) like site specific packages with `npm`:
 
     npm install --save @botmation/instagram
 
@@ -101,7 +100,7 @@ import { login } from '@botmation/instagram'
 Documentation
 -------------
 
-To get a complete picture of Botmation, learn about its design and pattern, view API Doc's, see examples, advanced techniques, and a tutorial on approaching these Bot problems, visit the [official Botmation Documentation](https://botmation.dev) site.
+For getting started, API docs of *all* packages with examples, visit [Botmation's Documentation](https://botmation.dev/).
 
 Contributors
 ------------

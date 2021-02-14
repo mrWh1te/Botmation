@@ -1,6 +1,6 @@
 {
   "name": "@botmation/linkedin",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Auxiliary package of functions for the TypeScript framework Botmation",
   "homepage": "https://www.botmation.dev/sites/linkedin",
   "author": "Michael Lage",
@@ -23,7 +23,7 @@
     "url": "https://github.com/mrWh1te/Botmation.git"
   },
   "peerDependencies": {
-    "@botmation/core": "^0.0.3"
+    "@botmation/core": "^0.0.4"
   },
   "dependencies": {
     "tslib": "^2.1.0"

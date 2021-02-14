@@ -35,6 +35,8 @@ Run `nx serve <app name>` for an app dev server for any example project. The app
 nx serve example
 ```
 
+Any directory name in the `/apps` folder can be served with nx.
+
 New Development Server
 ----------------------
 

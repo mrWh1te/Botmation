@@ -9,7 +9,7 @@ Requirement: create from project root directory folders `/assets/cookies`, `/ass
 
 Run the local test site for the included e2e tests:
 ```bash
-npm run localtestsite
+npm run test:site
 ```
 
 Each library (`core`, `instagram`, `linkedin`) can be tested:

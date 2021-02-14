@@ -1,7 +1,4 @@
-/**
- * @description  Simple Example Script
- */
-import * as puppeteer from 'puppeteer'
+import puppeteer from 'puppeteer'
 
 import {
   chain,

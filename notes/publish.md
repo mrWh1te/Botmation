@@ -44,3 +44,10 @@ Command to scaffold a new package for an example library called `acme`:
 ```bash
 nx g lib acme --buildable --publishable --importPath=@botmation/acme
 ```
+## Package Versioning
+
+[Semantic Versioning](https://semver.org/) with the Major version number anchored to `@botmation/core` starting at v1.0.0
+
+For example, if Core is at v1.0.0. Then releases a new update with a breaking API change, so v2.0.0. All the auxiliary packages can keep releasing v1.x.x, but once they are updated to work with Core v2.x, their major version is updated to match the major version of Core, v2.x.
+
+That way compatiblity between libraries can be more easily managed. As long as the major version numbers are the same, all @botmation packages should be compatible, minus a feature or bug fix.

@@ -1,6 +1,6 @@
 {
   "name": "@botmation/instagram",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Auxiliary package of functions for the TypeScript framework Botmation",
   "homepage": "https://www.botmation.dev/sites/instagram",
   "author": "Michael Lage",
@@ -23,7 +23,7 @@
     "url": "https://github.com/mrWh1te/Botmation.git"
   },
   "peerDependencies": {
-    "@botmation/core": "^0.0.4"
+    "@botmation/core": "^1.0.0"
   },
   "dependencies": {
     "tslib": "^2.1.0"

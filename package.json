@@ -7,6 +7,8 @@
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test",
+    "test:coverage": "nx test --codeCoverage",
+    "test:site": "http-server assets/server",
     "lint": "nx workspace-lint && nx lint",
     "e2e": "nx e2e",
     "affected:apps": "nx affected:apps",
@@ -24,8 +26,7 @@
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "localtestsite": "http-server assets/server",
-    "ci:test": "concurrently -k -s first \"npm:localtestsite\" \"npm:test\""
+    "ci:test": "concurrently -k -s first \"npm:test:site\" \"npm:test:coverage\""
   },
   "private": true,
   "devDependencies": {

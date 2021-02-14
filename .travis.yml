@@ -9,4 +9,4 @@ cache: npm
 install:
   - npm install
 script:
-  - npm run ci:test -- --coverage && bash <(curl -s https://codecov.io/bash)
+  - npm run ci:test && bash <(curl -s https://codecov.io/bash)

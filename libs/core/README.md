@@ -11,7 +11,7 @@
 
 # @botmation/core
 
-This is the primary package for building bots with [Botmation](https://botmation.dev).
+The primary package for building bots with [Botmation](https://botmation.dev).
 
 # Introduction
 
@@ -40,12 +40,12 @@ It has 100% source code test coverage.
 
 Botmation is a NodeJS library written in TypeScript. You'll need [node.js](http://nodejs.org/) LTS installed and the TypeScript compiler (`tsc`) installed globally (or have a transpiling code step).
 
-<img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
-
 Install
 -------
 
 To get started, install Botmation's main package with `npm`:
+
+<img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
 
     npm install --save @botmation/core
 

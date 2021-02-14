@@ -12,16 +12,17 @@ Step 1. Build the package i.e. `core`
 nx build core
 ```
 
-Step 2. Make package specific tweaks (see below)
+Step 2. Make package.json peer dependency version tweaks (see below)
 
 Step 3. Publish with public access
+cd into a distribution library folder i.e. `/dist/libs/core` then run:
 ```bash
-npm publish dist/libs/core --access public
+npm publish --access public
 ```
 [Read more](https://docs.npmjs.com/creating-and-publishing-scoped-public-packages#publishing-scoped-public-packages)
 
 
-## Package Specific Tweaks
+## package.json Specific Tweaks
 
 ### Core
 

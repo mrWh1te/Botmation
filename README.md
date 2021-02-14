@@ -34,12 +34,12 @@ It has 100% source code test coverage.
 
 Botmation is a NodeJS library written in TypeScript. You'll need [node.js](http://nodejs.org/) LTS installed and the TypeScript compiler (`tsc`) installed globally (or have a transpiling code step).
 
-<img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
-
 Install
 -------
 
 To get started, install Botmation's main package with `npm`:
+
+<img alt="Yellow Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/yellow_bot.PNG" width="175" align="right">
 
     npm install --save @botmation/core
 
@@ -51,18 +51,22 @@ You can install any other [@botmation packages](https://www.npmjs.com/org/botmat
 
     npm install --save @botmation/instagram
 
-Library Reference
------------------
+Documentation
+-------------
 
-`@botmation/core` is the main package used every-time. It has the foundational functions for building bots. Other packages, like `@botmation/instagram` have specific functions that work with the main ones from Core.
+For getting started, API docs of *all* packages with examples, visit [Botmation's Documentation](https://botmation.dev/).
 
-After intalling through `npm`, import functions from their respective packages:
+Core Library Reference
+----------------------
+
+`@botmation/core` is the main package consisting of all functions in the API of [Botmation docs](https://botmation/dev./). It has the foundational functions for building bots and a little more. Other packages, like `@botmation/instagram` have specific functions that work in conjunction with the core ones.
+
+Import any core API function from:
 ```javascript
 import { chain, goTo, screenshot } from '@botmation/core'
-import { login } from '@botmation/instagram'
 ```
 
-`@botmation/core` v1 has 14 groups of `BotAction` to choose from: 
+`@botmation/core` v1 has 14 groups of BotActions to choose from:
 
 <img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="200" align="right" style="position: relative;top: 30px;">
 
@@ -95,17 +99,12 @@ import { login } from '@botmation/instagram'
  - [utilities](https://www.botmation.dev/api/utilties)
     - handle more complex logic patterns ie if statements and for loops
 
-Documentation
--------------
-
-For getting started, API docs of *all* packages with examples, visit [Botmation's Documentation](https://botmation.dev/).
-
 Contributors
 ------------
 
 ### Code
 
-[Michael Lage](https://github.com/mrWh1te) - [Blog](https://copynpaste.me)
+[Michael Lage](https://github.com/mrWh1te) - [Blog](https://lage.tech)
 
 ### Art
 

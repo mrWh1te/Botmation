@@ -1,4 +1,4 @@
-## [v1.0.0](https://github.com/mrWh1te/Botmation/releases/tag/1.0.0)
+## [v1.0.0](https://github.com/mrWh1te/Botmation/releases/tag/1.0.0) @botmation/*
 
 This release includes a repo refactor, to rely on the amazing [Nx](https://nx.dev) tool to manage the "neighborhood" of applications ("houses") and libraries ("house parts") that Botmation consists of. With this, a new [@botmation](https://www.npmjs.com/org/botmation) organization has been filed with the npm registry and the following packages have been released:
 
@@ -20,6 +20,10 @@ If these out-of-order Github Tags confuse, please accept our apologies. The Tags
 
 The Github Tags will be updated on major API breaking changes, following [semantic versioning](https://docs.npmjs.com/about-semantic-versioning). Therefore these tagged Github releases will begin skipping minor and patch updates.
 
+# Deprecated `botmation` releases
+
+The following Tagged Releases pertain to the original [botmation](https://www.npmjs.com/package/botmation) npm package which has been replaced with [@botmation/core](https://www.npmjs.com/package/@botmation/core).
+
 ## [v3.0.0](https://github.com/mrWh1te/Botmation/releases/tag/3.0.0)
 
 - Updated to work with latest Puppeteer version 5.
@@ -38,7 +42,7 @@ New Docs Site published with updated README's for better distribution.
  - Getting Started guides, advanced topics reviewed, and detailed API docs
  - No source code changes
 
-# [v2.0.0](https://github.com/mrWh1te/Botmation/releases/tag/2.0.0)
+## [v2.0.0](https://github.com/mrWh1te/Botmation/releases/tag/2.0.0)
 
 ### Features
  - A fully composable design

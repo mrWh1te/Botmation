@@ -60,20 +60,19 @@ You can install any other [@botmation packages](https://www.npmjs.com/org/botmat
 Documentation
 -------------
 
-For getting started, API docs of *all* packages with examples, visit [Botmation's Documentation](https://botmation.dev/).
+Figure out the details with [Botmation's Documentation](https://botmation.dev/) for a deep reference into every package's functions with examples.
 
 Library Reference
 -----------------
 
-`@botmation/core` is the main package used every-time. It has the foundational functions for building bots. Other packages, like `@botmation/instagram` have specific functions that work with the main ones from Core.
+`@botmation/core` is the main package consisting of all functions in the API of [Botmation docs](https://botmation/dev./). It has the foundational functions for building bots and a little more. Other packages, like `@botmation/instagram` have specific functions that work in conjunction with the core ones.
 
-After intalling through `npm`, import functions from their respective packages:
+Import any core API function from:
 ```javascript
 import { chain, goTo, screenshot } from '@botmation/core'
-import { login } from '@botmation/instagram'
 ```
 
-`@botmation/core` v1 has 14 groups of `BotAction` to choose from: 
+`@botmation/core` v1 has 14 groups of BotActions to choose from:
 
 <img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="200" align="right" style="position: relative;top: 30px;">
 

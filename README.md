@@ -54,7 +54,7 @@ You can install any other [@botmation packages](https://www.npmjs.com/org/botmat
 Documentation
 -------------
 
-For getting started, API docs of *all* packages with examples, visit [Botmation's Documentation](https://botmation.dev/).
+Figure out the details with [Botmation's Documentation](https://botmation.dev/) for a deep reference into every package's functions with examples.
 
 Core Library Reference
 ----------------------

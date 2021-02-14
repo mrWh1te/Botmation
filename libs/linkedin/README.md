@@ -9,4 +9,6 @@
 
 # @botmation/linkedin
 
+An auxiliary [Botmation](https://botmation.dev) package for building bots.
+
 [Botmation's Linkedin Documentation](https://botmation.dev/sites/linkedin)

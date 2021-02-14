@@ -9,4 +9,6 @@
 
 # @botmation/instagram
 
+An auxiliary [Botmation](https://botmation.dev) package for building bots.
+
 [Botmation's Instagram Documentation](https://botmation.dev/sites/instagram)

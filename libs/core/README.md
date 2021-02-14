@@ -11,7 +11,7 @@
 
 # @botmation/core
 
-The primary package for building bots with [Botmation](https://botmation.dev).
+The primary [Botmation](https://botmation.dev) package for building bots.
 
 # Introduction
 

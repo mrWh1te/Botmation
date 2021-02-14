@@ -7,7 +7,6 @@ addons:
       - libgconf-2-4
 cache: npm
 install:
-  - npm install --ignore-scripts
-  - npm rebuild puppeteer
+  - npm install
 script:
-  - npm run test -- --coverage && bash <(curl -s https://codecov.io/bash)
+  - npm run ci:test && bash <(curl -s https://codecov.io/bash)

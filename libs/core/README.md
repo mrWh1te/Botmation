@@ -1,11 +1,17 @@
 <img src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/banner/1556x379v2.png" alt="Botmation Crew" width="474">
 
+[![npm](https://img.shields.io/npm/v/@botmation/core)](https://www.npmjs.com/package/@botmation/core)
 [![Build Status](https://travis-ci.com/mrWh1te/Botmation.svg?branch=master)](https://travis-ci.com/mrWh1te/Botmation)
 [![Known Vulnerabilities](https://snyk.io/test/github/mrWh1te/Botmation/badge.svg?targetFile=package.json)](https://snyk.io/test/github/mrWh1te/Botmation?targetFile=package.json)
 [![codecov](https://img.shields.io/codecov/c/github/mrWh1te/Botmation/master?label=codecov)](https://codecov.io/gh/mrWh1te/Botmation)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mrWh1te_Botmation&metric=alert_status)](https://sonarcloud.io/dashboard?id=mrWh1te_Botmation)
 [![dependencies Status](https://david-dm.org/mrWh1te/Botmation/status.svg)](https://david-dm.org/mrWh1te/Botmation)
 ![GitHub](https://img.shields.io/github/license/mrWh1te/Botmation)
+
+
+# @botmation/core
+
+The primary [Botmation](https://botmation.dev) package for building bots.
 
 # Introduction
 
@@ -56,17 +62,18 @@ Documentation
 
 For getting started, API docs of *all* packages with examples, visit [Botmation's Documentation](https://botmation.dev/).
 
-Core Library Reference
-----------------------
+Library Reference
+-----------------
 
-`@botmation/core` is the main package consisting of all functions in the API of [Botmation docs](https://botmation/dev./). It has the foundational functions for building bots and a little more. Other packages, like `@botmation/instagram` have specific functions that work in conjunction with the core ones.
+`@botmation/core` is the main package used every-time. It has the foundational functions for building bots. Other packages, like `@botmation/instagram` have specific functions that work with the main ones from Core.
 
-Import any core API function from:
+After intalling through `npm`, import functions from their respective packages:
 ```javascript
 import { chain, goTo, screenshot } from '@botmation/core'
+import { login } from '@botmation/instagram'
 ```
 
-`@botmation/core` v1 has 14 groups of BotActions to choose from:
+`@botmation/core` v1 has 14 groups of `BotAction` to choose from: 
 
 <img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="200" align="right" style="position: relative;top: 30px;">
 
@@ -98,14 +105,3 @@ import { chain, goTo, screenshot } from '@botmation/core'
     - scrape HTML documents with an HTML parser and evaluate JavaScript inside a Page
  - [utilities](https://www.botmation.dev/api/utilties)
     - handle more complex logic patterns ie if statements and for loops
-
-Contributors
-------------
-
-### Code
-
-[Michael Lage](https://github.com/mrWh1te) - [Blog](https://lage.tech)
-
-### Art
-
-[Patrick Capeto](https://www.instagram.com/patrick.capeto/) - [Email](mailto:me@patrickcapeto.com)

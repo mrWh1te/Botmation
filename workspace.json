@@ -1,0 +1,473 @@
+{
+  "version": 2,
+  "projects": {
+    "core": {
+      "root": "libs/core",
+      "sourceRoot": "libs/core/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/core/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/core"
+          ],
+          "options": {
+            "jestConfig": "libs/core/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/libs/core",
+            "tsConfig": "libs/core/tsconfig.lib.json",
+            "packageJson": "libs/core/package.json",
+            "main": "libs/core/src/index.ts",
+            "assets": [
+              "libs/core/*.md"
+            ]
+          }
+        }
+      }
+    },
+    "instagram": {
+      "root": "libs/instagram",
+      "sourceRoot": "libs/instagram/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/instagram/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/instagram"
+          ],
+          "options": {
+            "jestConfig": "libs/instagram/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/libs/instagram",
+            "tsConfig": "libs/instagram/tsconfig.lib.json",
+            "packageJson": "libs/instagram/package.json",
+            "main": "libs/instagram/src/index.ts",
+            "assets": [
+              "libs/instagram/*.md"
+            ],
+            "buildableProjectDepsInPackageJsonType": "peerDependencies"
+          }
+        }
+      }
+    },
+    "example": {
+      "root": "apps/example",
+      "sourceRoot": "apps/example/src",
+      "projectType": "application",
+      "prefix": "example",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/example",
+            "main": "apps/example/src/main.ts",
+            "tsConfig": "apps/example/tsconfig.app.json",
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/example/src/environments/environment.ts",
+                  "with": "apps/example/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "example:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/example/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/example"
+          ],
+          "options": {
+            "jestConfig": "apps/example/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "linkedin": {
+      "root": "libs/linkedin",
+      "sourceRoot": "libs/linkedin/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/linkedin/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/linkedin"
+          ],
+          "options": {
+            "jestConfig": "libs/linkedin/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/libs/linkedin",
+            "tsConfig": "libs/linkedin/tsconfig.lib.json",
+            "packageJson": "libs/linkedin/package.json",
+            "main": "libs/linkedin/src/index.ts",
+            "assets": [
+              "libs/linkedin/*.md"
+            ],
+            "buildableProjectDepsInPackageJsonType": "peerDependencies"
+          }
+        }
+      }
+    },
+    "bot-instagram": {
+      "root": "apps/bot-instagram",
+      "sourceRoot": "apps/bot-instagram/src",
+      "projectType": "application",
+      "prefix": "bot-instagram",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/bot-instagram",
+            "main": "apps/bot-instagram/src/main.ts",
+            "tsConfig": "apps/bot-instagram/tsconfig.app.json",
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/bot-instagram/src/environments/environment.ts",
+                  "with": "apps/bot-instagram/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "bot-instagram:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/bot-instagram/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/bot-instagram"
+          ],
+          "options": {
+            "jestConfig": "apps/bot-instagram/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "bot-linkedin": {
+      "root": "apps/bot-linkedin",
+      "sourceRoot": "apps/bot-linkedin/src",
+      "projectType": "application",
+      "prefix": "bot-linkedin",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/bot-linkedin",
+            "main": "apps/bot-linkedin/src/main.ts",
+            "tsConfig": "apps/bot-linkedin/tsconfig.app.json",
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/bot-linkedin/src/environments/environment.ts",
+                  "with": "apps/bot-linkedin/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "bot-linkedin:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/bot-linkedin/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/bot-linkedin"
+          ],
+          "options": {
+            "jestConfig": "apps/bot-linkedin/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "bot-pdf": {
+      "root": "apps/bot-pdf",
+      "sourceRoot": "apps/bot-pdf/src",
+      "projectType": "application",
+      "prefix": "bot-pdf",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/bot-pdf",
+            "main": "apps/bot-pdf/src/main.ts",
+            "tsConfig": "apps/bot-pdf/tsconfig.app.json",
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/bot-pdf/src/environments/environment.ts",
+                  "with": "apps/bot-pdf/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "bot-pdf:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/bot-pdf/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/bot-pdf"
+          ],
+          "options": {
+            "jestConfig": "apps/bot-pdf/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "bot-cluster": {
+      "root": "apps/bot-cluster",
+      "sourceRoot": "apps/bot-cluster/src",
+      "projectType": "application",
+      "prefix": "bot-cluster",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/bot-cluster",
+            "main": "apps/bot-cluster/src/main.ts",
+            "tsConfig": "apps/bot-cluster/tsconfig.app.json",
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/bot-cluster/src/environments/environment.ts",
+                  "with": "apps/bot-cluster/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "bot-cluster:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/bot-cluster/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/bot-cluster"
+          ],
+          "options": {
+            "jestConfig": "apps/bot-cluster/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "bot-object-oriented": {
+      "root": "apps/bot-object-oriented",
+      "sourceRoot": "apps/bot-object-oriented/src",
+      "projectType": "application",
+      "prefix": "bot-object-oriented",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/bot-object-oriented",
+            "main": "apps/bot-object-oriented/src/main.ts",
+            "tsConfig": "apps/bot-object-oriented/tsconfig.app.json",
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/bot-object-oriented/src/environments/environment.ts",
+                  "with": "apps/bot-object-oriented/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "bot-object-oriented:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/bot-object-oriented/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/bot-object-oriented"
+          ],
+          "options": {
+            "jestConfig": "apps/bot-object-oriented/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/node"
+  },
+  "defaultProject": "core"
+}

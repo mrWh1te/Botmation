@@ -1,0 +1,29 @@
+{
+  "npmScope": "botmation",
+  "affected": { "defaultBase": "master" },
+  "implicitDependencies": {
+    "workspace.json": "*",
+    "package.json": { "dependencies": "*", "devDependencies": "*" },
+    "tsconfig.base.json": "*",
+    "tslint.json": "*",
+    ".eslintrc.json": "*",
+    "nx.json": "*"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": { "cacheableOperations": ["build", "lint", "test", "e2e"] }
+    }
+  },
+  "projects": {
+    "core": { "tags": [] },
+    "instagram": { "tags": [] },
+    "example": { "tags": [] },
+    "linkedin": { "tags": [] },
+    "bot-instagram": { "tags": [] },
+    "bot-linkedin": { "tags": [] },
+    "bot-pdf": { "tags": [] },
+    "bot-cluster": { "tags": [] },
+    "bot-object-oriented": { "tags": [] }
+  }
+}

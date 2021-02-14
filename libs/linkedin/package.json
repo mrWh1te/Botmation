@@ -1,0 +1,31 @@
+{
+  "name": "@botmation/linkedin",
+  "version": "1.0.0",
+  "description": "Auxiliary package of functions for the TypeScript framework Botmation",
+  "homepage": "https://www.botmation.dev/sites/linkedin",
+  "author": "Michael Lage",
+  "keywords": [
+    "social",
+    "web",
+    "browser",
+    "automation",
+    "login",
+    "bot",
+    "crawler",
+    "puppeteer",
+    "declarative",
+    "functional"
+  ],
+  "license": "MIT",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrWh1te/Botmation.git"
+  },
+  "peerDependencies": {
+    "@botmation/core": "^1.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.1.0"
+  }
+}

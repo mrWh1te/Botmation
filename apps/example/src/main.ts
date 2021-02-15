@@ -21,14 +21,18 @@ import {
     const pages = await browser.pages()
     page = pages.length === 0 ? await browser.newPage() : pages[0]
 
-    // Run the chain of actions
-    await chain(
+    // Compose the bot
+    const bot = chain(
       log('Bot is running'),
       goTo('https://www.duckduckgo.com/'),
       screenshot('duckduckgo-homepage'),
       log('Screenshot taken')
-    )(page)
+    )
 
+    // Run the bot on a page
+    await bot(page)
+
+    // Finish up
     await page.close()
   } catch (error) {
     logError(error)

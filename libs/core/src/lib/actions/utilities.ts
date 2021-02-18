@@ -18,11 +18,11 @@ import { processAbortLineSignal } from '../helpers/abort'
  *              does it run the BotAction's provided in a pipe()(). Never the less, it does not return the final ran BotAction return value (if any)
  * @example     givenThat(isGuest)(login(...), closeSomePostLoginModal(),... more BotAction's)
  *              The condition function is async and provided the Puppeteer page instance so you can use it to determine TRUE/FALSE
- * @param condition 
+ * @param condition
  */
-export const givenThat = 
-  (condition: ConditionalBotAction) => 
-    (...actions: BotAction<PipeValue|void|AbortLineSignal>[]): BotAction<any> => 
+export const givenThat =
+  (condition: ConditionalBotAction) =>
+    (...actions: BotAction<PipeValue|void|AbortLineSignal>[]): BotAction<any> =>
       async(page, ...injects) => {
         const resolvedConditionValue: AbortLineSignal|boolean = await condition(page, ...pipeInjects(injects))
 
@@ -45,22 +45,22 @@ export const givenThat =
 /**
  * @future support piping in the `collection`
  * @description   A forEach method to loop a collection (array or object's key/value pairs) with assembled BotActions in a pipe
- * 
+ *
  *                Special BotAction that can take an array of stuff or an object of key value pairs (dictionary)
  *                to iterate over while applying the closure (botActionOrActionsFactory) as provided
  *                The closure's purpose is simply to return a BotAction or BotAction[]
- * 
+ *
  *                The collection can be passed in via higher-order param or as Pipe value. If both are provided, higher-order param is used.
- * 
+ *
  *                The callback's returned BotAction(s) are called with the three params matching the forEach() callback syntax
  *                  value, index, array
- * 
+ *
  *                Since this function supports Dictionaries too, the "index" is casted into a string
  *                  value, key, collection
- * 
+ *
  *                When the returned BotAction(s) are ran in a Pipe, the same callback params are wrapped in an array then injected as the Pipe object's value
  *                  [value, key, collection]
- * 
+ *
  *                The original use-case for this concept, was to be able to re-apply a script on multiple websites via a loop
  *                I've seen multiple examples online, of people using Puppeteer to write a script of actions then loop through a list of websites
  *                  to apply the same sequence of actions on each
@@ -72,7 +72,7 @@ export const givenThat =
  *      screenshot(siteName + '-homepage') // then re-use it in your BotAction setup
  *    ])
  *  )
- * 
+ *
  * @example    with a dictionary as the collection, we can iterate key/value pairs in our BotAction's setup ie fill a form with keys being form input selectors and values being what its typed in each
  *  forAll({id: 'google.com', someOtherKey: 'apple.com'})(
  *    (siteName, key) => ([
@@ -80,7 +80,7 @@ export const givenThat =
  *      screenshot(key + siteName + '-homepage')
  *    ])
  *  )
- * 
+ *
  * @example   a 1 action script example
  *  forAll(['google.com'])(
  *    (siteName) => goTo('http://' + siteName)
@@ -92,7 +92,7 @@ export const forAll =
     (botActionOrActionsFactory: (...args: [any, string, Collection]) => BotAction<any>[] | BotAction<any>): BotAction<any> =>
       async(page, ...injects) => {
         // the collection can be passed in via higher-order params or Pipe object value
-        // higher-order params trump Pipe object value        
+        // higher-order params trump Pipe object value
         if (!collection) {
           collection = getInjectsPipeValue(injects)
         }
@@ -127,7 +127,7 @@ export const forAll =
               // Update Pipe value for each iteration
               injects = removePipe(injects)
               injects.push(wrapValueInPipe([value, collection, key]))
-  
+
               // Run cb
               returnValue = await pipeActionOrActions(botActionOrActionsFactory(value, key, collection))(page, ...injects)
 
@@ -144,9 +144,9 @@ export const forAll =
  *                 Do the actions, and continue to keep doing them While this condition continue to resolves TRUE
  * @param condition
  */
-export const doWhile = 
-  (condition: ConditionalBotAction) => 
-    (...actions: BotAction<any>[]): BotAction<any> => 
+export const doWhile =
+  (condition: ConditionalBotAction) =>
+    (...actions: BotAction<any>[]): BotAction<any> =>
       async(page, ...injects) => {
         let returnValue: PipeValue|AbortLineSignal
         let resolvedCondition: boolean|AbortLineSignal = true
@@ -169,16 +169,16 @@ export const doWhile =
 /**
  * @description    Works like a traditional while loop. Before each loop iteration, it resolves the ConditionalBotAction then only runs the provided BotAction's (in a pipe) if that `condition` resolved TRUE
  *                 It continues to loop as long as the `condition` resolves TRUE each time. It only runs the BotAction's after the ConditionalBotAction resolves TRUE
- * @param condition 
+ * @param condition
  * @example     forAsLong(isLoggedIn)(
  *                goTo(...),
  *                click(...),
  *                //...
  *              )
  */
-export const forAsLong = 
-  (condition: ConditionalBotAction) => 
-    (...actions: BotAction[]): BotAction<any> => 
+export const forAsLong =
+  (condition: ConditionalBotAction) =>
+    (...actions: BotAction[]): BotAction<any> =>
       async(page, ...injects) => {
         let returnValue: PipeValue|AbortLineSignal
         let resolvedCondition = await condition(page, ...pipeInjects(injects))
@@ -210,3 +210,15 @@ export const forAsLong =
           }
         }
       }
+
+
+/**
+ *
+ * @param schedule
+ */
+export const schedule =
+  (schedule: string) =>
+      (...actions: BotAction[]): BotAction<any> =>
+        async(page, ...injects) => {
+
+        }

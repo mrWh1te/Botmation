@@ -19,3 +19,7 @@ Link relevant issues, pr's, etc.
 ### Documentation
 
 Does it need updating (file an issue), status, etc.
+
+### Publishing
+
+Does it need to be published as a new major, minor, patch release?

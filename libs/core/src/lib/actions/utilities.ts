@@ -218,7 +218,7 @@ export const forAsLong =
  */
 export const schedule =
   (schedule: string) =>
-      (...actions: BotAction[]): BotAction<any> =>
-        async(page, ...injects) => {
+    (...actions: BotAction[]): BotAction<any> =>
+      async(page, ...injects) => {
 
-        }
+      }

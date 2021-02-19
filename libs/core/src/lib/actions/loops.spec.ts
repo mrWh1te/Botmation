@@ -249,7 +249,7 @@ describe('[Botmation] actions/loops', () => {
   //
   // doWhile() Unit Test
   it('doWhile() should run the actions then check the condition to run the actions in a loop until the condition rejects or resolves FALSE', async() => {
-    const conditionResolvingFALSE:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
+    const conditionResolvingFALSE:BotAction<boolean> = async() => Promise.resolve(false)
 
     // Main test
     let conditionResolvingCount = 0;
@@ -300,7 +300,7 @@ describe('[Botmation] actions/loops', () => {
   })
 
   it('doWhile() should pass along the correct AbortLineSignal', async() => {
-    const conditionResolveFalse:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
+    const conditionResolveFalse:BotAction<boolean> = async() => Promise.resolve(false)
     const mockAction = jest.fn(() => Promise.resolve())
 
     const infinityAbort = await doWhile(conditionResolveFalse)(
@@ -335,7 +335,7 @@ describe('[Botmation] actions/loops', () => {
 
     // setup a test where the abort is during a loop iteration, not initial
     let conditionResolvingCount = 0;
-    const conditionResolvesTrue: BotAction<boolean> = async() => new Promise(resolve => resolve(true))
+    const conditionResolvesTrue: BotAction<boolean> = async() => Promise.resolve(true)
     const multiAbortButMultipleLoops =
       await doWhile(conditionResolvesTrue)(
         async() => {
@@ -393,7 +393,7 @@ describe('[Botmation] actions/loops', () => {
   //
   // forAsLong() Unit Test
   it('forAsLong() should check the condition before running the actions in a loop until the condition rejects or resolves FALSE', async() => {
-    const conditionResolvingFALSE:BotAction<boolean> = async() => new Promise(resolve => resolve(false))
+    const conditionResolvingFALSE:BotAction<boolean> = async() => Promise.resolve(false)
 
     // Main test
     let conditionResolvingCount = 0;
@@ -437,7 +437,7 @@ describe('[Botmation] actions/loops', () => {
   })
 
   it('forAsLong() should pass along the correct AbortLineSignal', async() => {
-    const conditionResolvesTrue: BotAction<boolean> = async() => new Promise(resolve => resolve(true))
+    const conditionResolvesTrue: BotAction<boolean> = async() => Promise.resolve(true)
     const mockAction = jest.fn(() => Promise.resolve())
 
     const infiniteAbort = await forAsLong(conditionResolvesTrue)(

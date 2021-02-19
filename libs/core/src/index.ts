@@ -1,5 +1,3 @@
-// export * from './lib/core';
-
 /**
  * Barrel of Exports
  */

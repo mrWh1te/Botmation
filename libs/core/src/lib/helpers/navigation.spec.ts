@@ -1,7 +1,6 @@
 
 import { WaitForOptions } from 'puppeteer'
 import { enrichGoToPageOptions, scrollToElement } from './navigation'
-import { sleep } from './time'
 
 const mockScrollIntoView = jest.fn()
 const mockQuerySelectorFactory = (timesRan = 0) => jest.fn(() => {
@@ -29,8 +28,6 @@ Object.defineProperty(global, 'document', {
  * @description   Navigation Helpers
  */
 describe('[Botmation] helpers/navigation', () => {
-  let setTimeoutFn = setTimeout
-
   it('scrollToElement() is a function evaluated in the browser the gets an element based on html selector then calls its scrollIntoView() method', () => {
     scrollToElement('teddy bear')
 
@@ -65,30 +62,6 @@ describe('[Botmation] helpers/navigation', () => {
     expect(enrichWaitForOptionsFromWaitUntil).toEqual({
       waitUntil: 'domcontentloaded'
     })
-  })
-
-  //
-  // sleep
-  it('should return a promise for pausing execution by calling setTimeout', async () => {
-    const mockSetTimeout = jest.fn()
-    type setTimeoutType = typeof globalThis.setTimeout
-
-    const mockSetTimeoutFunc = (callback: (...args: any[]) => void, ms: number, ...args: any[]): NodeJS.Timeout => {
-      mockSetTimeout(ms)
-      return callback() as any as NodeJS.Timeout
-    }
-
-    global.setTimeout = mockSetTimeoutFunc as setTimeoutType;
-
-    await sleep(1337)
-
-    expect(mockSetTimeout).toHaveBeenCalledWith(1337)
-  })
-
-  afterAll(() => {
-    // the test mocks the global setTimeout, so restore
-    // it to original value after the test completes
-    global.setTimeout = setTimeoutFn
   })
 
 })

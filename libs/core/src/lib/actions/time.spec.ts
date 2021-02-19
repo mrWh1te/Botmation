@@ -14,10 +14,9 @@ jest.mock('../helpers/time', () => {
 })
 
 /**
- * @description   Navigation BotAction's
- *                The factory methods here return BotAction's for the bots to input into the page as User
+ * @description   Time BotActions
  */
-describe('[Botmation] actions/navigation', () => {
+describe('[Botmation] actions/time', () => {
 
   let mockPage: Page
 

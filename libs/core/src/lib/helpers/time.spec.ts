@@ -12,7 +12,7 @@ describe('[Botmation] helpers/time', () => {
     const mockSetTimeout = jest.fn()
     type setTimeoutType = typeof globalThis.setTimeout
 
-    const mockSetTimeoutFunc = (callback: (...args: any[]) => void, ms: number, ...args: any[]): NodeJS.Timeout => {
+    const mockSetTimeoutFunc = (callback: (...args: any[]) => void, ms: number): NodeJS.Timeout => {
       mockSetTimeout(ms)
       return callback() as any as NodeJS.Timeout
     }

@@ -27,7 +27,9 @@ export * from './lib/actions/local-storage'
 export * from './lib/actions/navigation'
 export * from './lib/actions/pipe'
 export * from './lib/actions/scrapers'
-export * from './lib/actions/utilities'
+export * from './lib/actions/loops'
+export * from './lib/actions/conditionals'
+export * from './lib/actions/time'
 
 //
 // Helpers

@@ -1,8 +1,10 @@
 import { parseCronExpression } from "cron-schedule";
+import { processAbortLineSignal } from "../helpers/abort";
 import { getInjectsPipeValue, injectsHavePipe } from "../helpers/pipe";
 import { sleep } from "../helpers/time";
 import { BotAction } from "../interfaces";
-import { chain, pipe } from "./assembly-lines";
+import { isAbortLineSignal } from "../types";
+import { assemblyLine, chain, pipe } from "./assembly-lines";
 
 /**
  * @description   Pauses the runner (chain or pipe) for the provided milliseconds before continuing to the next BotAction
@@ -55,17 +57,13 @@ export const schedule =
   (schedule: string|Date) =>
     (...actions: BotAction[]): BotAction<any> =>
       async(page, ...injects) => {
+        let returnValue;
         if (isDate(schedule)) {
           const timeUntilScheduleInMilliSeconds = schedule.getTime() - new Date().getTime()
           if (timeUntilScheduleInMilliSeconds > 0) {
             await sleep(timeUntilScheduleInMilliSeconds)
 
-            // does injects have a pipe value?
-            if (injectsHavePipe(injects)) {
-              return await pipe()(...actions)(page, ...injects)
-            } else {
-              await chain(...actions)(page, ...injects);
-            }
+            returnValue = await pipe()(...actions)(page, ...injects)
           }
         } else {
           // 1. check cronjob
@@ -77,4 +75,9 @@ export const schedule =
         // 2. timeout until scheduled run time (with actions set to run)
 
         // 3. after actions run, reschedule if needed
+
+        // todo how to handle abort line signal ?
+        if (isAbortLineSignal(returnValue)) {
+          return processAbortLineSignal(returnValue)
+        }
       }

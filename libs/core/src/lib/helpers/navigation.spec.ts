@@ -1,6 +1,7 @@
 
 import { WaitForOptions } from 'puppeteer'
-import { enrichGoToPageOptions, sleep, scrollToElement } from './navigation'
+import { enrichGoToPageOptions, scrollToElement } from './navigation'
+import { sleep } from './time'
 
 const mockScrollIntoView = jest.fn()
 const mockQuerySelectorFactory = (timesRan = 0) => jest.fn(() => {

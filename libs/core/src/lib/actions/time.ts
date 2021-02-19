@@ -1,6 +1,8 @@
 import { parseCronExpression } from "cron-schedule";
+import { getInjectsPipeValue, injectsHavePipe } from "../helpers/pipe";
 import { sleep } from "../helpers/time";
 import { BotAction } from "../interfaces";
+import { chain, pipe } from "./assembly-lines";
 
 /**
  * @description   Pauses the runner (chain or pipe) for the provided milliseconds before continuing to the next BotAction
@@ -39,7 +41,9 @@ const isDate = (data: any): data is Date =>
 
 /**
  *
- * @param schedule
+ * @param schedule string|Date
+ *          string needs to a be a cronjob string, see https://crontab.guru/ which sets an interval
+ *          Date sets a one time event therefore NOT an interval
  *
  * @example    errors('catching errors in case cronjob gets misparsed')(
  *                schedule('* * * * *')(
@@ -52,8 +56,17 @@ export const schedule =
     (...actions: BotAction[]): BotAction<any> =>
       async(page, ...injects) => {
         if (isDate(schedule)) {
+          const timeUntilScheduleInMilliSeconds = schedule.getTime() - new Date().getTime()
+          if (timeUntilScheduleInMilliSeconds > 0) {
+            await sleep(timeUntilScheduleInMilliSeconds)
 
-
+            // does injects have a pipe value?
+            if (injectsHavePipe(injects)) {
+              return await pipe()(...actions)(page, ...injects)
+            } else {
+              await chain(...actions)(page, ...injects);
+            }
+          }
         } else {
           // 1. check cronjob
           const cron = parseCronExpression(schedule)

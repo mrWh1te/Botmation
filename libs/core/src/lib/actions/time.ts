@@ -56,27 +56,30 @@ export const schedule =
   (schedule: string|Date) =>
     (...actions: BotAction[]): BotAction<any> =>
       async(page, ...injects) => {
-        let returnValue;
+        let returnValue, timeUntilScheduleInMilliSeconds;
         if (isDate(schedule)) {
-          const timeUntilScheduleInMilliSeconds = schedule.getTime() - new Date().getTime()
+          timeUntilScheduleInMilliSeconds = schedule.getTime() - new Date().getTime()
           if (timeUntilScheduleInMilliSeconds > 0) {
             await sleep(timeUntilScheduleInMilliSeconds)
 
             returnValue = await pipe()(...actions)(page, ...injects)
+
+            if (isAbortLineSignal(returnValue)) {
+              return processAbortLineSignal(returnValue)
+            }
           }
         } else {
-          // 1. check cronjob
           const cron = parseCronExpression(schedule)
-          console.log(cron.getNextDate(new Date()))
-        }
 
+          while(true) {
+            timeUntilScheduleInMilliSeconds = cron.getNextDate(new Date()).getTime() - new Date().getTime()
+            await sleep(timeUntilScheduleInMilliSeconds)
 
-        // 2. timeout until scheduled run time (with actions set to run)
+            returnValue = await pipe()(...actions)(page, ...injects)
 
-        // 3. after actions run, reschedule if needed
-
-        // todo how to handle abort line signal ?
-        if (isAbortLineSignal(returnValue)) {
-          return processAbortLineSignal(returnValue)
+            if (isAbortLineSignal(returnValue)) {
+              return processAbortLineSignal(returnValue)
+            }
+          }
         }
       }

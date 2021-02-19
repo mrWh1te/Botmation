@@ -51,6 +51,10 @@ const isDate = (data: any): data is Date =>
  *                  ...actions
  *                )
  *             )
+ *
+ * @note    Date is a one time schedule
+ *          string is a cronjob that is an interval schedule that will not end on its own
+ *              therefore consider including some "abort" logic in the actions with a high enough assembledLines count
  */
 export const schedule =
   (schedule: string|Date) =>

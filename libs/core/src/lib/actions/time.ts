@@ -58,11 +58,11 @@ const isDate = (data: any): data is Date =>
  */
 export const schedule =
   (schedule: string|Date) =>
-    (...actions: BotAction[]): BotAction<any> =>
+    (...actions: BotAction<any>[]): BotAction<any> =>
       async(page, ...injects) => {
         let returnValue, timeUntilScheduleInMilliSeconds;
         if (isDate(schedule)) {
-          timeUntilScheduleInMilliSeconds = schedule.getTime() - new Date().getTime()
+          timeUntilScheduleInMilliSeconds = schedule.getTime() - Date.now()
           if (timeUntilScheduleInMilliSeconds > 0) {
             await sleep(timeUntilScheduleInMilliSeconds)
 
@@ -78,7 +78,7 @@ export const schedule =
           const cron = parseCronExpression(schedule) // throws an error if it doesnt parse
 
           while(true) {
-            timeUntilScheduleInMilliSeconds = cron.getNextDate(new Date()).getTime() - new Date().getTime()
+            timeUntilScheduleInMilliSeconds = cron.getNextDate(new Date(Date.now())).getTime() - Date.now()
             await sleep(timeUntilScheduleInMilliSeconds)
 
             returnValue = await pipe()(...actions)(page, ...injects)

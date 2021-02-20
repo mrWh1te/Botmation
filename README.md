@@ -74,7 +74,7 @@ import { chain, goTo, screenshot } from '@botmation/core'
     - abort an assembly of `BotAction`'s
  - [assembly-line](https://www.botmation.dev/api/assembly-lines)
     - compose and run `BotAction`'s in lines
- - [conditionals](https://www.botmation.dev/api/conditionals)
+ - [branching](https://www.botmation.dev/api/branching)
     - functional branching i.e. if statement
  - [console](https://www.botmation.dev/api/console)
     - log messages to the nodeJS console

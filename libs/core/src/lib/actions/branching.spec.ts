@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { givenThat } from './conditionals'
+import { givenThat } from './branching'
 import { click, type } from './input'
 
 import { BotAction } from './../interfaces/bot-actions'
@@ -8,10 +8,10 @@ import { abort } from './abort'
 import { createAbortLineSignal } from './../helpers/abort'
 
 /**
- * @description   Conditional BotActions
+ * @description   Branching BotActions
  *                The factory methods here return BotAction's for the bots to handle more complex functional flows
  */
-describe('[Botmation] actions/conditionals', () => {
+describe('[Botmation] actions/branching', () => {
 
   let mockPage: Page
 

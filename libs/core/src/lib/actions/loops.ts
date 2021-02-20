@@ -69,7 +69,7 @@ export const forAll =
         }
 
         if (!collection) {
-          logWarning('Utilities forAll() missing collection')
+          logWarning('Loops forAll() missing collection')
           return
         }
 

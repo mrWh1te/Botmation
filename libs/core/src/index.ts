@@ -26,7 +26,7 @@ export * from './lib/actions/navigation'
 export * from './lib/actions/pipe'
 export * from './lib/actions/scrapers'
 export * from './lib/actions/loops'
-export * from './lib/actions/conditionals'
+export * from './lib/actions/branching'
 export * from './lib/actions/time'
 
 //

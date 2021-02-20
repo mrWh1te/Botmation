@@ -26,6 +26,8 @@ global.Date.now = dateNowStub;
 const twoHoursInMilliSeconds = 2 * 60 * 60 * 1000;
 const futureDate = new Date(nowStart)
 futureDate.setTime(futureDate.getTime() + twoHoursInMilliSeconds) // 2 hours into the future
+const pastDate = new Date(nowStart)
+pastDate.setTime(pastDate.getTime() - twoHoursInMilliSeconds) // 2 hours into the past
 
 // cron schedule mocking
 let count = 0;
@@ -88,7 +90,17 @@ describe('[Botmation] actions/time', () => {
     expect(result2).toEqual(createAbortLineSignal(1, 'test52'))
   })
 
-  // todo test if input Date is in the past, actions should not run or sleep
+  it('schedule() should not call sleep() or run the actions when the input Date is in the now or in the past', async() => {
+    const result1 = await schedule(pastDate)(action1, actionFinal)(mockPage)
+    const result2 = await schedule(new Date(nowStart))(action1, actionFinal)(mockPage)
+
+    expect(result1).toBeUndefined()
+    expect(result2).toBeUndefined()
+
+    expect(mockSleepHelper).toHaveBeenCalledTimes(3)
+    expect(action1).toHaveBeenCalledTimes(2)
+    expect(actionFinal).toHaveBeenCalledTimes(1)
+  })
 
   //
   // schedule() = interval between events

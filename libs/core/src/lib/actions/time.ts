@@ -42,7 +42,7 @@ export const schedule =
           if (timeUntilScheduleInMilliSeconds > 0) {
             await sleep(timeUntilScheduleInMilliSeconds)
 
-            return await pipe()(...actions)(page, ...injects)
+            return pipe()(...actions)(page, ...injects)
           }
         } else {
           const cron = parseCronExpression(schedule) // throws an error if it doesnt parse

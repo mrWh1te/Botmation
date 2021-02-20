@@ -4,6 +4,7 @@ import { BASE_URL } from './../mocks'
 
 import { Page } from 'puppeteer'
 import { abort } from './abort'
+import { createAbortLineSignal } from '../helpers/abort'
 
 jest.mock('../helpers/time', () => {
   const originalModule = jest.requireActual('../helpers/time')
@@ -62,17 +63,12 @@ describe('[Botmation] actions/time', () => {
   })
 
   it('schedule() should take 2 assembled lines to fully abort with pipe value returned', async() => {
-    // fully abort out of schedule takes at least 2 assembled lines:
-    //    1. break the actions pipe
-    //    2. break the scheduler itself
-    // while it could be simpler with 1 assembled lines for one-time scheduling
-    //   this keeps the aborting assembledLines consistent for either input types (cronjob or Date | interval vs one-time)
     const result2 = await schedule(futureDate)(action1, abort(2, 'test52'), actionFinal)(mockPage)
 
     expect(action1).toHaveBeenCalledTimes(2)
     expect(mockSleepHelper).toHaveBeenNthCalledWith(3, twoHoursInMilliSeconds)
     expect(actionFinal).toHaveBeenCalledTimes(1)
-    expect(result2).toEqual('test52')
+    expect(result2).toEqual(createAbortLineSignal(1, 'test52'))
   })
 
   // todo test the cronjob scheduling & aborting

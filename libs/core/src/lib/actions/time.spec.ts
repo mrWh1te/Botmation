@@ -44,7 +44,7 @@ describe('[Botmation] actions/time', () => {
 
   //
   // wait()
-  it('should call setTimeout with the correct values', async() => {
+  it('wait() should call sleep with the correct values', async() => {
     await wait(5003234)(mockPage)
 
     expect(mockSleepHelper).toHaveBeenNthCalledWith(1, 5003234)
@@ -53,28 +53,26 @@ describe('[Botmation] actions/time', () => {
   //
   // schedule()
   it('schedule() should call sleep() with the correct value then run the actions to return the final value', async() => {
-
     const result1 = await schedule(futureDate)(action1, actionFinal)(mockPage)
-    expect(result1).toEqual('last one')
 
+    expect(result1).toEqual('last one')
     expect(mockSleepHelper).toHaveBeenNthCalledWith(2, twoHoursInMilliSeconds)
     expect(action1).toHaveBeenCalledTimes(1)
     expect(actionFinal).toHaveBeenCalledTimes(1)
   })
 
   it('schedule() should take 2 assembled lines to fully abort with pipe value returned', async() => {
-
     // fully abort out of schedule takes at least 2 assembled lines:
     //    1. break the actions pipe
     //    2. break the scheduler itself
     // while it could be simpler with 1 assembled lines for one-time scheduling
     //   this keeps the aborting assembledLines consistent for either input types (cronjob or Date | interval vs one-time)
     const result2 = await schedule(futureDate)(action1, abort(2, 'test52'), actionFinal)(mockPage)
+
     expect(action1).toHaveBeenCalledTimes(2)
     expect(mockSleepHelper).toHaveBeenNthCalledWith(3, twoHoursInMilliSeconds)
     expect(actionFinal).toHaveBeenCalledTimes(1)
     expect(result2).toEqual('test52')
-
   })
 
   // todo test the cronjob scheduling & aborting

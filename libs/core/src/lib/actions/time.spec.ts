@@ -3,6 +3,7 @@ import { schedule, wait } from './time'
 import { BASE_URL } from './../mocks'
 
 import { Page } from 'puppeteer'
+import { abort } from './abort'
 
 jest.mock('../helpers/time', () => {
   const originalModule = jest.requireActual('../helpers/time')
@@ -19,7 +20,6 @@ jest.mock('../helpers/time', () => {
 describe('[Botmation] actions/time', () => {
 
   let mockPage: Page
-  const now = new Date()
 
   // Date stubbing
   const realDateNow = Date.now.bind(global.Date);
@@ -32,10 +32,22 @@ describe('[Botmation] actions/time', () => {
   })
 
   //
+  // sleep() Integration Test
+  it('should call setTimeout with the correct values', async() => {
+    await wait(5003234)(mockPage)
+
+    const mockSleepHelper = require('../helpers/time').sleep
+
+    expect(mockSleepHelper).toHaveBeenNthCalledWith(1, 5003234)
+  })
+
+  //
   // schedule() Date input testing
   it('should call sleep() with the correct value then run the actions to return the final value', async() => {
     const futureDate = new Date(nowStart)
-    futureDate.setTime(futureDate.getTime() + (2*60*60*1000)) // 2 hours into the future
+    const twoHoursInMilliSeconds = 2 * 60 * 60 * 1000;
+
+    futureDate.setTime(futureDate.getTime() + twoHoursInMilliSeconds) // 2 hours into the future
 
     const action1 = jest.fn(async() => Promise.resolve())
     const actionFinal = jest.fn(async() => Promise.resolve('last one'))
@@ -45,20 +57,20 @@ describe('[Botmation] actions/time', () => {
 
     const mockSleepHelper = require('../helpers/time').sleep
 
-    expect(mockSleepHelper).toHaveBeenNthCalledWith(1, 2*60*60*1000)
+    expect(mockSleepHelper).toHaveBeenNthCalledWith(2, twoHoursInMilliSeconds)
     expect(action1).toHaveBeenCalledTimes(1)
     expect(actionFinal).toHaveBeenCalledTimes(1)
+
+    // abort out of schedule takes 2: 1 to break the actions pipe, and 2nd to break the scheduler
+    // while it could be simpler for one-time scheduling, this keeps the aborting consistent for either input types
+    const result2 = await schedule(futureDate)(action1, abort(2, 'test52'), actionFinal)(mockPage)
+    expect(action1).toHaveBeenCalledTimes(2)
+    expect(mockSleepHelper).toHaveBeenNthCalledWith(3, twoHoursInMilliSeconds)
+    expect(actionFinal).toHaveBeenCalledTimes(1)
+    expect(result2).toEqual('test52')
   })
 
-  //
-  // sleep() Integration Test
-  it('should call setTimeout with the correct values', async() => {
-    await wait(5003234)(mockPage)
 
-    const mockSleepHelper = require('../helpers/time').sleep
-
-    expect(mockSleepHelper).toHaveBeenNthCalledWith(2, 5003234)
-  })
 
   // clean up
   afterAll(async() => {

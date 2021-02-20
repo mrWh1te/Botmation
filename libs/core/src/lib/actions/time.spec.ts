@@ -21,45 +21,48 @@ describe('[Botmation] actions/time', () => {
 
   let mockPage: Page
 
+  const mockSleepHelper = require('../helpers/time').sleep
+
   // Date stubbing
   const realDateNow = Date.now.bind(global.Date);
   const nowStart = realDateNow()
   const dateNowStub = jest.fn(() => nowStart);
   global.Date.now = dateNowStub;
 
+  // date testing
+  const twoHoursInMilliSeconds = 2 * 60 * 60 * 1000;
+  const futureDate = new Date(nowStart)
+  futureDate.setTime(futureDate.getTime() + twoHoursInMilliSeconds) // 2 hours into the future
+
+  // action stubbing
+  const action1 = jest.fn(async() => Promise.resolve())
+  const actionFinal = jest.fn(async() => Promise.resolve('last one'))
+
   beforeEach(() => {
     mockPage = {} as any as Page
   })
 
   //
-  // sleep() Integration Test
+  // wait()
   it('should call setTimeout with the correct values', async() => {
     await wait(5003234)(mockPage)
-
-    const mockSleepHelper = require('../helpers/time').sleep
 
     expect(mockSleepHelper).toHaveBeenNthCalledWith(1, 5003234)
   })
 
   //
-  // schedule() Date input testing
-  it('should call sleep() with the correct value then run the actions to return the final value', async() => {
-    const futureDate = new Date(nowStart)
-    const twoHoursInMilliSeconds = 2 * 60 * 60 * 1000;
-
-    futureDate.setTime(futureDate.getTime() + twoHoursInMilliSeconds) // 2 hours into the future
-
-    const action1 = jest.fn(async() => Promise.resolve())
-    const actionFinal = jest.fn(async() => Promise.resolve('last one'))
+  // schedule()
+  it('schedule() should call sleep() with the correct value then run the actions to return the final value', async() => {
 
     const result1 = await schedule(futureDate)(action1, actionFinal)(mockPage)
     expect(result1).toEqual('last one')
 
-    const mockSleepHelper = require('../helpers/time').sleep
-
     expect(mockSleepHelper).toHaveBeenNthCalledWith(2, twoHoursInMilliSeconds)
     expect(action1).toHaveBeenCalledTimes(1)
     expect(actionFinal).toHaveBeenCalledTimes(1)
+  })
+
+  it('schedule() should take 2 assembled lines to fully abort with pipe value returned', async() => {
 
     // fully abort out of schedule takes at least 2 assembled lines:
     //    1. break the actions pipe
@@ -71,8 +74,10 @@ describe('[Botmation] actions/time', () => {
     expect(mockSleepHelper).toHaveBeenNthCalledWith(3, twoHoursInMilliSeconds)
     expect(actionFinal).toHaveBeenCalledTimes(1)
     expect(result2).toEqual('test52')
+
   })
 
+  // todo test the cronjob scheduling & aborting
 
 
   // clean up

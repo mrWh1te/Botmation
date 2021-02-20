@@ -61,8 +61,11 @@ describe('[Botmation] actions/time', () => {
     expect(action1).toHaveBeenCalledTimes(1)
     expect(actionFinal).toHaveBeenCalledTimes(1)
 
-    // abort out of schedule takes 2: 1 to break the actions pipe, and 2nd to break the scheduler
-    // while it could be simpler for one-time scheduling, this keeps the aborting consistent for either input types
+    // fully abort out of schedule takes at least 2 assembled lines:
+    //    1. break the actions pipe
+    //    2. break the scheduler itself
+    // while it could be simpler with 1 assembled lines for one-time scheduling
+    //   this keeps the aborting assembledLines consistent for either input types (cronjob or Date | interval vs one-time)
     const result2 = await schedule(futureDate)(action1, abort(2, 'test52'), actionFinal)(mockPage)
     expect(action1).toHaveBeenCalledTimes(2)
     expect(mockSleepHelper).toHaveBeenNthCalledWith(3, twoHoursInMilliSeconds)

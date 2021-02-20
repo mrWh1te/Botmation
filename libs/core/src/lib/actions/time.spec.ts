@@ -1,7 +1,5 @@
 import { schedule, wait } from './time'
 
-import { BASE_URL } from './../mocks'
-
 import { Page } from 'puppeteer'
 import { abort } from './abort'
 import { createAbortLineSignal } from '../helpers/abort'
@@ -23,11 +21,21 @@ const dateNowStub = jest.fn(() => nowStart);
 global.Date.now = dateNowStub;
 
 // date testing
-const twoHoursInMilliSeconds = 2 * 60 * 60 * 1000;
+const hoursToMilliSeconds = (hours: number) => hours * 60 * 60 * 1000;
+const twoHoursInMilliSeconds = hoursToMilliSeconds(2)
+const fourHoursInMilliSeconds = hoursToMilliSeconds(4)
+const sixHoursInMilliSeconds = hoursToMilliSeconds(6)
+
 const futureDate = new Date(nowStart)
 futureDate.setTime(futureDate.getTime() + twoHoursInMilliSeconds) // 2 hours into the future
 const pastDate = new Date(nowStart)
 pastDate.setTime(pastDate.getTime() - twoHoursInMilliSeconds) // 2 hours into the past
+
+const futureDate2 = new Date(nowStart)
+futureDate2.setTime(futureDate2.getTime() + fourHoursInMilliSeconds) // 4 hours into the future
+
+const futureDate3 = new Date(nowStart)
+futureDate3.setTime(futureDate3.getTime() + sixHoursInMilliSeconds) // 6 hours into the future
 
 // cron schedule mocking
 let count = 0;
@@ -39,7 +47,14 @@ jest.mock('cron-schedule', () => {
     parseCronExpression: jest.fn(() => ({
       getNextDate: () => {
         count++
-        return futureDate // todo dynamically return incrementing (future) dates on each new call
+        if (count === 2) {
+          return futureDate2
+        }
+        if (count === 3) {
+          return futureDate3
+        }
+
+        return futureDate
       }
     }))
   }
@@ -115,16 +130,21 @@ describe('[Botmation] actions/time', () => {
     expect(resultCron).toEqual('we were aborted')
 
     expect(mockSleepHelper).toHaveBeenNthCalledWith(4, twoHoursInMilliSeconds)
-    expect(mockSleepHelper).toHaveBeenNthCalledWith(5, twoHoursInMilliSeconds)
-    expect(mockSleepHelper).toHaveBeenNthCalledWith(6, twoHoursInMilliSeconds)
+    expect(mockSleepHelper).toHaveBeenNthCalledWith(5, fourHoursInMilliSeconds)
+    expect(mockSleepHelper).toHaveBeenNthCalledWith(6, sixHoursInMilliSeconds)
     expect(mockSleepHelper).toHaveBeenCalledTimes(6)
 
     expect(action1).toHaveBeenCalledTimes(5)
     expect(actionFinal).toHaveBeenCalledTimes(4)
-
-    // todo test we get abortline signal if 3+ assembledLines ?
   })
 
+  it('schedule() should return correct AbortLineSignal when aborted from cronjob interval scheduling with assembledLines 3 or more', async() => {
+    const dynamicAbort = async() => createAbortLineSignal(5, 'we got more to abort, keep going')
+
+    const resultCron = await schedule('* * * * *')(action1, actionFinal, dynamicAbort)(mockPage)
+
+    expect(resultCron).toEqual(createAbortLineSignal(3, 'we got more to abort, keep going'))
+  })
 
   // clean up
   afterAll(() => {

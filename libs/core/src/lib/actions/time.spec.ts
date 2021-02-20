@@ -6,12 +6,40 @@ import { Page } from 'puppeteer'
 import { abort } from './abort'
 import { createAbortLineSignal } from '../helpers/abort'
 
+// helper sleep mocking
 jest.mock('../helpers/time', () => {
   const originalModule = jest.requireActual('../helpers/time')
 
   return {
     ...originalModule,
     sleep: jest.fn(() => Promise.resolve()),
+  }
+})
+
+// Date stubbing
+const realDateNow = Date.now.bind(global.Date);
+const nowStart = realDateNow()
+const dateNowStub = jest.fn(() => nowStart);
+global.Date.now = dateNowStub;
+
+// date testing
+const twoHoursInMilliSeconds = 2 * 60 * 60 * 1000;
+const futureDate = new Date(nowStart)
+futureDate.setTime(futureDate.getTime() + twoHoursInMilliSeconds) // 2 hours into the future
+
+// cron schedule mocking
+let count = 0;
+jest.mock('cron-schedule', () => {
+  const originalModule = jest.requireActual('cron-schedule')
+
+  return {
+    ...originalModule,
+    parseCronExpression: jest.fn(() => ({
+      getNextDate: () => {
+        count++
+        return futureDate // todo dynamically return incrementing (future) dates on each new call
+      }
+    }))
   }
 })
 
@@ -23,17 +51,6 @@ describe('[Botmation] actions/time', () => {
   let mockPage: Page
 
   const mockSleepHelper = require('../helpers/time').sleep
-
-  // Date stubbing
-  const realDateNow = Date.now.bind(global.Date);
-  const nowStart = realDateNow()
-  const dateNowStub = jest.fn(() => nowStart);
-  global.Date.now = dateNowStub;
-
-  // date testing
-  const twoHoursInMilliSeconds = 2 * 60 * 60 * 1000;
-  const futureDate = new Date(nowStart)
-  futureDate.setTime(futureDate.getTime() + twoHoursInMilliSeconds) // 2 hours into the future
 
   // action stubbing
   const action1 = jest.fn(async() => Promise.resolve())
@@ -52,7 +69,7 @@ describe('[Botmation] actions/time', () => {
   })
 
   //
-  // schedule()
+  // schedule() - 1 time event
   it('schedule() should call sleep() with the correct value then run the actions to return the final value', async() => {
     const result1 = await schedule(futureDate)(action1, actionFinal)(mockPage)
 
@@ -71,12 +88,36 @@ describe('[Botmation] actions/time', () => {
     expect(result2).toEqual(createAbortLineSignal(1, 'test52'))
   })
 
-  // todo test the cronjob scheduling & aborting
+  // todo test if input Date is in the past, actions should not run or sleep
+
+  //
+  // schedule() = interval between events
+  it('schedule() should call with correct time until aborted with 2 assembledLines or more', async() => {
+    const dynamicAbort = async() => {
+      if (count > 2) {
+        return createAbortLineSignal(2, 'we were aborted')
+      }
+    }
+    const resultCron = await schedule('* * * * *')(action1, actionFinal, dynamicAbort)(mockPage)
+
+    expect(resultCron).toEqual('we were aborted')
+
+    expect(mockSleepHelper).toHaveBeenNthCalledWith(4, twoHoursInMilliSeconds)
+    expect(mockSleepHelper).toHaveBeenNthCalledWith(5, twoHoursInMilliSeconds)
+    expect(mockSleepHelper).toHaveBeenNthCalledWith(6, twoHoursInMilliSeconds)
+    expect(mockSleepHelper).toHaveBeenCalledTimes(6)
+
+    expect(action1).toHaveBeenCalledTimes(5)
+    expect(actionFinal).toHaveBeenCalledTimes(4)
+
+    // todo test we get abortline signal if 3+ assembledLines ?
+  })
 
 
   // clean up
-  afterAll(async() => {
+  afterAll(() => {
     jest.unmock('../helpers/time')
+    jest.unmock('cron-schedule')
     global.Date.now = realDateNow
   })
 })

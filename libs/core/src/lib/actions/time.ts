@@ -17,8 +17,10 @@ export const wait = (milliseconds: number): BotAction => async() => {
 /**
  *
  * @param schedule string|Date
- *          string needs to a be a cronjob string, see https://crontab.guru/ which sets an interval
- *          Date sets a one time event therefore NOT an interval
+ *          string sets a schedule on a repeating interval
+ *             - needs to a be a cronjob string, ie https://crontab.guru/
+ *             - actions scheduled should have some kind of abort() logic (ie after X date, abort the sequence)
+ *          Date sets a one time scheduled event
  *
  * @example    errors('catching errors in case cronjob gets misparsed')(
  *                schedule('* * * * *')(
@@ -34,7 +36,7 @@ export const schedule =
   (schedule: string|Date) =>
     (...actions: BotAction<any>[]): BotAction<any> =>
       async(page, ...injects) => {
-        let returnValue, timeUntilScheduleInMilliSeconds;
+        let timeUntilScheduleInMilliSeconds
         if (isDate(schedule)) {
           timeUntilScheduleInMilliSeconds = schedule.getTime() - Date.now()
           if (timeUntilScheduleInMilliSeconds > 0) {
@@ -49,7 +51,7 @@ export const schedule =
             timeUntilScheduleInMilliSeconds = cron.getNextDate(new Date(Date.now())).getTime() - Date.now()
             await sleep(timeUntilScheduleInMilliSeconds)
 
-            returnValue = await pipe()(...actions)(page, ...injects)
+            const returnValue = await pipe()(...actions)(page, ...injects)
 
             if (isAbortLineSignal(returnValue)) {
               return processAbortLineSignal(returnValue)

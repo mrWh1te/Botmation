@@ -27,6 +27,6 @@ export const errors =
           console.error(error)
           console.log('\n') // space between this message block and the next
 
-          // @TODO future is it possible to return something if we're in a pipe like an error flag? That way something next in the pipe can react to the error, for such use-cases?
+          // todo future is it possible to return something if we're in a pipe like an error flag? That way something next in the pipe can react to the error, for such use-cases?
         }
       }

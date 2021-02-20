@@ -71,9 +71,11 @@ export const schedule =
             if (isAbortLineSignal(returnValue)) {
               return processAbortLineSignal(returnValue)
             }
+
+            return returnValue
           }
         } else {
-          const cron = parseCronExpression(schedule)
+          const cron = parseCronExpression(schedule) // throws an error if it doesnt parse
 
           while(true) {
             timeUntilScheduleInMilliSeconds = cron.getNextDate(new Date()).getTime() - new Date().getTime()

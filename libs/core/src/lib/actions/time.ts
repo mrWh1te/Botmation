@@ -18,7 +18,7 @@ export const wait = (milliseconds: number): BotAction => async() => {
  *
  * @param schedule string|Date
  *          string sets a schedule on a repeating interval
- *             - needs to a be a cronjob string, ie https://crontab.guru/
+ *             - needs to a be a cron schedule expression, see https://crontab.guru/
  *             - actions scheduled should have some kind of abort() logic (ie after X date, abort the sequence)
  *          Date sets a one time scheduled event
  *

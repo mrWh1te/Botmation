@@ -88,7 +88,7 @@ describe('[Botmation] actions/loops', () => {
     )(mockPage)
 
     expect(mocklogWarning).toHaveBeenCalledTimes(1)
-    expect(mocklogWarning).toHaveBeenNthCalledWith(1, 'Utilities forAll() missing collection')
+    expect(mocklogWarning).toHaveBeenNthCalledWith(1, 'Loops forAll() missing collection')
     expect(mockPage.url).toHaveBeenCalledTimes(0)
     expect(mockPage.goto).toHaveBeenCalledTimes(0)
 

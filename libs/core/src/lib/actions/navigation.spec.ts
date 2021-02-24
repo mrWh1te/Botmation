@@ -1,4 +1,4 @@
-import { goTo, waitForNavigation, goBack, goForward, reload, wait, scrollTo } from './navigation'
+import { goTo, waitForNavigation, goBack, goForward, reload, scrollTo } from './navigation'
 import { enrichGoToPageOptions } from './../helpers/navigation'
 import { click } from './input'
 
@@ -12,8 +12,16 @@ jest.mock('../helpers/navigation', () => {
 
   return {
     ...originalModule,
-    sleep: jest.fn(() => Promise.resolve()),
     scrollToElement: jest.fn(() => {})
+  }
+})
+
+jest.mock('../helpers/time', () => {
+  const originalModule = jest.requireActual('../helpers/time')
+
+  return {
+    ...originalModule,
+    sleep: jest.fn(() => Promise.resolve()),
   }
 })
 
@@ -40,16 +48,6 @@ describe('[Botmation] actions/navigation', () => {
         return Promise.resolve()
       })
     } as any as Page
-  })
-
-  //
-  // sleep() Integration Test
-  it('should call setTimeout with the correct values', async() => {
-    await wait(5003234)(mockPage)
-
-    const mockSleepHelper = require('../helpers/navigation').sleep
-
-    expect(mockSleepHelper).toHaveBeenNthCalledWith(1, 5003234)
   })
 
   //
@@ -100,17 +98,20 @@ describe('[Botmation] actions/navigation', () => {
     await scrollTo('some-element-far-away')(mockPage)
 
     const {
-      scrollToElement: mockScrollToElement,
-      sleep: mockSleep
+      scrollToElement: mockScrollToElement
     } = require('../helpers/navigation')
 
+    const {
+      sleep: mockSleep
+    } = require('../helpers/time')
+
     expect(mockScrollToElement).toHaveBeenNthCalledWith(1, 'some-element-far-away')
-    expect(mockSleep).toHaveBeenNthCalledWith(2, 2500)
+    expect(mockSleep).toHaveBeenNthCalledWith(1, 2500)
 
     await scrollTo('some-element-far-far-away', 5000)(mockPage)
 
     expect(mockScrollToElement).toHaveBeenNthCalledWith(2, 'some-element-far-far-away')
-    expect(mockSleep).toHaveBeenNthCalledWith(3, 5000)
+    expect(mockSleep).toHaveBeenNthCalledWith(2, 5000)
   })
 
   //
@@ -140,5 +141,6 @@ describe('[Botmation] actions/navigation', () => {
   // clean up
   afterAll(async() => {
     jest.unmock('../helpers/navigation')
+    jest.unmock('../helpers/time')
   })
 })

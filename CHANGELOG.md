@@ -1,3 +1,7 @@
+## v1.1.0 @botmation/core
+
+New `schedule()` BotAction, reorganization of BotAction groups (Utilities => Time, Loops, Branching) and minor performance improvement of a few core BotActions.
+
 ## [v1.0.0](https://github.com/mrWh1te/Botmation/releases/tag/1.0.0) @botmation/*
 
 This release includes a repo refactor, to rely on the amazing [Nx](https://nx.dev) tool to manage the "neighborhood" of applications ("houses") and libraries ("house parts") that Botmation consists of. With this, a new [@botmation](https://www.npmjs.com/org/botmation) organization has been filed with the npm registry and the following packages have been released:

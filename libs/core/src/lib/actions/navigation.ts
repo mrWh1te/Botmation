@@ -1,9 +1,10 @@
 import { WaitForOptions } from 'puppeteer'
 
 import { BotAction } from '../interfaces/bot-actions'
-import { enrichGoToPageOptions, sleep, scrollToElement } from '../helpers/navigation'
+import { enrichGoToPageOptions, scrollToElement } from '../helpers/navigation'
 import { chain } from './assembly-lines'
 import { evaluate } from './scrapers'
+import { wait } from './time'
 
 /**
  * @description   Go to url provided in the current page
@@ -56,14 +57,6 @@ export const reload = (options?: WaitForOptions): BotAction =>
  */
 export const waitForNavigation: BotAction = async(page) => {
   await page.waitForNavigation()
-}
-
-/**
- * @description   Pauses the runner (chain or pipe) for the provided milliseconds before continuing to the next BotAction
- * @param milliseconds
- */
-export const wait = (milliseconds: number): BotAction => async() => {
-  await sleep(milliseconds)
 }
 
 /**

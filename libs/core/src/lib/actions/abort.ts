@@ -38,33 +38,32 @@ export const recycle = (minimumAssembledLines: number = 1) =>
     async(page, ...injects) => {
       let pipeObject: Pipe = createEmptyPipe()
 
-      // in case we are used in a chain, injects won't have a pipe at the end
       if (injectsHavePipe(injects)) {
         pipeObject = getInjectsPipeOrEmptyPipe(injects)
         injects = injects.slice(0, injects.length - 1)
       }
 
-      let runActions: boolean
+      let recycleActions: boolean
       do {
-        runActions = false;
+        recycleActions = false;
 
-        // pipe's are closed chain-links, so nothing pipeable comes in, so data is grabbed in a pipe and shared down stream a pipe, and returns
         for(const action of actions) {
-          const nextPipeValueOrUndefined: AbortLineSignal|PipeValue|void = await action(page, ...injects, pipeObject)
+          const nextPipeValueOrUndefined: AbortLineSignal|PipeValue|undefined = await action(page, ...injects, pipeObject)
 
           if (isAbortLineSignal(nextPipeValueOrUndefined)) {
-            if (minimumAssembledLines >= nextPipeValueOrUndefined.assembledLines) {
-              runActions = true;
+            // todo handle infinite 0 case
+            if (nextPipeValueOrUndefined.assembledLines >= minimumAssembledLines) {
+              recycleActions = true;
               break;
             } else {
+              // abort the recycle
               return processAbortLineSignal(nextPipeValueOrUndefined)
             }
           }
 
-          // Bot Actions return the value removed from the pipe, and BotActionsPipe wraps it for injecting
-          pipeObject = wrapValueInPipe(nextPipeValueOrUndefined as PipeValue|undefined)
+          pipeObject = wrapValueInPipe(nextPipeValueOrUndefined)
         }
-      } while(runActions)
+      } while(recycleActions)
 
       return pipeObject.value
     }

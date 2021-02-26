@@ -33,7 +33,7 @@ export const abortPipe = (value: CaseValue, abortPipeValue: PipeValue = undefine
  * If an assembled BotAction returns an AbortLineSignal, instead of just aborting the line, recycle will catch the AbortLineSignal then restart the actions
  * @param minimumAssembledLines require a minimum `assembledLines` number in the AbortLineSignal to recycle otherwise abort regularly
  */
-export const recycle = (minimumAssembledLines: number = 1) =>
+export const recycle = (minimumAssembledLines: number = 1, useThisActionsPipeValueOnRecycle?: BotAction<any>) =>
   (...actions: BotAction<any>[]): BotAction<any> =>
     async(page, ...injects) => {
       let pipeObject: Pipe = createEmptyPipe()
@@ -45,6 +45,10 @@ export const recycle = (minimumAssembledLines: number = 1) =>
 
       let recycleActions: boolean
       do {
+        if (recycleActions && useThisActionsPipeValueOnRecycle) {
+          pipeObject = wrapValueInPipe(await useThisActionsPipeValueOnRecycle(page, ...injects, pipeObject))
+        }
+
         recycleActions = false;
 
         for(const action of actions) {
@@ -55,6 +59,7 @@ export const recycle = (minimumAssembledLines: number = 1) =>
             // infinite edge case: aborts recycle() UNLESS minimumAssembledLines is set to 0
             if (nextPipeValueOrUndefined.assembledLines >= minimumAssembledLines || minimumAssembledLines === 0) {
               recycleActions = true;
+              pipeObject = wrapValueInPipe(nextPipeValueOrUndefined)
               break;
             } else {
               // abort the recycle

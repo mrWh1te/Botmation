@@ -33,7 +33,7 @@ export const abortPipe = (value: CaseValue, abortPipeValue: PipeValue = undefine
  * If an assembled BotAction returns an AbortLineSignal, instead of just aborting the line, recycle will catch the AbortLineSignal then restart the actions
  * @param minimumAssembledLines require a minimum `assembledLines` number in the AbortLineSignal to recycle otherwise abort regularly
  */
-export const recycle = (minimumAssembledLines: number = 1, useThisActionsPipeValueOnRecycle?: BotAction<any>) =>
+export const recycle = (minimumAssembledLines: number = 1, getPipeValueFromOnRecycle?: BotAction<any>) =>
   (...actions: BotAction<any>[]): BotAction<any> =>
     async(page, ...injects) => {
       let pipeObject: Pipe = createEmptyPipe()
@@ -45,8 +45,8 @@ export const recycle = (minimumAssembledLines: number = 1, useThisActionsPipeVal
 
       let recycleActions: boolean
       do {
-        if (recycleActions && useThisActionsPipeValueOnRecycle) {
-          pipeObject = wrapValueInPipe(await useThisActionsPipeValueOnRecycle(page, ...injects, pipeObject))
+        if (recycleActions && getPipeValueFromOnRecycle) {
+          pipeObject = wrapValueInPipe(await getPipeValueFromOnRecycle(page, ...injects, pipeObject))
         }
 
         recycleActions = false;
@@ -59,7 +59,12 @@ export const recycle = (minimumAssembledLines: number = 1, useThisActionsPipeVal
             // infinite edge case: aborts recycle() UNLESS minimumAssembledLines is set to 0
             if (nextPipeValueOrUndefined.assembledLines >= minimumAssembledLines || minimumAssembledLines === 0) {
               recycleActions = true;
-              pipeObject = wrapValueInPipe(nextPipeValueOrUndefined)
+              if (getPipeValueFromOnRecycle) {
+                // if we are going to change the pipe value for next iteration of actions
+                // lets pipe in the processed abort line signal, in case its pipeValue has something useful
+                // for `getPipeValueFromOnRecycle` BotAction to check or return forward unto the recycled actions
+                pipeObject = wrapValueInPipe(processAbortLineSignal(nextPipeValueOrUndefined)) // processed abort line signal as
+              }
               break;
             } else {
               // abort the recycle

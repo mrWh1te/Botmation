@@ -107,4 +107,4 @@ import { chain, goTo, screenshot } from '@botmation/core'
  - [scrapers](https://www.botmation.dev/api/scrapers)
     - scrape HTML documents with an HTML parser and evaluate JavaScript inside a Page
  - [time](https://www.botmation.dev/api/time)
-    - time based operations i.e. scheduling4
+    - time based operations i.e. scheduling

@@ -1,6 +1,6 @@
 {
   "name": "@botmation/core",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "description": "Main package of functions for the TypeScript framework Botmation",
   "homepage": "https://botmation.dev",
   "author": "Michael Lage",
@@ -23,7 +23,7 @@
     "url": "https://github.com/mrWh1te/Botmation.git"
   },
   "peerDependencies": {
-    "puppeteer": "^7.1.0"
+    "puppeteer": "^8.0.0"
   },
   "dependencies": {
     "tslib": "^2.1.0"

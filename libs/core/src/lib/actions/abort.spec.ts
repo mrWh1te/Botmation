@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 
-import { abort, abortPipe, recycle } from './abort'
+import { abort, abortPipe, restart } from './abort'
 import { createCasesSignal } from './../helpers/cases'
 import { createEmptyPipe, wrapValueInPipe } from './../helpers/pipe'
 import { createAbortLineSignal } from '../helpers/abort'
@@ -60,8 +60,8 @@ describe('[Botmation] actions/abort', () => {
   })
 
   //
-  // recycle
-  it('recycle() should rerun actions once if assembled botactions returns an AbortLineSignal once with assembledLines of 1', async() => {
+  // restart
+  it('restart() should rerun actions once if assembled botactions returns an AbortLineSignal once with assembledLines of 1', async() => {
     let abortCount = 0;
     const dynamicAbort = async() => {
       abortCount++;
@@ -72,7 +72,7 @@ describe('[Botmation] actions/abort', () => {
     const mockAction = jest.fn(async(p, { value }) => Promise.resolve(value))
     const mockActionReturnsValue = jest.fn(async() => Promise.resolve(42)) // 42 is the answer
 
-    const result = await recycle(mockAction, dynamicAbort, mockActionReturnsValue, mockAction)(mockPage, wrapValueInPipe('start'))
+    const result = await restart(mockAction, dynamicAbort, mockActionReturnsValue, mockAction)(mockPage, wrapValueInPipe('start'))
 
     expect(mockAction).toHaveBeenNthCalledWith(1, mockPage, wrapValueInPipe('start'))
     expect(mockAction).toHaveBeenNthCalledWith(2, mockPage, wrapValueInPipe('we need to retry these actions with this initial pipe value instead'))
@@ -82,20 +82,19 @@ describe('[Botmation] actions/abort', () => {
     expect(result).toEqual(42)
   })
 
-  it('recycle() should not rerun actions, but abort when a AbortLineSignal\'s assembledLines is 2 or greater', async() => {
+  it('restart() should not rerun actions, but abort when a AbortLineSignal\'s assembledLines is 2 or greater', async() => {
     const minimumAbort = async() => createAbortLineSignal(2, 'minimum to fully abort')
     const infiniteAbort = async() => createAbortLineSignal(0, 'infinity abort')
     const highCountAbort = async() => createAbortLineSignal(542, 'big number')
 
-    const result1 = await recycle(minimumAbort)(mockPage)
-    const result2 = await recycle(infiniteAbort)(mockPage)
-    const result3 = await recycle(highCountAbort)(mockPage)
+    const result1 = await restart(minimumAbort)(mockPage)
+    const result2 = await restart(infiniteAbort)(mockPage)
+    const result3 = await restart(highCountAbort)(mockPage)
 
     expect(result1).toEqual('minimum to fully abort')
     expect(result2).toEqual(createAbortLineSignal(0, 'infinity abort'))
     expect(result3).toEqual(createAbortLineSignal(540, 'big number'))
   })
-
 
   // Clean up
   afterAll(async() => {

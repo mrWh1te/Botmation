@@ -4,7 +4,6 @@ import { PipeValue } from "../types/pipe-value"
 import { createAbortLineSignal, processAbortLineSignal } from "../helpers/abort"
 import { pipeCase } from "./pipe"
 import { CasesSignal, CaseValue } from "../types/cases"
-import { pipe } from "./assembly-lines"
 import { createEmptyPipe, getInjectsPipeOrEmptyPipe, injectsHavePipe, wrapValueInPipe } from "../helpers/pipe"
 
 /**
@@ -30,9 +29,10 @@ export const abortPipe = (value: CaseValue, abortPipeValue: PipeValue = undefine
   ) // returns AbortLineSignal(1, abortPipeValue?) if value(pipeValue) is truthy || value === pipeValue
 
 /**
- * If an assembled BotAction returns an AbortLineSignal, instead of just aborting the line, recycle will catch the AbortLineSignal then restart the actions
+ * Similar to Pipe, except a default abort() with assembledLines = 1 will abort the pipe AND restart it with the abort line signal's pipe value injected
+ * @param actions
  */
-export const recycle = (...actions: BotAction<any>[]): BotAction<any> =>
+export const restart = (...actions: BotAction<any>[]): BotAction<any> =>
   async(page, ...injects) => {
     let pipeObject: Pipe = createEmptyPipe()
 
@@ -41,10 +41,10 @@ export const recycle = (...actions: BotAction<any>[]): BotAction<any> =>
       injects = injects.slice(0, injects.length - 1)
     }
 
-    let recycleActions: boolean
+    let restartActions: boolean
     let actionResult: AbortLineSignal|PipeValue|undefined
     do {
-      recycleActions = false;
+      restartActions = false;
 
       for(const action of actions) {
         // manually resolving actions in a Pipe instead of using pipe()() to control the AbortLineSignal processing
@@ -58,7 +58,7 @@ export const recycle = (...actions: BotAction<any>[]): BotAction<any> =>
           if (actionResult.assembledLines > 1 || actionResult.assembledLines === 0) {
             return processAbortLineSignal(actionResult, 2) // abort the line and abort recycle()
           } else {
-            recycleActions = true;
+            restartActions = true;
             pipeObject = wrapValueInPipe(actionResult.pipeValue)
             break;
           }
@@ -66,10 +66,7 @@ export const recycle = (...actions: BotAction<any>[]): BotAction<any> =>
 
         pipeObject = wrapValueInPipe(actionResult)
       }
-    } while(recycleActions)
+    } while(restartActions)
 
-    // todo return what? number of times actions recycled, could state()() be used instead?
-    // could write a BotAction that appears after abort() (runs if not aborted) that updates state for keeping track count of recycles
-    //    in this example, state()() would wrap recycle()() which would wrap the BotActions including the one interacting with the State injectable
     return actionResult
   }

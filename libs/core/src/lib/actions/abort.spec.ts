@@ -3,7 +3,6 @@ import { Page } from 'puppeteer'
 import { abort, abortPipe, restart } from './abort'
 import { createCasesSignal } from './../helpers/cases'
 import { createEmptyPipe, wrapValueInPipe } from './../helpers/pipe'
-import { createAbortLineSignal } from '../helpers/abort'
 
 jest.mock('../helpers/abort', () => {
   // Require the original module to not be mocked...
@@ -62,6 +61,8 @@ describe('[Botmation] actions/abort', () => {
   //
   // restart
   it('restart() should rerun actions once if assembled botactions returns an AbortLineSignal once with assembledLines of 1', async() => {
+    const {createAbortLineSignal} = jest.requireActual('../helpers/abort')
+
     let abortCount = 0;
     const dynamicAbort = async() => {
       abortCount++;
@@ -83,6 +84,8 @@ describe('[Botmation] actions/abort', () => {
   })
 
   it('restart() should not rerun actions, but abort when a AbortLineSignal\'s assembledLines is 2 or greater', async() => {
+    const {createAbortLineSignal} = jest.requireActual('../helpers/abort')
+
     const minimumAbort = async() => createAbortLineSignal(2, 'minimum to fully abort')
     const infiniteAbort = async() => createAbortLineSignal(0, 'infinity abort')
     const highCountAbort = async() => createAbortLineSignal(542, 'big number')

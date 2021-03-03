@@ -31,50 +31,45 @@ export const abortPipe = (value: CaseValue, abortPipeValue: PipeValue = undefine
 
 /**
  * If an assembled BotAction returns an AbortLineSignal, instead of just aborting the line, recycle will catch the AbortLineSignal then restart the actions
- * @param minimumAssembledLines require a minimum `assembledLines` number in the AbortLineSignal to recycle otherwise abort regularly
  */
-export const recycle = (minimumAssembledLines: number = 1, getPipeValueFromOnRecycle?: BotAction<any>) =>
-  (...actions: BotAction<any>[]): BotAction<any> =>
-    async(page, ...injects) => {
-      let pipeObject: Pipe = createEmptyPipe()
+export const recycle = (...actions: BotAction<any>[]): BotAction<any> =>
+  async(page, ...injects) => {
+    let pipeObject: Pipe = createEmptyPipe()
 
-      if (injectsHavePipe(injects)) {
-        pipeObject = getInjectsPipeOrEmptyPipe(injects)
-        injects = injects.slice(0, injects.length - 1)
-      }
-
-      let recycleActions: boolean
-      do {
-        if (recycleActions && getPipeValueFromOnRecycle) {
-          pipeObject = wrapValueInPipe(await getPipeValueFromOnRecycle(page, ...injects, pipeObject))
-        }
-
-        recycleActions = false;
-
-        for(const action of actions) {
-          // manually resolving actions in a Pipe instead of using pipe()() to control the AbortLineSignal processing
-          const nextPipeValueOrUndefined: AbortLineSignal|PipeValue|undefined = await action(page, ...injects, pipeObject)
-
-          if (isAbortLineSignal(nextPipeValueOrUndefined)) {
-            // infinite edge case: aborts recycle() UNLESS minimumAssembledLines is set to 0
-            if (nextPipeValueOrUndefined.assembledLines >= minimumAssembledLines || minimumAssembledLines === 0) {
-              recycleActions = true;
-              if (getPipeValueFromOnRecycle) {
-                // if we are going to change the pipe value for next iteration of actions
-                // lets pipe in the processed abort line signal, in case its pipeValue has something useful
-                // for `getPipeValueFromOnRecycle` BotAction to check or return forward unto the recycled actions
-                pipeObject = wrapValueInPipe(processAbortLineSignal(nextPipeValueOrUndefined)) // processed abort line signal as
-              }
-              break;
-            } else {
-              // abort the recycle
-              return processAbortLineSignal(nextPipeValueOrUndefined)
-            }
-          }
-
-          pipeObject = wrapValueInPipe(nextPipeValueOrUndefined)
-        }
-      } while(recycleActions)
-
-      return pipeObject.value
+    if (injectsHavePipe(injects)) {
+      pipeObject = getInjectsPipeOrEmptyPipe(injects)
+      injects = injects.slice(0, injects.length - 1)
     }
+
+    let recycleActions: boolean
+    let actionResult: AbortLineSignal|PipeValue|undefined
+    do {
+      recycleActions = false;
+
+      for(const action of actions) {
+        // manually resolving actions in a Pipe instead of using pipe()() to control the AbortLineSignal processing
+        actionResult = await action(page, ...injects, pipeObject)
+
+        // unique recycle aborting behavior
+        if (isAbortLineSignal(actionResult)) {
+          // cannot recycle an infinity abort, if desirable, create another BotAction - maybe with a customizing HO function
+          // assembledLines 1 => recycle actions
+          // assembledLines 0 or 2+ => abort recycle
+          if (actionResult.assembledLines > 1 || actionResult.assembledLines === 0) {
+            return processAbortLineSignal(actionResult, 2) // abort the line and abort recycle()
+          } else {
+            recycleActions = true;
+            pipeObject = wrapValueInPipe(actionResult.pipeValue)
+            break;
+          }
+        }
+
+        pipeObject = wrapValueInPipe(actionResult)
+      }
+    } while(recycleActions)
+
+    // todo return what? number of times actions recycled, could state()() be used instead?
+    // could write a BotAction that appears after abort() (runs if not aborted) that updates state for keeping track count of recycles
+    //    in this example, state()() would wrap recycle()() which would wrap the BotActions including the one interacting with the State injectable
+    return actionResult
+  }

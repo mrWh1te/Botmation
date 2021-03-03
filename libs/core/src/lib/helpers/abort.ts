@@ -2,10 +2,10 @@ import { PipeValue } from "../types/pipe-value"
 import { AbortLineSignal } from "../types/abort-line-signal"
 
 /**
- * 
+ *
  * @param assembledLines 0 means all lines of assembly, 1 is just the current assembled line, and a positive number represents the exact number of lines to abort (going up from current line as 1)
  *                       The absolute value of assembledLines is used so negative numbers are flipped to their corresponding positives
- * @param pipeValue 
+ * @param pipeValue
  */
 export const createAbortLineSignal = (assembledLines = 1, pipeValue?: PipeValue): AbortLineSignal => ({
   brand: 'Abort_Signal',
@@ -15,7 +15,7 @@ export const createAbortLineSignal = (assembledLines = 1, pipeValue?: PipeValue)
 
 /**
  * Process an AbortLineSignal object returned from a BotAction
- *  Default is for 1 assembled line (level deep) but can be overriden with reduceAssembledLinesBy for 
+ *  Default is for 1 assembled line (level deep) but can be overriden with reduceAssembledLinesBy for
  * @param abortLineSignal signal to process for default one assembled line
  * @param reduceAssembledLinesBy positive number to reduce the AbortLineSignal's assembledLines by (should be 1)
  */
@@ -26,7 +26,7 @@ export const processAbortLineSignal = (abortLineSignal: AbortLineSignal, reduceA
     case 1:
       return abortLineSignal.pipeValue
     default:
-      if (abortLineSignal.assembledLines < reduceAssembledLinesBy) {
+      if (abortLineSignal.assembledLines <= reduceAssembledLinesBy) {
         return abortLineSignal.pipeValue
       } else {
         return createAbortLineSignal(abortLineSignal.assembledLines - reduceAssembledLinesBy, abortLineSignal.pipeValue)

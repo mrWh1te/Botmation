@@ -1,6 +1,6 @@
 {
   "name": "@botmation/core",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Main package of functions for the TypeScript framework Botmation",
   "homepage": "https://botmation.dev",
   "author": "Michael Lage",

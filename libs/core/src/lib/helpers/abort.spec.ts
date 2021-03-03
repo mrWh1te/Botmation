@@ -67,6 +67,14 @@ describe('[Botmation] helpers/abort', () => {
     const abortLineSignalMultiFewReduceMultiMoreNoPipe = createAbortLineSignal(3)
     expect(processAbortLineSignal(abortLineSignalMultiFewReduceMultiMoreNoPipe, 8))
       .toBeUndefined() // return pipeValue when negative so if no pipeValue then undefined
+
+    const processAbortLineSignalByFive = createAbortLineSignal(9999, 'the sky is blue')
+    expect(processAbortLineSignal(processAbortLineSignalByFive, 5))
+      .toEqual({brand: 'Abort_Signal', assembledLines: 9994, pipeValue: 'the sky is blue'})
+
+    const processAbortLineSignalByTwo = createAbortLineSignal(2, 'the sky is blue')
+    expect(processAbortLineSignal(processAbortLineSignalByTwo, 2))
+      .toEqual('the sky is blue')
   })
 
 })

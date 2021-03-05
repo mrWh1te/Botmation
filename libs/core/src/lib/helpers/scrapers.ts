@@ -12,7 +12,7 @@ export const getElementOuterHTML = (htmlSelector: string): string|undefined =>
  */
 /* istanbul ignore next */
 export const getElementsOuterHTML = (htmlSelector: string): string[] =>
-  Array.from(document.querySelectorAll(htmlSelector)).map(el => el.outerHTML)
+  Array.from(document.querySelectorAll(htmlSelector)).map(el => el?.outerHTML)
 
 /**
  *

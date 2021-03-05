@@ -89,8 +89,7 @@ export const $$ = <R = CheerioStatic[]>(htmlSelector: string, higherOrderHTMLPar
     }
 
     const scrapedHTMLs = await page.evaluate(getElementsOuterHTML, htmlSelector)
-
-    const cheerioEls: CheerioStatic[] = scrapedHTMLs.map(scrapedHTML => parser(scrapedHTML))
+    const cheerioEls: CheerioStatic[] = scrapedHTMLs.map(scrapedHTML => scrapedHTML ? parser(scrapedHTML) : undefined)
 
     return cheerioEls as any as R
   }

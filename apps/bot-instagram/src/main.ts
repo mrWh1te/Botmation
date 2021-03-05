@@ -9,8 +9,7 @@ import {
   saveCookies,
   screenshot,
   logError,
-  wait,
-  waitForNavigation
+  waitForNavigation,
 } from '@botmation/core'
 
 import {
@@ -53,7 +52,7 @@ import {
 
       // lets log in, if we are a guest
       givenThat(isGuest) (
-        login({username: 'account', password: 'password'}), // <- put your username and password here
+        login({username: 'lagmahol', password: 'i4MFr33!'}), // <- put your username and password here
         files()(
           saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies
         )
@@ -73,7 +72,8 @@ import {
 
         screenshot('logged-in'),
 
-        log('view stories'),
+        log('view all stories'),
+
         viewStories
       ),
 

@@ -1,4 +1,4 @@
-import { ConditionalBotAction } from '@botmation/core'
+import { ConditionalBotAction, textExists } from '@botmation/core'
 import { BotAction } from '@botmation/core'
 
 import { chain } from '@botmation/core'
@@ -58,3 +58,19 @@ export const login = ({username, password}: {username: string, password: string}
       log('Login Complete')
     )
   )
+
+/**
+ * During initial login, in a brand new environment, Instagram might prompt the User to save their login information
+ *  This will disrupt feed access, therefore this function can be used to check if that is being presented
+ */
+export const isSaveYourLoginInfoActive: ConditionalBotAction = textExists('Save Your Login Info?')
+
+/**
+ *
+ */
+export const clickSaveYourLoginInfoYesButton: BotAction = click('main button:first-child')
+
+/**
+ *
+ */
+export const clickSaveYourLoginInfoNoButton: BotAction = click('main button:last-child')

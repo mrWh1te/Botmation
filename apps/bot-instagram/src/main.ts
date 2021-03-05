@@ -7,9 +7,9 @@ import {
   givenThat,
   loadCookies,
   saveCookies,
-  goTo,
   screenshot,
-  logError
+  logError,
+  wait
 } from '@botmation/core'
 
 import {
@@ -18,7 +18,9 @@ import {
   isLoggedIn,
   closeTurnOnNotificationsModal,
   isTurnOnNotificationsModalActive,
-  getInstagramBaseUrl
+  goToHome,
+  viewStories,
+  isSaveYourLoginInfoActive
 } from '@botmation/instagram'
 
 (async () => {
@@ -39,7 +41,7 @@ import {
         loadCookies('instagram'),
       ),
 
-      goTo(getInstagramBaseUrl()),
+      goToHome,
 
       // inline, hackish but do-able if your doing something on the fly
       //  follow the rules, don't return a value in a chain
@@ -61,6 +63,16 @@ import {
       // in case that log in failed, lets check before we operate as a logged in user
       givenThat(isLoggedIn)(
         log('is logged in'),
+
+        // givenThat(textExists('Save your login info?'))(
+
+        // ),
+        givenThat(isSaveYourLoginInfoActive)(
+          log('save your login info is active')
+        ),
+
+        wait(500000),
+
         // After initial load, Instagram sometimes prompts the User with a modal...
         // Deal with the "Turn On Notifications" Modal, if it shows up
         givenThat(isTurnOnNotificationsModalActive)(
@@ -68,6 +80,9 @@ import {
         ),
 
         screenshot('logged-in'),
+
+        log('view stories'),
+        viewStories
       ),
 
       log('Done'),

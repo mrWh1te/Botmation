@@ -39,7 +39,8 @@ export const elementExists = (elementSelector: string): ConditionalBotAction =>
  *
  * @param text
  */
-export const textExists = (text: string): ConditionalBotAction => evaluate(textExistsInDocument, text)
+export const textExists = (text: string): ConditionalBotAction =>
+  evaluate(textExistsInDocument, text)
 
 /**
  * Returns the first Element that matches the provided HTML Selector
@@ -95,9 +96,9 @@ export const $$ = <R = CheerioStatic[]>(htmlSelector: string, higherOrderHTMLPar
   }
 
 /**
- * Evaluate functions inside the `page` context
+ * Evaluate functions inside the `page` context. Run Javascript functions inside Puppeteer Pages as if copying/pasting the code in the Console then running it
  * @param functionToEvaluate
  * @param functionParams
  */
 export const evaluate = (functionToEvaluate: EvaluateFn<any>, ...functionParams: any[]): BotAction<any> =>
-  async(page) => await page.evaluate(functionToEvaluate, ...functionParams)
+  async(page) => page.evaluate(functionToEvaluate, ...functionParams)

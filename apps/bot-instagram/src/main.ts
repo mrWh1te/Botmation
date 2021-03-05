@@ -9,7 +9,8 @@ import {
   saveCookies,
   screenshot,
   logError,
-  wait
+  wait,
+  waitForNavigation
 } from '@botmation/core'
 
 import {
@@ -20,7 +21,8 @@ import {
   isTurnOnNotificationsModalActive,
   goToHome,
   viewStories,
-  isSaveYourLoginInfoActive
+  isSaveYourLoginInfoActive,
+  clickSaveYourLoginInfoNoButton
 } from '@botmation/instagram'
 
 (async () => {
@@ -35,7 +37,7 @@ import {
       log('Botmation running'),
 
       // Sets up the injects for BotFileAction's (optional)
-      files({cookies_directory: 'simple'})(
+      files()(
         // Takes the name of the file to load cookies from
         // Match this value with the same used in saveCookies()
         loadCookies('instagram'),
@@ -50,30 +52,20 @@ import {
       // },
 
       // lets log in, if we are a guest
-      log('checking Guest status'),
       givenThat(isGuest) (
-        log('is guest so logging in'),
         login({username: 'account', password: 'password'}), // <- put your username and password here
-        files({cookies_directory: 'simple'})(
+        files()(
           saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies
-        ),
-        log('Saved Cookies')
+        )
       ),
 
       // in case that log in failed, lets check before we operate as a logged in user
       givenThat(isLoggedIn)(
-        log('is logged in'),
-
-        // givenThat(textExists('Save your login info?'))(
-
-        // ),
         givenThat(isSaveYourLoginInfoActive)(
-          log('save your login info is active')
+          clickSaveYourLoginInfoNoButton,
+          waitForNavigation
         ),
 
-        wait(500000),
-
-        // After initial load, Instagram sometimes prompts the User with a modal...
         // Deal with the "Turn On Notifications" Modal, if it shows up
         givenThat(isTurnOnNotificationsModalActive)(
           closeTurnOnNotificationsModal

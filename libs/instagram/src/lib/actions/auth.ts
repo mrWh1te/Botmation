@@ -1,10 +1,11 @@
-import { clickText, ConditionalBotAction, textExists } from '@botmation/core'
+import { clickText, ConditionalBotAction, pipe, textExists } from '@botmation/core'
 import { BotAction } from '@botmation/core'
 
-import { chain } from '@botmation/core'
-import { goTo, waitForNavigation, wait } from '@botmation/core'
+import { chain, errors } from '@botmation/core'
+import { goTo, reload, waitForNavigation, wait } from '@botmation/core'
+import { getCookies, deleteCookies } from '@botmation/core'
 import { click, type } from '@botmation/core'
-import { getIndexedDBValue, indexedDBStore } from '@botmation/core'
+import { getIndexedDBValue, indexedDBStore, clearAllLocalStorage } from '@botmation/core'
 import { map } from '@botmation/core'
 import { log } from '@botmation/core'
 
@@ -14,7 +15,6 @@ import {
   FORM_AUTH_PASSWORD_INPUT_SELECTOR,
   FORM_AUTH_SUBMIT_BUTTON_SELECTOR
 } from '../selectors'
-import { errors } from '@botmation/core'
 
 /**
  * @description    ConditionalBotAction that resolves TRUE if the User is NOT logged in
@@ -63,10 +63,13 @@ export const login = ({username, password}: {username: string, password: string}
  *
  * @param page
  */
-export const logout: BotAction = async(page) => {
-  // todo try deleting something from local storage/indexeddb instead of trying to click links
-  // todo after delete data, navigate/refresh home page
-}
+export const logout: BotAction = pipe()(
+  getCookies(),
+  deleteCookies(),
+  clearAllLocalStorage,
+  // todo clear all indexeddb
+  reload()
+)
 
 /**
  * During initial login, in a brand new environment, Instagram might prompt the User to save their login information

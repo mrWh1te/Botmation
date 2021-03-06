@@ -10,6 +10,7 @@ import {
   screenshot,
   logError,
   waitForNavigation,
+  wait,
 } from '@botmation/core'
 
 import {
@@ -21,7 +22,8 @@ import {
   goToHome,
   viewStories,
   isSaveYourLoginInfoActive,
-  clickSaveYourLoginInfoNoButton
+  clickSaveYourLoginInfoNoButton,
+  logout
 } from '@botmation/instagram'
 
 (async () => {
@@ -72,9 +74,13 @@ import {
 
         screenshot('logged-in'),
 
-        log('view all stories'),
+        // viewStories,
 
-        viewStories
+        wait(5000),
+
+        logout,
+
+        wait(5000)
       ),
 
       log('Done'),

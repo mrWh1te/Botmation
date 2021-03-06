@@ -5,7 +5,7 @@ import { chain, errors } from '@botmation/core'
 import { goTo, reload, waitForNavigation, wait } from '@botmation/core'
 import { getCookies, deleteCookies } from '@botmation/core'
 import { click, type } from '@botmation/core'
-import { getIndexedDBValue, indexedDBStore, clearAllLocalStorage } from '@botmation/core'
+import { getIndexedDBValue, indexedDBStore, deleteIndexedDB, clearAllLocalStorage } from '@botmation/core'
 import { map } from '@botmation/core'
 import { log } from '@botmation/core'
 
@@ -66,9 +66,13 @@ export const login = ({username, password}: {username: string, password: string}
 export const logout: BotAction = pipe()(
   getCookies(),
   deleteCookies(),
+  log('cookies delete'),
   clearAllLocalStorage,
-  // todo clear all indexeddb
-  reload()
+  log('clear all local storage'),
+  deleteIndexedDB('redux'), // not working
+  log('delete redux indexeddb'),
+  reload(),
+  log('reload')
 )
 
 /**

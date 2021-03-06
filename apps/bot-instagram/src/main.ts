@@ -62,9 +62,11 @@ import {
 
       // in case that log in failed, lets check before we operate as a logged in user
       givenThat(isLoggedIn)(
+
         givenThat(isSaveYourLoginInfoActive)(
           clickSaveYourLoginInfoNoButton,
-          waitForNavigation
+          waitForNavigation,
+          log('save ur login info closed')
         ),
 
         // Deal with the "Turn On Notifications" Modal, if it shows up
@@ -75,12 +77,15 @@ import {
         screenshot('logged-in'),
 
         // viewStories,
+        log('screenshot taken'),
 
         wait(5000),
 
         logout,
 
-        wait(5000)
+        log('logout complete'),
+
+        wait(15000)
       ),
 
       log('Done'),

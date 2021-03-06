@@ -3,25 +3,44 @@
 //
 
 /**
+ *
+ * @param databaseName
+ */
+export function deleteIndexedDBDatabase(databaseName: string) {
+  return new Promise<void>((resolve, reject) => {
+    const DBDeleteRequest = window.indexedDB.deleteDatabase(databaseName);
+
+    DBDeleteRequest.onerror = function(event) {
+      event.stopPropagation()
+      return reject(this.error)
+    };
+
+    DBDeleteRequest.onsuccess = function() {
+      return resolve()
+    };
+  })
+}
+
+/**
  * @description      Async function to set an IndexedDB Store value by key
- * @param databaseName 
- * @param databaseVersion 
- * @param storeName 
- * @param key 
- * @param value 
+ * @param databaseName
+ * @param databaseVersion
+ * @param storeName
+ * @param key
+ * @param value
  */
 export function setIndexedDBStoreValue(databaseName: string, databaseVersion: number, storeName: string, key: string, value: any) {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
 
     const openRequest = indexedDB.open(databaseName, databaseVersion)
 
     openRequest.onerror = function(this: IDBRequest<IDBDatabase>, ev: Event) {
       ev.stopPropagation()
-      return reject(this.error) 
+      return reject(this.error)
     }
 
     // when adding a new store, do a higher db version number to invoke this function:
-    openRequest.onupgradeneeded = function(this: IDBOpenDBRequest, ev: IDBVersionChangeEvent): any { 
+    openRequest.onupgradeneeded = function(this: IDBOpenDBRequest, ev: IDBVersionChangeEvent): any {
       /* istanbul ignore next */
       if (!this.result.objectStoreNames.contains(storeName)) {
         this.result.createObjectStore(storeName)
@@ -42,24 +61,24 @@ export function setIndexedDBStoreValue(databaseName: string, databaseVersion: nu
       } catch (error) {
         db.close()
         return reject(error)
-      } 
+      }
     }
   })
 }
 
 /**
  * @description      Async function to get an IndexedDB Store value by key
- * @param databaseName 
- * @param databaseVersion 
- * @param storeName 
- * @param key 
+ * @param databaseName
+ * @param databaseVersion
+ * @param storeName
+ * @param key
  */
 export function getIndexedDBStoreValue(databaseName: string, databaseVersion: number, storeName: string, key: string) {
   return new Promise((resolve, reject) => {
     const openRequest = indexedDB.open(databaseName, databaseVersion)
 
     openRequest.onerror = function(this: IDBRequest<IDBDatabase>, ev: Event) {
-      return reject(this.error) 
+      return reject(this.error)
     }
 
     openRequest.onsuccess = function(this: IDBRequest<IDBDatabase>, ev: Event) {
@@ -69,13 +88,13 @@ export function getIndexedDBStoreValue(databaseName: string, databaseVersion: nu
         const tx = db.transaction(storeName, 'readonly')
           .objectStore(storeName)
           .get(key)
-  
+
           tx.onsuccess = function(this: IDBRequest<any>) {
             const result = this.result // If key isn't found, the result resolved is undefined
             db.close()
             return resolve(result)
           }
-  
+
       } catch (error) {
         db.close()
         return reject(error)

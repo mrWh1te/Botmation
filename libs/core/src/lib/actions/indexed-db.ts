@@ -7,6 +7,20 @@ import { PipeValue } from '../types/pipe-value'
 import { isObjectWithKey, isObjectWithValue } from '../types/objects'
 import { getQueryKey, getQueryKeyValue } from '../types/database'
 import { pipe } from './assembly-lines'
+import { deleteIndexedDBDatabase } from '../helpers/indexed-db'
+
+/**
+ *
+ * @param page
+ */
+export const deleteIndexedDB = (databaseName?: string): BotIndexedDBAction<void> => async(page, ...injects) => {
+  const [, , injectDatabaseName] = unpipeInjects<getQueryKey>(injects, 3)
+
+  await page.evaluate(
+    deleteIndexedDBDatabase,
+    databaseName ?? injectDatabaseName
+  )
+}
 
 /**
  * @description    It's a higher-order BotAction that sets injects for identifying information of one IndexedDB store

@@ -16,10 +16,14 @@ import { deleteIndexedDBDatabase } from '../helpers/indexed-db'
 export const deleteIndexedDB = (databaseName?: string): BotIndexedDBAction<void> => async(page, ...injects) => {
   const [, , injectDatabaseName] = unpipeInjects<getQueryKey>(injects, 3)
 
+  console.log('evaluate')
+
   await page.evaluate(
     deleteIndexedDBDatabase,
     databaseName ?? injectDatabaseName
   )
+
+  console.log('evaluate complete')
 }
 
 /**

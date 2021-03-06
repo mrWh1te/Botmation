@@ -2,20 +2,29 @@
 // The following functions are evaluated in a Puppeteer Page instance's browser context
 //
 
+import { logError, logMessage } from "./console";
+
 /**
  *
  * @param databaseName
  */
 export function deleteIndexedDBDatabase(databaseName: string) {
   return new Promise<void>((resolve, reject) => {
-    const DBDeleteRequest = window.indexedDB.deleteDatabase(databaseName);
+    const DBDeleteRequest = indexedDB.deleteDatabase(databaseName);
 
     DBDeleteRequest.onerror = function(event) {
+      logError('delete IndexedDB Database name = ' + databaseName)
       event.stopPropagation()
       return reject(this.error)
     };
 
     DBDeleteRequest.onsuccess = function() {
+      console.log('?')
+      return resolve()
+    };
+
+    DBDeleteRequest.onblocked = function(e) {
+      logMessage('blocked attempt to delete IndexedDB Database name = ' + databaseName)
       return resolve()
     };
   })

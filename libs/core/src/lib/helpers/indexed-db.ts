@@ -19,11 +19,11 @@ export function deleteIndexedDBDatabase(databaseName: string) {
     };
 
     DBDeleteRequest.onsuccess = function() {
-      console.log('?')
       return resolve()
     };
 
-    DBDeleteRequest.onblocked = function(e) {
+    DBDeleteRequest.onblocked = function(event) {
+      event.stopPropagation()
       logMessage('blocked attempt to delete IndexedDB Database name = ' + databaseName)
       return resolve()
     };

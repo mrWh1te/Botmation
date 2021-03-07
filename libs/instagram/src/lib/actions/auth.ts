@@ -66,13 +66,8 @@ export const login = ({username, password}: {username: string, password: string}
 export const logout: BotAction = pipe()(
   getCookies(),
   deleteCookies(),
-  log('cookies delete'),
   clearAllLocalStorage,
-  log('clear all local storage'),
-  deleteIndexedDB('redux'), // not working
-  log('delete redux indexeddb'),
-  reload(),
-  log('reload')
+  reload() // instagram will delete IndexedDB 'redux' db after reload
 )
 
 /**

@@ -69,7 +69,18 @@ describe('[Botmation] actions/scraping', () => {
     expect(mockPage.evaluate).toHaveBeenNthCalledWith(1, expect.any(Function), 'test-1')
     expect(mockPage.evaluate).toHaveBeenNthCalledWith(2, expect.any(Function), 'test-1-1')
     expect(mockPage.evaluate).toHaveBeenNthCalledWith(3, expect.any(Function), '5')
-    expect(result).toEqual(10)
+    expect(result).toBeUndefined()
+  })
+
+  it('$() should return undefined if it doesnt find the HTML node based on the selector', async() => {
+    page = await browser.newPage()
+
+    await page.goto(BASE_URL);
+
+    const noResult = await $('does-not-exist')(page)
+
+    expect(noResult).toBeUndefined
+    await page.close()
   })
 
   it('$$() should call Page.evaluate() with a helper function and the correct html selector', async() => {

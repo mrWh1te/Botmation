@@ -139,7 +139,7 @@ describe('[Botmation] actions/cookies', () => {
 
     await pipe()(
       getCookies(),
-      // todo tap like BotAction? It would be similar to Map except it ignores whatever the cb returns and simply returns the pipe value
+      // todo tap() BotAction? similar to map() BotAction but ignore cb return / auto return pipe value
       async(page, pipeObject) => {
         expect(pipeObject.value.length).toEqual(2)
         expect(pipeObject.value[0]).toEqual({"domain": "localhost", "expires": -1, "httpOnly": false, "name": "sessionId", "path": "/", "sameParty": false, "secure": false, "session": true, "size": 16, "sourcePort": 8080, "sourceScheme": "NonSecure", "value": "1235711"})

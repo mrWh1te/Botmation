@@ -75,6 +75,7 @@ describe('[Botmation] actions/input', () => {
 
     await clickText('Example Link 2')(page)
     await page.waitForNavigation()
+    await clickText('dlkfjnsldkfjslkdfjbslkfdjbsdfg')(page) // can attempt to click soemthing that doesn't exist
 
     expect(page.url()).toEqual('http://localhost:8080/example2.html')
   })

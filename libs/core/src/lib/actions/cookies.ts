@@ -5,9 +5,7 @@ import { enrichBotFileOptionsWithDefaults } from '../helpers/files'
 import { BotFileOptions } from '../interfaces'
 import { getFileUrl } from '../helpers/files'
 import { getInjectsPipeValue, injectsHavePipe, unpipeInjects } from '../helpers/pipe'
-import { pipe } from './assembly-lines'
 import { Protocol } from 'puppeteer'
-import { forAll } from './loops'
 
 /**
  * @description   Parse page's cookies and save them as JSON in a local file

@@ -2,7 +2,7 @@ import { Page } from 'puppeteer'
 import { promises as fs, Stats } from 'fs'
 
 import { getFileUrl } from './../helpers/files'
-import { saveCookies, loadCookies } from './cookies'
+import { saveCookies, loadCookies, getCookies } from './cookies'
 import { BotFileOptions } from './../interfaces/bot-file-options'
 
 import { wrapValueInPipe } from './../helpers/pipe'
@@ -35,10 +35,14 @@ describe('[Botmation] actions/cookies', () => {
     }
   ]
 
-  let mockPage: Page = {
-    cookies: jest.fn(() => COOKIES_JSON),
-    setCookie: jest.fn()
-  } as any as Page
+  let mockPage: Page
+
+  beforeEach(() => {
+    mockPage = {
+      cookies: jest.fn(() => COOKIES_JSON),
+      setCookie: jest.fn(),
+    } as any as Page
+  })
 
   //
   // saveCookies() Unit/Integration Test
@@ -65,6 +69,28 @@ describe('[Botmation] actions/cookies', () => {
       "secure": true,
       "session": false
     })
+  })
+
+  //
+  // getCookies
+  it('getCookies() should call Puppeteer page cookies() method with urls provided, with safe default of no urls provided', async() => {
+    await getCookies()(mockPage)
+
+    expect(mockPage.cookies).toHaveBeenCalledTimes(1)
+
+    await getCookies('url 1')(mockPage)
+
+    expect(mockPage.cookies).toHaveBeenNthCalledWith(2, 'url 1')
+
+    await getCookies('url 5', 'url 25', 'url 54')(mockPage)
+
+    expect(mockPage.cookies).toHaveBeenNthCalledWith(3, 'url 5', 'url 25', 'url 54')
+  })
+
+  //
+  // deleteCookies
+  it('deleteCookies() should call puppeteer page deleteCookies() method with cookies provided through HO param or fallback pipe value if value is an array', async() => {
+
   })
 
   //

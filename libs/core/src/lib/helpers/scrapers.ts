@@ -18,6 +18,7 @@ export const getElementsOuterHTML = (htmlSelector: string): string[] =>
  *
  * @param htmlSelector
  */
+/* istanbul ignore next */
 export const elementExistsInDocument = (htmlSelector: string): boolean =>
   document.querySelector(htmlSelector) !== null
 
@@ -25,6 +26,7 @@ export const elementExistsInDocument = (htmlSelector: string): boolean =>
  * Check the DOM for text. If found, return TRUE, otherwise return FALSE
  * @param text
  */
+/* istanbul ignore next */
 export const textExistsInDocument = (text: string): boolean =>
   ( document.documentElement.textContent || document.documentElement.innerText )
     .indexOf(text) > -1

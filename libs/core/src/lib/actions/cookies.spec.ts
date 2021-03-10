@@ -1,8 +1,8 @@
-import { Page } from 'puppeteer'
+import { Page, Protocol } from 'puppeteer'
 import { promises as fs, Stats } from 'fs'
 
 import { getFileUrl } from './../helpers/files'
-import { saveCookies, loadCookies, getCookies } from './cookies'
+import { saveCookies, loadCookies, getCookies, deleteCookies } from './cookies'
 import { BotFileOptions } from './../interfaces/bot-file-options'
 
 import { wrapValueInPipe } from './../helpers/pipe'
@@ -41,6 +41,7 @@ describe('[Botmation] actions/cookies', () => {
     mockPage = {
       cookies: jest.fn(() => COOKIES_JSON),
       setCookie: jest.fn(),
+      deleteCookie: jest.fn()
     } as any as Page
   })
 
@@ -90,7 +91,36 @@ describe('[Botmation] actions/cookies', () => {
   //
   // deleteCookies
   it('deleteCookies() should call puppeteer page deleteCookies() method with cookies provided through HO param or fallback pipe value if value is an array', async() => {
+    const cookies = ['a', 'b', 'c', 'd'] as any as Protocol.Network.Cookie[]
+    const pipeCookies = ['5', '2', '3', '1'] as any as Protocol.Network.Cookie[]
 
+    await deleteCookies(...cookies)(mockPage)
+
+    expect(mockPage.deleteCookie).toHaveBeenCalledWith('a', 'b', 'c', 'd')
+    expect(mockPage.deleteCookie).toHaveBeenCalledTimes(1)
+
+    await deleteCookies()(mockPage, wrapValueInPipe(pipeCookies))
+
+    expect(mockPage.deleteCookie).toHaveBeenNthCalledWith(2, '5', '2', '3', '1')
+    expect(mockPage.deleteCookie).toHaveBeenCalledTimes(2)
+
+    const higherOrderOverwritesPipeValue = ['blue', 'green', 'red'] as any as Protocol.Network.Cookie[]
+
+    await deleteCookies(...higherOrderOverwritesPipeValue)(mockPage, wrapValueInPipe(pipeCookies))
+
+    expect(mockPage.deleteCookie).toHaveBeenNthCalledWith(3, 'blue', 'green', 'red')
+    expect(mockPage.deleteCookie).toHaveBeenCalledTimes(3)
+
+    // no cookies specified to delete so no delete call
+    const notCookies = {}
+
+    await deleteCookies()(mockPage, wrapValueInPipe(notCookies))
+
+    expect(mockPage.deleteCookie).toHaveBeenCalledTimes(3)
+
+    await deleteCookies()(mockPage) // no HO, no injects (pipe value)
+
+    expect(mockPage.deleteCookie).toHaveBeenCalledTimes(3)
   })
 
   //

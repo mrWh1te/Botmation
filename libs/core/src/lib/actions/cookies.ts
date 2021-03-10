@@ -6,6 +6,7 @@ import { BotFileOptions } from '../interfaces'
 import { getFileUrl } from '../helpers/files'
 import { getInjectsPipeValue, injectsHavePipe, unpipeInjects } from '../helpers/pipe'
 import { Protocol } from 'puppeteer'
+import { logWarning } from '../helpers/console'
 
 /**
  * @description   Parse page's cookies and save them as JSON in a local file
@@ -72,5 +73,7 @@ export const deleteCookies = (...cookies: Protocol.Network.Cookie[]): BotAction 
     }
   }
 
-  return page.deleteCookie(...cookies)
+  if (cookies.length > 0) {
+    return page.deleteCookie(...cookies)
+  }
 }

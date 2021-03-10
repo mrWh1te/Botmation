@@ -1,4 +1,6 @@
 import { Page, Protocol } from 'puppeteer'
+import * as puppeteer from 'puppeteer'
+
 import { promises as fs, Stats } from 'fs'
 
 import { getFileUrl } from './../helpers/files'
@@ -6,6 +8,8 @@ import { saveCookies, loadCookies, getCookies, deleteCookies } from './cookies'
 import { BotFileOptions } from './../interfaces/bot-file-options'
 
 import { wrapValueInPipe } from './../helpers/pipe'
+import { COOKIES_URL } from '../mocks'
+import { pipe } from './assembly-lines'
 
 /**
  * @description   Cookies BotAction's
@@ -121,6 +125,36 @@ describe('[Botmation] actions/cookies', () => {
     await deleteCookies()(mockPage) // no HO, no injects (pipe value)
 
     expect(mockPage.deleteCookie).toHaveBeenCalledTimes(3)
+  })
+
+  // e2e
+  it('can deleteCookies() based on piped value from getCookies()', async() => {
+    const browser = await puppeteer.launch()
+    const page = await browser.newPage()
+
+    await page.goto(COOKIES_URL)
+    const initialCookies = await page.cookies()
+
+    expect(initialCookies.length).toEqual(2)
+
+    await pipe()(
+      getCookies(),
+      // todo tap like BotAction? It would be similar to Map except it ignores whatever the cb returns and simply returns the pipe value
+      async(page, pipeObject) => {
+        expect(pipeObject.value.length).toEqual(2)
+        expect(pipeObject.value[0]).toEqual({"domain": "localhost", "expires": -1, "httpOnly": false, "name": "sessionId", "path": "/", "sameParty": false, "secure": false, "session": true, "size": 16, "sourcePort": 8080, "sourceScheme": "NonSecure", "value": "1235711"})
+        expect(pipeObject.value[1]).toEqual({"domain": "localhost", "expires": -1, "httpOnly": false, "name": "username", "path": "/", "sameParty": false, "secure": false, "session": true, "size": 16, "sourcePort": 8080, "sourceScheme": "NonSecure", "value": "John Doe"})
+
+        return pipeObject.value
+      },
+      deleteCookies()
+    )(page)
+
+    const finalCookies = await page.cookies()
+    expect(finalCookies.length).toEqual(0)
+
+    await page.close()
+    await browser.close()
   })
 
   //

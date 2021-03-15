@@ -6,10 +6,11 @@
 
 import { ConditionalBotAction, BotAction } from '../interfaces/bot-actions'
 import { pipeInjects } from '../helpers/pipe'
-import { pipe } from './assembly-lines'
+import { assemblyLine, pipe } from './assembly-lines'
 import { PipeValue } from '../types/pipe-value'
 import { AbortLineSignal, isAbortLineSignal } from '../types/abort-line-signal'
 import { processAbortLineSignal } from '../helpers/abort'
+import { rollDice } from '../helpers/branching'
 
 /**
  * @description Higher Order BotAction that accepts a ConditionalBotAction (pipeable, that returns a boolean) and based on what boolean it resolves,
@@ -37,5 +38,21 @@ export const givenThat =
           if (isAbortLineSignal(returnValue)) {
             return returnValue
           }
+        }
+      }
+
+/**
+ * @future once sync BotActions are supported, update this with givenThat(diceRoll(val))(...actions)
+ * @param numberOfDiceSides
+ * @param numberToRoll
+ */
+export const runOnDiceRoll =
+  (numberOfDiceSides = 1, numberToRoll = 1) =>
+    (...actions: BotAction[]): BotAction =>
+      async(page, ...injects) => {
+        const diceRoll = rollDice(numberOfDiceSides)
+
+        if (diceRoll === numberToRoll) {
+          return assemblyLine()(...actions)(page, ...injects)
         }
       }

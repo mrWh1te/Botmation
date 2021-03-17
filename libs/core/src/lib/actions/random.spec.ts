@@ -19,8 +19,8 @@ describe('[Botmation] actions/random', () => {
   })
 
   //
-  // diceRoll() Unit Tests
-  it('diceRoll() should roll dice and if the correct number to roll appears, than the assembled actions are ran, otherwise the assembled actions are skipped', async() => {
+  // rollDice() Unit Tests
+  it('rollDice() should roll dice and if the correct number to roll appears, than the assembled actions are ran, otherwise the assembled actions are skipped', async() => {
 
   })
 

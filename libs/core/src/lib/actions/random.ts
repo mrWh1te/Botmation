@@ -18,7 +18,7 @@ export const rollDice =
  *  if random number generated is within the probability range, then assembled BotActions are ran
  *  ie if probability is 60% then all numbers generated 0-60 will cause actions to run and all numbers generated 61-100 will cause nothing
  * @future use givenThat() with a wrapper function post v2 (support sync BotActions and )
- * @param probability number 0-1 ie .6 = 60%
+ * @param probability decimal between 0-1 ie .6 = 60% probability of assembled BotActions running
  */
 export const probably =
   (probability = 1) =>

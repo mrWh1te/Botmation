@@ -46,7 +46,7 @@ export const givenThat =
  * @param numberOfDiceSides
  * @param numberToRoll
  */
-export const runOnDiceRoll =
+export const onDiceRoll =
   (numberOfDiceSides = 1, numberToRoll = 1) =>
     (...actions: BotAction[]): BotAction =>
       async(page, ...injects) => {

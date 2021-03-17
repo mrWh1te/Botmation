@@ -1,4 +1,4 @@
-import { calculateDiceRoll, randomDecimal } from './random'
+import { randomDiceRoll, randomDecimal } from './random'
 
 /**
  * @description   Random Helpers
@@ -8,11 +8,11 @@ describe('[Botmation] helpers/random', () => {
 
   //
   // Unit Test
-  it('calculateDiceRoll() returns a random number from 1 to n where n is the numberOfDiceSides', () => {
-    const noParams = calculateDiceRoll()
-    const diceWithTwoSides = calculateDiceRoll(2)
-    const diceWithNineSides = calculateDiceRoll(9)
-    const diceWithTwentyFiveSides = calculateDiceRoll(25)
+  it('randomDiceRoll() returns a random number from 1 to n where n is the numberOfDiceSides', () => {
+    const noParams = randomDiceRoll()
+    const diceWithTwoSides = randomDiceRoll(2)
+    const diceWithNineSides = randomDiceRoll(9)
+    const diceWithTwentyFiveSides = randomDiceRoll(25)
 
     expect(noParams).toEqual(1)
 
@@ -26,9 +26,9 @@ describe('[Botmation] helpers/random', () => {
     expect(diceWithTwentyFiveSides).toBeLessThanOrEqual(25)
 
     // unique edge cases
-    const diceWithZeroSides = calculateDiceRoll(0)
-    const diceWithNegativeOneSide = calculateDiceRoll(-1)
-    const diceWithNegativeSides = calculateDiceRoll(-10)
+    const diceWithZeroSides = randomDiceRoll(0)
+    const diceWithNegativeOneSide = randomDiceRoll(-1)
+    const diceWithNegativeSides = randomDiceRoll(-10)
 
     expect(diceWithZeroSides).toEqual(0)
     expect(diceWithNegativeOneSide).toEqual(0)

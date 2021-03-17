@@ -1,6 +1,6 @@
 import { BotAction } from '../interfaces/bot-actions'
 import { assemblyLine } from './assembly-lines'
-import { calculateDiceRoll, randomDecimal } from '../helpers/random'
+import { randomDiceRoll, randomDecimal } from '../helpers/random'
 
 /**
  * Run assembled BotActions ONLY if a virtually rolled dice lands on the number to roll
@@ -13,13 +13,10 @@ export const rollDice =
   (numberOfDiceSides = 1, numberToRoll = 1) =>
     (...actions: BotAction[]): BotAction =>
       async(page, ...injects) => {
-        if (calculateDiceRoll(numberOfDiceSides) === numberToRoll) {
+        if (randomDiceRoll(numberOfDiceSides) === numberToRoll) {
           return assemblyLine()(...actions)(page, ...injects)
         }
       }
-
-// todo problem about this design -> it limits the range of "random" to 50% or smaller
-// if dev wants to run BotActions with a 60% chance or higher, this won't work
 
 /**
  * Run assembled BotActions based on a probability

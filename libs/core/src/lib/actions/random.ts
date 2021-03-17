@@ -19,12 +19,13 @@ export const rollDice =
  *  ie if probability is 60% then all numbers generated 0-60 will cause actions to run and all numbers generated 61-100 will cause nothing
  * @future use givenThat() with a wrapper function post v2 (support sync BotActions and )
  * @param probability decimal between 0-1 ie .6 = 60% probability of assembled BotActions running
+ * @param generateRandomDecimal function to generate a random decimal between 0 and 1 with default set to randomDecimal helper that uses a pseudo random method
  */
 export const probably =
-  (probability = 1) =>
+  (probability = 1, generateRandomDecimal = randomDecimal) =>
     (...actions: BotAction[]): BotAction =>
       async(page, ...injects) => {
-        if (randomDecimal() <= probability) {
+        if (generateRandomDecimal() <= probability) {
           return assemblyLine()(...actions)(page, ...injects)
         }
       }

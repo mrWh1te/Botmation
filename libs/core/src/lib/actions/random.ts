@@ -1,5 +1,5 @@
 import { BotAction } from '../interfaces/bot-actions'
-import { assemblyLine, pipe } from './assembly-lines'
+import { assemblyLine } from './assembly-lines'
 import { generateRandomDecimal } from '../helpers/random'
 import { inject } from './inject'
 import { errors } from './errors'
@@ -13,10 +13,8 @@ import { NumberReturningFunc } from '../types/random'
  */
 export const randomDecimal = (injectGenerateRandomDecimalFunction: NumberReturningFunc) =>
   (...actions: BotAction[]): BotAction =>
-    pipe()(
-      inject(injectGenerateRandomDecimalFunction)(
-        errors('randomGenerator()()')(...actions)
-      )
+    inject(injectGenerateRandomDecimalFunction)(
+      errors('randomGenerator()()')(...actions)
     )
 
 /**

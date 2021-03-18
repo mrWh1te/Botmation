@@ -28,6 +28,7 @@ export * from './lib/actions/scrapers'
 export * from './lib/actions/loops'
 export * from './lib/actions/branching'
 export * from './lib/actions/time'
+export * from './lib/actions/random'
 
 //
 // Helpers
@@ -42,3 +43,4 @@ export * from './lib/helpers/navigation'
 export * from './lib/helpers/pipe'
 export * from './lib/helpers/scrapers'
 export * from './lib/helpers/cases'
+export * from './lib/helpers/random'

@@ -3,6 +3,7 @@ import { assemblyLine, pipe } from './assembly-lines'
 import { randomDecimal } from '../helpers/random'
 import { inject } from './inject'
 import { errors } from './errors'
+import { unpipeInjects } from '../helpers/pipe'
 
 /**
  * @description   Inject a random decimal number generator
@@ -41,8 +42,10 @@ export const probably =
     (...actions: BotAction[]): BotAction =>
       async(page, ...injects) => {
         if (!generateRandomDecimal) {
-          if (typeof injects[0] === 'function') {
-            generateRandomDecimal = injects[0] // once injects becomes Map based :)
+          const [,injectedRandomDecimalGenerator] = unpipeInjects(injects, 1)
+
+          if (typeof injectedRandomDecimalGenerator === 'function') {
+            generateRandomDecimal = injectedRandomDecimalGenerator // once injects becomes Map based :)
           } else {
             generateRandomDecimal = randomDecimal
           }

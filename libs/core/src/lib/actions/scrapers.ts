@@ -12,7 +12,21 @@ import { errors } from '../actions/errors'
 import { elementExistsInDocument, getElementOuterHTML, getElementsOuterHTML, textExistsInDocument } from '../helpers/scrapers'
 import { unpipeInjects } from '../helpers/pipe'
 import { pipe } from './assembly-lines'
-import { map } from './pipe'
+
+/**
+ * A ConditionalBotAction to return a Boolean value
+ *    True if element is found, false if element is not found
+ * @param elementSelector
+ */
+export const elementExists = (elementSelector: string): ConditionalBotAction =>
+evaluate(elementExistsInDocument, elementSelector)
+
+/**
+ *
+ * @param text
+ */
+export const textExists = (text: string): ConditionalBotAction =>
+evaluate(textExistsInDocument, text)
 
 /**
  * @description   Inject htmlParser for ScraperBotAction's
@@ -26,21 +40,6 @@ export const htmlParser = (htmlParserFunction: Function) =>
         errors('htmlParser()()')(...actions)
       )
     )
-
-/**
- * A ConditionalBotAction to return a Boolean value
- *    True if element is found, false if element is not found
- * @param elementSelector
- */
-export const elementExists = (elementSelector: string): ConditionalBotAction =>
-  evaluate(elementExistsInDocument, elementSelector)
-
-/**
- *
- * @param text
- */
-export const textExists = (text: string): ConditionalBotAction =>
-  evaluate(textExistsInDocument, text)
 
 /**
  * Returns the first Element that matches the provided HTML Selector

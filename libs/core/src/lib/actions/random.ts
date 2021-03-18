@@ -1,6 +1,21 @@
 import { BotAction } from '../interfaces/bot-actions'
-import { assemblyLine } from './assembly-lines'
+import { assemblyLine, pipe } from './assembly-lines'
 import { randomDecimal } from '../helpers/random'
+import { inject } from './inject'
+import { errors } from './errors'
+
+/**
+ * @description   Inject a random decimal number generator
+ *
+ * @param generateRandomDecimalFunction
+ */
+export const randomGenerator = (generateRandomDecimalFunction: Function) =>
+  (...actions: BotAction[]): BotAction =>
+    pipe()(
+      inject(generateRandomDecimalFunction)(
+        errors('randomGenerator()()')(...actions)
+      )
+    )
 
 /**
  * Roll a virtual device with number of dice sides (default is 1). If the dice rolls a 1, the assembled BotActions run
@@ -29,3 +44,4 @@ export const probably =
           return assemblyLine()(...actions)(page, ...injects)
         }
       }
+

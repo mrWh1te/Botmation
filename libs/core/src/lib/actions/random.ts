@@ -14,7 +14,7 @@ import { NumberReturningFunc } from '../types/random'
 export const randomDecimal = (injectGenerateRandomDecimalFunction: NumberReturningFunc) =>
   (...actions: BotAction[]): BotAction =>
     inject(injectGenerateRandomDecimalFunction)(
-      errors('randomGenerator()()')(...actions)
+      errors('randomDecimal()()')(...actions)
     )
 
 /**
@@ -41,10 +41,10 @@ export const probably =
     (...actions: BotAction[]): BotAction =>
       async(page, ...injects) => {
         if (!overloadGenerateRandomDecimal) {
-          const [,injectedRandomDecimalGenerator] = unpipeInjects(injects, 1)
+          const [,injectedRandomDecimalFunction] = unpipeInjects(injects, 1)
 
-          if (typeof injectedRandomDecimalGenerator === 'function') {
-            overloadGenerateRandomDecimal = injectedRandomDecimalGenerator // once injects becomes Map based :)
+          if (typeof injectedRandomDecimalFunction === 'function') {
+            overloadGenerateRandomDecimal = injectedRandomDecimalFunction // once injects becomes Map based :)
           } else {
             overloadGenerateRandomDecimal = generateRandomDecimal
           }

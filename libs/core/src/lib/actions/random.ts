@@ -24,9 +24,9 @@ export const randomGenerator = (generateRandomDecimalFunction: Function) =>
  * @param numberToRoll
  */
 export const rollDice =
-  (numberOfDiceSides = 1) =>
+  (numberOfDiceSides = 1, generateRandomDecimal?: () => number) =>
     (...actions: BotAction[]): BotAction =>
-      probably(1 / numberOfDiceSides)(...actions)
+      probably(1 / numberOfDiceSides, generateRandomDecimal)(...actions)
 
 /**
  * Run assembled BotActions based on a probability
@@ -37,9 +37,17 @@ export const rollDice =
  * @param generateRandomDecimal function to generate a random decimal between 0 and 1 with default set to randomDecimal helper that uses a pseudo random method
  */
 export const probably =
-  (probability = 1, generateRandomDecimal = randomDecimal) =>
+  (probability = .6, generateRandomDecimal?: () => number) =>
     (...actions: BotAction[]): BotAction =>
       async(page, ...injects) => {
+        if (!generateRandomDecimal) {
+          if (typeof injects[0] === 'function') {
+            generateRandomDecimal = injects[0] // once injects becomes Map based :)
+          } else {
+            generateRandomDecimal = randomDecimal
+          }
+        }
+
         if (generateRandomDecimal() <= probability) {
           return assemblyLine()(...actions)(page, ...injects)
         }

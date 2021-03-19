@@ -1,4 +1,4 @@
-import { randomDecimal } from './random'
+import { generateRandomDecimal } from './random'
 
 /**
  * @description   Random Helpers
@@ -6,11 +6,11 @@ import { randomDecimal } from './random'
  */
 describe('[Botmation] helpers/random', () => {
 
-  it('randomDecimal() returns a pseudorandom decimal between 0 to 1', () => {
+  it('generateRandomDecimal() returns a pseudorandom decimal between 0 to 1', () => {
     for(let i = 0; i < 100; i++) {
-      const randomDecimalValue = randomDecimal()
-      expect(randomDecimalValue).toBeGreaterThan(0)
-      expect(randomDecimalValue).toBeLessThan(1)
+      const generateRandomDecimalValue = generateRandomDecimal()
+      expect(generateRandomDecimalValue).toBeGreaterThan(0)
+      expect(generateRandomDecimalValue).toBeLessThan(1)
     }
   })
 

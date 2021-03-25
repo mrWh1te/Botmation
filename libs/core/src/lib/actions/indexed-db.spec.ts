@@ -9,7 +9,7 @@ import {
 
 import * as puppeteer from 'puppeteer'
 import { pipe } from './assembly-lines'
-import { evaluate } from './scrapers'
+import { INDEXEDDB_URL } from '../mocks/urls'
 
 const mockInject3rdCall = jest.fn()
 jest.mock('./inject', () => {
@@ -42,7 +42,6 @@ describe('[Botmation] actions/indexed-db', () => {
 
   // e2e testing
   const databaseName = 'MyTestDatabase';
-  const databaseVersion = undefined;
   const storeName = 'TestObjectStore';
   const key = 'TestKey';
   const value = 'TestValue234';
@@ -181,7 +180,7 @@ describe('[Botmation] actions/indexed-db', () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
-    await page.goto('http://localhost:8080/indexed-db.html')
+    await page.goto(INDEXEDDB_URL)
 
     // "MyTestDatabase"
     const result = await pipe()(

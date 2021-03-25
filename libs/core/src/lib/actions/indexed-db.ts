@@ -1,13 +1,12 @@
 
 import { BotAction, BotIndexedDBAction } from '../interfaces/bot-actions'
 import { unpipeInjects } from '../helpers/pipe'
-import { getIndexedDBStoreValue, setIndexedDBStoreValue } from '../helpers/indexed-db'
+import { getIndexedDBStoreValue, setIndexedDBStoreValue, deleteIndexedDBDatabase } from '../helpers/indexed-db'
 import { inject } from './inject'
 import { PipeValue } from '../types/pipe-value'
 import { isObjectWithKey, isObjectWithValue } from '../types/objects'
 import { getQueryKey, getQueryKeyValue } from '../types/database'
 import { pipe } from './assembly-lines'
-import { deleteIndexedDBDatabase } from '../helpers/indexed-db'
 
 /**
  *

@@ -1,4 +1,3 @@
-import { Page, Protocol } from 'puppeteer'
 import * as puppeteer from 'puppeteer'
 
 import { promises as fs, Stats } from 'fs'
@@ -39,14 +38,14 @@ describe('[Botmation] actions/cookies', () => {
     }
   ]
 
-  let mockPage: Page
+  let mockPage: puppeteer.Page
 
   beforeEach(() => {
     mockPage = {
       cookies: jest.fn(() => COOKIES_JSON),
       setCookie: jest.fn(),
       deleteCookie: jest.fn()
-    } as any as Page
+    } as any as puppeteer.Page
   })
 
   //
@@ -95,8 +94,8 @@ describe('[Botmation] actions/cookies', () => {
   //
   // deleteCookies
   it('deleteCookies() should call puppeteer page deleteCookies() method with cookies provided through HO param or fallback pipe value if value is an array', async() => {
-    const cookies = ['a', 'b', 'c', 'd'] as any as Protocol.Network.Cookie[]
-    const pipeCookies = ['5', '2', '3', '1'] as any as Protocol.Network.Cookie[]
+    const cookies = ['a', 'b', 'c', 'd'] as any as puppeteer.Protocol.Network.Cookie[]
+    const pipeCookies = ['5', '2', '3', '1'] as any as puppeteer.Protocol.Network.Cookie[]
 
     await deleteCookies(...cookies)(mockPage)
 
@@ -108,7 +107,7 @@ describe('[Botmation] actions/cookies', () => {
     expect(mockPage.deleteCookie).toHaveBeenNthCalledWith(2, '5', '2', '3', '1')
     expect(mockPage.deleteCookie).toHaveBeenCalledTimes(2)
 
-    const higherOrderOverwritesPipeValue = ['blue', 'green', 'red'] as any as Protocol.Network.Cookie[]
+    const higherOrderOverwritesPipeValue = ['blue', 'green', 'red'] as any as puppeteer.Protocol.Network.Cookie[]
 
     await deleteCookies(...higherOrderOverwritesPipeValue)(mockPage, wrapValueInPipe(pipeCookies))
 
@@ -140,7 +139,7 @@ describe('[Botmation] actions/cookies', () => {
     await pipe()(
       getCookies(),
       // todo tap() BotAction? similar to map() BotAction but ignore cb return / auto return pipe value
-      async(page, pipeObject) => {
+      async(_, pipeObject) => {
         expect(pipeObject.value.length).toEqual(2)
         expect(pipeObject.value[0]).toEqual({"domain": "localhost", "expires": -1, "httpOnly": false, "name": "sessionId", "path": "/", "sameParty": false, "secure": false, "session": true, "size": 16, "sourcePort": 8080, "sourceScheme": "NonSecure", "value": "1235711"})
         expect(pipeObject.value[1]).toEqual({"domain": "localhost", "expires": -1, "httpOnly": false, "name": "username", "path": "/", "sameParty": false, "secure": false, "session": true, "size": 16, "sourcePort": 8080, "sourceScheme": "NonSecure", "value": "John Doe"})

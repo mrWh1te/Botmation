@@ -76,7 +76,7 @@ import {
 
         screenshot('logged-in'),
 
-        // viewStories,
+        viewStories,
         log('screenshot taken'),
 
         wait(5000),

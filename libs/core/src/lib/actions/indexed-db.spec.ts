@@ -1,5 +1,3 @@
-import { Page } from 'puppeteer'
-
 import {
   setIndexedDBValue,
   getIndexedDBValue,
@@ -24,7 +22,7 @@ jest.mock('./inject', () => {
  * @description   IndexedDB BotAction's
  */
 describe('[Botmation] actions/indexed-db', () => {
-  let mockPage: Page
+  let mockPage: puppeteer.Page
 
   // Function sources for the key & value support both higher-order param and Pipe.value
   const higherOrderParamKey = 'higher-order-key'
@@ -49,12 +47,12 @@ describe('[Botmation] actions/indexed-db', () => {
   beforeEach(() => {
     mockPage = {
       evaluate: jest.fn()
-    } as any as Page
+    } as any as puppeteer.Page
   })
 
   it('indexedDBStore()() should set the first few injects as BotIndexedDBInjects from higher order params', async() => {
     const injectsWithoutPipe = [25, 'hi', 'World']
-    mockPage = {} as any as Page
+    mockPage = {} as any as puppeteer.Page
 
     await indexedDBStore(higherOrderDatabaseName, higherOrderStoreName, higherOrderDatabaseVersion)()(mockPage)
     await indexedDBStore(higherOrderDatabaseName, higherOrderStoreName, higherOrderDatabaseVersion)()(mockPage, ...injectsWithoutPipe)

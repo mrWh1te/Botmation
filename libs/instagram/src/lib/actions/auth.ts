@@ -5,7 +5,7 @@ import { chain, errors } from '@botmation/core'
 import { goTo, reload, waitForNavigation, wait } from '@botmation/core'
 import { getCookies, deleteCookies } from '@botmation/core'
 import { click, type } from '@botmation/core'
-import { getIndexedDBValue, indexedDBStore, deleteIndexedDB, clearAllLocalStorage } from '@botmation/core'
+import { getIndexedDBValue, indexedDBStore, clearAllLocalStorage } from '@botmation/core'
 import { map } from '@botmation/core'
 import { log } from '@botmation/core'
 

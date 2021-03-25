@@ -3,8 +3,13 @@ import { Page } from 'puppeteer'
 import {
   setIndexedDBValue,
   getIndexedDBValue,
-  indexedDBStore
+  indexedDBStore,
+  deleteIndexedDB
 } from './indexed-db'
+
+import * as puppeteer from 'puppeteer'
+import { pipe } from './assembly-lines'
+import { evaluate } from './scrapers'
 
 const mockInject3rdCall = jest.fn()
 jest.mock('./inject', () => {
@@ -34,6 +39,13 @@ describe('[Botmation] actions/indexed-db', () => {
 
   const injectedPipeParamKey = 'pipe-key'
   const injectedPipeParamValue = 'pipe-value'
+
+  // e2e testing
+  const databaseName = 'MyTestDatabase';
+  const databaseVersion = undefined;
+  const storeName = 'TestObjectStore';
+  const key = 'TestKey';
+  const value = 'TestValue234';
 
   beforeEach(() => {
     mockPage = {
@@ -154,17 +166,52 @@ describe('[Botmation] actions/indexed-db', () => {
     expect(mockPage.evaluate).toHaveBeenNthCalledWith(12, expect.any(Function), 'missing-db-name', undefined, 'missing-store', 'missing-key')
   })
 
-  // E2E Test
-  // E2E test was resulting in a false fail from an error, see Issue: https://github.com/smooth-code/jest-puppeteer/issues/311
-  // it('should set a key/value pair in a new Database & Store, then update that value and get it again', async() => {
-  //   await setIndexedDBValue('a-key', 'a-value', 'a-store', 1, 'a-db')(page)
-  //   await expect(getIndexedDBValue('a-key', 'a-store', 1, 'a-db')(page)).resolves.toEqual('a-value')
+  //
+  // e2e test
+  it('should be able to set & delete a key->value pair from an indexeddb, and delete a database from indexeddb using these botactions', async() => {
+    const db1Exists = `(async() => {
+      const dbs = await window.indexedDB.databases();
+      return dbs.map(db => db.name).includes("${databaseName}");
+    })()`
+    const db2Exists = `(async() => {
+      const dbs = await window.indexedDB.databases();
+      return dbs.map(db => db.name).includes("MySecondDatabase");
+    })()`
 
-  //   await setIndexedDBValue('a-key', 'b-value', 'a-store', 1, 'a-db')(page)
-  //   await expect(getIndexedDBValue('a-key', 'a-store', 1, 'a-db')(page)).resolves.toEqual('b-value')
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
 
-  //   // if you were to add a new key/value pair, that would change the schema, therefore need to bump up db version number
-  // })
+    await page.goto('http://localhost:8080/indexed-db.html')
+
+    // "MyTestDatabase"
+    const result = await pipe()(
+      setIndexedDBValue('new-key', 'new-value', storeName, databaseName),
+      getIndexedDBValue('new-key', storeName, databaseName)
+    )(page)
+    const result2 = await pipe()(
+      getIndexedDBValue(key, storeName, databaseName)
+    )(page)
+
+    expect(result).toEqual('new-value')
+    expect(result2).toEqual(value)
+    const result21 = await page.evaluate(db1Exists, databaseName)
+    expect(result21).toEqual(true)
+
+    await deleteIndexedDB(databaseName)(page)
+    const result22 = await page.evaluate(db1Exists, databaseName)
+    expect(result22).toEqual(false)
+
+    // "MySecondDatabase"
+    const result3 = await page.evaluate(db2Exists)
+    expect(result3).toEqual(true)
+
+    await deleteIndexedDB()(page, undefined, 'MySecondDatabase') // simulate indexedDBStore()() HO assembling that injects db name
+    const result4 = await page.evaluate(db2Exists)
+    expect(result4).toEqual(false)
+
+    await page.close()
+    await browser.close()
+  })
 
   afterAll(() => {
     jest.unmock('./inject')

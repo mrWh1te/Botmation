@@ -14,9 +14,8 @@ import { deleteIndexedDBDatabase } from '../helpers/indexed-db'
  * @param page
  */
 export const deleteIndexedDB = (databaseName?: string): BotIndexedDBAction<void> => async(page, ...injects) => {
-  const [, , injectDatabaseName] = unpipeInjects(injects, 3)
+  const [, , injectDatabaseName] = unpipeInjects(injects, 2)
 
-  // todo e2e test that does not block attempt to delete
   await page.evaluate(
     deleteIndexedDBDatabase,
     databaseName ?? injectDatabaseName

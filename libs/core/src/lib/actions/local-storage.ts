@@ -28,15 +28,7 @@ export const removeLocalStorageItem =
     async(page, ...injects) => {
       const pipeValue = getInjectsPipeValue(injects)
 
-      if (!key) {
-        if (pipeValue) {
-          if (pipeValue.key) {
-            key = pipeValue.key
-          } else {
-            key = pipeValue
-          }
-        }
-      }
+      key ??= pipeValue && pipeValue.key ? pipeValue.key : pipeValue
 
       await page.evaluate(
         removeLocalStorageKeyValue,

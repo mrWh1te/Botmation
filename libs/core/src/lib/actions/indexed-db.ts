@@ -7,6 +7,7 @@ import { PipeValue } from '../types/pipe-value'
 import { isObjectWithKey, isObjectWithValue } from '../types/objects'
 import { getQueryKey, getQueryKeyValue } from '../types/database'
 import { pipe } from './assembly-lines'
+import { pipeValue } from './pipe'
 
 /**
  *
@@ -51,31 +52,18 @@ export const indexedDBStore = (databaseName: string, storeName: string, database
 export const setIndexedDBValue =
   (key?: string, value?: any, storeName?: string, databaseName?: string, databaseVersion?: number): BotIndexedDBAction<void> =>
     async(page, ...injects) => {
-      const [pipedValue, injectDatabaseVersion, injectDatabaseName, injectStoreName] = unpipeInjects<getQueryKeyValue>(injects, 3)
+      let [pipeValue, injectDatabaseVersion, injectDatabaseName, injectStoreName] = unpipeInjects<getQueryKeyValue>(injects, 3)
 
-      if (!value) {
-        if (pipedValue) {
-          // idea here is that the piped value is another object with keys {key: '', value: ''} -> to map as what we are setting in the DB
-          if (isObjectWithValue(pipedValue)) {
-            value = pipedValue.value
-          } else {
-            value = pipedValue
-          }
-        }
-      }
-      if (!key) {
-        if (isObjectWithKey(pipedValue)) {
-          key = pipedValue.key
-        }
-      }
+      value ??= isObjectWithValue(pipeValue) ? pipeValue.value : pipeValue ??= 'missing-value'
+      key ??= isObjectWithKey(pipeValue) ? pipeValue.key : 'missing-key'
 
       await page.evaluate(
         setIndexedDBStoreValue,
         databaseName ? databaseName : injectDatabaseName ?? 'missing-db-name',
         databaseVersion ? databaseVersion : injectDatabaseVersion ?? undefined, // grab latest version
         storeName ? storeName : injectStoreName ?? 'missing-store',
-        key ?? 'missing-key',
-        value ?? 'missing-value'
+        key,
+        value
       )
     }
 
@@ -91,17 +79,9 @@ export const setIndexedDBValue =
 export const getIndexedDBValue =
   (key?: string, storeName?: string, databaseName?: string, databaseVersion?: number): BotIndexedDBAction<PipeValue> =>
     async(page, ...injects) => {
-      const [pipeValue, injectDatabaseVersion, injectDatabaseName, injectStoreName] = unpipeInjects<getQueryKey>(injects, 3)
+      let [pipeValue, injectDatabaseVersion, injectDatabaseName, injectStoreName] = unpipeInjects<getQueryKey|string>(injects, 3)
 
-      if (!key) {
-        if (pipeValue) {
-          if (isObjectWithKey(pipeValue)) {
-            key = pipeValue.key
-          } else {
-            key = pipeValue
-          }
-        }
-      }
+      key ??= isObjectWithKey(pipeValue) ? pipeValue.key : (pipeValue as string) ??= 'missing-key'
 
       return page.evaluate(
         getIndexedDBStoreValue,

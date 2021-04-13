@@ -34,23 +34,17 @@ export const rollDice =
  *  ie if probability is 60% then all numbers generated 0-60 will cause actions to run and all numbers generated 61-100 will cause nothing
  * @future use givenThat() with a wrapper function post v2 (support sync BotActions and decomposed `page` from params into an inject)
  * @param probability represented as a decimal ie .6 = 60% chance of running assembled BotActions
- * @param overloadGenerateRandomDecimal function to generate a random decimal between 0 and 1 with default set to randomDecimal helper that uses a pseudo random method
+ * @param randomDecimal function to generate a random decimal between 0 and 1 with default set to randomDecimal helper that uses a pseudo random method
  */
 export const probably =
-  (probability = .6, overloadGenerateRandomDecimal?: NumberReturningFunc) =>
+  (probability = .6, randomDecimal?: NumberReturningFunc) =>
     (...actions: BotAction[]): BotAction =>
       async(page, ...injects) => {
-        if (!overloadGenerateRandomDecimal) {
-          const [,injectedRandomDecimalFunction] = unpipeInjects(injects, 1)
+        let [,injectedRandomDecimalFunction] = unpipeInjects(injects, 1)
 
-          if (typeof injectedRandomDecimalFunction === 'function') {
-            overloadGenerateRandomDecimal = injectedRandomDecimalFunction // once injects becomes Map based :)
-          } else {
-            overloadGenerateRandomDecimal = generateRandomDecimal
-          }
-        }
+        randomDecimal ??= injectedRandomDecimalFunction ??= generateRandomDecimal
 
-        if (overloadGenerateRandomDecimal() <= probability) {
+        if (randomDecimal() <= probability) {
           return assemblyLine()(...actions)(page, ...injects)
         }
       }

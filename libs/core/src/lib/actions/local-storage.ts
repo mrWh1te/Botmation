@@ -56,27 +56,14 @@ export const setLocalStorageItem =
     async(page, ...injects) => {
       const pipeValue = getInjectsPipeValue(injects)
 
-      if (!value) {
-        if (pipeValue) {
-          // idea here is that the Pipe value is anothe object with keys {key: '', value: ''} -> to map as what we are setting in the DB
-          if (pipeValue.value) {
-            value = pipeValue.value
-          } else {
-            // with potential fallback that the Pipe's value IS the value to set, and we'll get the key from the BotAction's higher order `key` param
-            value = pipeValue
-          }
-        }
-      }
-      if (!key) {
-        if (pipeValue && pipeValue.key) {
-          key = pipeValue.key
-        }
-      }
+      // todo throw an error , don't error silently
+      value ??= pipeValue ? pipeValue.value ? pipeValue.value : pipeValue : 'missing-value'
+      key ??= pipeValue && pipeValue.key ? pipeValue.key : 'missing-key'
 
       await page.evaluate(
         setLocalStorageKeyValue,
-        key ?? 'missing-key',
-        value ?? 'missing-value'
+        key,
+        value
       )
     }
 
@@ -91,15 +78,7 @@ export const getLocalStorageItem =
     async(page, ...injects) => {
       const pipeValue = getInjectsPipeValue(injects)
 
-      if (!key) {
-        if (pipeValue) {
-          if (pipeValue.key) {
-            key = pipeValue.key
-          } else {
-            key = pipeValue
-          }
-        }
-      }
+      key ??= pipeValue && pipeValue.key ? pipeValue.key : pipeValue
 
       return page.evaluate(
         getLocalStorageKeyValue,

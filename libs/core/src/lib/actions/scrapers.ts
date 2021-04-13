@@ -45,22 +45,11 @@ export const htmlParser = (htmlParserFunction: Function) =>
  * Returns the first Element that matches the provided HTML Selector
  * @param htmlSelector
  */
-export const $ = <R = CheerioStatic>(htmlSelector: string, higherOrderHTMLParser?: Function): ScraperBotAction<R> =>
+export const $ = <R = CheerioStatic>(htmlSelector: string, parser?: Function): ScraperBotAction<R> =>
   async(page, ...injects) => {
-    let parser: Function
+    let [,injectedHTMLParser] = unpipeInjects(injects, 1)
 
-    // Future support piping the HTML selector with higher-order overriding
-    const [,injectedHTMLParser] = unpipeInjects(injects, 1)
-
-    if (higherOrderHTMLParser) {
-      parser = higherOrderHTMLParser
-    } else {
-      if (injectedHTMLParser) {
-        parser = injectedHTMLParser
-      } else {
-        parser = cheerio.load
-      }
-    }
+    parser ??= injectedHTMLParser ??= cheerio.load
 
     const scrapedHTML = await page.evaluate(getElementOuterHTML, htmlSelector)
     return scrapedHTML ? parser(scrapedHTML) : undefined
@@ -70,22 +59,11 @@ export const $ = <R = CheerioStatic>(htmlSelector: string, higherOrderHTMLParser
  * Returns an array of parsed HTML Element's as objects (dependent on the html parser used) that match the provided HTML Selector
  * @param htmlSelector
  */
-export const $$ = <R = CheerioStatic[]>(htmlSelector: string, higherOrderHTMLParser?: Function): ScraperBotAction<R> =>
+export const $$ = <R = CheerioStatic[]>(htmlSelector: string, parser?: Function): ScraperBotAction<R> =>
   async(page, ...injects) => {
-    let parser: Function
+    let [,injectedHTMLParser] = unpipeInjects(injects, 1)
 
-    // Future support piping the HTML selector with higher-order overriding
-    const [,injectedHTMLParser] = unpipeInjects(injects, 1)
-
-    if (higherOrderHTMLParser) {
-      parser = higherOrderHTMLParser
-    } else {
-      if (injectedHTMLParser) {
-        parser = injectedHTMLParser
-      } else {
-        parser = cheerio.load
-      }
-    }
+    parser ??= injectedHTMLParser ??= cheerio.load
 
     const scrapedHTMLs = await page.evaluate(getElementsOuterHTML, htmlSelector)
     const cheerioEls: CheerioStatic[] = scrapedHTMLs.map(scrapedHTML => parser(scrapedHTML))

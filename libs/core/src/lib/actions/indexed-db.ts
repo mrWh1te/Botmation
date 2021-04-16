@@ -7,7 +7,6 @@ import { PipeValue } from '../types/pipe-value'
 import { isObjectWithKey, isObjectWithValue } from '../types/objects'
 import { getQueryKey, getQueryKeyValue } from '../types/database'
 import { pipe } from './assembly-lines'
-import { pipeValue } from './pipe'
 
 /**
  *

@@ -19,14 +19,14 @@ import { pipe } from './assembly-lines'
  * @param elementSelector
  */
 export const elementExists = (elementSelector: string): ConditionalBotAction =>
-evaluate(elementExistsInDocument, elementSelector)
+  evaluate(elementExistsInDocument, elementSelector)
 
 /**
  *
  * @param text
  */
 export const textExists = (text: string): ConditionalBotAction =>
-evaluate(textExistsInDocument, text)
+  evaluate(textExistsInDocument, text)
 
 /**
  * @description   Inject htmlParser for ScraperBotAction's

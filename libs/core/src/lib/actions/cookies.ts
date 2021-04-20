@@ -15,6 +15,7 @@ import { Protocol } from 'puppeteer'
  * @param fileName
  * @example saveCookies('cookies') -> creates `cookies.json`
  */
+// TODO spike saveCookies concept using pipe(getCookies, saveToDisk)
 export const saveCookies = (fileName: string, botFileOptions?: Partial<BotFileOptions>): BotFilesAction =>
   async(page, ...injects) => {
     const [,injectedOptions] = unpipeInjects(injects, 1)

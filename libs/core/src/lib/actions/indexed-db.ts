@@ -80,7 +80,7 @@ export const getIndexedDBValue =
     async(page, ...injects) => {
       let [pipeValue, injectDatabaseVersion, injectDatabaseName, injectStoreName] = unpipeInjects<getQueryKey|string>(injects, 3)
 
-      key ??= isObjectWithKey(pipeValue) ? pipeValue.key : (pipeValue as string) ??= 'missing-key'
+      key ??= isObjectWithKey(pipeValue) ? pipeValue.key : pipeValue as string
 
       return page.evaluate(
         getIndexedDBStoreValue,

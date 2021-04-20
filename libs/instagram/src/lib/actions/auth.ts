@@ -9,12 +9,12 @@ import { getIndexedDBValue, indexedDBStore, clearAllLocalStorage } from '@botmat
 import { map } from '@botmation/core'
 import { log } from '@botmation/core'
 
-import { getInstagramLoginUrl } from '../helpers/urls'
+import { INSTAGRAM_URL_LOGIN } from '../constants/urls'
 import {
   FORM_AUTH_USERNAME_INPUT_SELECTOR,
   FORM_AUTH_PASSWORD_INPUT_SELECTOR,
   FORM_AUTH_SUBMIT_BUTTON_SELECTOR
-} from '../selectors'
+} from '../constants/selectors'
 
 /**
  * @description    ConditionalBotAction that resolves TRUE if the User is NOT logged in
@@ -47,7 +47,7 @@ export const isLoggedIn: ConditionalBotAction =
 export const login = ({username, password}: {username: string, password: string}): BotAction =>
   chain(
     errors('Instagram login()')(
-      goTo(getInstagramLoginUrl()),
+      goTo(INSTAGRAM_URL_LOGIN),
       click(FORM_AUTH_USERNAME_INPUT_SELECTOR),
       type(username),
       click(FORM_AUTH_PASSWORD_INPUT_SELECTOR),

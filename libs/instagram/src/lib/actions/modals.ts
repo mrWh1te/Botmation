@@ -4,7 +4,7 @@
 import { BotAction } from '@botmation/core'
 
 import { TURN_OFF_NOTIFICATIONS_BUTTON_LABEL } from '../constants/modals'
-import { MAIN_MODAL_HEADER_SELECTOR } from '../selectors'
+import { MAIN_MODAL_HEADER_SELECTOR } from '../constants/selectors'
 import { TURN_OFF_NOTIFICATIONS_MODAL_HEADER_TEXT } from '../constants/modals'
 import { ConditionalBotAction } from '@botmation/core'
 

@@ -3,7 +3,7 @@
  */
 
 import { BotAction, click, forAsLong, wait, elementExists, givenThat } from "@botmation/core";
-import { FIRST_STORY, STORIES_VIEWER_NEXT_STORY_ICON } from "../selectors";
+import { FIRST_STORY, STORIES_VIEWER_NEXT_STORY_ICON } from "../constants/selectors";
 
 /**
  * When on the Home page, run this BotAction to cause the bot to open the Stories Theater Mode with the 1st Story then view them all until there are no more left

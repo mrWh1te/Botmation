@@ -72,7 +72,7 @@ Import any core API function from:
 import { chain, goTo, screenshot } from '@botmation/core'
 ```
 
-`@botmation/core` v1 has 16 groups of BotActions to choose from:
+`@botmation/core` v1 has 17 groups of BotActions to choose from:
 
 <img alt="Leader Bot" src="https://raw.githubusercontent.com/mrWh1te/Botmation/master/assets/art/red_bot.PNG" width="200" align="right" style="position: relative;top: 30px;">
 
@@ -104,6 +104,8 @@ import { chain, goTo, screenshot } from '@botmation/core'
     - change the page's URL, wait for form submissions to change page URL, back, forward, refresh
  - [pipe](https://www.botmation.dev/api/pipe)
     - functions specific to Piping
+ - [random](https://www.botmation.dev/api/random)
+    - functions specific to randomness like rolling dice
  - [scrapers](https://www.botmation.dev/api/scrapers)
     - scrape HTML documents with an HTML parser and evaluate JavaScript inside a Page
  - [time](https://www.botmation.dev/api/time)

@@ -14,14 +14,11 @@ import { wait } from './time'
  */
 export const goTo = (url: string, goToOptions?: Partial<WaitForOptions>): BotAction =>
   async(page) => {
-    goToOptions = enrichGoToPageOptions(goToOptions)
-
-    // same url check
     if (page.url() === url) {
       return
     }
 
-    await page.goto(url, goToOptions)
+    await page.goto(url, enrichGoToPageOptions(goToOptions))
   }
 
 /**

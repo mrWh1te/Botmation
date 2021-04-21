@@ -18,8 +18,6 @@ export const goTo = (url: string, goToOptions?: Partial<WaitForOptions>): BotAct
       return
     }
 
-    console.log('type of = ', typeof page.url())
-
     await page.goto(url, enrichGoToPageOptions(goToOptions))
   }
 

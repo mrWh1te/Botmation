@@ -7,7 +7,6 @@ import {
   givenThat,
   loadCookies,
   saveCookies,
-  screenshot,
   logError,
   wait,
 } from '@botmation/core'
@@ -17,8 +16,12 @@ import {
   isGuest,
   isLoggedIn,
   goToHome,
-  logout,
+  tweet,
 } from '@botmation/twitter'
+
+const tweetMessage = `This tweet was published by a Botmation bot!
+
+https://botmation.dev/`;
 
 (async () => {
   let browser: puppeteer.Browser
@@ -53,12 +56,12 @@ import {
       log('login complete'),
 
       givenThat(isLoggedIn)(
-        log('is logged in check complete'),
-        screenshot('logged-in'),
-        log('screenshot taken'),
-        logout,
-        wait(2000),
-        screenshot('logout')
+        // log('is logged in check complete'),
+        // screenshot('logged-in'),
+        // log('screenshot taken'),
+        // logout,
+        tweet(tweetMessage),
+        // screenshot('logout')
       ),
 
       log('Done'),

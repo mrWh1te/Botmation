@@ -4,6 +4,7 @@
 export const TWITTER_URL_BASE = 'https://www.twitter.com/'
 
 export const TWITTER_URL_HOME = TWITTER_URL_BASE + 'home'
+export const TWITTER_URL_TWEET = TWITTER_URL_BASE + 'compose/tweet'
 export const TWITTER_URL_EXPLORE = TWITTER_URL_BASE + 'explore'
 export const TWITTER_URL_NOTIFICATIONS = TWITTER_URL_BASE + 'notifications'
 export const TWITTER_URL_MESSAGES = TWITTER_URL_BASE + 'messages'

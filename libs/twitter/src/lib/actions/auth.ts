@@ -2,14 +2,13 @@ import { clickText, ConditionalBotAction, getCookies } from '@botmation/core'
 import { BotAction } from '@botmation/core'
 
 import { chain, errors, pipe } from '@botmation/core'
-import { goTo, waitForNavigation } from '@botmation/core'
+import { waitForNavigation } from '@botmation/core'
 import { click, type } from '@botmation/core'
 import { map } from '@botmation/core'
 import { log } from '@botmation/core'
 import { FORM_AUTH_PASSWORD_INPUT_SELECTOR, FORM_AUTH_USERNAME_INPUT_SELECTOR } from '../constants/selectors'
 
-import { TWITTER_URL_LOGIN } from '../constants/urls'
-import { goToLogout } from './navigation'
+import { goToLogin, goToLogout } from './navigation'
 
 /**
  * @description  BotAction that attempts the login flow for Twitter
@@ -18,7 +17,7 @@ import { goToLogout } from './navigation'
 export const login = ({username, password}: {username: string, password: string}): BotAction =>
   chain(
     errors('Twitter login()')(
-      goTo(TWITTER_URL_LOGIN),
+      goToLogin,
       click(FORM_AUTH_USERNAME_INPUT_SELECTOR),
       type(username),
       click(FORM_AUTH_PASSWORD_INPUT_SELECTOR),

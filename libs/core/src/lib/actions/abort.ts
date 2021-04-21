@@ -50,13 +50,13 @@ export const restart = (...actions: BotAction<any>[]): BotAction<any> =>
         // manually resolving actions in a Pipe instead of using pipe()() to control the AbortLineSignal processing
         actionResult = await action(page, ...injects, pipeObject)
 
-        // unique recycle aborting behavior
+        // unique restart aborting behavior
         if (isAbortLineSignal(actionResult)) {
-          // cannot recycle an infinity abort, if desirable, create another BotAction - maybe with a customizing HO function
-          // assembledLines 1 => recycle actions
-          // assembledLines 0 or 2+ => abort recycle
+          // cannot restart an infinity abort, if desirable, create another BotAction - maybe with a customizing HO function
+          // assembledLines 1 => restart actions
+          // assembledLines 0 or 2+ => abort restart
           if (actionResult.assembledLines > 1 || actionResult.assembledLines === 0) {
-            return processAbortLineSignal(actionResult, 2) // abort the line and abort recycle()
+            return processAbortLineSignal(actionResult, 2) // abort the line and abort restart()
           } else {
             restartActions = true;
             pipeObject = wrapValueInPipe(actionResult.pipeValue)

@@ -1,6 +1,6 @@
 import { Page, Browser } from 'puppeteer'
 
-import { click, type } from './input'
+import { click, clickText, type } from './input'
 
 import { FORM_SUBMIT_BUTTON_SELECTOR, FORM_TEXT_INPUT_SELECTOR, BASE_URL } from './../mocks'
 
@@ -67,6 +67,17 @@ describe('[Botmation] actions/input', () => {
     expect(formInputValueJSON).toEqual('My cat is black')
 
     await page.close()
+  })
+
+  it('clickText should click the element with the text provided', async() => {
+    page = await browser.newPage()
+    await page.goto(BASE_URL)
+
+    await clickText('Example Link 2')(page)
+    await page.waitForNavigation()
+    await clickText('dlkfjnsldkfjslkdfjbslkfdjbsdfg')(page) // can attempt to click soemthing that doesn't exist
+
+    expect(page.url()).toEqual('http://localhost:8080/example2.html')
   })
 
 })

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Testing: IndexedDB</title>
+    <script type="text/javascript">
+      const databaseName = 'MyTestDatabase';
+      const databaseName2 = 'MySecondDatabase';
+      const databaseVersion = undefined;
+      const storeName = 'TestObjectStore';
+      const key = 'TestKey';
+      const value = 'TestValue234';
+
+      const openRequest = indexedDB.open(databaseName, databaseVersion);
+
+      openRequest.onerror = function(ev) {
+        ev.stopPropagation();
+        console.error(openRequest.error);
+      }
+
+      openRequest.onupgradeneeded = function(ev) {
+        if (!openRequest.result.objectStoreNames.contains(storeName)) {
+          openRequest.result.createObjectStore(storeName);
+        }
+      }
+
+      openRequest.onsuccess = function(ev) {
+        const db = openRequest.result;
+
+        try {
+          db.transaction(storeName, 'readwrite')
+            .objectStore(storeName)
+            .put(value, key)
+            .onsuccess = function() {
+              db.close();
+            }
+        } catch (error) {
+          db.close();
+        }
+      }
+
+      const openRequest2 = indexedDB.open(databaseName2);
+
+      openRequest2.onerror = function(ev) {
+        ev.stopPropagation();
+        console.error(openRequest2.error);
+      }
+
+      openRequest2.onupgradeneeded = function(ev) {
+        if (!openRequest2.result.objectStoreNames.contains(storeName)) {
+          openRequest2.result.createObjectStore(storeName);
+        }
+      }
+
+      openRequest2.onsuccess = function(ev) {
+        const db = openRequest2.result;
+
+        try {
+          db.transaction(storeName, 'readwrite')
+            .objectStore(storeName)
+            .put(value, key)
+            .onsuccess = function() {
+              db.close();
+            }
+        } catch (error) {
+          db.close();
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>IndexedDB</h1>
+    <ul>
+      <li>DB name: MyTestDatabase</li>
+      <li>Store name: TestObjectStore</li>
+      <li>Key: TestKey</li>
+      <li>Key Value: TestValue234</li>
+    </ul>
+  </body>
+</html>

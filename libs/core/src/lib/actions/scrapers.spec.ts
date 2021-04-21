@@ -2,7 +2,7 @@ import { Page, Browser } from 'puppeteer'
 const puppeteer = require('puppeteer')
 
 import { BASE_URL } from './../mocks'
-import { $, $$, htmlParser, evaluate } from './scrapers'
+import { $, $$, htmlParser, evaluate, elementExists, textExists } from './scrapers'
 
 // Mock inject()()
 jest.mock('../actions/inject', () => {
@@ -63,13 +63,11 @@ describe('[Botmation] actions/scraping', () => {
 
     await $('test-1')(mockPage, (d:any) => d) // mock html parser
     await $('test-1-1', (d:any) => d)(mockPage)
-
-    const result = await $('5', (d: any) => 10)(mockPage, (d: any) => d)
+    await $('5', (d: any) => 10)(mockPage, (d: any) => d)
 
     expect(mockPage.evaluate).toHaveBeenNthCalledWith(1, expect.any(Function), 'test-1')
     expect(mockPage.evaluate).toHaveBeenNthCalledWith(2, expect.any(Function), 'test-1-1')
     expect(mockPage.evaluate).toHaveBeenNthCalledWith(3, expect.any(Function), '5')
-    expect(result).toEqual(10)
   })
 
   it('$$() should call Page.evaluate() with a helper function and the correct html selector', async() => {
@@ -107,7 +105,7 @@ describe('[Botmation] actions/scraping', () => {
   })
 
   //
-  // Unit-Tests
+  // e2e
   it('Should scrape joke (2 paragraph elements) and 1 home link (anchor element) and grab their text', async() => {
     // setup test
     page = await browser.newPage()
@@ -123,6 +121,49 @@ describe('[Botmation] actions/scraping', () => {
     expect(jokeLines[1]('p').text()).toEqual('So he walks up to the tables, and asks, "May I join you?"')
 
     expect(homeLink('a').text()).toEqual('Home Link')
+
+    await page.close()
+  })
+
+  it('$() should return undefined if it doesnt find the HTML node based on the selector', async() => {
+    page = await browser.newPage()
+
+    await page.goto(BASE_URL);
+
+    const noResult = await $('does-not-exist')(page)
+
+    expect(noResult).toBeUndefined
+    await page.close()
+  })
+
+  it('elementExists should return TRUE if the selector is found in the DOM otherwise return FALSE', async() => {
+    page = await browser.newPage()
+
+    await page.goto(BASE_URL)
+
+    const result = await elementExists('form input[name="answer"]')(page)
+    const noResult = await elementExists('not-an-html-element')(page)
+
+    expect(result).toEqual(true)
+    expect(noResult).toEqual(false)
+
+    await page.close()
+  })
+
+  it('textExists should return TRUE if the text is found in the DOM otherwise return FALSE', async() => {
+    page = await browser.newPage()
+
+    await page.goto(BASE_URL)
+
+    const result = await textExists('Do you want to hear a joke?')(page)
+    const partialResult = await textExists(' to hear a ')(page)
+
+    const noResult = await textExists('The local neighborhood Spiderman is on vacation')(page)
+
+    expect(result).toEqual(true)
+    expect(partialResult).toEqual(true)
+
+    expect(noResult).toEqual(false)
 
     await page.close()
   })

@@ -1,11 +1,14 @@
-import { Page } from 'puppeteer'
+import * as puppeteer from 'puppeteer'
+
 import { promises as fs, Stats } from 'fs'
 
 import { getFileUrl } from './../helpers/files'
-import { saveCookies, loadCookies } from './cookies'
+import { saveCookies, loadCookies, getCookies, deleteCookies } from './cookies'
 import { BotFileOptions } from './../interfaces/bot-file-options'
 
 import { wrapValueInPipe } from './../helpers/pipe'
+import { COOKIES_URL } from '../mocks'
+import { pipe } from './assembly-lines'
 
 /**
  * @description   Cookies BotAction's
@@ -35,10 +38,15 @@ describe('[Botmation] actions/cookies', () => {
     }
   ]
 
-  let mockPage: Page = {
-    cookies: jest.fn(() => COOKIES_JSON),
-    setCookie: jest.fn()
-  } as any as Page
+  let mockPage: puppeteer.Page
+
+  beforeEach(() => {
+    mockPage = {
+      cookies: jest.fn(() => COOKIES_JSON),
+      setCookie: jest.fn(),
+      deleteCookie: jest.fn()
+    } as any as puppeteer.Page
+  })
 
   //
   // saveCookies() Unit/Integration Test
@@ -65,6 +73,87 @@ describe('[Botmation] actions/cookies', () => {
       "secure": true,
       "session": false
     })
+  })
+
+  //
+  // getCookies
+  it('getCookies() should call Puppeteer page cookies() method with urls provided, with safe default of no urls provided', async() => {
+    await getCookies()(mockPage)
+
+    expect(mockPage.cookies).toHaveBeenCalledTimes(1)
+
+    await getCookies('url 1')(mockPage)
+
+    expect(mockPage.cookies).toHaveBeenNthCalledWith(2, 'url 1')
+
+    await getCookies('url 5', 'url 25', 'url 54')(mockPage)
+
+    expect(mockPage.cookies).toHaveBeenNthCalledWith(3, 'url 5', 'url 25', 'url 54')
+  })
+
+  //
+  // deleteCookies
+  it('deleteCookies() should call puppeteer page deleteCookies() method with cookies provided through HO param or fallback pipe value if value is an array', async() => {
+    const cookies = ['a', 'b', 'c', 'd'] as any as puppeteer.Protocol.Network.Cookie[]
+    const pipeCookies = ['5', '2', '3', '1'] as any as puppeteer.Protocol.Network.Cookie[]
+
+    await deleteCookies(...cookies)(mockPage)
+
+    expect(mockPage.deleteCookie).toHaveBeenCalledWith('a', 'b', 'c', 'd')
+    expect(mockPage.deleteCookie).toHaveBeenCalledTimes(1)
+
+    await deleteCookies()(mockPage, wrapValueInPipe(pipeCookies))
+
+    expect(mockPage.deleteCookie).toHaveBeenNthCalledWith(2, '5', '2', '3', '1')
+    expect(mockPage.deleteCookie).toHaveBeenCalledTimes(2)
+
+    const higherOrderOverwritesPipeValue = ['blue', 'green', 'red'] as any as puppeteer.Protocol.Network.Cookie[]
+
+    await deleteCookies(...higherOrderOverwritesPipeValue)(mockPage, wrapValueInPipe(pipeCookies))
+
+    expect(mockPage.deleteCookie).toHaveBeenNthCalledWith(3, 'blue', 'green', 'red')
+    expect(mockPage.deleteCookie).toHaveBeenCalledTimes(3)
+
+    // no cookies specified to delete so no delete call
+    const notCookies = {}
+
+    await deleteCookies()(mockPage, wrapValueInPipe(notCookies))
+
+    expect(mockPage.deleteCookie).toHaveBeenCalledTimes(3)
+
+    await deleteCookies()(mockPage) // no HO, no injects (pipe value)
+
+    expect(mockPage.deleteCookie).toHaveBeenCalledTimes(3)
+  })
+
+  // e2e
+  it('can deleteCookies() based on piped value from getCookies()', async() => {
+    const browser = await puppeteer.launch()
+    const page = await browser.newPage()
+
+    await page.goto(COOKIES_URL)
+    const initialCookies = await page.cookies()
+
+    expect(initialCookies.length).toEqual(2)
+
+    await pipe()(
+      getCookies(),
+      // todo tap() BotAction? similar to map() BotAction but ignore cb return / auto return pipe value
+      async(_, pipeObject) => {
+        expect(pipeObject.value.length).toEqual(2)
+        expect(pipeObject.value[0]).toEqual({"domain": "localhost", "expires": -1, "httpOnly": false, "name": "sessionId", "path": "/", "sameParty": false, "secure": false, "session": true, "size": 16, "sourcePort": 8080, "sourceScheme": "NonSecure", "value": "1235711"})
+        expect(pipeObject.value[1]).toEqual({"domain": "localhost", "expires": -1, "httpOnly": false, "name": "username", "path": "/", "sameParty": false, "secure": false, "session": true, "size": 16, "sourcePort": 8080, "sourceScheme": "NonSecure", "value": "John Doe"})
+
+        return pipeObject.value
+      },
+      deleteCookies()
+    )(page)
+
+    const finalCookies = await page.cookies()
+    expect(finalCookies.length).toEqual(0)
+
+    await page.close()
+    await browser.close()
   })
 
   //

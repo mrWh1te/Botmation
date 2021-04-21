@@ -7,9 +7,10 @@ import {
   givenThat,
   loadCookies,
   saveCookies,
-  goTo,
   screenshot,
-  logError
+  logError,
+  waitForNavigation,
+  wait,
 } from '@botmation/core'
 
 import {
@@ -18,7 +19,10 @@ import {
   isLoggedIn,
   closeTurnOnNotificationsModal,
   isTurnOnNotificationsModalActive,
-  getInstagramBaseUrl
+  goToHome,
+  viewStories,
+  isSaveYourLoginInfoActive,
+  clickSaveYourLoginInfoNoButton,
 } from '@botmation/instagram'
 
 (async () => {
@@ -29,17 +33,26 @@ import {
     const pages = await browser.pages()
     const page = pages.length === 0 ? await browser.newPage() : pages[0]
 
+    // Instagram BotActions were developed for the UI responsiveness in desktop widths
+    // specifically, in mobile widths, the `viewStories` BotAction will open your story
+    // instead of the presentation of stories
+    await page.setViewport({
+      width: 1000,
+      height: 600,
+      deviceScaleFactor: 1,
+    });
+
     await chain(
       log('Botmation running'),
 
       // Sets up the injects for BotFileAction's (optional)
-      files({cookies_directory: 'simple'})(
+      files()(
         // Takes the name of the file to load cookies from
         // Match this value with the same used in saveCookies()
         loadCookies('instagram'),
       ),
 
-      goTo(getInstagramBaseUrl()),
+      goToHome,
 
       // inline, hackish but do-able if your doing something on the fly
       //  follow the rules, don't return a value in a chain
@@ -48,26 +61,35 @@ import {
       // },
 
       // lets log in, if we are a guest
-      log('checking Guest status'),
       givenThat(isGuest) (
-        log('is guest so logging in'),
         login({username: 'account', password: 'password'}), // <- put your username and password here
-        files({cookies_directory: 'simple'})(
-          saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies
+        files()(
+          saveCookies('instagram'), // the Bot will skip login, on next run, by loading the cookies from this file
         ),
-        log('Saved Cookies')
       ),
 
       // in case that log in failed, lets check before we operate as a logged in user
       givenThat(isLoggedIn)(
-        log('is logged in'),
-        // After initial load, Instagram sometimes prompts the User with a modal...
+
+        givenThat(isSaveYourLoginInfoActive)(
+          clickSaveYourLoginInfoNoButton,
+          waitForNavigation,
+          log('save ur login info closed')
+        ),
+
         // Deal with the "Turn On Notifications" Modal, if it shows up
         givenThat(isTurnOnNotificationsModalActive)(
           closeTurnOnNotificationsModal
         ),
 
         screenshot('logged-in'),
+
+        viewStories,
+
+        log('screenshot taken'),
+
+        wait(5000),
+
       ),
 
       log('Done'),

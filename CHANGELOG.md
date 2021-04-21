@@ -1,3 +1,24 @@
+## v1.3.0 @botmation/core
+
+New BotActions group called "Random" for running BotActions on a probability.
+
+Couple bug fixes.
+
+New auxiliary Instagram package v1.1.0:
+ - navigation
+ - view stories
+ - logout
+
+More details [here](https://github.com/mrWh1te/Botmation/pull/105).
+
+## v1.2.0 @botmation/core
+
+New BotAction called [restart](https://www.botmation.dev/api/abort#restart) for restarting an assembled lines of BotActions that aborts.
+
+Added support for latest major Puppeteer v8.
+
+More details [here](https://github.com/mrWh1te/Botmation/pull/97).
+
 ## v1.1.0 @botmation/core
 
 New `schedule()` BotAction, reorganization of BotAction groups (Utilities => Time, Loops, Branching) and minor performance improvement of a few core BotActions.

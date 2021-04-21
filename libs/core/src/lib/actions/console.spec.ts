@@ -29,7 +29,7 @@ describe('[Botmation] actions/console', () => {
     page = await browser.newPage()
   })
 
-  afterEach(async () => {
+  afterEach(async() => {
     await page.close()
   })
 

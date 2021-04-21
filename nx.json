@@ -25,6 +25,7 @@
     "bot-pdf": { "tags": [] },
     "bot-cluster": { "tags": [] },
     "bot-object-oriented": { "tags": [] },
-    "twitter": { "tags": [] }
+    "twitter": { "tags": [] },
+    "bot-twitter": { "tags": [] }
   }
 }

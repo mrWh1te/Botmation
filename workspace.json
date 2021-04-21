@@ -504,6 +504,63 @@
           }
         }
       }
+    },
+    "bot-twitter": {
+      "root": "apps/bot-twitter",
+      "sourceRoot": "apps/bot-twitter/src",
+      "projectType": "application",
+      "prefix": "bot-twitter",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/bot-twitter",
+            "main": "apps/bot-twitter/src/main.ts",
+            "tsConfig": "apps/bot-twitter/tsconfig.app.json",
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/bot-twitter/src/environments/environment.ts",
+                  "with": "apps/bot-twitter/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "bot-twitter:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/bot-twitter/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/bot-twitter"
+          ],
+          "options": {
+            "jestConfig": "apps/bot-twitter/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

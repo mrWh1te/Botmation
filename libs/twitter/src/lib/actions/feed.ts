@@ -1,14 +1,12 @@
 import { BotAction, chain, click, clickText, log, type, wait, waitForNavigation } from "@botmation/core";
+import { FORM_TWEET_TEXTAREA } from "../constants/selectors";
 import { goToTweet } from "./navigation";
 
 export const tweet = (message: string): BotAction => chain(
   goToTweet,
-  log('tweet page'),
   wait(1200),
-  click('.DraftEditor-root'),
-  log('clicked form input'),
+  click(FORM_TWEET_TEXTAREA),
   type(message),
-  log('message typed'),
   clickText('Tweet'),
   waitForNavigation
 )

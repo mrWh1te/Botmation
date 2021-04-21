@@ -464,6 +464,46 @@
           }
         }
       }
+    },
+    "twitter": {
+      "root": "libs/twitter",
+      "sourceRoot": "libs/twitter/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/twitter/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/twitter"
+          ],
+          "options": {
+            "jestConfig": "libs/twitter/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/libs/twitter",
+            "tsConfig": "libs/twitter/tsconfig.lib.json",
+            "packageJson": "libs/twitter/package.json",
+            "main": "libs/twitter/src/index.ts",
+            "assets": [
+              "libs/twitter/*.md"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {

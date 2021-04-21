@@ -38,12 +38,11 @@ import {
       log('cookies loaded'),
 
       goToHome,
-      wait(3000),
 
       log('home navigated'),
 
       // login if guest
-      givenThat(isGuest) (
+      givenThat(isGuest)(
         login({username: 'account', password: 'password'}), // <- put your username and password here
         files()(
           saveCookies('twitter')

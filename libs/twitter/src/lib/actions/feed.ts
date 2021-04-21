@@ -1,4 +1,13 @@
-import { BotAction, chain, click, clickText, log, type, wait, waitForNavigation } from "@botmation/core";
+import {
+  BotAction,
+  chain,
+  click,
+  clickText,
+  type,
+  wait,
+  waitForNavigation
+} from "@botmation/core";
+
 import { FORM_TWEET_TEXTAREA } from "../constants/selectors";
 import { goToTweet } from "./navigation";
 

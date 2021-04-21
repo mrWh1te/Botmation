@@ -1,13 +1,19 @@
-import { clickText, ConditionalBotAction, getCookies } from '@botmation/core'
-import { BotAction } from '@botmation/core'
+import {
+  clickText,
+  ConditionalBotAction,
+  getCookies,
+  BotAction,
+  chain,
+  errors,
+  pipe,
+  waitForNavigation,
+  click,
+  type,
+  map,
+  log
+} from '@botmation/core'
 
-import { chain, errors, pipe } from '@botmation/core'
-import { waitForNavigation } from '@botmation/core'
-import { click, type } from '@botmation/core'
-import { map } from '@botmation/core'
-import { log } from '@botmation/core'
 import { FORM_AUTH_PASSWORD_INPUT_SELECTOR, FORM_AUTH_USERNAME_INPUT_SELECTOR } from '../constants/selectors'
-
 import { goToLogin, goToLogout } from './navigation'
 
 /**

@@ -23,10 +23,6 @@ import {
   viewStories,
   isSaveYourLoginInfoActive,
   clickSaveYourLoginInfoNoButton,
-  logout,
-  goToExplore,
-  goToMessaging,
-  goToSettings
 } from '@botmation/instagram'
 
 (async () => {
@@ -66,11 +62,10 @@ import {
 
       // lets log in, if we are a guest
       givenThat(isGuest) (
-        login({username: 'lagmahol', password: 'jesu1t2007!'}), // <- put your username and password here
+        login({username: 'account', password: 'password'}), // <- put your username and password here
         files()(
-          saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies
+          saveCookies('instagram'), // the Bot will skip login, on next run, by loading the cookies from this file
         ),
-
       ),
 
       // in case that log in failed, lets check before we operate as a logged in user
@@ -89,31 +84,13 @@ import {
 
         screenshot('logged-in'),
 
-        // viewStories,
+        viewStories,
+
         log('screenshot taken'),
-
-        wait(12000),
-
-        goToExplore,
-
-        wait(2000),
-
-        goToMessaging,
-
-        wait(2000),
-
-        goToSettings,
-
 
         wait(5000),
 
-        // logout,
-
-        // log('logout complete'),
-
-        wait(15000)
       ),
-
 
       log('Done'),
     )(page)

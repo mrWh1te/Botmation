@@ -23,7 +23,10 @@ import {
   viewStories,
   isSaveYourLoginInfoActive,
   clickSaveYourLoginInfoNoButton,
-  logout
+  logout,
+  goToExplore,
+  goToMessaging,
+  goToSettings
 } from '@botmation/instagram'
 
 (async () => {
@@ -33,6 +36,15 @@ import {
     browser = await puppeteer.launch({headless: false})
     const pages = await browser.pages()
     const page = pages.length === 0 ? await browser.newPage() : pages[0]
+
+    // Instagram BotActions were developed for the UI responsiveness in desktop widths
+    // specifically, in mobile widths, the `viewStories` BotAction will open your story
+    // instead of the presentation of stories
+    await page.setViewport({
+      width: 1000,
+      height: 600,
+      deviceScaleFactor: 1,
+    });
 
     await chain(
       log('Botmation running'),
@@ -54,10 +66,11 @@ import {
 
       // lets log in, if we are a guest
       givenThat(isGuest) (
-        login({username: 'account', password: 'password'}), // <- put your username and password here
+        login({username: 'lagmahol', password: 'jesu1t2007!'}), // <- put your username and password here
         files()(
           saveCookies('instagram'), // the Bot will skip login, on next run, by loading cookies
-        )
+        ),
+
       ),
 
       // in case that log in failed, lets check before we operate as a logged in user
@@ -76,17 +89,31 @@ import {
 
         screenshot('logged-in'),
 
-        viewStories,
+        // viewStories,
         log('screenshot taken'),
+
+        wait(12000),
+
+        goToExplore,
+
+        wait(2000),
+
+        goToMessaging,
+
+        wait(2000),
+
+        goToSettings,
+
 
         wait(5000),
 
-        logout,
+        // logout,
 
-        log('logout complete'),
+        // log('logout complete'),
 
         wait(15000)
       ),
+
 
       log('Done'),
     )(page)

@@ -26,6 +26,7 @@
     "bot-cluster": { "tags": [] },
     "bot-object-oriented": { "tags": [] },
     "twitter": { "tags": [] },
-    "bot-twitter": { "tags": [] }
+    "bot-twitter": { "tags": [] },
+    "facebook": { "tags": [] }
   }
 }

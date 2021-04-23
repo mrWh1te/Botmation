@@ -561,6 +561,46 @@
           }
         }
       }
+    },
+    "facebook": {
+      "root": "libs/facebook",
+      "sourceRoot": "libs/facebook/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/facebook/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/facebook"
+          ],
+          "options": {
+            "jestConfig": "libs/facebook/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/libs/facebook",
+            "tsConfig": "libs/facebook/tsconfig.lib.json",
+            "packageJson": "libs/facebook/package.json",
+            "main": "libs/facebook/src/index.ts",
+            "assets": [
+              "libs/facebook/*.md"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {

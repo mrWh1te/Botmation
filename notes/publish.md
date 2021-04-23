@@ -48,6 +48,9 @@ Command to scaffold a new package for an example library called `acme`:
 ```bash
 nx g lib acme --buildable --publishable --importPath=@botmation/acme
 ```
+
+> Don't forget to copy/paste an auxiliary package README then update its links & badge
+
 ## Package Versioning
 
 [Semantic Versioning](https://semver.org/) with the Major version number anchored to `@botmation/core` starting at v1.0.0

@@ -24,6 +24,8 @@
     "bot-linkedin": { "tags": [] },
     "bot-pdf": { "tags": [] },
     "bot-cluster": { "tags": [] },
-    "bot-object-oriented": { "tags": [] }
+    "bot-object-oriented": { "tags": [] },
+    "twitter": { "tags": [] },
+    "bot-twitter": { "tags": [] }
   }
 }

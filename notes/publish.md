@@ -38,12 +38,19 @@ Sync the lib's package.json's `@botmation/core` version with the correct one.
 
 Sync the lib's package.json's `@botmation/core` version with the correct one.
 
+### Twitter
+
+Sync the lib's packge.json's `@botmation/core` version with correct one.
+
 # Add new Publishable Package
 
 Command to scaffold a new package for an example library called `acme`:
 ```bash
 nx g lib acme --buildable --publishable --importPath=@botmation/acme
 ```
+
+> Don't forget to copy/paste an auxiliary package README then update its links & badge
+
 ## Package Versioning
 
 [Semantic Versioning](https://semver.org/) with the Major version number anchored to `@botmation/core` starting at v1.0.0

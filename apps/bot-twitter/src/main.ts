@@ -38,11 +38,7 @@ https://botmation.dev/`;
         loadCookies('twitter'),
       ),
 
-      log('cookies loaded'),
-
       goToHome,
-
-      log('home navigated'),
 
       // login if guest
       givenThat(isGuest)(
@@ -56,12 +52,7 @@ https://botmation.dev/`;
       log('login complete'),
 
       givenThat(isLoggedIn)(
-        // log('is logged in check complete'),
-        // screenshot('logged-in'),
-        // log('screenshot taken'),
-        // logout,
         tweet(tweetMessage),
-        // screenshot('logout')
       ),
 
       log('Done'),

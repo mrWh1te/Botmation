@@ -47,17 +47,17 @@ export const login = ({username, password}: {username: string, password: string}
  * @param page
  * @param injects
  */
-// export const isGuest: ConditionalBotAction = pipe()(
-//   getCookies(),
-//   map(cookies => cookies.find(cookie => cookie.name === 'auth_token') ? false : true)
-// )
+export const isGuest: ConditionalBotAction = pipe()(
+  getCookies(),
+  map(cookies => cookies.find(cookie => cookie.name === 'c_user') ? false : true)
+)
 
 /**
  * @param page
  * @param injects
  */
-// export const isLoggedIn: ConditionalBotAction = pipe()(
-//   getCookies(),
-//   map(cookies => cookies.find(cookie => cookie.name === 'auth_token') ? true : false)
-// )
+export const isLoggedIn: ConditionalBotAction = pipe()(
+  getCookies(),
+  map(cookies => cookies.find(cookie => cookie.name === 'c_user') ? true : false)
+)
 

@@ -13,8 +13,8 @@ import {
   log
 } from '@botmation/core'
 
-import { FORM_AUTH_PASSWORD_INPUT_SELECTOR, FORM_AUTH_SUBMIT_BUTTON_SELECTOR, FORM_AUTH_USERNAME_INPUT_SELECTOR } from '../constants/selectors'
-import { goToLogin, goToLogout } from './navigation'
+import { FORM_AUTH_PASSWORD_INPUT_SELECTOR, FORM_AUTH_SUBMIT_BUTTON_SELECTOR, FORM_AUTH_USERNAME_INPUT_SELECTOR, NAVIGATION_ACCOUNT_CONTROLS_AND_SETTINGS } from '../constants/selectors'
+import { goToLogin } from './navigation'
 
 /**
  * @description  BotAction that attempts the login flow for Facebook
@@ -37,11 +37,11 @@ export const login = ({username, password}: {username: string, password: string}
 /**
  * @param page
  */
-// export const logout: BotAction = chain(
-//   goToLogout,
-//   clickText('Log out'),
-//   waitForNavigation
-// )
+export const logout: BotAction = chain(
+  click(NAVIGATION_ACCOUNT_CONTROLS_AND_SETTINGS + ' > span'),
+  clickText('Log Out'),
+  waitForNavigation
+)
 
 /**
  * @param page

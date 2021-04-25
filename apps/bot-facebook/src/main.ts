@@ -11,6 +11,8 @@ import {
   screenshot,
   click,
   loadCookies,
+  type,
+  clickText,
 } from '@botmation/core'
 
 import {
@@ -18,7 +20,7 @@ import {
   isGuest,
   isLoggedIn,
   goToHome,
-  logout
+  createAPost
 } from '@botmation/facebook'
 
 (async () => {
@@ -54,9 +56,12 @@ import {
       log('login complete'),
 
       givenThat(isLoggedIn)(
-        screenshot('logged-in'),
-        logout,
-        wait(1000),
+        // screenshot('logged-in'),
+        createAPost('hello world'),
+        // logout,
+        wait(3000),
+        goToHome,
+        wait(1200),
         screenshot('logged-out')
       ),
 

@@ -1,4 +1,31 @@
 {
   "name": "@botmation/facebook",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "description": "Auxiliary package of functions for the TypeScript framework Botmation focused on Facebook",
+  "homepage": "https://www.botmation.dev/sites/facebook",
+  "author": "Michael Lage",
+  "keywords": [
+    "social",
+    "web",
+    "browser",
+    "automation",
+    "login",
+    "bot",
+    "crawler",
+    "puppeteer",
+    "declarative",
+    "functional"
+  ],
+  "license": "MIT",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrWh1te/Botmation.git"
+  },
+  "peerDependencies": {
+    "@botmation/core": "^1.3.0"
+  },
+  "dependencies": {
+    "tslib": "^2.1.0"
+  }
 }

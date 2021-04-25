@@ -1,7 +1,7 @@
 {
   "name": "@botmation/linkedin",
   "version": "1.0.2",
-  "description": "Auxiliary package of functions for the TypeScript framework Botmation",
+  "description": "Auxiliary package of functions for the TypeScript framework Botmation focused on LinkedIn",
   "homepage": "https://www.botmation.dev/sites/linkedin",
   "author": "Michael Lage",
   "keywords": [

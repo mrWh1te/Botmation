@@ -1,7 +1,7 @@
 {
   "name": "@botmation/instagram",
   "version": "1.1.0",
-  "description": "Auxiliary package of functions for the TypeScript framework Botmation",
+  "description": "Auxiliary package of functions for the TypeScript framework Botmation focused on Instagram",
   "homepage": "https://www.botmation.dev/sites/instagram",
   "author": "Michael Lage",
   "keywords": [

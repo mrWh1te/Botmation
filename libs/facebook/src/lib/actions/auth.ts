@@ -15,19 +15,19 @@ import {
   deleteCookies
 } from '@botmation/core'
 
-import { FORM_AUTH_PASSWORD_INPUT_SELECTOR, FORM_AUTH_SUBMIT_BUTTON_SELECTOR, FORM_AUTH_USERNAME_INPUT_SELECTOR, NAVIGATION_ACCOUNT_CONTROLS_AND_SETTINGS } from '../constants/selectors'
+import { FORM_AUTH_PASSWORD_INPUT_SELECTOR, FORM_AUTH_SUBMIT_BUTTON_SELECTOR, FORM_AUTH_EMAIL_INPUT_SELECTOR, NAVIGATION_ACCOUNT_CONTROLS_AND_SETTINGS } from '../constants/selectors'
 import { goToLogin } from './navigation'
 
 /**
  * @description  BotAction that attempts the login flow for Facebook
- * @param {username, password} destructured
+ * @param {email, password} destructured
  */
-export const login = ({username, password}: {username: string, password: string}): BotAction =>
+export const login = ({email, password}: {email: string, password: string}): BotAction =>
   chain(
     errors('Facebook login()')(
       goToLogin,
-      click(FORM_AUTH_USERNAME_INPUT_SELECTOR),
-      type(username),
+      click(FORM_AUTH_EMAIL_INPUT_SELECTOR),
+      type(email),
       click(FORM_AUTH_PASSWORD_INPUT_SELECTOR),
       type(password),
       click(FORM_AUTH_SUBMIT_BUTTON_SELECTOR),

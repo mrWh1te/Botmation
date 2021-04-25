@@ -5,14 +5,11 @@ import {
   files,
   log,
   givenThat,
+  loadCookies,
   saveCookies,
   logError,
   wait,
   screenshot,
-  click,
-  loadCookies,
-  type,
-  clickText,
 } from '@botmation/core'
 
 import {
@@ -20,7 +17,9 @@ import {
   isGuest,
   isLoggedIn,
   goToHome,
-  createAPost
+  createAPost,
+  isPushNotificationsRequestVisible,
+  closeModal
 } from '@botmation/facebook'
 
 (async () => {
@@ -44,21 +43,20 @@ import {
 
       // login if guest
       givenThat(isGuest)(
-        login({username: 'email', password: 'password'}), // <- put your username and password here
-        wait(3000),
-        click('body'), // on 1st login, app prompts user for notifications which covers the app in a translucent white cover to click away
+        login({email: 'email', password: 'password'}), // <- put your username and password here
+        wait(2000),
+        givenThat(isPushNotificationsRequestVisible)(
+          closeModal
+        ),
         files()(
           saveCookies('facebook')
         ),
-        wait(3000) // let things load
       ),
 
       log('login complete'),
 
       givenThat(isLoggedIn)(
-        // screenshot('logged-in'),
         createAPost('hello world'),
-        // logout,
         wait(3000),
         goToHome,
         wait(1200),

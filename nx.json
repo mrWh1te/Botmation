@@ -27,6 +27,7 @@
     "bot-object-oriented": { "tags": [] },
     "twitter": { "tags": [] },
     "bot-twitter": { "tags": [] },
-    "facebook": { "tags": [] }
+    "facebook": { "tags": [] },
+    "bot-facebook": { "tags": [] }
   }
 }

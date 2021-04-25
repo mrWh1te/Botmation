@@ -10,7 +10,9 @@ import {
   click,
   type,
   map,
-  log
+  log,
+  wait,
+  deleteCookies
 } from '@botmation/core'
 
 import { FORM_AUTH_PASSWORD_INPUT_SELECTOR, FORM_AUTH_SUBMIT_BUTTON_SELECTOR, FORM_AUTH_USERNAME_INPUT_SELECTOR, NAVIGATION_ACCOUNT_CONTROLS_AND_SETTINGS } from '../constants/selectors'
@@ -37,10 +39,13 @@ export const login = ({username, password}: {username: string, password: string}
 /**
  * @param page
  */
-export const logout: BotAction = chain(
+export const logout: BotAction = pipe()(
   click(NAVIGATION_ACCOUNT_CONTROLS_AND_SETTINGS + ' > span'),
+  wait(1000),
   clickText('Log Out'),
-  waitForNavigation
+  waitForNavigation,
+  getCookies(),
+  deleteCookies()
 )
 
 /**

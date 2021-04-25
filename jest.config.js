@@ -12,5 +12,6 @@ module.exports = {
     '<rootDir>/libs/twitter',
     '<rootDir>/apps/bot-twitter',
     '<rootDir>/libs/facebook',
+    '<rootDir>/apps/bot-facebook',
   ],
 };

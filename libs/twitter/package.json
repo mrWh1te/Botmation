@@ -1,7 +1,7 @@
 {
   "name": "@botmation/twitter",
   "version": "1.0.2",
-  "description": "Auxiliary package of functions for the TypeScript framework Botmation",
+  "description": "Auxiliary package of functions for the TypeScript framework Botmation focused on Twitter",
   "homepage": "https://www.botmation.dev/sites/twitter",
   "author": "Michael Lage",
   "keywords": [

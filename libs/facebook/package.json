@@ -1,6 +1,6 @@
 {
   "name": "@botmation/facebook",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Auxiliary package of functions for the TypeScript framework Botmation focused on Facebook",
   "homepage": "https://www.botmation.dev/sites/facebook",
   "author": "Michael Lage",

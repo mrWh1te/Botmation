@@ -13,5 +13,6 @@ module.exports = {
     '<rootDir>/apps/bot-twitter',
     '<rootDir>/libs/facebook',
     '<rootDir>/apps/bot-facebook',
+    '<rootDir>/libs/reddit',
   ],
 };

@@ -20,7 +20,8 @@
       "@botmation/instagram": ["libs/instagram/src/index.ts"],
       "@botmation/linkedin": ["libs/linkedin/src/index.ts"],
       "@botmation/twitter": ["libs/twitter/src/index.ts"],
-      "@botmation/facebook": ["libs/facebook/src/index.ts"]
+      "@botmation/facebook": ["libs/facebook/src/index.ts"],
+      "@botmation/reddit": ["libs/reddit/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

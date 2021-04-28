@@ -28,6 +28,8 @@
     "twitter": { "tags": [] },
     "bot-twitter": { "tags": [] },
     "facebook": { "tags": [] },
-    "bot-facebook": { "tags": [] }
+    "bot-facebook": { "tags": [] },
+    "reddit": { "tags": [] },
+    "bot-reddit": { "tags": [] }
   }
 }

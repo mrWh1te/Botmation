@@ -658,6 +658,103 @@
           }
         }
       }
+    },
+    "reddit": {
+      "root": "libs/reddit",
+      "sourceRoot": "libs/reddit/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/reddit/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/reddit"
+          ],
+          "options": {
+            "jestConfig": "libs/reddit/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/libs/reddit",
+            "tsConfig": "libs/reddit/tsconfig.lib.json",
+            "packageJson": "libs/reddit/package.json",
+            "main": "libs/reddit/src/index.ts",
+            "assets": [
+              "libs/reddit/*.md"
+            ]
+          }
+        }
+      }
+    },
+    "bot-reddit": {
+      "root": "apps/bot-reddit",
+      "sourceRoot": "apps/bot-reddit/src",
+      "projectType": "application",
+      "prefix": "bot-reddit",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/bot-reddit",
+            "main": "apps/bot-reddit/src/main.ts",
+            "tsConfig": "apps/bot-reddit/tsconfig.app.json",
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/bot-reddit/src/environments/environment.ts",
+                  "with": "apps/bot-reddit/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "bot-reddit:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/bot-reddit/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/bot-reddit"
+          ],
+          "options": {
+            "jestConfig": "apps/bot-reddit/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

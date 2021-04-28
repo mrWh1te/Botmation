@@ -1,0 +1,29 @@
+/**
+ * @description  Crawled URL's belonging to Reddit
+ */
+export const REDDIT_URL_BASE = 'https://www.reddit.com/'
+
+export const REDDIT_URL_ONEREDDIT_BASE = REDDIT_URL_BASE + 'r/'
+export const REDDIT_URL_SUBREDDIT_BASE = REDDIT_URL_BASE + 'subreddits/'
+
+export const REDDIT_URL_POPULAR = REDDIT_URL_ONEREDDIT_BASE + 'popular'
+export const REDDIT_URL_ALL = REDDIT_URL_ONEREDDIT_BASE + 'all'
+export const REDDIT_URL_TOPCOMMUNITIES = REDDIT_URL_SUBREDDIT_BASE + 'leaderboard/'
+export const REDDIT_URL_NOTIFICATIONS = REDDIT_URL_BASE + 'notifications'
+export const REDDIT_URL_SETTINGS = REDDIT_URL_BASE + 'settings'
+export const REDDIT_URL_CREATEAPOST = REDDIT_URL_BASE + 'submit'
+export const REDDIT_URL_CREATECOMMUNITY = REDDIT_URL_SUBREDDIT_BASE + 'create'
+export const REDDIT_URL_COINS = REDDIT_URL_BASE + 'coins'
+export const REDDIT_URL_PREMIUM = REDDIT_URL_BASE + 'premium'
+
+export const REDDIT_URL_MESSAGES_BASE = REDDIT_URL_BASE + 'message/'
+
+export const REDDIT_URL_MESSAGES_ALL = REDDIT_URL_MESSAGES_BASE + 'inbox'
+export const REDDIT_URL_MESSAGES_UNREAD = REDDIT_URL_MESSAGES_BASE + 'unread'
+export const REDDIT_URL_MESSAGES_MESSAGES = REDDIT_URL_MESSAGES_BASE + 'messages'
+export const REDDIT_URL_MESSAGES_SENT = REDDIT_URL_MESSAGES_BASE + 'sent'
+export const REDDIT_URL_MESSAGES_COMMENTREPLIES = REDDIT_URL_MESSAGES_BASE + 'comments'
+export const REDDIT_URL_MESSAGES_POSTREPLIES = REDDIT_URL_MESSAGES_BASE + 'selfreply'
+export const REDDIT_URL_MESSAGES_USERNAMEMENTIONS = REDDIT_URL_MESSAGES_BASE + 'mentions'
+
+export const REDDIT_URL_LOGIN = REDDIT_URL_BASE + 'login/'

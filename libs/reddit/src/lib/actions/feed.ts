@@ -3,18 +3,28 @@ import {
   chain,
   click,
   clickText,
+  isString,
+  pipe,
+  pipeCase,
   type,
-  wait,
   waitForNavigation
 } from "@botmation/core";
 
 import { goToCreateAPost } from "./navigation";
 
-// todo complete
-export const createAPost = (community: string, title: string, text?: string): BotAction => chain(
+export const createATextPost = (community: string, title: string, text?: string): BotAction => chain(
   goToCreateAPost,
-  wait(2000),
-  type(text),
+  click('input[placeholder="Choose a community"]'),
+  type(community),
+  click('body'),
+  click('textarea[placeholder="Title"]'),
+  type(title),
+  pipe(text)(
+    pipeCase(isString)(
+      click('.DraftEditor-root'),
+      type(text)
+    )
+  ),
   clickText('Post'),
   waitForNavigation
 )

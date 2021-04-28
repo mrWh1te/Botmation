@@ -16,10 +16,10 @@ import {
   isGuest,
   isLoggedIn,
   goToHome,
-  createAPost,
+  createATextPost,
 } from '@botmation/reddit'
 
-const postText = `This tweet was published by a Botmation bot!
+const postText = `This post was published by a Botmation bot!
 
 https://botmation.dev/`;
 
@@ -52,7 +52,7 @@ https://botmation.dev/`;
       log('login complete'),
 
       givenThat(isLoggedIn)(
-        createAPost('AskReddit', 'Example Title', postText),
+        createATextPost('3Dprinting', 'example title', postText),
       ),
 
       log('Done'),

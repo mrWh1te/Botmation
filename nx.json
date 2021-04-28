@@ -29,6 +29,7 @@
     "bot-twitter": { "tags": [] },
     "facebook": { "tags": [] },
     "bot-facebook": { "tags": [] },
-    "reddit": { "tags": [] }
+    "reddit": { "tags": [] },
+    "bot-reddit": { "tags": [] }
   }
 }

@@ -6,7 +6,6 @@ export const goToHome = goTo(REDDIT_URL_BASE, {waitUntil: 'load'})
 export const goToPopular = goTo(REDDIT_URL_POPULAR, {waitUntil: 'load'})
 export const goToAll = goTo(REDDIT_URL_ALL, {waitUntil: 'load'})
 /**
- *
  * @param subredditURLExtension ie 'AskReddit' => reddit.com/r/AskReddit/
  */
 export const goToSubReddit = (subredditURLExtension: string) => goTo(REDDIT_URL_ONEREDDIT_BASE + subredditURLExtension, {waitUntil: 'load'})

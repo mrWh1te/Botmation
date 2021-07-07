@@ -755,6 +755,46 @@
           }
         }
       }
+    },
+    "v2core": {
+      "root": "libs/v2core",
+      "sourceRoot": "libs/v2core/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/v2core/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/v2core"
+          ],
+          "options": {
+            "jestConfig": "libs/v2core/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/libs/v2core",
+            "tsConfig": "libs/v2core/tsconfig.lib.json",
+            "packageJson": "libs/v2core/package.json",
+            "main": "libs/v2core/src/index.ts",
+            "assets": [
+              "libs/v2core/*.md"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {

@@ -29,7 +29,7 @@ import { PipeValue } from '../types'
  * @description    BotAction is an async Function whose default nature is to return a Promise<void>, but can be set to return a value
  */
 export interface BotAction<I extends {} = {}, R = void|AbortLineSignal|PipeValue> extends Function {
-  (injects: I) : Promise<R>
+  (injects?: I) : Promise<R>
 }
 
 /**

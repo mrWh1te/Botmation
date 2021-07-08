@@ -795,6 +795,63 @@
           }
         }
       }
+    },
+    "puppeteer-bot": {
+      "root": "apps/puppeteer-bot",
+      "sourceRoot": "apps/puppeteer-bot/src",
+      "projectType": "application",
+      "prefix": "puppeteer-bot",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/puppeteer-bot",
+            "main": "apps/puppeteer-bot/src/main.ts",
+            "tsConfig": "apps/puppeteer-bot/tsconfig.app.json",
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/puppeteer-bot/src/environments/environment.ts",
+                  "with": "apps/puppeteer-bot/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "puppeteer-bot:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/puppeteer-bot/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/puppeteer-bot"
+          ],
+          "options": {
+            "jestConfig": "apps/puppeteer-bot/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

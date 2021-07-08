@@ -1,3 +1,5 @@
+
+// todo deprecate types barrel file ?
 export * from './bot-files-inject'
 export * from './bot-indexed-db-inject'
 export * from './database'

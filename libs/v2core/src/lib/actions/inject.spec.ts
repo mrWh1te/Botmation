@@ -55,13 +55,27 @@ describe('[Botmation] actions/inject', () => {
 
     // empty injects, with(out) actions to get inject value
     await upsertInject('testKey17')()(mockAction1)({})
+    expect(mockAction1).toHaveBeenNthCalledWith(3, {'testKey17': undefined})
+
     await upsertInject('testKey13')(mockAction2)(mockAction1)({})
+    expect(mockAction1).toHaveBeenNthCalledWith(4, {'testKey13': 'hello world'})
+    expect(mockAction2).toHaveBeenNthCalledWith(2, {})
 
     // new injects, with(out) actions to get inject value
     await upsertInject('testKey117')()(mockAction1)(newInjects)
+    expect(mockAction1).toHaveBeenNthCalledWith(5, {'testKey117': undefined, 'new1': 5, 'new2': 15, 'past3': 45})
+
     await upsertInject('testKey113')(mockAction2)(mockAction1)(newInjects)
+    expect(mockAction1).toHaveBeenNthCalledWith(6, {'testKey113': 'hello world', 'new1': 5, 'new2': 15, 'past3': 45})
+    expect(mockAction2).toHaveBeenNthCalledWith(3, {'new1': 5, 'new2': 15, 'past3': 45})
 
+    // new injects overrwrite, with(out) actions to get inject value
+    await upsertInject('new2')()(mockAction1)(newInjects)
+    expect(mockAction1).toHaveBeenNthCalledWith(7, {'new1': 5, 'new2': undefined, 'past3': 45})
 
+    await upsertInject('new2')(mockAction2)(mockAction1)(newInjects)
+    expect(mockAction1).toHaveBeenNthCalledWith(8, {'new1': 5, 'new2': 'hello world', 'past3': 45})
+    expect(mockAction2).toHaveBeenNthCalledWith(4, {'new1': 5, 'new2': 15, 'past3': 45})
   })
 
 })

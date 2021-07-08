@@ -3,7 +3,7 @@
 import { inject, upsertInject } from "./inject"
 
 /**
- * @description   Inject Action
+ * @description   Inject Actions
  */
 describe('[Botmation] actions/inject', () => {
 
@@ -45,6 +45,9 @@ describe('[Botmation] actions/inject', () => {
   })
 
   it('upsertInject()()() should set or replace inject with specified inject key using result of an assembled line of actions in the next line of actions', async() => {
+    // in these tests, mockAction1 is the newly created actions line with the upserted inject
+    // and mockAction2 is the action used to get the upserted inject's value
+
     // no injects, with(out) actions to get inject value
     await upsertInject('testKey7')()(mockAction1)()
     expect(mockAction1).toHaveBeenNthCalledWith(1, {'testKey7': undefined})

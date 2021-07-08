@@ -1,4 +1,5 @@
-import { Page, launch, Browser } from "puppeteer"
+import { Page, Browser } from "puppeteer"
+import * as puppeteer from 'puppeteer'
 
 import { BotAction } from "../interfaces"
 import { upsertInject } from "./inject"
@@ -11,7 +12,7 @@ import { injects, injectsBrowser } from './../types/injects'
  * inject (browser) returns new line of BotActions with browser added to injects
  */
 export const browser =
-  <I extends injects = injects>(...browserLaunchOptions: Parameters<typeof launch>) =>
+  <I extends injects = injects>(...browserLaunchOptions: Parameters<typeof puppeteer.launch>) =>
     (...actions: BotAction<I & {browser: Browser}>[]): BotAction<I> =>
       upsertInject('browser')(
         getBrowser(...browserLaunchOptions)
@@ -22,8 +23,8 @@ export const browser =
  * @param browserLaunchOptions
  */
 export const getBrowser =
-  <I extends injects = injects>(...browserLaunchOptions: Parameters<typeof launch>): BotAction<I, Browser> =>
-    async() => launch(...browserLaunchOptions)
+  <I extends injects = injects>(...browserLaunchOptions: Parameters<typeof puppeteer.launch>): BotAction<I, Browser> =>
+    async() => puppeteer.launch(...browserLaunchOptions)
 
 /**
  * sets `page` inject
@@ -32,7 +33,7 @@ export const getBrowser =
 export const browserPage =
   <I extends injectsBrowser = injectsBrowser>(browserPageIndex?: number) =>
     (...actions: BotAction<I & {page: Page}>[]): BotAction<I & {page: Page}> =>
-      upsertInject<I>('page')(getBrowserPage(browserPageIndex))(...actions)
+      upsertInject('page')(getBrowserPage(browserPageIndex))(...actions)
 
 /**
  * Grab a particular page from the `browser` inject by pages() index or a new page (negative number as browserPageIndex or undefined)

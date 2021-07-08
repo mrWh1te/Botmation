@@ -18,12 +18,10 @@ export const inject =
  * @param injectKey ie `page`
  */
 export const upsertInject =
-  <I extends {} = {}>(injectKey: string) =>
-    (...actionsToGetNewInjectValue: BotAction<I>[]) =>
-      (...actionsWithNewInject: BotAction<I & {[newInjectKey: string]: PipeValue}>[]):BotAction<I> =>
-        async(injects: I) => {
+  (injectKey: string) =>
+    (...actionsToGetNewInjectValue: BotAction[]) =>
+      (...actionsWithNewInject: BotAction<injects & {[newInjectKey: string]: PipeValue}>[]):BotAction =>
+        async(injects: injects = {}) => {
           const newInjectValue = await assemblyLine()(...actionsToGetNewInjectValue)(injects)
-          injects[injectKey] = newInjectValue
-
-          return await assemblyLine()(...actionsWithNewInject)(injects)
+          return await assemblyLine()(...actionsWithNewInject)({...injects, [injectKey]: newInjectValue})
         }

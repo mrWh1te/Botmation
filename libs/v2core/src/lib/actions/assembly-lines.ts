@@ -13,6 +13,7 @@ import { PipeValue } from "../types/pipe-value"
 import { AbortLineSignal, isAbortLineSignal } from "../types/abort-line-signal"
 import { processAbortLineSignal } from "../helpers/abort"
 import { isCasesSignal, CasesSignal } from "../types/cases"
+import { injects, injectsValue } from "../types"
 
 /**
  * @description     chain() BotAction for running a chain of BotAction's safely and optimized
@@ -169,10 +170,10 @@ export const chain =
  * @param forceInPipe boolean default is FALSE
  */
 export const assemblyLine =
-  <I extends {value?: PipeValue} = {}>(forceInPipe: boolean = false) =>
-    (...actions: BotAction<I>[]): BotAction<I> =>
-      async(injects: I) => {
-        if (injects.value) {
+  (forceInPipe: boolean = false) =>
+    (...actions: BotAction[]): BotAction =>
+      async(injects: Partial<injectsValue> = {}) => {
+        if (injects.value || forceInPipe) {
           // running a pipe
           if (actions.length === 0) {return undefined}
           else if (actions.length === 1) {
@@ -187,19 +188,18 @@ export const assemblyLine =
             return pipeRunner(...actions)(injects)
           }
         } else {
-          // while chains dont return pipeValues, this is an assembly line running botactions
-          // in a chain but it's still an assembly line, and without changing anything, you can use this
-          // to still work with the `pipeValue` of an AbortLineSignal, so a step-up from chain in terms of functionality but not quite pipe
-          // with a flag to switch into pipe, which can be great for new dev's, to explore these concepts at their own pace, one step at a time
           if (actions.length === 1) {
             const chainActionResult = await actions[0](injects)
 
-            // ignore the 1 case since then we would return the pipeValue, but chains..
             if (isAbortLineSignal(chainActionResult)) {
               return processAbortLineSignal(chainActionResult)
             }
+
+            return chainActionResult // NEW chains return last Action's return value
           } else if (actions.length > 1) {
             return chainRunner(...actions)(injects)
+          } else {
+            return undefined
           }
         }
       }

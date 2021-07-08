@@ -1,6 +1,6 @@
 
 
-import { inject } from "./inject"
+import { inject, upsertInject } from "./inject"
 
 /**
  * @description   Inject Action
@@ -45,6 +45,22 @@ describe('[Botmation] actions/inject', () => {
   })
 
   it('upsertInject()()() should set or replace inject with specified inject key using result of an assembled line of actions in the next line of actions', async() => {
+    // no injects, with(out) actions to get inject value
+    await upsertInject('testKey7')()(mockAction1)()
+    expect(mockAction1).toHaveBeenNthCalledWith(1, {'testKey7': undefined})
+
+    await upsertInject('testKey3')(mockAction2)(mockAction1)()
+    expect(mockAction1).toHaveBeenNthCalledWith(2, {'testKey3': 'hello world'})
+    expect(mockAction2).toHaveBeenNthCalledWith(1, {})
+
+    // empty injects, with(out) actions to get inject value
+    await upsertInject('testKey17')()(mockAction1)({})
+    await upsertInject('testKey13')(mockAction2)(mockAction1)({})
+
+    // new injects, with(out) actions to get inject value
+    await upsertInject('testKey117')()(mockAction1)(newInjects)
+    await upsertInject('testKey113')(mockAction2)(mockAction1)(newInjects)
+
 
   })
 

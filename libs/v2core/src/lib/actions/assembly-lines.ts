@@ -29,12 +29,16 @@ export const chain =
         if (isAbortLineSignal(returnValue)) {
           return processAbortLineSignal(returnValue)
         }
+
+        return returnValue
       } else {
         const returnValue = await chainRunner(...actions)(injects)
 
         if (isAbortLineSignal(returnValue)) {
           return processAbortLineSignal(returnValue)
         }
+
+        return returnValue
       }
     }
 
@@ -246,6 +250,8 @@ export const chainRunner =
         if (isAbortLineSignal(returnValue)) {
           return processAbortLineSignal(returnValue)
         }
+
+        return returnValue
       }
     }
 

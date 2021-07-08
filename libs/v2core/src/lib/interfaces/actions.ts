@@ -26,9 +26,9 @@ import { PipeValue } from '../types'
  */
 
 /**
- * @description    BotAction is an async Function whose default nature is to return a Promise<void>, but can be set to return a value
+ * @description    Action is an async Function whose default nature is to return a Promise<void>, but can be set to return a value
  */
-export interface BotAction<I extends {} = {}, R = void|AbortLineSignal|PipeValue> extends Function {
+export interface Action<I extends {} = {}, R = void|AbortLineSignal|PipeValue> extends Function {
   (injects?: I) : Promise<R>
 }
 
@@ -36,7 +36,7 @@ export interface BotAction<I extends {} = {}, R = void|AbortLineSignal|PipeValue
  * @description    Higher-Order BotAction Functions that return BotAction's
  *                 Helpful for adding a layer of customization to a BotAction through dynamic scoping
  */
-export interface BotActionFactory<I extends {} = {}, B = BotAction> extends Function {
+export interface ActionFactory<I extends {} = {}, B = Action> extends Function {
   // Higher-Order Function (Factory) to Produce an Async Function (Returns Promise to be awaited)
   (args: I) : B
 }
@@ -45,7 +45,7 @@ export interface BotActionFactory<I extends {} = {}, B = BotAction> extends Func
  * @description   Is an advanced BotAction that returns a boolean value
  *                Useful in the higher order BotAction `givenThat()()` in providing a BotAction test as to whether or not run the following actions
  */
-export interface ConditionalBotAction extends Function {
+export interface ConditionalAction extends Function {
   (page: Page, ...injects: any[]) : Promise<boolean|AbortLineSignal>
 }
 
@@ -53,7 +53,7 @@ export interface ConditionalBotAction extends Function {
  * @description    Specifies BotFilesInjects as its injects
  *                 BotFilesInjects are safely injected by the higher order files()() BotAction
  */
-export interface BotFilesAction<R = void|AbortLineSignal> {
+export interface FilesAction<R = void|AbortLineSignal> {
   (page: Page, ...injects: BotFilesInjects) : Promise<R>
 }
 
@@ -61,7 +61,7 @@ export interface BotFilesAction<R = void|AbortLineSignal> {
  * @description    Specifies BotIndexedDBInjects as its injects
  *                 BotIndexedDBInjects are safely injected by the higher order indexedDBStore()() BotAction
  */
-export interface BotIndexedDBAction<R = any> {
+export interface IndexedDBAction<R = any> {
   (page: Page, ...injects: BotIndexedDBInjects) : Promise<R>
 }
 
@@ -69,6 +69,6 @@ export interface BotIndexedDBAction<R = any> {
  * @description   Specifies return type (scraper bot action's scrape things from the web so they return objects representating what they scrape)
  *                and Inject (1st) of a HTML Parser to be html parsing agnostic
  */
-export interface ScraperBotAction<R = object> {
+export interface ScraperAction<R = object> {
   (page: Page, ...injects: ScraperBotInjects) : Promise<R>
 }

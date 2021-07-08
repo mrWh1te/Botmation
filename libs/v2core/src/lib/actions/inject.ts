@@ -1,4 +1,4 @@
-import { BotAction } from "../interfaces"
+import { Action } from "../interfaces"
 import { injects } from "../types"
 import { PipeValue } from "../types/pipe-value"
 import { assemblyLine } from "./assembly-lines"
@@ -9,7 +9,7 @@ import { assemblyLine } from "./assembly-lines"
  */
 export const inject =
   (newInjects: injects) =>
-    (...actions: BotAction[]): BotAction =>
+    (...actions: Action[]): Action =>
       async(injects: injects = {}) =>
         await assemblyLine()(...actions)({...injects, ...newInjects})
 
@@ -19,8 +19,8 @@ export const inject =
  */
 export const upsertInject =
   (injectKey: string) =>
-    (...actionsToGetNewInjectValue: BotAction[]) =>
-      (...actionsWithNewInject: BotAction<injects & {[newInjectKey: string]: PipeValue}>[]):BotAction =>
+    (...actionsToGetNewInjectValue: Action[]) =>
+      (...actionsWithNewInject: Action<injects & {[newInjectKey: string]: PipeValue}>[]):Action =>
         async(injects: injects = {}) => {
           const newInjectValue = await assemblyLine()(...actionsToGetNewInjectValue)(injects)
           return await assemblyLine()(...actionsWithNewInject)({...injects, [injectKey]: newInjectValue})

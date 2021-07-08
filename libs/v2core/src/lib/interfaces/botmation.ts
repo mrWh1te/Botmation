@@ -1,12 +1,12 @@
 import { Page } from 'puppeteer'
-import { BotAction } from './bot-actions'
+import { Action } from './actions'
 
 /**
  * @description   Base public interface for a Botmation instance
  */
 export interface BotmationInterface {
   // Main
-  actions(...actions: BotAction<any>[]): Promise<void>
+  actions(...actions: Action<any>[]): Promise<void>
   // Page
   setPage(page: Page): void
   getPage(): Page

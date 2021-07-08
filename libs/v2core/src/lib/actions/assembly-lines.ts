@@ -1,6 +1,6 @@
 import { Page } from "puppeteer"
 
-import { BotAction, Pipe } from "../interfaces"
+import { Action, Pipe } from "../interfaces"
 import {
   injectsHavePipe,
   pipeInjects,
@@ -21,7 +21,7 @@ import { injects, injectsValue } from "../types"
  * @param actions
  */
 export const chain =
-  <I extends {} = {}>(...actions: BotAction<I>[]): BotAction<I> =>
+  <I extends {} = {}>(...actions: Action<I>[]): Action<I> =>
     async(injects: I) => {
       if(actions.length === 1) {
         const returnValue = await actions[0](injects)
@@ -171,7 +171,7 @@ export const chain =
  */
 export const assemblyLine =
   (forceInPipe: boolean = false) =>
-    (...actions: BotAction[]): BotAction =>
+    (...actions: Action[]): Action =>
       async(injects: Partial<injectsValue> = {}) => {
         if (injects.value || forceInPipe) {
           // running a pipe
@@ -237,7 +237,7 @@ export const assemblyLine =
  * @param actions
  */
 export const chainRunner =
-  <I extends {} = {}>(...actions: BotAction<I>[]): BotAction<I> =>
+  <I extends {} = {}>(...actions: Action<I>[]): Action<I> =>
     async(injects: I) => {
       let returnValue: any
       for(const action of actions) {
@@ -255,7 +255,7 @@ export const chainRunner =
  * @param actions
  */
 export const pipeRunner =
-  <I extends {value?: PipeValue} = {}>(...actions: BotAction<I>[]): BotAction<I> =>
+  <I extends {value?: PipeValue} = {}>(...actions: Action<I>[]): Action<I> =>
     async(injects) => {
       // possible injects has no `value`
       let injectsWithPipeValue = {value: undefined}

@@ -1,9 +1,8 @@
 import { Page, Browser } from "puppeteer"
 import * as puppeteer from 'puppeteer'
 
-import { BotAction } from "../interfaces"
+import { Action } from "../interfaces"
 import { upsertInject } from "./inject"
-// import { goTo } from "./navigation"
 
 import { injects, injectsBrowser } from './../types/injects'
 
@@ -13,17 +12,15 @@ import { injects, injectsBrowser } from './../types/injects'
  */
 export const browser =
   <I extends injects = injects>(...browserLaunchOptions: Parameters<typeof puppeteer.launch>) =>
-    (...actions: BotAction<I & {browser: Browser}>[]): BotAction<I> =>
-      upsertInject('browser')(
-        getBrowser(...browserLaunchOptions)
-      )(...actions)
+    (...actions: Action<I & {browser: Browser}>[]): Action<I> =>
+      upsertInject('browser')(getBrowser(...browserLaunchOptions))(...actions)
 
 /**
  * get Puppeteer browser instance
  * @param browserLaunchOptions
  */
 export const getBrowser =
-  <I extends injects = injects>(...browserLaunchOptions: Parameters<typeof puppeteer.launch>): BotAction<I, Browser> =>
+  <I extends injects = injects>(...browserLaunchOptions: Parameters<typeof puppeteer.launch>): Action<I, Browser> =>
     async() => puppeteer.launch(...browserLaunchOptions)
 
 /**
@@ -32,7 +29,7 @@ export const getBrowser =
  */
 export const browserPage =
   <I extends injectsBrowser = injectsBrowser>(browserPageIndex?: number) =>
-    (...actions: BotAction<I & {page: Page}>[]): BotAction<I & {page: Page}> =>
+    (...actions: Action<I & {page: Page}>[]): Action<I & {page: Page}> =>
       upsertInject('page')(getBrowserPage(browserPageIndex))(...actions)
 
 /**
@@ -40,7 +37,7 @@ export const browserPage =
  * @param browserLaunchOptions
  */
 export const getBrowserPage =
-  <I extends injectsBrowser = injectsBrowser>(browserPageIndex?: number): BotAction<I, Page> =>
+  <I extends injectsBrowser = injectsBrowser>(browserPageIndex?: number): Action<I, Page> =>
     async({browser}) => {
       if (browserPageIndex && browserPageIndex >= 0) {
         const pages = await browser.pages()

@@ -15,15 +15,15 @@ export const inject =
 
 /**
  * Create a line of BotActions with upserted injected with key of Higher-Order param and return value of final BotAction provided in the first line (second line of actions is ran after with updated injects)
- * @param newInjectKey ie `page`
+ * @param injectKey ie `page`
  */
 export const upsertInject =
-  <I extends {} = {}>(newInjectKey: string) =>
+  <I extends {} = {}>(injectKey: string) =>
     (...actionsToGetNewInjectValue: BotAction<I>[]) =>
       (...actionsWithNewInject: BotAction<I & {[newInjectKey: string]: PipeValue}>[]):BotAction<I> =>
-      async(injects: I) => {
-        const newInjectValue = await assemblyLine()(...actionsToGetNewInjectValue)(injects)
-        injects[newInjectKey] = newInjectValue
+        async(injects: I) => {
+          const newInjectValue = await assemblyLine()(...actionsToGetNewInjectValue)(injects)
+          injects[injectKey] = newInjectValue
 
-        return await assemblyLine()(...actionsWithNewInject)(injects)
-      }
+          return await assemblyLine()(...actionsWithNewInject)(injects)
+        }

@@ -3,10 +3,10 @@ import { WaitForOptions } from 'puppeteer'
 import { Action } from '@botmation/v2core'
 import { chain } from '@botmation/v2core'
 import { wait } from '@botmation/v2core'
-import { evaluate } from '@botmation/puppeteer'
 
 import { enrichGoToPageOptions, scrollToElement } from '@botmation/core' // todo move to puppeteer package
 
+import { evaluate } from './scrape'
 import { injectsPage } from '../types/injects'
 
 /**

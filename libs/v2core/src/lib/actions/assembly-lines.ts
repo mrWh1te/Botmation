@@ -47,49 +47,49 @@ export const chain =
  *                 valueToPipe overwrites the passed in Pipe value
  * @param valueToPipe
  */
-// export const pipe =
-//   (valueToPipe?: PipeValue) =>
-//     (...actions: BotAction<PipeValue|AbortLineSignal|void>[]): BotAction<any> =>
-//       async(page, ...injects) => {
-//         if (injectsHavePipe(injects)) {
-//           if (actions.length === 0) {return undefined}
-//           if (actions.length === 1) {
-//             let returnValue: PipeValue|AbortLineSignal|void
-//             if (valueToPipe) {
-//               returnValue = await actions[0](page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe))
-//             } else {
-//               returnValue = await actions[0](page, ...injects)
-//             }
+export const pipe =
+  (valueToPipe?: PipeValue) =>
+    (...actions: Action[]): Action<Partial<injectsValue>> =>
+      async({value, ...otherInjects}) => {
+        if (value) {
+          if (actions.length === 0) {return undefined}
+          if (actions.length === 1) {
+            let returnValue: PipeValue|AbortLineSignal
+            if (valueToPipe) {
+              returnValue = await actions[0]({value: valueToPipe, ...otherInjects})
+            } else {
+              returnValue = await actions[0]({value, ...otherInjects})
+            }
 
-//             if (isAbortLineSignal(returnValue)) {
-//               return processAbortLineSignal(returnValue)
-//             } else {
-//               return returnValue
-//             }
-//           } else {
-//             // injects only have a pipe when its ran inside a pipe, so lets return our value to flow with the pipe mechanics
-//             if (valueToPipe) {
-//               return pipeRunner(...actions)(page, ...injects.splice(0, injects.length - 1), wrapValueInPipe(valueToPipe))
-//             } else {
-//               return pipeRunner(...actions)(page, ...injects)
-//             }
-//           }
-//         } else {
-//           // injects don't have a pipe, so add one
-//           if (actions.length === 0) {return undefined}
-//           if (actions.length === 1) {
-//             const returnValue = await actions[0](page, ...injects, wrapValueInPipe(valueToPipe))
+            if (isAbortLineSignal(returnValue)) {
+              return processAbortLineSignal(returnValue)
+            } else {
+              return returnValue
+            }
+          } else {
+            // injects only have a pipe when its ran inside a pipe, so lets return our value to flow with the pipe mechanics
+            if (valueToPipe) {
+              return pipeRunner(...actions)({value: valueToPipe, ...otherInjects})
+            } else {
+              return pipeRunner(...actions)({value, ...otherInjects})
+            }
+          }
+        } else {
+          // injects don't have a pipe, so add one
+          if (actions.length === 0) {return undefined}
+          if (actions.length === 1) {
+            const returnValue = await actions[0]({value: undefined, ...otherInjects})
 
-//             if (isAbortLineSignal(returnValue)) {
-//               return processAbortLineSignal(returnValue)
-//             } else {
-//               return returnValue
-//             }
-//           } else {
-//             return pipeRunner(...actions)(page, ...injects, wrapValueInPipe(valueToPipe))
-//           }
-//         }
-//       }
+            if (isAbortLineSignal(returnValue)) {
+              return processAbortLineSignal(returnValue)
+            } else {
+              return returnValue
+            }
+          } else {
+            return pipeRunner(...actions)({value: undefined, ...otherInjects})
+          }
+        }
+      }
 
 /**
  * switchPipe is similar to Pipe in that is supports piping, EXCEPT every assembled BotAction gets the same pipe object

@@ -26,9 +26,9 @@ import { PipeValue } from '../types'
  */
 
 /**
- * @description    Action is an async Function whose default nature is to return a Promise<void>, but can be set to return a value
+ * @description    Action is an async Function whose default nature is to return a Promise<undefined>, but can be set to return a value
  */
-export interface Action<I extends {} = {}, R = void|AbortLineSignal|PipeValue> extends Function {
+export interface Action<I extends {} = {}, R = AbortLineSignal|PipeValue> extends Function {
   (injects?: I) : Promise<R>
 }
 

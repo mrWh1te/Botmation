@@ -46,3 +46,6 @@ export const isDictionary = <V = any>(value: any): value is Dictionary<V> =>
  * Array or Dictionary
  */
 export type Collection<V = any> = Array<V>|Dictionary<V>
+
+export const isCollection = (value: any): value is Collection =>
+  Array.isArray(value) || typeof value === 'object' && value !== null && Object.keys(value).every(k => typeof k === 'string')

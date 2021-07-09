@@ -20,8 +20,8 @@ export const inject =
 export const upsertInject =
   (injectKey: string) =>
     (...actionsToGetNewInjectValue: Action[]) =>
-      (...actionsWithNewInject: Action<injects & {[newInjectKey: string]: PipeValue}>[]):Action =>
+      (...actionsWithUpsertedInject: Action<injects & {[injectKey: string]: PipeValue}>[]):Action =>
         async(injects: injects = {}) => {
           const newInjectValue = await assemblyLine()(...actionsToGetNewInjectValue)(injects)
-          return await assemblyLine()(...actionsWithNewInject)({...injects, [injectKey]: newInjectValue})
+          return await assemblyLine()(...actionsWithUpsertedInject)({...injects, [injectKey]: newInjectValue})
         }

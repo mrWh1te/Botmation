@@ -19,3 +19,4 @@ nx test <library name> --testPathPattern=<regex against urls of files>
 # ie 
 nx test core --testPathPattern=inject # test all spec files with `inject` in filename
 ```
+[Read more in Jest docs](https://jestjs.io/docs/cli#--testpathpatternregex)

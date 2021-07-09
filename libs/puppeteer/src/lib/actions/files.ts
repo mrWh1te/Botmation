@@ -23,7 +23,7 @@ export const files = (fileOptions?: Partial<FileOptions>) =>
  *                It relies on fileOptions, to determine the local directory as to where to save the file
  * @param fileName name of the file to save the PNG as
  */
-export const screenshot = (fileName: string, fileOptions?: Partial<FileOptions>): Action<injectsPage & Partial<injectsFileOptions>> =>
+export const screenshot = (fileName: string, fileOptions: Partial<FileOptions> = {}): Action<injectsPage & Partial<injectsFileOptions>> =>
   async ({page, fileOptions: injectedFileOptions}) => {
 
     // fileOptions is higher order param that overwrites injected options
@@ -56,12 +56,9 @@ export const screenshotAll = (urls: string[], fileOptions?: Partial<FileOptions>
  * @note          Launching the browser without headless (headless: false) breaks this
  *                See https://github.com/puppeteer/puppeteer/issues/1829
  */
-export const savePDF = (fileName: string, fileOptions?: Partial<FileOptions>): Action =>
-  async(page, ...injects) => {
-    const [,injectedOptions] = unpipeInjects(injects, 1)
-
-    const hydratedOptions = enrichFileOptionsWithDefaults({...injectedOptions, ...fileOptions})
-
+export const savePDF = (fileName: string, fileOptions: Partial<FileOptions> = {}): Action<injectsPage & Partial<injectsFileOptions>> =>
+  async({page, fileOptions: injectedFileOptions}) => {
+    const hydratedOptions = enrichFileOptionsWithDefaults({...injectedFileOptions, ...fileOptions})
     const fileUrl = getFileUrl(hydratedOptions.pdfs_directory, hydratedOptions, fileName) + '.pdf'
 
     await page.pdf({path: fileUrl, format: 'a4'})

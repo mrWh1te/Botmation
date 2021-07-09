@@ -151,7 +151,7 @@ export const forAsLong =
   (condition: Action<injects, boolean>) =>
     (...actions: Action[]): Action =>
       async(injects) => {
-        let returnValue: PipeValue|AbortLineSignal
+        let returnValue: PipeValue|AbortLineSignal|void
         let resolvedCondition = await condition(injects)
 
         // 1 line of assembly for the condition

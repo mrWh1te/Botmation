@@ -65,10 +65,3 @@ export interface IndexedDBAction<R = any> {
   (page: Page, ...injects: BotIndexedDBInjects) : Promise<R>
 }
 
-/**
- * @description   Specifies return type (scraper bot action's scrape things from the web so they return objects representating what they scrape)
- *                and Inject (1st) of a HTML Parser to be html parsing agnostic
- */
-export interface ScraperAction<R = object> {
-  (page: Page, ...injects: ScraperBotInjects) : Promise<R>
-}

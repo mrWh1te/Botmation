@@ -17,5 +17,6 @@ module.exports = {
     '<rootDir>/apps/bot-reddit',
     '<rootDir>/libs/v2core',
     '<rootDir>/apps/puppeteer-bot',
+    '<rootDir>/libs/puppeteer',
   ],
 };

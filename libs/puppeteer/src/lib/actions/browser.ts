@@ -1,10 +1,8 @@
 import { Page, Browser } from "puppeteer"
 import * as puppeteer from 'puppeteer'
 
-import { Action } from "../interfaces"
-import { upsertInject } from "./inject"
-
-import { injects, injectsBrowser } from './../types/injects'
+import { Action, upsertInject, injects } from "@botmation/v2core"
+import { injectsBrowser } from './../types/injects'
 
 
 /**

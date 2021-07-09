@@ -22,7 +22,8 @@
       "@botmation/twitter": ["libs/twitter/src/index.ts"],
       "@botmation/facebook": ["libs/facebook/src/index.ts"],
       "@botmation/reddit": ["libs/reddit/src/index.ts"],
-      "@botmation/v2core": ["libs/v2core/src/index.ts"]
+      "@botmation/v2core": ["libs/v2core/src/index.ts"],
+      "@botmation/puppeteer": ["libs/puppeteer/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

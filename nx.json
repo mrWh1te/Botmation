@@ -32,6 +32,7 @@
     "reddit": { "tags": [] },
     "bot-reddit": { "tags": [] },
     "v2core": { "tags": [] },
-    "puppeteer-bot": { "tags": [] }
+    "puppeteer-bot": { "tags": [] },
+    "puppeteer": { "tags": [] }
   }
 }

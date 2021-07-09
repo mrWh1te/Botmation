@@ -3,7 +3,7 @@ import { sleep } from '@botmation/core'
 import {
   browserPage,
   browser
-} from '@botmation/v2core'
+} from '@botmation/puppeteer'
 
 
 (async () => {

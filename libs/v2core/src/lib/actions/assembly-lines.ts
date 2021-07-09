@@ -251,8 +251,8 @@ export const chainRunner =
           return processAbortLineSignal(returnValue)
         }
 
-        return returnValue
       }
+      return returnValue
     }
 
 /**

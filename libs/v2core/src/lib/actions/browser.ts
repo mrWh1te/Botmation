@@ -8,7 +8,7 @@ import { injects, injectsBrowser } from './../types/injects'
 
 
 /**
- * inject (browser) returns new line of BotActions with browser added to injects
+ * inject (browser) returns new line of Actions with browser added to injects
  */
 export const browser =
   <I extends injects = injects>(...browserLaunchOptions: Parameters<typeof puppeteer.launch>) =>

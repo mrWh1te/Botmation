@@ -4,7 +4,7 @@ import { sleep } from "../helpers/time";
 import { Action } from "../interfaces";
 import { isAbortLineSignal } from "../types";
 import { isDate } from "../types/time";
-// import { pipe } from "./assembly-lines"; // todo uncomment post update pipe
+import { pipe } from "./assembly-lines";
 
 /**
  * @description   Pauses the runner (chain or pipe) for the provided milliseconds before continuing to the next Action
@@ -32,30 +32,30 @@ export const wait = (milliseconds: number): Action => async() => {
  *          string is a cronjob that is an interval schedule that will not end on its own
  *              therefore consider including some "abort" logic in the actions with a high enough assembledLines count
  */
-// export const schedule =
-//   (schedule: string|Date) =>
-//     (...actions: Action<any>[]): Action<any> =>
-//       async(page, ...injects) => {
-//         let timeUntilScheduleInMilliSeconds
-//         if (isDate(schedule)) {
-//           timeUntilScheduleInMilliSeconds = schedule.getTime() - Date.now()
-//           if (timeUntilScheduleInMilliSeconds > 0) {
-//             await sleep(timeUntilScheduleInMilliSeconds)
+export const schedule =
+  (schedule: string|Date) =>
+    (...actions: Action[]): Action =>
+      async(injects) => {
+        let timeUntilScheduleInMilliSeconds
+        if (isDate(schedule)) {
+          timeUntilScheduleInMilliSeconds = schedule.getTime() - Date.now()
+          if (timeUntilScheduleInMilliSeconds > 0) {
+            await sleep(timeUntilScheduleInMilliSeconds)
 
-//             return pipe()(...actions)(page, ...injects)
-//           }
-//         } else {
-//           const cron = parseCronExpression(schedule) // throws an error if it doesnt parse
+            return pipe()(...actions)(injects)
+          }
+        } else {
+          const cron = parseCronExpression(schedule) // throws an error if it doesnt parse
 
-//           while(true) {
-//             timeUntilScheduleInMilliSeconds = cron.getNextDate(new Date(Date.now())).getTime() - Date.now()
-//             await sleep(timeUntilScheduleInMilliSeconds)
+          while(true) {
+            timeUntilScheduleInMilliSeconds = cron.getNextDate(new Date(Date.now())).getTime() - Date.now()
+            await sleep(timeUntilScheduleInMilliSeconds)
 
-//             const returnValue = await pipe()(...actions)(page, ...injects)
+            const returnValue = await pipe()(...actions)(injects)
 
-//             if (isAbortLineSignal(returnValue)) {
-//               return processAbortLineSignal(returnValue)
-//             }
-//           }
-//         }
-//       }
+            if (isAbortLineSignal(returnValue)) {
+              return processAbortLineSignal(returnValue)
+            }
+          }
+        }
+      }

@@ -1,12 +1,12 @@
-import { Dictionary, PipeValue } from "../types"
+import { PipeValue } from "../types"
 import { CasesSignal, isCasesSignal } from "../types/cases"
 
 /**
  * Create a CasesSignal object with safe defaults for no params provided (default is no matches, pipe value undefined, and conditionPass false)
- * @param matches 
- * @param pipeValue 
+ * @param matches
+ * @param pipeValue
  */
-export const createCasesSignal = <V = any>(matches: Dictionary<V> = {}, conditionPass: boolean = false, pipeValue?: PipeValue): CasesSignal<V> => ({
+export const createCasesSignal = <V = any>(matches: {} = {}, conditionPass: boolean = false, pipeValue?: PipeValue): CasesSignal<V> => ({
   brand: 'Cases_Signal',
   conditionPass,
   matches,
@@ -15,7 +15,7 @@ export const createCasesSignal = <V = any>(matches: Dictionary<V> = {}, conditio
 
 /**
  * If a CasesSignal is provided, its pipeValue is returned, otherwise `undefined` is returned
- * @param casesSignal 
+ * @param casesSignal
  */
-export const casesSignalToPipeValue = (casesSignal: CasesSignal|any): PipeValue => 
+export const casesSignalToPipeValue = (casesSignal: CasesSignal|any): PipeValue =>
   isCasesSignal(casesSignal) ? casesSignal.pipeValue : undefined

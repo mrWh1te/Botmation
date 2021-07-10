@@ -15,17 +15,17 @@ export interface FileOptions {
   /**
    * @description   Directory name for saving screenshots in
    */
-  screenshots_directory: string
+  screenshots_directory?: string
 
   /**
    * @description   Directory name for saving PDF's in
    */
-  pdfs_directory: string
+  pdfs_directory?: string
 
   /**
    * @description   Directory name for saving cookies in
    */
-  cookies_directory: string
+  cookies_directory?: string
 
   /**
    * @description   Directory name for storing all other directories (screenshots, cookies, etc) in

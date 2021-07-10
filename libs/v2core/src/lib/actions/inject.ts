@@ -25,3 +25,18 @@ export const upsertInject =
           const newInjectValue = await assemblyLine()(...actionsToGetNewInjectValue)(injects)
           return await assemblyLine()(...actionsWithUpsertedInject)({...injects, [injectKey]: newInjectValue})
         }
+
+/**
+ * Remove inject by key
+ * @param injectKey
+ */
+export const deleteInject =
+  (injectKey: string) =>
+    (...actionsWithoutSpecifiedInject: Action[]):Action =>
+      async(injects: injects = {}) => {
+        if (injects[injectKey]) {
+          delete injects[injectKey]
+        }
+
+        return await assemblyLine()(...actionsWithoutSpecifiedInject)(injects)
+      }

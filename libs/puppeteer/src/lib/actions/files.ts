@@ -14,7 +14,7 @@ import { injectsFileOptions, injectsPage } from '../types/injects'
  */
 export const files = (fileOptions?: Partial<FileOptions>) =>
   (...actions: Action<injectsPage>[]): Action<injectsPage> =>
-    inject(enrichFileOptionsWithDefaults(fileOptions))(
+    inject({fileOptions: enrichFileOptionsWithDefaults(fileOptions)})(
       errors('files()()')(...actions)
     )
 

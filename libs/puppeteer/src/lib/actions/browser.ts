@@ -2,7 +2,7 @@ import { Page, Browser } from "puppeteer"
 import * as puppeteer from 'puppeteer'
 
 import { Action, upsertInject, Injects } from "@botmation/v2core"
-import { injectsBrowser } from './../types/injects'
+import { InjectBrowser } from './../types/injects'
 
 
 /**
@@ -26,7 +26,7 @@ export const getBrowser =
  * @param browserPageIndex 0+ to get from browser.pages() array or undefined (or blank, negative numbers) to get a new page from the injected browser
  */
 export const browserPage =
-  <I extends injectsBrowser = injectsBrowser>(browserPageIndex?: number) =>
+  <I extends InjectBrowser = InjectBrowser>(browserPageIndex?: number) =>
     (...actions: Action<I & {page: Page}>[]): Action<I & {page: Page}> =>
       upsertInject('page')(getBrowserPage(browserPageIndex))(...actions)
 
@@ -35,7 +35,7 @@ export const browserPage =
  * @param browserLaunchOptions
  */
 export const getBrowserPage =
-  <I extends injectsBrowser = injectsBrowser>(browserPageIndex?: number): Action<I, Page> =>
+  <I extends InjectBrowser = InjectBrowser>(browserPageIndex?: number): Action<I, Page> =>
     async({browser}) => {
       if (browserPageIndex && browserPageIndex >= 0) {
         const pages = await browser.pages()

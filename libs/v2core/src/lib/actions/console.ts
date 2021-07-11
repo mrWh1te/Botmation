@@ -1,6 +1,6 @@
 import { Action } from '../interfaces/actions'
 import { logMessage, logWarning, logError, logPipeValue } from '../helpers/console'
-import { InjectsValue } from '../types'
+import { InjectValue } from '../types'
 
 /**
  * @description   The following Actions are specific to the NodeJS Console, intended for the Developer.
@@ -17,7 +17,7 @@ import { InjectsValue } from '../types'
  *                Forwards any Pipe value received by returning it
  * @param message
  */
-export const log = (message?: string): Action<Partial<InjectsValue>> => async ({value}) => {
+export const log = (message?: string): Action<Partial<InjectValue>> => async ({value}) => {
   if (message) {
     logMessage(message)
   }
@@ -39,7 +39,7 @@ export const log = (message?: string): Action<Partial<InjectsValue>> => async ({
  *                Forwards any Pipe value received by returning it
  * @param message
  */
-export const warning = (warningMessage?: string): Action<Partial<InjectsValue>> => async ({value}) => {
+export const warning = (warningMessage?: string): Action<Partial<InjectValue>> => async ({value}) => {
   if (warningMessage) {
     logWarning(warningMessage)
   }
@@ -55,7 +55,7 @@ export const warning = (warningMessage?: string): Action<Partial<InjectsValue>> 
  *                Forwards any Pipe value received by returning it
  * @param message
  */
-export const error = (errorMessage?: string): Action<Partial<InjectsValue>> => async ({value}) => {
+export const error = (errorMessage?: string): Action<Partial<InjectValue>> => async ({value}) => {
   if (errorMessage) {
     logError(errorMessage)
   }

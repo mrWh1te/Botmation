@@ -9,21 +9,21 @@ import { Action, inject } from '@botmation/v2core'
 import { errors } from '@botmation/core'
 
 import { elementExistsInDocument, getElementOuterHTML, getElementsOuterHTML, textExistsInDocument } from '../helpers/scrapers'
-import { injectsHtmlParser, injectsPage } from '../types/injects'
+import { InjectHtmlParser, InjectPage } from '../types/injects'
 
 /**
  * A ConditionalAction to return a Boolean value
  *    True if element is found, false if element is not found
  * @param elementSelector
  */
-export const elementExists = (elementSelector: string): Action<injectsPage> =>
+export const elementExists = (elementSelector: string): Action<InjectPage> =>
   evaluate(elementExistsInDocument, elementSelector)
 
 /**
  *
  * @param text
  */
-export const textExists = (text: string): Action<injectsPage> =>
+export const textExists = (text: string): Action<InjectPage> =>
   evaluate(textExistsInDocument, text)
 
 /**
@@ -42,7 +42,7 @@ export const htmlParser = (htmlParserFunction: Function) =>
  * Returns the first Element that matches the provided HTML Selector
  * @param htmlSelector
  */
-export const $ = (htmlSelector: string, parser?: Function): Action<injectsPage & Partial<injectsHtmlParser>> =>
+export const $ = (htmlSelector: string, parser?: Function): Action<InjectPage & Partial<InjectHtmlParser>> =>
   async({page, htmlParser}) => {
     parser ??= htmlParser ??= cheerio.load
 
@@ -54,7 +54,7 @@ export const $ = (htmlSelector: string, parser?: Function): Action<injectsPage &
  * Returns an array of parsed HTML Element's as objects (dependent on the html parser used) that match the provided HTML Selector
  * @param htmlSelector
  */
-export const $$ = (htmlSelector: string, parser?: Function): Action<injectsPage & Partial<injectsHtmlParser>> =>
+export const $$ = (htmlSelector: string, parser?: Function): Action<InjectPage & Partial<InjectHtmlParser>> =>
   async({page, htmlParser}) => {
     parser ??= htmlParser ??= cheerio.load
 
@@ -69,5 +69,5 @@ export const $$ = (htmlSelector: string, parser?: Function): Action<injectsPage 
  * @param functionToEvaluate
  * @param functionParams
  */
-export const evaluate = (functionToEvaluate: EvaluateFn<any>, ...functionParams: any[]): Action<injectsPage> =>
+export const evaluate = (functionToEvaluate: EvaluateFn<any>, ...functionParams: any[]): Action<InjectPage> =>
   async({page}) => page.evaluate(functionToEvaluate, ...functionParams)

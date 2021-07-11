@@ -4,7 +4,7 @@ import { inject, errors, forAll } from "@botmation/v2core"
 import { goTo } from "./navigation"
 import { FileOptions } from "../interfaces/file-options"
 import { enrichFileOptionsWithDefaults, getFileUrl } from "../helpers/files"
-import { injectsFileOptions, injectsPage } from '../types/injects'
+import { InjectFileOptions, InjectPage } from '../types/injects'
 
 /**
  * @description    Higher-order Action to inject an enriched "fileOptions" from an optional provided Partial of one
@@ -13,7 +13,7 @@ import { injectsFileOptions, injectsPage } from '../types/injects'
  *                    overwride the fileOptions through their own function params
  */
 export const files = (fileOptions?: Partial<FileOptions>) =>
-  (...actions: Action<injectsPage>[]): Action<injectsPage> =>
+  (...actions: Action<InjectPage>[]): Action<InjectPage> =>
     inject({fileOptions: enrichFileOptionsWithDefaults(fileOptions)})(
       errors('files()()')(...actions)
     )
@@ -23,7 +23,7 @@ export const files = (fileOptions?: Partial<FileOptions>) =>
  *                It relies on fileOptions, to determine the local directory as to where to save the file
  * @param fileName name of the file to save the PNG as
  */
-export const screenshot = (fileName: string, fileOptions: Partial<FileOptions> = {}): Action<injectsPage & Partial<injectsFileOptions>> =>
+export const screenshot = (fileName: string, fileOptions: Partial<FileOptions> = {}): Action<InjectPage & Partial<InjectFileOptions>> =>
   async ({page, fileOptions: injectedFileOptions}) => {
 
     // fileOptions is higher order param that overwrites injected options
@@ -56,7 +56,7 @@ export const screenshotAll = (urls: string[], fileOptions?: Partial<FileOptions>
  * @note          Launching the browser without headless (headless: false) breaks this
  *                See https://github.com/puppeteer/puppeteer/issues/1829
  */
-export const savePDF = (fileName: string, fileOptions: Partial<FileOptions> = {}): Action<injectsPage & Partial<injectsFileOptions>> =>
+export const savePDF = (fileName: string, fileOptions: Partial<FileOptions> = {}): Action<InjectPage & Partial<InjectFileOptions>> =>
   async({page, fileOptions: injectedFileOptions}) => {
     const hydratedOptions = enrichFileOptionsWithDefaults({...injectedFileOptions, ...fileOptions})
     const fileUrl = getFileUrl(hydratedOptions.pdfs_directory, hydratedOptions, fileName) + '.pdf'

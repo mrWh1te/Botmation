@@ -8,7 +8,7 @@ import { PipeValue } from "../types/pipe-value"
 import { AbortLineSignal, isAbortLineSignal } from "../types/abort-line-signal"
 import { processAbortLineSignal } from "../helpers/abort"
 import { isCasesSignal, CasesSignal } from "../types/cases"
-import { Injects, InjectsValue } from "../types"
+import { Injects, InjectValue } from "../types"
 
 /**
  * @description     chain() Action for running a chain of Action's safely and optimized
@@ -47,7 +47,7 @@ export const chain =
  */
 export const pipe =
   <I extends Injects = {}, R extends PipeValue|AbortLineSignal|void = void>(valueToPipe?: PipeValue) =>
-    (...actions: Action<InjectsValue & I>[]): Action<Partial<InjectsValue> & I, R> =>
+    (...actions: Action<InjectValue & I>[]): Action<Partial<InjectValue> & I, R> =>
       async(injects) => {
         if (injects.value) {
           if (actions.length === 0) {
@@ -105,7 +105,7 @@ export const pipe =
  */
 export const switchPipe =
   (pipeValue?: PipeValue) =>
-    (...actions: Action[]): Action<Partial<InjectsValue>> =>
+    (...actions: Action[]): Action<Partial<InjectValue>> =>
       async(injects) => {
         // fallback is injects pipe value
         if (!pipeValue) {
@@ -169,7 +169,7 @@ export const switchPipe =
 export const assemblyLine =
   (forceInPipe: boolean = false) =>
     (...actions: Action[]): Action =>
-      async(injects: Partial<InjectsValue> = {}) => {
+      async(injects: Partial<InjectValue> = {}) => {
         if (injects.value || forceInPipe) {
           // running a pipe
           if (actions.length === 0) {return undefined}
@@ -208,7 +208,7 @@ export const assemblyLine =
  * @param actionOrActions action | Action[]
  */
 export const pipeActionOrActions =
-  (actionOrActions: Action | Action[]): Action<Partial<InjectsValue>> =>
+  (actionOrActions: Action | Action[]): Action<Partial<InjectValue>> =>
     async(injects) => {
       if (Array.isArray(actionOrActions)) {
         // pipe handles AbortLineSignal for itself and therefore we don't need to evaluate the signal here just return it
@@ -254,7 +254,7 @@ export const chainRunner =
  * @param actions
  */
 export const pipeRunner =
-  (...actions: Action<InjectsValue>[]): Action<Partial<InjectsValue>> =>
+  (...actions: Action<InjectValue>[]): Action<Partial<InjectValue>> =>
     async(injects) => {
       // possible injects has no `value`
       let injectsWithPipeValue = {value: undefined}

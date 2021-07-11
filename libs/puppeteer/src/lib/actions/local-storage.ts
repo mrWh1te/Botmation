@@ -1,4 +1,4 @@
-import { Action, InjectsValue } from "@botmation/v2core"
+import { Action, InjectValue } from "@botmation/v2core"
 
 import {
   getLocalStorageKeyValue,
@@ -6,13 +6,13 @@ import {
   removeLocalStorageKeyValue,
   clearLocalStorage
 } from "../helpers/local-storage"
-import { injectsPage } from "../types/injects"
+import { InjectPage } from "../types/injects"
 
 /**
  * @description     Care! Clears all key/value pairs from Local Storage
  * @param page
  */
-export const clearAllLocalStorage: Action<injectsPage> =
+export const clearAllLocalStorage: Action<InjectPage> =
   async ({page}) => {
     await page.evaluate(
       clearLocalStorage
@@ -24,7 +24,7 @@ export const clearAllLocalStorage: Action<injectsPage> =
  * @param key
  */
 export const removeLocalStorageItem =
-  (key?: string): Action<injectsPage & Partial<InjectsValue>> =>
+  (key?: string): Action<InjectPage & Partial<InjectValue>> =>
     async({page, value}) => {
 
       key ??= value && value['key'] ? value['key'] : value
@@ -43,7 +43,7 @@ export const removeLocalStorageItem =
  * @param value
  */
 export const setLocalStorageItem =
-  (key?: string, value?: string): Action<injectsPage & Partial<InjectsValue>> =>
+  (key?: string, value?: string): Action<InjectPage & Partial<InjectValue>> =>
     async({page, value:pipeValue}) => {
       // todo throw an error , don't error silently
       value ??= pipeValue ? pipeValue['value'] ? pipeValue['value'] : pipeValue : 'missing-value'
@@ -63,7 +63,7 @@ export const setLocalStorageItem =
  * @param key
  */
 export const getLocalStorageItem =
-  (key?: string): Action<injectsPage & Partial<InjectsValue>, string|null> =>
+  (key?: string): Action<InjectPage & Partial<InjectValue>, string|null> =>
     async({page, value}) => {
       key ??= value && value['key'] ? value['key'] : value
 

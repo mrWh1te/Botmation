@@ -1,8 +1,7 @@
 import { Action } from "../interfaces"
 import { PipeValue } from "../types/pipe-value"
-import { getInjectsPipeValue, injectsHavePipe } from "../helpers/pipe"
 import { CasesSignal, CaseValue } from "../types/cases"
-import { AbortLineSignal, Dictionary, InjectsValue, isAbortLineSignal } from "../types"
+import { AbortLineSignal, InjectValue, isAbortLineSignal } from "../types"
 import { pipe } from "./assembly-lines"
 import { createCasesSignal } from "../helpers/cases"
 import { processAbortLineSignal } from "../helpers/abort"
@@ -18,7 +17,7 @@ import { processAbortLineSignal } from "../helpers/abort"
  * @param mapFunction pure function to change the piped value to something else
  * Rename pipeMap ?
  */
-export const map = (mapFunction: (pipeValue: any) => PipeValue): Action<Partial<InjectsValue>> =>
+export const map = (mapFunction: (pipeValue: any) => PipeValue): Action<Partial<InjectValue>> =>
   async ({value}) =>
     mapFunction(value)
 
@@ -47,7 +46,7 @@ export const emptyPipe: Action = async () => undefined
  */
 export const pipeCase =
   (...valuesToTest: CaseValue[]) =>
-    (...actions: Action[]): Action<Partial<InjectsValue>> =>
+    (...actions: Action[]): Action<Partial<InjectValue>> =>
       async({value: pipeValue, ...otherInjects}) => {
         // if any of the values matches the injected pipe object value
         // then run the assembled actions
@@ -88,7 +87,7 @@ export const pipeCase =
  */
 export const pipeCases =
   (...valuesToTest: CaseValue[]) =>
-    (...actions: Action[]): Action<Partial<InjectsValue>> =>
+    (...actions: Action[]): Action<Partial<InjectValue>> =>
       async({value: pipeValue, ...otherInjects}) => {
         // if any of the values matches the injected pipe object value
         // then run the assembled actions

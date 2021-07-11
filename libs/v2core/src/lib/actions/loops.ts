@@ -5,7 +5,6 @@
  */
 
 import { Action } from '../interfaces/actions'
-import { pipeInjects, getInjectsPipeValue, removePipe, wrapValueInPipe } from '../helpers/pipe'
 import { pipeActionOrActions, pipe } from './assembly-lines'
 import { logWarning } from '../helpers/console'
 import { Collection, isCollection, isDictionary } from '../types/objects'
@@ -75,7 +74,7 @@ export const forAll =
           return
         }
 
-        let returnValue: AbortLineSignal|PipeValue
+        let returnValue: AbortLineSignal|PipeValue|void
 
         if (Array.isArray(collection)) {
           for(let index = 0; index < collection.length; index++) {

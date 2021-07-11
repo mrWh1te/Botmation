@@ -1,17 +1,18 @@
 import {
   clickText,
-  ConditionalBotAction,
   getCookies,
-  BotAction,
-  chain,
-  errors,
-  pipe,
   waitForNavigation,
   click,
   type,
+} from '@botmation/puppeteer'
+
+import {
+  log,
+  chain,
+  errors,
+  pipe,
   map,
-  log
-} from '@botmation/core'
+} from '@botmation/v2core'
 
 import { FORM_AUTH_PASSWORD_INPUT_SELECTOR, FORM_AUTH_USERNAME_INPUT_SELECTOR } from '../constants/selectors'
 import { goToLogin, goToLogout } from './navigation'

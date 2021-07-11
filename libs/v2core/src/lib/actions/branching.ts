@@ -5,7 +5,6 @@
  */
 
 import { Action } from '../interfaces/actions'
-import { pipeInjects } from '../helpers/pipe'
 import { pipe } from './assembly-lines'
 import { PipeValue } from '../types/pipe-value'
 import { AbortLineSignal, isAbortLineSignal } from '../types/abort-line-signal'

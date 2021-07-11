@@ -1,4 +1,4 @@
-import { Action, injectsValue } from "@botmation/v2core"
+import { Action, InjectsValue } from "@botmation/v2core"
 
 import {
   getLocalStorageKeyValue,
@@ -24,7 +24,7 @@ export const clearAllLocalStorage: Action<injectsPage> =
  * @param key
  */
 export const removeLocalStorageItem =
-  (key?: string): Action<injectsPage & Partial<injectsValue>> =>
+  (key?: string): Action<injectsPage & Partial<InjectsValue>> =>
     async({page, value}) => {
 
       key ??= value && value['key'] ? value['key'] : value
@@ -43,7 +43,7 @@ export const removeLocalStorageItem =
  * @param value
  */
 export const setLocalStorageItem =
-  (key?: string, value?: string): Action<injectsPage & Partial<injectsValue>> =>
+  (key?: string, value?: string): Action<injectsPage & Partial<InjectsValue>> =>
     async({page, value:pipeValue}) => {
       // todo throw an error , don't error silently
       value ??= pipeValue ? pipeValue['value'] ? pipeValue['value'] : pipeValue : 'missing-value'
@@ -63,7 +63,7 @@ export const setLocalStorageItem =
  * @param key
  */
 export const getLocalStorageItem =
-  (key?: string): Action<injectsPage & Partial<injectsValue>, string|null> =>
+  (key?: string): Action<injectsPage & Partial<InjectsValue>, string|null> =>
     async({page, value}) => {
       key ??= value && value['key'] ? value['key'] : value
 

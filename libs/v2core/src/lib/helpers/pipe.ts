@@ -3,7 +3,7 @@
  */
 
 import { isPipe, Pipe, EmptyPipe } from "../interfaces/pipe"
-import { injects, injectsValue } from "../types"
+import { Injects, InjectsValue } from "../types"
 import { PipeValue } from "../types/pipe-value"
 
 /**
@@ -88,7 +88,7 @@ export const injectsHavePipe = (injects: any[]): boolean => {
  * @description    Gets the Pipe value from provided `injects`, but if injects are missing a Pipe, this returns undefined instead, as if the injects had an empty Pipe (safe fallback)
  * @param injects
  */
-export const getInjectsPipeValue = ({value}: Partial<injectsValue>): PipeValue =>
+export const getInjectsPipeValue = ({value}: Partial<InjectsValue>): PipeValue =>
   value
 
 /**

@@ -1,11 +1,11 @@
 import { Browser, Page } from "puppeteer"
 
-import { injects } from "@botmation/v2core"
+import { Injects } from "@botmation/v2core"
 import { FileOptions } from "../interfaces/file-options"
 
-export type injectsBrowser = injects & {browser: Browser}
-export type injectsPage = injects & {page: Page}
+export type injectsBrowser = Injects & {browser: Browser}
+export type injectsPage = Injects & {page: Page}
 
-export type injectsHtmlParser = injects & {htmlParser: Function}
+export type injectsHtmlParser = Injects & {htmlParser: Function}
 
-export type injectsFileOptions = injects & {fileOptions: FileOptions}
+export type injectsFileOptions = Injects & {fileOptions: FileOptions}

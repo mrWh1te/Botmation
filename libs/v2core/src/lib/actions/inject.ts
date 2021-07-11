@@ -1,5 +1,5 @@
 import { Action } from "../interfaces"
-import { injects } from "../types"
+import { Injects } from "../types"
 import { PipeValue } from "../types/pipe-value"
 import { assemblyLine } from "./assembly-lines"
 
@@ -8,9 +8,9 @@ import { assemblyLine } from "./assembly-lines"
  * @note           If you need the injects to run as a pipe, wrap injects in pipe()() otherwise assemblyLine()() will run it as a chain
  */
 export const inject =
-  (newInjects: injects) =>
+  (newInjects: Injects) =>
     (...actions: Action[]): Action =>
-      async(injects: injects = {}) =>
+      async(injects: Injects = {}) =>
         await assemblyLine()(...actions)({...injects, ...newInjects})
 
 /**
@@ -20,8 +20,8 @@ export const inject =
 export const upsertInject =
   (injectKey: string) =>
     (...actionsToGetNewInjectValue: Action[]) =>
-      (...actionsWithUpsertedInject: Action<injects & {[injectKey: string]: PipeValue}>[]):Action =>
-        async(injects: injects = {}) => {
+      (...actionsWithUpsertedInject: Action<Injects & {[injectKey: string]: PipeValue}>[]):Action =>
+        async(injects: Injects = {}) => {
           const newInjectValue = await assemblyLine()(...actionsToGetNewInjectValue)(injects)
           return await assemblyLine()(...actionsWithUpsertedInject)({...injects, [injectKey]: newInjectValue})
         }
@@ -33,7 +33,7 @@ export const upsertInject =
 export const deleteInject =
   (injectKey: string) =>
     (...actionsWithoutSpecifiedInject: Action[]):Action =>
-      async(injects: injects = {}) => {
+      async(injects: Injects = {}) => {
         if (injects[injectKey]) {
           delete injects[injectKey]
         }

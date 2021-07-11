@@ -4,9 +4,11 @@ import {
   waitForNavigation,
   click,
   type,
+  injectsPage,
 } from '@botmation/puppeteer'
 
 import {
+  Action,
   log,
   chain,
   errors,
@@ -18,10 +20,10 @@ import { FORM_AUTH_PASSWORD_INPUT_SELECTOR, FORM_AUTH_USERNAME_INPUT_SELECTOR } 
 import { goToLogin, goToLogout } from './navigation'
 
 /**
- * @description  BotAction that attempts the login flow for Twitter
+ * @description  Action that attempts the login flow for Twitter
  * @param {username, password} destructured
  */
-export const login = ({username, password}: {username: string, password: string}): BotAction =>
+export const login = ({username, password}: {username: string, password: string}): Action =>
   chain(
     errors('Twitter login()')(
       goToLogin,
@@ -38,7 +40,7 @@ export const login = ({username, password}: {username: string, password: string}
 /**
  * @param page
  */
-export const logout: BotAction = chain(
+export const logout: Action = chain<injectsPage>(
   goToLogout,
   clickText('Log out'),
   waitForNavigation
@@ -48,7 +50,7 @@ export const logout: BotAction = chain(
  * @param page
  * @param injects
  */
-export const isGuest: ConditionalBotAction = pipe()(
+export const isGuest = pipe<injectsPage, boolean>()(
   getCookies(),
   map(cookies => cookies.find(cookie => cookie.name === 'auth_token') ? false : true)
 )
@@ -57,7 +59,7 @@ export const isGuest: ConditionalBotAction = pipe()(
  * @param page
  * @param injects
  */
-export const isLoggedIn: ConditionalBotAction = pipe()(
+export const isLoggedIn = pipe<injectsPage, boolean>()(
   getCookies(),
   map(cookies => cookies.find(cookie => cookie.name === 'auth_token') ? true : false)
 )

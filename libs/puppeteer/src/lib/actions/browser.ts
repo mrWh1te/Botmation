@@ -1,7 +1,7 @@
 import { Page, Browser } from "puppeteer"
 import * as puppeteer from 'puppeteer'
 
-import { Action, upsertInject, injects } from "@botmation/v2core"
+import { Action, upsertInject, Injects } from "@botmation/v2core"
 import { injectsBrowser } from './../types/injects'
 
 
@@ -9,7 +9,7 @@ import { injectsBrowser } from './../types/injects'
  * inject (browser) returns new line of Actions with browser added to injects
  */
 export const browser =
-  <I extends injects = injects>(...browserLaunchOptions: Parameters<typeof puppeteer.launch>) =>
+  <I extends Injects = Injects>(...browserLaunchOptions: Parameters<typeof puppeteer.launch>) =>
     (...actions: Action<I & {browser: Browser}>[]): Action<I> =>
       upsertInject('browser')(getBrowser(...browserLaunchOptions))(...actions)
 
@@ -18,7 +18,7 @@ export const browser =
  * @param browserLaunchOptions
  */
 export const getBrowser =
-  <I extends injects = injects>(...browserLaunchOptions: Parameters<typeof puppeteer.launch>): Action<I, Browser> =>
+  <I extends Injects = Injects>(...browserLaunchOptions: Parameters<typeof puppeteer.launch>): Action<I, Browser> =>
     async() => puppeteer.launch(...browserLaunchOptions)
 
 /**

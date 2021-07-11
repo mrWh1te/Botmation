@@ -1,5 +1,5 @@
 import { Action } from "../interfaces"
-import { AbortLineSignal, injectsValue, isAbortLineSignal } from '../types'
+import { AbortLineSignal, InjectsValue, isAbortLineSignal } from '../types'
 import { PipeValue } from "../types/pipe-value"
 import { createAbortLineSignal, processAbortLineSignal } from "../helpers/abort"
 import { pipeCase } from "./pipe"
@@ -31,7 +31,7 @@ export const abortPipe = (value: CaseValue, abortPipeValue: PipeValue = undefine
  * Similar to Pipe, except a default abort() with assembledLines = 1 will abort the pipe AND restart it with the abort line signal's pipe value injected
  * @param actions
  */
-export const restart = (...actions: Action[]): Action<Partial<injectsValue>> =>
+export const restart = (...actions: Action[]): Action<Partial<InjectsValue>> =>
   async(injects) => {
     let restartActions: boolean
     let actionResult: AbortLineSignal|PipeValue

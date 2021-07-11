@@ -1,7 +1,7 @@
 import { Action } from "../interfaces"
 import { logError } from "../helpers/console"
 import { pipe, chain } from "@botmation/v2core"
-import { injectsValue } from "../types"
+import { InjectsValue } from "../types"
 
 /**
  * @description    Higher-order Action to run actions in a try/catch block that logs errors with the provided errorBlockName
@@ -13,7 +13,7 @@ import { injectsValue } from "../types"
  */
 export const errors =
   (errorsBlockName: string = 'Unnamed Errors Block') =>
-    (...actions: Action[]): Action<Partial<injectsValue>> =>
+    (...actions: Action[]): Action<Partial<InjectsValue>> =>
       async({value, ...otherInjects}) => {
         try {
           if (value) {

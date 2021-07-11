@@ -1,4 +1,4 @@
-import { goTo } from "@botmation/core";
+import { goTo } from "@botmation/puppeteer";
 
 import {
   TWITTER_URL_BOOKMARKS,

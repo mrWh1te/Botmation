@@ -1,19 +1,14 @@
 import { Page } from "puppeteer"
 
-import { Action, Pipe } from "../interfaces"
+import { Action } from "../interfaces"
 import {
-  injectsHavePipe,
-  pipeInjects,
-  wrapValueInPipe,
-  getInjectsPipeOrEmptyPipe,
-  createEmptyPipe,
   getInjectsPipeValue
 } from "../helpers/pipe"
 import { PipeValue } from "../types/pipe-value"
 import { AbortLineSignal, isAbortLineSignal } from "../types/abort-line-signal"
 import { processAbortLineSignal } from "../helpers/abort"
 import { isCasesSignal, CasesSignal } from "../types/cases"
-import { injects, injectsValue } from "../types"
+import { Injects, InjectsValue } from "../types"
 
 /**
  * @description     chain() Action for running a chain of Action's safely and optimized
@@ -51,20 +46,20 @@ export const chain =
  * @param valueToPipe
  */
 export const pipe =
-  (valueToPipe?: PipeValue) =>
-    (...actions: Action[]): Action<Partial<injectsValue>> =>
-      async({value, ...otherInjects}) => {
-        if (value) {
+  <I extends Injects = {}, R extends PipeValue|AbortLineSignal|void = void>(valueToPipe?: PipeValue) =>
+    (...actions: Action<InjectsValue & I>[]): Action<Partial<InjectsValue> & I, R> =>
+      async(injects) => {
+        if (injects.value) {
           if (actions.length === 0) {
             return undefined
           }
 
           if (actions.length === 1) {
-            let returnValue: PipeValue|AbortLineSignal|void
+            let returnValue
             if (valueToPipe) {
-              returnValue = await actions[0]({value: valueToPipe, ...otherInjects})
+              returnValue = await actions[0]({...injects, value: valueToPipe})
             } else {
-              returnValue = await actions[0]({value, ...otherInjects})
+              returnValue = await actions[0]({value: undefined, ...injects})
             }
 
             if (isAbortLineSignal(returnValue)) {
@@ -75,16 +70,16 @@ export const pipe =
           } else {
             // injects only have a pipe when its ran inside a pipe, so lets return our value to flow with the pipe mechanics
             if (valueToPipe) {
-              return pipeRunner(...actions)({value: valueToPipe, ...otherInjects})
+              return pipeRunner(...actions)({...injects, value: valueToPipe})
             } else {
-              return pipeRunner(...actions)({value, ...otherInjects})
+              return pipeRunner(...actions)({value: undefined, ...injects})
             }
           }
         } else {
           // injects don't have a pipe, so add one
           if (actions.length === 0) {return undefined}
           if (actions.length === 1) {
-            const returnValue = await actions[0]({value: undefined, ...otherInjects})
+            const returnValue = await actions[0]({value: undefined, ...injects})
 
             if (isAbortLineSignal(returnValue)) {
               return processAbortLineSignal(returnValue)
@@ -92,7 +87,7 @@ export const pipe =
               return returnValue
             }
           } else {
-            return pipeRunner(...actions)({value: undefined, ...otherInjects})
+            return pipeRunner(...actions)({value: undefined, ...injects})
           }
         }
       }
@@ -110,7 +105,7 @@ export const pipe =
  */
 export const switchPipe =
   (pipeValue?: PipeValue) =>
-    (...actions: Action[]): Action<Partial<injectsValue>> =>
+    (...actions: Action[]): Action<Partial<InjectsValue>> =>
       async(injects) => {
         // fallback is injects pipe value
         if (!pipeValue) {
@@ -174,7 +169,7 @@ export const switchPipe =
 export const assemblyLine =
   (forceInPipe: boolean = false) =>
     (...actions: Action[]): Action =>
-      async(injects: Partial<injectsValue> = {}) => {
+      async(injects: Partial<InjectsValue> = {}) => {
         if (injects.value || forceInPipe) {
           // running a pipe
           if (actions.length === 0) {return undefined}
@@ -213,7 +208,7 @@ export const assemblyLine =
  * @param actionOrActions action | Action[]
  */
 export const pipeActionOrActions =
-  (actionOrActions: Action | Action[]): Action<Partial<injectsValue>> =>
+  (actionOrActions: Action | Action[]): Action<Partial<InjectsValue>> =>
     async(injects) => {
       if (Array.isArray(actionOrActions)) {
         // pipe handles AbortLineSignal for itself and therefore we don't need to evaluate the signal here just return it
@@ -259,7 +254,7 @@ export const chainRunner =
  * @param actions
  */
 export const pipeRunner =
-  <I extends {value?: PipeValue} = {}>(...actions: Action<I>[]): Action<I> =>
+  (...actions: Action<InjectsValue>[]): Action<Partial<InjectsValue>> =>
     async(injects) => {
       // possible injects has no `value`
       let injectsWithPipeValue = {value: undefined}
@@ -269,7 +264,7 @@ export const pipeRunner =
       }
 
       for(const action of actions) {
-        const value: AbortLineSignal|PipeValue|void = await action({...injects, ...injectsWithPipeValue})
+        const value = await action({...injects, ...injectsWithPipeValue})
 
         if (isAbortLineSignal(value)) {
           return processAbortLineSignal(value)

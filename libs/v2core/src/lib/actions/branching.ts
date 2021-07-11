@@ -9,7 +9,7 @@ import { pipe } from './assembly-lines'
 import { PipeValue } from '../types/pipe-value'
 import { AbortLineSignal, isAbortLineSignal } from '../types/abort-line-signal'
 import { processAbortLineSignal } from '../helpers/abort'
-import { injects } from '../types'
+import { Injects } from '../types'
 
 /**
  * @description Higher Order Action that accepts a Action (pipeable, that returns a boolean) and based on what boolean it resolves,
@@ -19,7 +19,7 @@ import { injects } from '../types'
  * @param condition
  */
 export const givenThat =
-  <I extends injects = {}>(condition: Action<I, boolean>) =>
+  <I extends Injects = {}>(condition: Action<I, boolean>) =>
     (...actions: Action[]): Action =>
       async(injects: I) => {
         const resolvedConditionValue: AbortLineSignal|boolean = await condition(injects)

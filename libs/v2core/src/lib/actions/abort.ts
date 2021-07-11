@@ -1,10 +1,9 @@
-import { Action, Pipe } from "../interfaces"
+import { Action } from "../interfaces"
 import { AbortLineSignal, injectsValue, isAbortLineSignal } from '../types'
 import { PipeValue } from "../types/pipe-value"
 import { createAbortLineSignal, processAbortLineSignal } from "../helpers/abort"
 import { pipeCase } from "./pipe"
 import { CasesSignal, CaseValue } from "../types/cases"
-import { createEmptyPipe, getInjectsPipeOrEmptyPipe, injectsHavePipe, wrapValueInPipe } from "../helpers/pipe"
 
 /**
  * Action to return an AbortLineSignal to be processed by an assembler for an effect of aborting assembled lines (including parent(s) if specified a number greater than 1 or 0 for all)
@@ -35,7 +34,7 @@ export const abortPipe = (value: CaseValue, abortPipeValue: PipeValue = undefine
 export const restart = (...actions: Action[]): Action<Partial<injectsValue>> =>
   async(injects) => {
     let restartActions: boolean
-    let actionResult: AbortLineSignal|PipeValue|void
+    let actionResult: AbortLineSignal|PipeValue
 
     if (injects.value) {
       actionResult = injects.value

@@ -10,9 +10,8 @@ import { assemblyLine } from "./assembly-lines";
  * @description   Pauses the runner (chain or pipe) for the provided milliseconds before continuing to the next Action
  * @param milliseconds
  */
-export const wait = (milliseconds: number): Action => async() => {
+export const wait = (milliseconds: number): Action => async() =>
   await sleep(milliseconds)
-}
 
 /**
  *

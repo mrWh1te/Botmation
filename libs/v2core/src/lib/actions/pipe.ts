@@ -63,13 +63,13 @@ export const pipeCase =
           }, {})
 
           if (Object.keys(matches).length > 0) {
-            const returnValue:PipeValue|AbortLineSignal = await pipe()(...actions)({value: pipeValue, ...otherInjects})
+            const returnValue:PipeValue|AbortLineSignal|void = await pipe()(...actions)({value: pipeValue, ...otherInjects})
 
             if (isAbortLineSignal(returnValue)) {
               return processAbortLineSignal(returnValue)
             } else {
               // signal that a case matched
-              return createCasesSignal(matches, true, returnValue)
+              return createCasesSignal(matches, true, returnValue as PipeValue) // todo handle void case
             }
           } else {
             return createCasesSignal(matches, false, pipeValue) // pass through original pipe object as CasesSignal.pipeValue
@@ -107,14 +107,14 @@ export const pipeCases =
 
           // only run assembled Action's if ALL cases pass
           if (Object.keys(matches).length === valuesToTest.length) {
-            const returnValue:PipeValue|AbortLineSignal = await pipe()(...actions)({value: pipeValue, ...otherInjects})
+            const returnValue:PipeValue|AbortLineSignal|void = await pipe()(...actions)({value: pipeValue, ...otherInjects})
 
             if (isAbortLineSignal(returnValue)) {
               return processAbortLineSignal(returnValue) // processed by pipe() to abort the line
                                                          // processed a 2nd time to abort the returning CasesSignal feature
             } else {
               // signal that All cases matched
-              return createCasesSignal(matches, true, returnValue)
+              return createCasesSignal(matches, true, returnValue as PipeValue) // todo handle void case
             }
           } else {
             return createCasesSignal(matches, false, pipeValue) // pass through original pipe object as CasesSignal.pipeValue

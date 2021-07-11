@@ -1,6 +1,6 @@
 import { Action } from "../interfaces"
 import { logError } from "../helpers/console"
-import { pipe, chain } from "@botmation/v2core"
+import { pipe, chain } from "./assembly-lines"
 import { InjectValue } from "../types"
 
 /**

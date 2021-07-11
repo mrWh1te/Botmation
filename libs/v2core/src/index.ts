@@ -14,3 +14,5 @@ export * from './lib/actions/time'
 // barrels todo deprecate ?
 export * from './lib/types'
 export * from './lib/interfaces'
+
+export * from './lib/helpers/console'

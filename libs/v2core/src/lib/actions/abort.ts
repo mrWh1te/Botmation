@@ -34,7 +34,7 @@ export const abortPipe = (value: CaseValue, abortPipeValue: PipeValue = undefine
 export const restart = (...actions: Action[]): Action<Partial<InjectValue>> =>
   async(injects) => {
     let restartActions: boolean
-    let actionResult: AbortLineSignal|PipeValue
+    let actionResult: AbortLineSignal|PipeValue|void
 
     if (injects.value) {
       actionResult = injects.value

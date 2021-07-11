@@ -32,18 +32,26 @@ export const browserPage =
 
 /**
  * Grab a particular page from the `browser` inject by pages() index or a new page (negative number as browserPageIndex or undefined)
- * @param browserLaunchOptions
+ * @param browserPageIndex undefined gets first active page or creates one if none exists (default behavior)
+ *                         number equal to or greater than zero acts as pages() index to grab a specific page
+ *                         'new' or any negative number will create a new page
  */
 export const getBrowserPage =
-  <I extends InjectBrowser = InjectBrowser>(browserPageIndex?: number): Action<I, Page> =>
+  <I extends InjectBrowser = InjectBrowser>(browserPageIndex?: number|'new'): Action<I, Page> =>
     async({browser}) => {
+      if (!browserPageIndex) {
+        const pages = await browser.pages()
+        const page = pages.length === 0 ? await browser.newPage() : pages[0]
+        return page
+      }
+
       if (browserPageIndex && browserPageIndex >= 0) {
         const pages = await browser.pages()
         return pages[browserPageIndex]
-      } else {
-        const newPage = await browser.newPage()
-        return newPage
       }
+
+      const newPage = await browser.newPage()
+      return newPage
     }
 
 

@@ -17,7 +17,8 @@ import { wait } from '@botmation/v2core'
         wait(1000),
         goTo('https://google.com'),
         wait(1000),
-        goBack()
+        goBack(),
+        wait(10000)
       )
     )
 

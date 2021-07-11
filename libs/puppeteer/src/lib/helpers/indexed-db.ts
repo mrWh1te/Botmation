@@ -2,7 +2,7 @@
 // The following functions are evaluated in a Puppeteer Page instance's browser context
 //
 
-import { logError, logMessage } from "./console";
+import { logError, logMessage } from "@botmation/v2core";
 
 /**
  *

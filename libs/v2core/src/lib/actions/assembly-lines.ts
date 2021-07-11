@@ -1,5 +1,3 @@
-import { Page } from "puppeteer"
-
 import { Action } from "../interfaces"
 import {
   getInjectsPipeValue
@@ -7,7 +5,7 @@ import {
 import { PipeValue } from "../types/pipe-value"
 import { AbortLineSignal, isAbortLineSignal } from "../types/abort-line-signal"
 import { processAbortLineSignal } from "../helpers/abort"
-import { isCasesSignal, CasesSignal } from "../types/cases"
+import { isCasesSignal } from "../types/cases"
 import { Injects, InjectValue } from "../types"
 
 /**

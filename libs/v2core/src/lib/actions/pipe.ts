@@ -68,7 +68,7 @@ export const pipeCase =
               return processAbortLineSignal(returnValue)
             } else {
               // signal that a case matched
-              return createCasesSignal(matches, true, returnValue as PipeValue) // todo handle void case
+              return createCasesSignal(matches, true, returnValue as unknown as PipeValue) // todo handle void case
             }
           } else {
             return createCasesSignal(matches, false, pipeValue) // pass through original pipe object as CasesSignal.pipeValue
@@ -113,7 +113,7 @@ export const pipeCases =
                                                          // processed a 2nd time to abort the returning CasesSignal feature
             } else {
               // signal that All cases matched
-              return createCasesSignal(matches, true, returnValue as PipeValue) // todo handle void case
+              return createCasesSignal(matches, true, returnValue as unknown as PipeValue) // todo handle void case
             }
           } else {
             return createCasesSignal(matches, false, pipeValue) // pass through original pipe object as CasesSignal.pipeValue

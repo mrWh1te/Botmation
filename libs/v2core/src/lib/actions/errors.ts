@@ -12,9 +12,9 @@ import { InjectValue } from "../types"
  * @param errorsBlockName errors caught will be logged with this name
  */
 export const errors =
-  (errorsBlockName: string = 'Unnamed Errors Block') =>
-    (...actions: Action[]): Action<Partial<InjectValue>> =>
-      async({value, ...otherInjects}) => {
+  <I extends Partial<InjectValue> = {}>(errorsBlockName: string = 'Unnamed Errors Block') =>
+    (...actions: Action[]): Action<I> =>
+      async({value, ...otherInjects}: I) => {
         try {
           if (value) {
             return await pipe()(...actions)({value, ...otherInjects})

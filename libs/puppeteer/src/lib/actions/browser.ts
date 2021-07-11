@@ -33,7 +33,7 @@ export const browserPage =
 /**
  * Grab a particular page from the `browser` inject by pages() index or a new page (negative number as browserPageIndex or undefined)
  * @param browserPageIndex undefined gets first active page or creates one if none exists (default behavior)
- *                         number equal to or greater than zero acts as pages() index to grab a specific page
+ *                         number equal to or greater than zero acts as pages() index to grab a specific page, if not found, page returned is undefined
  *                         'new' or any negative number will create a new page
  */
 export const getBrowserPage =

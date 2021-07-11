@@ -1,11 +1,11 @@
+import { wait } from '@botmation/v2core'
+
 import {
   browserPage,
   browser,
   goTo,
   goBack
 } from '@botmation/puppeteer'
-import { wait } from '@botmation/v2core'
-
 
 (async () => {
   try {

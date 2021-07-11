@@ -23,8 +23,8 @@ import { goToLogin, goToLogout } from './navigation'
  * @description  Action that attempts the login flow for Twitter
  * @param {username, password} destructured
  */
-export const login = ({username, password}: {username: string, password: string}): Action =>
-  chain(
+export const login = ({username, password}: {username: string, password: string}): Action<InjectPage> =>
+  chain<InjectPage>(
     errors('Twitter login()')(
       goToLogin,
       click(FORM_AUTH_USERNAME_INPUT_SELECTOR),

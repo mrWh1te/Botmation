@@ -23,6 +23,10 @@ import { injects, injectsValue } from "../types"
 export const chain =
   <I extends {} = {}>(...actions: Action<I>[]): Action<I> =>
     async(injects: I) => {
+      if (actions.length === 0) {
+        return undefined
+      }
+
       if(actions.length === 1) {
         const returnValue = await actions[0](injects)
 
@@ -31,15 +35,14 @@ export const chain =
         }
 
         return returnValue
-      } else {
-        const returnValue = await chainRunner(...actions)(injects)
-
-        if (isAbortLineSignal(returnValue)) {
-          return processAbortLineSignal(returnValue)
-        }
-
-        return returnValue
       }
+
+      const returnValue = await chainRunner(...actions)(injects)
+      if (isAbortLineSignal(returnValue)) {
+        return processAbortLineSignal(returnValue)
+      }
+
+      return returnValue
     }
 
 /**
@@ -52,7 +55,10 @@ export const pipe =
     (...actions: Action[]): Action<Partial<injectsValue>> =>
       async({value, ...otherInjects}) => {
         if (value) {
-          if (actions.length === 0) {return undefined}
+          if (actions.length === 0) {
+            return undefined
+          }
+
           if (actions.length === 1) {
             let returnValue: PipeValue|AbortLineSignal
             if (valueToPipe) {
@@ -212,24 +218,24 @@ export const assemblyLine =
  * @description   For a particular utility BotAction that doesn't know whether it's receiving an array (not spread!) of BotActions or just 1 BotAction
  *                Can be helpful for advanced BotAction's that use a callback function as a param to return BotAction(s) for running in some new context
  * @example       See forAll()()
- * @param actionOrActions Botaction<PipeValue> | BotAction<PipeValue>[]
+ * @param actionOrActions Botaction | BotAction[]
  */
-// export const pipeActionOrActions =
-//   (actionOrActions: BotAction<PipeValue> | BotAction<PipeValue>[]): BotAction<PipeValue|undefined|AbortLineSignal> =>
-//     async(page, ...injects) => {
-//       if (Array.isArray(actionOrActions)) {
-//         // pipe handles AbortLineSignal for itself and therefore we don't need to evaluate the signal here just return it
-//         return pipe()(...actionOrActions)(page, ...injects)
-//       } else {
-//         const singleActionResult = await actionOrActions(page, ...pipeInjects(injects)) // simulate pipe
+export const pipeActionOrActions =
+  (actionOrActions: Action | Action[]): Action<Partial<injectsValue>> =>
+    async(injects) => {
+      if (Array.isArray(actionOrActions)) {
+        // pipe handles AbortLineSignal for itself and therefore we don't need to evaluate the signal here just return it
+        return pipe()(...actionOrActions)(injects)
+      } else {
+        const singleActionResult = await actionOrActions(injects)
 
-//         if (isAbortLineSignal(singleActionResult)) {
-//           return processAbortLineSignal(singleActionResult)
-//         } else {
-//           return singleActionResult
-//         }
-//       }
-//     }
+        if (isAbortLineSignal(singleActionResult)) {
+          return processAbortLineSignal(singleActionResult)
+        } else {
+          return singleActionResult
+        }
+      }
+    }
 
 //
 // Avoid using the following BotAction's, unless you know what you're doing

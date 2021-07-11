@@ -1,14 +1,14 @@
-import { Action, injectsValue } from '@botmation/v2core'
+import { Action, InjectValue } from '@botmation/v2core'
 import { inject } from '@botmation/v2core'
 import { PipeValue } from '@botmation/v2core'
 import { isObjectWithKey, isObjectWithValue } from '@botmation/v2core'
 import { pipe } from '@botmation/v2core'
 
-import { injectsPage } from '../types/injects'
+import { InjectPage } from '../types/injects'
 
 import { getIndexedDBStoreValue, setIndexedDBStoreValue, deleteIndexedDBDatabase } from '../helpers/indexed-db'
 
-export type injectsIndexedDB = injectsPage & Partial<injectsValue> & {
+export type injectsIndexedDB = InjectPage & Partial<InjectValue> & {
   idb: indexedDBConnection
 }
 

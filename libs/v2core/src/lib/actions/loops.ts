@@ -11,7 +11,7 @@ import { Collection, isCollection, isDictionary } from '../types/objects'
 import { PipeValue } from '../types/pipe-value'
 import { AbortLineSignal, isAbortLineSignal } from '../types/abort-line-signal'
 import { processAbortLineSignal } from '../helpers/abort'
-import { injects, injectsValue } from '../types'
+import { Injects, InjectValue } from '../types'
 
 /**
  * @future support piping in the `collection`
@@ -61,7 +61,7 @@ import { injects, injectsValue } from '../types'
 export const forAll =
   (collection?: Collection) =>
     // cb params = iterated value, iterated index/key (casted as string), collection
-    (actionOrActionsFactory: (...args: [any, string, Collection]) => Action[] | Action): Action<Partial<injectsValue>> =>
+    (actionOrActionsFactory: (...args: [any, string, Collection]) => Action[] | Action): Action<Partial<InjectValue>> =>
       async({...injects}) => {
         // the collection can be passed in via higher-order params or Pipe object value
         // higher-order params trump Pipe object value
@@ -115,7 +115,7 @@ export const forAll =
  * @param condition
  */
 export const doWhile =
-  (condition: Action<injects,boolean>) =>
+  (condition: Action<Injects,boolean>) =>
     (...actions: Action[]): Action =>
       async({...injects}) => {
         let returnValue: PipeValue|AbortLineSignal|void
@@ -147,7 +147,7 @@ export const doWhile =
  *              )
  */
 export const forAsLong =
-  (condition: Action<injects, boolean>) =>
+  (condition: Action<Injects, boolean>) =>
     (...actions: Action[]): Action =>
       async(injects) => {
         let returnValue: PipeValue|AbortLineSignal|void

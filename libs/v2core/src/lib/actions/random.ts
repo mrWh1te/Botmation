@@ -1,6 +1,6 @@
 import { Action } from '@botmation/v2core'
 
-import { injects } from '../types'
+import { Injects } from '../types'
 
 import { assemblyLine } from './assembly-lines'
 import { generateRandomDecimal } from '../helpers/random'
@@ -8,7 +8,7 @@ import { inject } from './inject'
 import { errors } from './errors'
 import { NumberReturningFunc } from '../types/random'
 
-export type injectsRandom = injects & {randomDecimal: NumberReturningFunc}
+export type injectsRandom = Injects & {randomDecimal: NumberReturningFunc}
 
 /**
  * @description   Inject a random decimal number generator

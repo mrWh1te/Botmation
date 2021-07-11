@@ -4,7 +4,7 @@ import {
   waitForNavigation,
   click,
   type,
-  injectsPage,
+  InjectPage,
 } from '@botmation/puppeteer'
 
 import {
@@ -40,7 +40,7 @@ export const login = ({username, password}: {username: string, password: string}
 /**
  * @param page
  */
-export const logout: Action = chain<injectsPage>(
+export const logout: Action = chain<InjectPage>(
   goToLogout,
   clickText('Log out'),
   waitForNavigation
@@ -50,7 +50,7 @@ export const logout: Action = chain<injectsPage>(
  * @param page
  * @param injects
  */
-export const isGuest = pipe<injectsPage, boolean>()(
+export const isGuest = pipe<InjectPage, boolean>()(
   getCookies(),
   map(cookies => cookies.find(cookie => cookie.name === 'auth_token') ? false : true)
 )
@@ -59,7 +59,7 @@ export const isGuest = pipe<injectsPage, boolean>()(
  * @param page
  * @param injects
  */
-export const isLoggedIn = pipe<injectsPage, boolean>()(
+export const isLoggedIn = pipe<InjectPage, boolean>()(
   getCookies(),
   map(cookies => cookies.find(cookie => cookie.name === 'auth_token') ? true : false)
 )

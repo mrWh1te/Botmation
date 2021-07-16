@@ -33,6 +33,7 @@
     "bot-reddit": { "tags": [] },
     "v2core": { "tags": [] },
     "puppeteer-bot": { "tags": [] },
-    "puppeteer": { "tags": [] }
+    "puppeteer": { "tags": [] },
+    "soundcloud": { "tags": [] }
   }
 }

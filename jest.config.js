@@ -18,5 +18,6 @@ module.exports = {
     '<rootDir>/libs/v2core',
     '<rootDir>/apps/puppeteer-bot',
     '<rootDir>/libs/puppeteer',
+    '<rootDir>/libs/soundcloud',
   ],
 };

@@ -8,11 +8,17 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["libs/core/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "libs/core/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/core"],
+          "outputs": [
+            "coverage/libs/core"
+          ],
           "options": {
             "jestConfig": "libs/core/jest.config.js",
             "passWithNoTests": true
@@ -20,13 +26,17 @@
         },
         "build": {
           "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/core",
             "tsConfig": "libs/core/tsconfig.lib.json",
             "packageJson": "libs/core/package.json",
             "main": "libs/core/src/index.ts",
-            "assets": ["libs/core/*.md"]
+            "assets": [
+              "libs/core/*.md"
+            ]
           }
         }
       }
@@ -38,11 +48,17 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["libs/instagram/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "libs/instagram/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/instagram"],
+          "outputs": [
+            "coverage/libs/instagram"
+          ],
           "options": {
             "jestConfig": "libs/instagram/jest.config.js",
             "passWithNoTests": true
@@ -50,13 +66,17 @@
         },
         "build": {
           "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/instagram",
             "tsConfig": "libs/instagram/tsconfig.lib.json",
             "packageJson": "libs/instagram/package.json",
             "main": "libs/instagram/src/index.ts",
-            "assets": ["libs/instagram/*.md"],
+            "assets": [
+              "libs/instagram/*.md"
+            ],
             "buildableProjectDepsInPackageJsonType": "peerDependencies"
           }
         }
@@ -70,7 +90,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/example",
             "main": "apps/example/src/main.ts",
@@ -93,15 +115,23 @@
         },
         "serve": {
           "executor": "@nrwl/node:execute",
-          "options": { "buildTarget": "example:build" }
+          "options": {
+            "buildTarget": "example:build"
+          }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["apps/example/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "apps/example/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/example"],
+          "outputs": [
+            "coverage/apps/example"
+          ],
           "options": {
             "jestConfig": "apps/example/jest.config.js",
             "passWithNoTests": true
@@ -116,11 +146,17 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["libs/linkedin/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "libs/linkedin/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/linkedin"],
+          "outputs": [
+            "coverage/libs/linkedin"
+          ],
           "options": {
             "jestConfig": "libs/linkedin/jest.config.js",
             "passWithNoTests": true
@@ -128,13 +164,17 @@
         },
         "build": {
           "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/linkedin",
             "tsConfig": "libs/linkedin/tsconfig.lib.json",
             "packageJson": "libs/linkedin/package.json",
             "main": "libs/linkedin/src/index.ts",
-            "assets": ["libs/linkedin/*.md"],
+            "assets": [
+              "libs/linkedin/*.md"
+            ],
             "buildableProjectDepsInPackageJsonType": "peerDependencies"
           }
         }
@@ -148,7 +188,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/bot-instagram",
             "main": "apps/bot-instagram/src/main.ts",
@@ -171,15 +213,23 @@
         },
         "serve": {
           "executor": "@nrwl/node:execute",
-          "options": { "buildTarget": "bot-instagram:build" }
+          "options": {
+            "buildTarget": "bot-instagram:build"
+          }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["apps/bot-instagram/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "apps/bot-instagram/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/bot-instagram"],
+          "outputs": [
+            "coverage/apps/bot-instagram"
+          ],
           "options": {
             "jestConfig": "apps/bot-instagram/jest.config.js",
             "passWithNoTests": true
@@ -195,7 +245,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/bot-linkedin",
             "main": "apps/bot-linkedin/src/main.ts",
@@ -218,15 +270,23 @@
         },
         "serve": {
           "executor": "@nrwl/node:execute",
-          "options": { "buildTarget": "bot-linkedin:build" }
+          "options": {
+            "buildTarget": "bot-linkedin:build"
+          }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["apps/bot-linkedin/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "apps/bot-linkedin/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/bot-linkedin"],
+          "outputs": [
+            "coverage/apps/bot-linkedin"
+          ],
           "options": {
             "jestConfig": "apps/bot-linkedin/jest.config.js",
             "passWithNoTests": true
@@ -242,7 +302,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/bot-pdf",
             "main": "apps/bot-pdf/src/main.ts",
@@ -265,15 +327,23 @@
         },
         "serve": {
           "executor": "@nrwl/node:execute",
-          "options": { "buildTarget": "bot-pdf:build" }
+          "options": {
+            "buildTarget": "bot-pdf:build"
+          }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["apps/bot-pdf/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "apps/bot-pdf/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/bot-pdf"],
+          "outputs": [
+            "coverage/apps/bot-pdf"
+          ],
           "options": {
             "jestConfig": "apps/bot-pdf/jest.config.js",
             "passWithNoTests": true
@@ -289,7 +359,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/bot-cluster",
             "main": "apps/bot-cluster/src/main.ts",
@@ -312,15 +384,23 @@
         },
         "serve": {
           "executor": "@nrwl/node:execute",
-          "options": { "buildTarget": "bot-cluster:build" }
+          "options": {
+            "buildTarget": "bot-cluster:build"
+          }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["apps/bot-cluster/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "apps/bot-cluster/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/bot-cluster"],
+          "outputs": [
+            "coverage/apps/bot-cluster"
+          ],
           "options": {
             "jestConfig": "apps/bot-cluster/jest.config.js",
             "passWithNoTests": true
@@ -336,7 +416,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/bot-object-oriented",
             "main": "apps/bot-object-oriented/src/main.ts",
@@ -359,17 +441,23 @@
         },
         "serve": {
           "executor": "@nrwl/node:execute",
-          "options": { "buildTarget": "bot-object-oriented:build" }
+          "options": {
+            "buildTarget": "bot-object-oriented:build"
+          }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/bot-object-oriented/**/*.ts"]
+            "lintFilePatterns": [
+              "apps/bot-object-oriented/**/*.ts"
+            ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/bot-object-oriented"],
+          "outputs": [
+            "coverage/apps/bot-object-oriented"
+          ],
           "options": {
             "jestConfig": "apps/bot-object-oriented/jest.config.js",
             "passWithNoTests": true
@@ -384,11 +472,17 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["libs/twitter/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "libs/twitter/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/twitter"],
+          "outputs": [
+            "coverage/libs/twitter"
+          ],
           "options": {
             "jestConfig": "libs/twitter/jest.config.js",
             "passWithNoTests": true
@@ -396,13 +490,17 @@
         },
         "build": {
           "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/twitter",
             "tsConfig": "libs/twitter/tsconfig.lib.json",
             "packageJson": "libs/twitter/package.json",
             "main": "libs/twitter/src/index.ts",
-            "assets": ["libs/twitter/*.md"]
+            "assets": [
+              "libs/twitter/*.md"
+            ]
           }
         }
       }
@@ -415,7 +513,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/bot-twitter",
             "main": "apps/bot-twitter/src/main.ts",
@@ -438,15 +538,23 @@
         },
         "serve": {
           "executor": "@nrwl/node:execute",
-          "options": { "buildTarget": "bot-twitter:build" }
+          "options": {
+            "buildTarget": "bot-twitter:build"
+          }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["apps/bot-twitter/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "apps/bot-twitter/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/bot-twitter"],
+          "outputs": [
+            "coverage/apps/bot-twitter"
+          ],
           "options": {
             "jestConfig": "apps/bot-twitter/jest.config.js",
             "passWithNoTests": true
@@ -461,11 +569,17 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["libs/facebook/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "libs/facebook/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/facebook"],
+          "outputs": [
+            "coverage/libs/facebook"
+          ],
           "options": {
             "jestConfig": "libs/facebook/jest.config.js",
             "passWithNoTests": true
@@ -473,13 +587,17 @@
         },
         "build": {
           "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/facebook",
             "tsConfig": "libs/facebook/tsconfig.lib.json",
             "packageJson": "libs/facebook/package.json",
             "main": "libs/facebook/src/index.ts",
-            "assets": ["libs/facebook/*.md"]
+            "assets": [
+              "libs/facebook/*.md"
+            ]
           }
         }
       }
@@ -492,7 +610,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/bot-facebook",
             "main": "apps/bot-facebook/src/main.ts",
@@ -515,15 +635,23 @@
         },
         "serve": {
           "executor": "@nrwl/node:execute",
-          "options": { "buildTarget": "bot-facebook:build" }
+          "options": {
+            "buildTarget": "bot-facebook:build"
+          }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["apps/bot-facebook/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "apps/bot-facebook/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/bot-facebook"],
+          "outputs": [
+            "coverage/apps/bot-facebook"
+          ],
           "options": {
             "jestConfig": "apps/bot-facebook/jest.config.js",
             "passWithNoTests": true
@@ -538,11 +666,17 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["libs/reddit/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "libs/reddit/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/reddit"],
+          "outputs": [
+            "coverage/libs/reddit"
+          ],
           "options": {
             "jestConfig": "libs/reddit/jest.config.js",
             "passWithNoTests": true
@@ -550,13 +684,17 @@
         },
         "build": {
           "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/reddit",
             "tsConfig": "libs/reddit/tsconfig.lib.json",
             "packageJson": "libs/reddit/package.json",
             "main": "libs/reddit/src/index.ts",
-            "assets": ["libs/reddit/*.md"]
+            "assets": [
+              "libs/reddit/*.md"
+            ]
           }
         }
       }
@@ -569,7 +707,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/bot-reddit",
             "main": "apps/bot-reddit/src/main.ts",
@@ -592,15 +732,23 @@
         },
         "serve": {
           "executor": "@nrwl/node:execute",
-          "options": { "buildTarget": "bot-reddit:build" }
+          "options": {
+            "buildTarget": "bot-reddit:build"
+          }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["apps/bot-reddit/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "apps/bot-reddit/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/bot-reddit"],
+          "outputs": [
+            "coverage/apps/bot-reddit"
+          ],
           "options": {
             "jestConfig": "apps/bot-reddit/jest.config.js",
             "passWithNoTests": true
@@ -615,11 +763,17 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["libs/v2core/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "libs/v2core/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/v2core"],
+          "outputs": [
+            "coverage/libs/v2core"
+          ],
           "options": {
             "jestConfig": "libs/v2core/jest.config.js",
             "passWithNoTests": true
@@ -627,13 +781,17 @@
         },
         "build": {
           "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/v2core",
             "tsConfig": "libs/v2core/tsconfig.lib.json",
             "packageJson": "libs/v2core/package.json",
             "main": "libs/v2core/src/index.ts",
-            "assets": ["libs/v2core/*.md"]
+            "assets": [
+              "libs/v2core/*.md"
+            ]
           }
         }
       }
@@ -646,7 +804,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/puppeteer-bot",
             "main": "apps/puppeteer-bot/src/main.ts",
@@ -669,15 +829,23 @@
         },
         "serve": {
           "executor": "@nrwl/node:execute",
-          "options": { "buildTarget": "puppeteer-bot:build" }
+          "options": {
+            "buildTarget": "puppeteer-bot:build"
+          }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["apps/puppeteer-bot/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "apps/puppeteer-bot/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/puppeteer-bot"],
+          "outputs": [
+            "coverage/apps/puppeteer-bot"
+          ],
           "options": {
             "jestConfig": "apps/puppeteer-bot/jest.config.js",
             "passWithNoTests": true
@@ -692,11 +860,17 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["libs/puppeteer/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "libs/puppeteer/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/puppeteer"],
+          "outputs": [
+            "coverage/libs/puppeteer"
+          ],
           "options": {
             "jestConfig": "libs/puppeteer/jest.config.js",
             "passWithNoTests": true
@@ -704,18 +878,64 @@
         },
         "build": {
           "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/puppeteer",
             "tsConfig": "libs/puppeteer/tsconfig.lib.json",
             "packageJson": "libs/puppeteer/package.json",
             "main": "libs/puppeteer/src/index.ts",
-            "assets": ["libs/puppeteer/*.md"]
+            "assets": [
+              "libs/puppeteer/*.md"
+            ]
+          }
+        }
+      }
+    },
+    "soundcloud": {
+      "root": "libs/soundcloud",
+      "sourceRoot": "libs/soundcloud/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/soundcloud/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/soundcloud"
+          ],
+          "options": {
+            "jestConfig": "libs/soundcloud/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/libs/soundcloud",
+            "tsConfig": "libs/soundcloud/tsconfig.lib.json",
+            "packageJson": "libs/soundcloud/package.json",
+            "main": "libs/soundcloud/src/index.ts",
+            "assets": [
+              "libs/soundcloud/*.md"
+            ]
           }
         }
       }
     }
   },
-  "cli": { "defaultCollection": "@nrwl/node" },
+  "cli": {
+    "defaultCollection": "@nrwl/node"
+  },
   "defaultProject": "core"
 }

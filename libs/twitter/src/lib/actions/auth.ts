@@ -24,7 +24,7 @@ import { goToLogin, goToLogout } from './navigation'
  * @param {username, password} destructured
  */
 export const login = ({username, password}: {username: string, password: string}): Action<InjectPage> =>
-  chain<InjectPage>(
+  chain(
     errors('Twitter login()')(
       goToLogin,
       click(FORM_AUTH_USERNAME_INPUT_SELECTOR),

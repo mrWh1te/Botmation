@@ -6,7 +6,7 @@ import { Action, InjectValue } from '@botmation/v2core'
 import { enrichFileOptionsWithDefaults } from '../helpers/files'
 import { FileOptions } from '../interfaces/file-options'
 import { getFileUrl } from '../helpers/files'
-import { InjectPage } from '../types/injects'
+import { InjectBrowserPage } from '../types/injects'
 
 /**
  * @description   Parse page's cookies and save them as JSON in a local file
@@ -17,7 +17,7 @@ import { InjectPage } from '../types/injects'
  * @example saveCookies('cookies') -> creates `cookies.json`
  */
 // TODO spike saveCookies concept using pipe(getCookies, saveToDisk)
-export const saveCookies = (fileName: string, fileOptions?: Partial<FileOptions>): Action<InjectPage & {fileOptions: FileOptions}> =>
+export const saveCookies = (fileName: string, fileOptions?: Partial<FileOptions>): Action<InjectBrowserPage & {fileOptions: FileOptions}> =>
   async({page, fileOptions: injectedOptions}) => {
     // fileOptions is higher order param that overwrites injected options
     const hydratedOptions = enrichFileOptionsWithDefaults({...injectedOptions, ...fileOptions})
@@ -34,7 +34,7 @@ export const saveCookies = (fileName: string, fileOptions?: Partial<FileOptions>
  * @param fileName
  * @example loadCookies('cookies')
  */
-export const loadCookies = (fileName: string, fileOptions?: Partial<FileOptions>): Action<InjectPage & {fileOptions: FileOptions}> =>
+export const loadCookies = (fileName: string, fileOptions?: Partial<FileOptions>): Action<InjectBrowserPage & {fileOptions: FileOptions}> =>
   async({page, fileOptions: injectedOptions}) => {
     // fileOptions is higher order param that overwrites injected options
     const hydratedOptions = enrichFileOptionsWithDefaults({...injectedOptions, ...fileOptions})
@@ -51,7 +51,7 @@ export const loadCookies = (fileName: string, fileOptions?: Partial<FileOptions>
  * @param page
  * @param injects
  */
-export const getCookies = (...urls: string[]): Action<InjectPage, Protocol.Network.Cookie[]> =>
+export const getCookies = (...urls: string[]): Action<InjectBrowserPage, Protocol.Network.Cookie[]> =>
   async({page}) =>
     page.cookies(...urls)
 
@@ -60,7 +60,7 @@ export const getCookies = (...urls: string[]): Action<InjectPage, Protocol.Netwo
  * Delete cookies provided. Can be provided through HO param OR through pipe value as a fallback
  * @param cookies
  */
-export const deleteCookies = (...cookies: Protocol.Network.Cookie[]): Action<InjectPage & Partial<InjectValue>> =>
+export const deleteCookies = (...cookies: Protocol.Network.Cookie[]): Action<InjectBrowserPage & Partial<InjectValue>> =>
   async({page, value}) => {
     if (cookies.length === 0) {
       if (value && Array.isArray(value) && value.length > 0) {

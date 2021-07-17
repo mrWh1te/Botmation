@@ -932,6 +932,63 @@
           }
         }
       }
+    },
+    "music-alarm": {
+      "root": "apps/music-alarm",
+      "sourceRoot": "apps/music-alarm/src",
+      "projectType": "application",
+      "prefix": "music-alarm",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/music-alarm",
+            "main": "apps/music-alarm/src/main.ts",
+            "tsConfig": "apps/music-alarm/tsconfig.app.json",
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/music-alarm/src/environments/environment.ts",
+                  "with": "apps/music-alarm/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "music-alarm:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/music-alarm/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/music-alarm"
+          ],
+          "options": {
+            "jestConfig": "apps/music-alarm/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

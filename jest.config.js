@@ -19,5 +19,6 @@ module.exports = {
     '<rootDir>/apps/puppeteer-bot',
     '<rootDir>/libs/puppeteer',
     '<rootDir>/libs/soundcloud',
+    '<rootDir>/apps/music-alarm',
   ],
 };

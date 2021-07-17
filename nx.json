@@ -34,6 +34,7 @@
     "v2core": { "tags": [] },
     "puppeteer-bot": { "tags": [] },
     "puppeteer": { "tags": [] },
-    "soundcloud": { "tags": [] }
+    "soundcloud": { "tags": [] },
+    "music-alarm": { "tags": [] }
   }
 }

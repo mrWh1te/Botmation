@@ -7,7 +7,9 @@ const goToNavigationOptions: Parameters<typeof goTo>[1] = {
   waitUntil: 'load'
 }
 
-// Generic
+// Main
+export const goToHome = goTo(SOUNDCLOUD_URL_BASE, goToNavigationOptions)
+
 /**
  * Takes URL extension and appends it to the BASE url of https://soundcloud.com/{artistUrlExtension}
  * @param artistUrlExtension ie 'idealismus' -> `https://soundcloud.com/idealismus`

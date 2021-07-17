@@ -4,11 +4,11 @@ import { PipeValue } from '@botmation/v2core'
 import { isObjectWithKey, isObjectWithValue } from '@botmation/v2core'
 import { pipe } from '@botmation/v2core'
 
-import { InjectPage } from '../types/injects'
+import { InjectBrowserPage } from '../types/injects'
 
 import { getIndexedDBStoreValue, setIndexedDBStoreValue, deleteIndexedDBDatabase } from '../helpers/indexed-db'
 
-export type injectsIndexedDB = InjectPage & Partial<InjectValue> & {
+export type injectsIndexedDB = InjectBrowserPage & Partial<InjectValue> & {
   idb: indexedDBConnection
 }
 

@@ -6,13 +6,13 @@ import {
   removeLocalStorageKeyValue,
   clearLocalStorage
 } from "../helpers/local-storage"
-import { InjectPage } from "../types/injects"
+import { InjectBrowserPage } from "../types/injects"
 
 /**
  * @description     Care! Clears all key/value pairs from Local Storage
  * @param page
  */
-export const clearAllLocalStorage: Action<InjectPage> =
+export const clearAllLocalStorage: Action<InjectBrowserPage> =
   async ({page}) => {
     await page.evaluate(
       clearLocalStorage
@@ -24,7 +24,7 @@ export const clearAllLocalStorage: Action<InjectPage> =
  * @param key
  */
 export const removeLocalStorageItem =
-  (key?: string): Action<InjectPage & Partial<InjectValue>> =>
+  (key?: string): Action<InjectBrowserPage & Partial<InjectValue>> =>
     async({page, value}) => {
 
       key ??= value && value['key'] ? value['key'] : value
@@ -43,7 +43,7 @@ export const removeLocalStorageItem =
  * @param value
  */
 export const setLocalStorageItem =
-  (key?: string, value?: string): Action<InjectPage & Partial<InjectValue>> =>
+  (key?: string, value?: string): Action<InjectBrowserPage & Partial<InjectValue>> =>
     async({page, value:pipeValue}) => {
       // todo throw an error , don't error silently
       value ??= pipeValue ? pipeValue['value'] ? pipeValue['value'] : pipeValue : 'missing-value'
@@ -63,7 +63,7 @@ export const setLocalStorageItem =
  * @param key
  */
 export const getLocalStorageItem =
-  (key?: string): Action<InjectPage & Partial<InjectValue>, string|null> =>
+  (key?: string): Action<InjectBrowserPage & Partial<InjectValue>, string|null> =>
     async({page, value}) => {
       key ??= value && value['key'] ? value['key'] : value
 

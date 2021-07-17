@@ -2,7 +2,7 @@ import { Page, Browser } from "puppeteer"
 import * as puppeteer from 'puppeteer'
 
 import { Action, upsertInject, Injects } from "@botmation/v2core"
-import { InjectBrowser } from './../types/injects'
+import { InjectBrowser, InjectBrowserPage } from './../types/injects'
 
 
 /**
@@ -22,6 +22,12 @@ export const getBrowser =
     async() => puppeteer.launch(...browserLaunchOptions)
 
 /**
+ * Close the Inject Browser (ie Chromium and all of its pages)
+ */
+export const closeBrowser: Action<InjectBrowser> = async({browser}) =>
+  browser.close()
+
+/**
  * sets `page` inject
  * @param browserPageIndex 0+ to get from browser.pages() array or undefined (or blank, negative numbers) to get a new page from the injected browser
  */
@@ -29,6 +35,12 @@ export const browserPage =
   <I extends InjectBrowser = InjectBrowser>(browserPageIndex?: number) =>
     (...actions: Action<I & {page: Page}>[]): Action<I & {page: Page}> =>
       upsertInject('page')(getBrowserPage(browserPageIndex))(...actions)
+
+/**
+ * close the Inject Page
+ */
+export const closeBrowserPage: Action<InjectBrowserPage> = async({page}) =>
+  page.close()
 
 /**
  * Grab a particular page from the `browser` inject by pages() index or a new page (negative number as browserPageIndex or undefined)

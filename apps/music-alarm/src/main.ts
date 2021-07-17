@@ -7,7 +7,6 @@ import {
 } from '@botmation/puppeteer'
 
 import {
-  goToHome,
   goToArtist,
   clickFirstSongPlayButton
 } from '@botmation/soundcloud'
@@ -22,7 +21,6 @@ const playMusicForTimeSpanInMinutes = 30;
       browser({headless: false})(
         // Inject Puppeteer browser page instance
         browserPage()(
-          goToHome,
           goToArtist('idealismus'),
           clickFirstSongPlayButton,
           wait(playMusicForTimeSpanInMinutes * 60 * 1000),

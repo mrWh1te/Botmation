@@ -65,7 +65,7 @@ export const waitForNavigation: Action<InjectBrowserPage> = async({page}) => {
  * @param waitTimeForScroll milliseconds to wait for scrolling
  */
 export const scrollTo = (htmlSelector: string, waitTimeForScroll: number = 2500): Action<InjectBrowserPage> =>
-  chain<InjectBrowserPage>(
+  chain(
     evaluate(scrollToElement, htmlSelector), // init's scroll code, but does not wait for it to complete
     wait(waitTimeForScroll) // wait for scroll to complete
   )

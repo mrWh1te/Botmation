@@ -59,7 +59,7 @@ Figure out the details with [Botmation's Documentation](https://botmation.dev/) 
 Core Library Reference
 ----------------------
 
-`@botmation/core` is the main package consisting of all functions in the API of [Botmation docs](https://botmation/dev./). It has the foundational functions for building bots and a little more. Other packages, like `@botmation/instagram` have specific functions that work in conjunction with the core ones.
+`@botmation/core` is the main package consisting of all functions in the API of [Botmation docs](https://botmation.dev/). It has the foundational functions for building bots and a little more. Other packages, like `@botmation/instagram` have specific functions that work in conjunction with the core ones.
 
 Import any core API function from:
 ```javascript

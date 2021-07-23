@@ -8,7 +8,7 @@ import { InjectBrowserPage } from '../types/injects'
 
 import { getIndexedDBStoreValue, setIndexedDBStoreValue, deleteIndexedDBDatabase } from '../helpers/indexed-db'
 
-export type injectsIndexedDB = InjectBrowserPage & Partial<InjectValue> & {
+export type InjectsIndexedDB = InjectBrowserPage & Partial<InjectValue> & {
   idb: indexedDBConnection
 }
 
@@ -22,7 +22,7 @@ export interface indexedDBConnection {
  *
  * @param page
  */
-export const deleteIndexedDB = (databaseName?: string): Action<injectsIndexedDB> => async({page, idb: {databaseName: injectedDatabaseName}}) => {
+export const deleteIndexedDB = (databaseName?: string): Action<InjectsIndexedDB> => async({page, idb: {databaseName: injectedDatabaseName}}) => {
   await page.evaluate(
     deleteIndexedDBDatabase,
     databaseName ?? injectedDatabaseName
@@ -39,7 +39,7 @@ export const deleteIndexedDB = (databaseName?: string): Action<injectsIndexedDB>
  * @param storeName
  */
 export const indexedDBStore = (databaseName: string, storeName: string, databaseVersion?: number) =>
-  (...actions: Action<injectsIndexedDB>[]): Action<injectsIndexedDB> =>
+  (...actions: Action<InjectsIndexedDB>[]): Action<InjectsIndexedDB> =>
     pipe()(
       inject({
         idb: {
@@ -58,7 +58,7 @@ export const indexedDBStore = (databaseName: string, storeName: string, database
  * @param databaseVersion
  */
 export const setIndexedDBValue =
-  (key?: string, value?: any, storeName?: string, databaseName?: string, databaseVersion?: number): Action<injectsIndexedDB> =>
+  (key?: string, value?: any, storeName?: string, databaseName?: string, databaseVersion?: number): Action<InjectsIndexedDB> =>
     async({value: pipeValue, page, idb:{databaseVersion: injectDatabaseVersion, databaseName: injectDatabaseName, storeName: injectStoreName}}) => {
       value ??= isObjectWithValue(pipeValue) ? pipeValue['value'] : pipeValue ??= 'missing-value'
       key ??= isObjectWithKey(pipeValue) ? pipeValue['key'] : 'missing-key'
@@ -83,7 +83,7 @@ export const setIndexedDBValue =
  * @param databaseVersion
  */
 export const getIndexedDBValue =
-  (key?: string, storeName?: string, databaseName?: string, databaseVersion?: number): Action<injectsIndexedDB> =>
+  (key?: string, storeName?: string, databaseName?: string, databaseVersion?: number): Action<InjectsIndexedDB> =>
     async({value: pipeValue, page, idb:{databaseVersion: injectDatabaseVersion, databaseName: injectDatabaseName, storeName: injectStoreName}}) => {
       key ??= isObjectWithKey(pipeValue) ? pipeValue['key'] : typeof pipeValue === 'string' ? pipeValue : 'missing-key'
 

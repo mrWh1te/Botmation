@@ -4,7 +4,7 @@ import { BotFilesInjects } from '../types/bot-files-inject'
 import { BotIndexedDBInjects } from '../types/bot-indexed-db-inject'
 import { ScraperBotInjects } from '../types/scraper-bot-injects'
 import { AbortLineSignal } from '../types/abort-line-signal'
-import { PipeValue } from '../types'
+import { Injects, PipeValue } from '../types'
 
 /**
  * @description    All BotAction Interfaces
@@ -28,7 +28,7 @@ import { PipeValue } from '../types'
 /**
  * @description    Action is an async Function whose default nature is to return a Promise<undefined>, but can be set to return a value
  */
-export interface Action<I extends {} = {}, R = AbortLineSignal|PipeValue|void> extends Function {
+export interface Action<I extends Injects = {}, R = AbortLineSignal|PipeValue|void> extends Function {
   (injects?: I) : Promise<R>
 }
 

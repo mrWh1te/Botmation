@@ -1,7 +1,7 @@
 import { Action } from "../interfaces"
 import { logError } from "../helpers/console"
 import { pipe, chain } from "./assembly-lines"
-import { InjectValue } from "../types"
+import { Injects, InjectValue } from "../types"
 
 /**
  * @description    Higher-order Action to run actions in a try/catch block that logs errors with the provided errorBlockName

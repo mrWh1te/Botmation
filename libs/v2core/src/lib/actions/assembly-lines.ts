@@ -14,7 +14,7 @@ import { Injects, InjectValue } from "../types"
  * @param actions
  */
 export const chain =
-  (...actions: Action[]): Action =>
+  <I extends Injects = {}>(...actions: Action<I>[]): Action<I> =>
     async(injects) => {
       if (actions.length === 0) {
         return undefined

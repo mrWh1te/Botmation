@@ -3,7 +3,8 @@ import { schedule, wait } from '@botmation/v2core'
 import {
   browserPage,
   browser,
-  closeBrowser
+  closeBrowser,
+  screenshot
 } from '@botmation/puppeteer'
 
 import {
@@ -12,20 +13,19 @@ import {
 } from '@botmation/soundcloud'
 
 // Music will play for X minutes:
-const playMusicForTimeSpanInMinutes = 30;
+const playMusicForTimeInMinutes = 180; // 3h
 
 (async () => {
   try {
-    // Inject Puppeteer browser instance
-    const bot = schedule('30 6 * * 1-5')( // Monday-Friday at 6:30am
-      browser({headless: false})(
-        // Inject Puppeteer browser page instance
+    const bot = schedule('15 6 * * 1-5')( // Monday-Friday at 6:15am
+      browser({headless: false, defaultViewport: {width: 1200, height: 800}})(
         browserPage()(
           goToArtist('idealismus'),
           clickFirstSongPlayButton,
-          wait(playMusicForTimeSpanInMinutes * 60 * 1000),
+          screenshot('soundcloud'),
+          wait(playMusicForTimeInMinutes * 60 * 1000),
+          closeBrowser
         ),
-        closeBrowser
       ),
     )
 

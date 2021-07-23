@@ -4,7 +4,7 @@ import {
   waitForNavigation,
   click,
   type,
-  InjectPage,
+  InjectBrowserPage
 } from '@botmation/puppeteer'
 
 import {
@@ -23,7 +23,7 @@ import { goToLogin, goToLogout } from './navigation'
  * @description  Action that attempts the login flow for Twitter
  * @param {username, password} destructured
  */
-export const login = ({username, password}: {username: string, password: string}): Action<InjectPage> =>
+export const login = ({username, password}: {username: string, password: string}): Action<InjectBrowserPage> =>
   chain(
     errors('Twitter login()')(
       goToLogin,
@@ -40,7 +40,7 @@ export const login = ({username, password}: {username: string, password: string}
 /**
  * @param page
  */
-export const logout: Action = chain<InjectPage>(
+export const logout: Action = chain(
   goToLogout,
   clickText('Log out'),
   waitForNavigation
@@ -50,7 +50,7 @@ export const logout: Action = chain<InjectPage>(
  * @param page
  * @param injects
  */
-export const isGuest = pipe<InjectPage, boolean>()(
+export const isGuest = pipe<InjectBrowserPage, boolean>()(
   getCookies(),
   map(cookies => cookies.find(cookie => cookie.name === 'auth_token') ? false : true)
 )
@@ -59,7 +59,7 @@ export const isGuest = pipe<InjectPage, boolean>()(
  * @param page
  * @param injects
  */
-export const isLoggedIn = pipe<InjectPage, boolean>()(
+export const isLoggedIn = pipe<InjectBrowserPage, boolean>()(
   getCookies(),
   map(cookies => cookies.find(cookie => cookie.name === 'auth_token') ? true : false)
 )

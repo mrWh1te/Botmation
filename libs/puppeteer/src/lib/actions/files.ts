@@ -25,7 +25,6 @@ export const files = (fileOptions?: Partial<FileOptions>) =>
  */
 export const screenshot = (fileName: string, fileOptions: Partial<FileOptions> = {}): Action<InjectBrowserPage & Partial<InjectFileOptions>> =>
   async ({page, fileOptions: injectedFileOptions}) => {
-
     // fileOptions is higher order param that overwrites injected options
     const hydratedOptions = enrichFileOptionsWithDefaults({...injectedFileOptions, ...fileOptions})
 

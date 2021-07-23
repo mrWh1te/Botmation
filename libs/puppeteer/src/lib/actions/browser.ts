@@ -9,9 +9,9 @@ import { InjectBrowser, InjectBrowserPage } from './../types/injects'
  * inject (browser) returns new line of Actions with browser added to injects
  */
 export const browser =
-  <I extends Injects = Injects>(...browserLaunchOptions: Parameters<typeof puppeteer.launch>) =>
+  <I extends Injects = Injects>(browserLaunchOptions: Parameters<typeof puppeteer.launch>[0]) =>
     (...actions: Action<I & {browser: Browser}>[]): Action<I> =>
-      upsertInject('browser')(getBrowser(...browserLaunchOptions))(...actions)
+      upsertInject('browser')(getBrowser(browserLaunchOptions))(...actions)
 
 /**
  * get Puppeteer browser instance

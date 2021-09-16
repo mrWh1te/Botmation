@@ -15,5 +15,10 @@ module.exports = {
     '<rootDir>/apps/bot-facebook',
     '<rootDir>/libs/reddit',
     '<rootDir>/apps/bot-reddit',
+    '<rootDir>/libs/v2core',
+    '<rootDir>/apps/puppeteer-bot',
+    '<rootDir>/libs/puppeteer',
+    '<rootDir>/libs/soundcloud',
+    '<rootDir>/apps/music-alarm',
   ],
 };

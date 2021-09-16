@@ -30,6 +30,11 @@
     "facebook": { "tags": [] },
     "bot-facebook": { "tags": [] },
     "reddit": { "tags": [] },
-    "bot-reddit": { "tags": [] }
+    "bot-reddit": { "tags": [] },
+    "v2core": { "tags": [] },
+    "puppeteer-bot": { "tags": [] },
+    "puppeteer": { "tags": [] },
+    "soundcloud": { "tags": [] },
+    "music-alarm": { "tags": [] }
   }
 }

@@ -1,14 +1,17 @@
 import {
-  BotAction,
-  click,
-  clickText,
+  Action,
   isString,
   chain,
   pipe,
-  pipeCase,
+  pipeCase
+} from "@botmation/v2core";
+
+import {
+  click,
+  clickText,
   type,
   waitForNavigation
-} from "@botmation/core";
+} from "@botmation/puppeteer"
 
 import { FORM_CREATEAPOST_CHOOSEACOMMUNITY_INPUT, FORM_CREATEAPOST_TEXT_TEXTAREA, FORM_CREATEAPOST_TITLE_INPUT } from "../constants/selectors";
 import { goToCreateAPost } from "./navigation";
@@ -20,7 +23,7 @@ import { goToCreateAPost } from "./navigation";
  * @param text ie `Example Text
  *                  can by a multi-line Template literal`
  */
-export const createATextPost = (community: string, title: string, text?: string): BotAction => chain(
+export const createATextPost = (community: string, title: string, text?: string): Action => chain(
   goToCreateAPost,
   click(FORM_CREATEAPOST_CHOOSEACOMMUNITY_INPUT),
   type(community),

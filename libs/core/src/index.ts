@@ -44,3 +44,4 @@ export * from './lib/helpers/pipe'
 export * from './lib/helpers/scrapers'
 export * from './lib/helpers/cases'
 export * from './lib/helpers/random'
+export * from './lib/helpers/time' // missing

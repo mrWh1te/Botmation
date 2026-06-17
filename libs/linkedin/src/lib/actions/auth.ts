@@ -1,16 +1,20 @@
-import { BotAction, ConditionalBotAction } from '@botmation/core'
+import { Action } from '@botmation/v2core'
 import {
   chain,
   pipe,
+  log,
+  map,
+  errors
+} from '@botmation/v2core'
+
+import {
   goTo,
   waitForNavigation,
   click,
   type,
-  log,
   getLocalStorageItem,
-  map,
-  errors
-} from '@botmation/core'
+  InjectBrowserPage,
+} from '@botmation/puppeteer'
 
 /**
  * LinkedIn Auth
@@ -28,7 +32,7 @@ import {
 /**
  * Tests the page for being a "guest" in LinkedIn (not logged in)
  */
- export const isGuest: ConditionalBotAction = pipe()(
+ export const isGuest: Action = pipe<InjectBrowserPage>()(
   // data feature for user notifications
   getLocalStorageItem('voyager-web:badges'),
   map(value => value === null) // Local Storage returns null if not found
@@ -37,7 +41,7 @@ import {
 /**
  * Test page for being logged in LinkedIn
  */
-export const isLoggedIn: ConditionalBotAction = pipe()(
+export const isLoggedIn: Action = pipe<InjectBrowserPage>()(
   // data feature for user notifications
   getLocalStorageItem('voyager-web:badges'),
   map(value => typeof value === 'string') // Local Storage returns string value if found
@@ -48,8 +52,8 @@ export const isLoggedIn: ConditionalBotAction = pipe()(
  * @param emailOrPhone
  * @param password
  */
-export const login = (emailOrPhone: string, password: string): BotAction =>
-  chain(
+export const login = (emailOrPhone: string, password: string): Action =>
+  chain<InjectBrowserPage>(
     errors('LinkedIn login()')(
       goTo('https://www.linkedin.com/login'),
       click('form input[id="username"]'),

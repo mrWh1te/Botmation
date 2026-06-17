@@ -1,8 +1,10 @@
-import { BotAction, click, ConditionalBotAction, elementExists } from "@botmation/core";
+import { Action } from "@botmation/v2core";
+
+import { click, elementExists } from '@botmation/puppeteer'
 
 // Push Notifications Request
-export const isPushNotificationsRequestVisible: ConditionalBotAction =
+export const isPushNotificationsRequestVisible: Action =
   elementExists('div[aria-label="Push notifications request"]')
 
-export const closeModal: BotAction =
+export const closeModal: Action =
   click('body')

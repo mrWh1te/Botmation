@@ -26,8 +26,8 @@ nx test core
 
 Learn more about the library's testing strategy and coverage with the [Botmation: Tests documentation](/notes/test.md).
 
-Development Server
-------------------
+Develop App
+-----------
 
 Run `nx serve <app name>` for an app dev server for any example project. The app will automatically reload if you change any of the source files.
 
@@ -37,10 +37,11 @@ nx serve example
 
 Any directory name in the `/apps` folder can be served with nx.
 
-New Development Server
-----------------------
+New App
+-------
 
-Add a new application with a new name to setup a new development server. For example, an app called `acme`:
+Add a new application with a new name to scaffold a new app in `apps/`. For example, an app called `acme`:
 ```bash
 nx g app acme
 ```
+Creates `apps/acme/` with a basic setup to develop and test.

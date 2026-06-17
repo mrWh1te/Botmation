@@ -1,27 +1,30 @@
 import {
-  ConditionalBotAction,
-  getCookies,
-  BotAction,
+  Action,
   chain,
   errors,
   pipe,
+  map,
+  log
+} from '@botmation/v2core'
+
+import {
+  getCookies,
   waitForNavigation,
   click,
   type,
-  map,
-  log,
   deleteCookies,
-  reload
-} from '@botmation/core'
+  reload,
+  InjectBrowserPage
+} from '@botmation/puppeteer'
 
 import { FORM_AUTH_PASSWORD_INPUT_SELECTOR, FORM_AUTH_SUBMIT_BUTTON_SELECTOR, FORM_AUTH_USERNAME_INPUT_SELECTOR } from '../constants/selectors'
 import { goToLogin } from './navigation'
 
 /**
- * @description  BotAction that attempts the login flow for Reddit
+ * @description  Action that attempts the login flow for Reddit
  * @param {username, password} destructured
  */
-export const login = (username: string, password: string): BotAction =>
+export const login = (username: string, password: string): Action =>
   chain(
     errors('Reddit login()')(
       goToLogin,
@@ -38,7 +41,7 @@ export const login = (username: string, password: string): BotAction =>
 /**
  * @param page
  */
-export const logout: BotAction = pipe()(
+export const logout: Action = pipe<InjectBrowserPage>()(
   getCookies(),
   deleteCookies(),
   reload()
@@ -48,7 +51,7 @@ export const logout: BotAction = pipe()(
  * @param page
  * @param injects
  */
-export const isGuest: ConditionalBotAction = pipe()(
+export const isGuest: Action = pipe<InjectBrowserPage>()(
   getCookies(),
   map(cookies => cookies.find(cookie => cookie.name === 'reddit_session') ? false : true)
 )
@@ -57,7 +60,7 @@ export const isGuest: ConditionalBotAction = pipe()(
  * @param page
  * @param injects
  */
-export const isLoggedIn: ConditionalBotAction = pipe()(
+export const isLoggedIn: Action = pipe<InjectBrowserPage>()(
   getCookies(),
   map(cookies => cookies.find(cookie => cookie.name === 'reddit_session') ? true : false)
 )

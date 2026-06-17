@@ -12,3 +12,11 @@ Then, in a separate terminal, test any library `core`, `instagram`, `linkedin`:
 ```bash
 nx test <library name>
 ```
+
+Filer library tests with regex:
+```bash
+nx test <library name> --testPathPattern=<regex against urls of files>
+# ie 
+nx test core --testPathPattern=inject # test all spec files with `inject` in filename
+```
+[Read more in Jest docs](https://jestjs.io/docs/cli#--testpathpatternregex)

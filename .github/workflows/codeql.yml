@@ -1,0 +1,41 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ "master", "snyk-fix-5737847d0332882b8d4db3025536fd30", "snyk-upgrade-9dc8780ffbdcfea4ff8ab88af3a7eee6", "snyk-upgrade-1428ee4b23d9dc5333239b5e3176983e", "snyk-upgrade-d60c560ea43a4b1a13f1452bb3d040b8", "snyk-upgrade-dcac9f5d03d4da4144471e2b7784a569", "v2-core" ]
+  pull_request:
+    branches: [ "master" ]
+  schedule:
+    - cron: "51 17 * * 5"
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ javascript ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+          queries: +security-and-quality
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:${{ matrix.language }}"
